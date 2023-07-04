@@ -1,6 +1,33 @@
 Working On
-退貨單
-[v] CRUD
+
+調整
+Orders
+[] C : 隱藏退貨、退款選項, 寄送方式下拉式debug, 貨態追蹤代碼對應寄送方式e.g. 7-11 11碼
+[] R : Detail =>OrderItem  Create debug，應改成新增訂單明細至該筆訂單  ;  View => 訂單主檔的部分跟訂單明細的部分拆開，商品圖套用 ; 回首頁
+[] U : 畫面呈現正在編輯哪筆訂單，及寄信功能; 下拉選單三種狀態的對應
+[] D : 新增讓空的主檔可以被刪除、被關聯的主檔被刪除會被提醒
+
+OrderItemReturn
+[] C
+[] R
+[] U
+[] D
+
+
+Inventory
+[] C
+[] R
+[] U
+[] D
+Get 呈現原本的值(參考Order):  Inventory Detail & 
+
+StockInSheets
+[] C
+[] R
+[] U
+[] D
+
+
 
 
 To Do
@@ -75,3 +102,4 @@ Completed
 07/04
 退貨單
 [v] Dto VM Exts
+[v] CRUD
