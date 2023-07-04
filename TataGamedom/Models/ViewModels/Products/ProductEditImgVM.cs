@@ -17,5 +17,11 @@ namespace TataGamedom.Models.ViewModels.Products
 		public DateTime ModifiedTime { get; set; }
 		[Display(Name = "最後修改者")]
 		public int ModifiedTimeBackendMemberId { get; set; }
+
+		public ProductEditImgVM()
+		{
+			// 初始化 Image 属性为一个空的列表
+			Image = new List<string>();
+		}
 	}
 }
