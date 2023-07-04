@@ -525,6 +525,9 @@
     <Content Include="Views\StockInSheets\Index.cshtml" />
     <Content Include="Views\StockInSheets\Create.cshtml" />
     <Content Include="Views\StockInSheets\Edit.cshtml" />
+    <Content Include="Views\BackendMembers\Register.cshtml" />
+    <Content Include="Views\BackendMembers\ConfirmRegister.cshtml" />
+    <Content Include="Views\BackendMembersList\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
