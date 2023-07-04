@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TataGamedom.Models.EFModels.Member>
+﻿@model IEnumerable<TataGamedom.Models.ViewModels.Members.MembersListVM>
 
 @{
 	ViewBag.Title = "MembersList";
@@ -20,9 +20,7 @@
 		}
 	</style>
 }
-
 <h2>會員列表</h2>
-
 
 <table class="table" id="myTable">
 	<thead>
@@ -43,15 +41,14 @@
 				@Html.DisplayNameFor(model => model.Phone)
 			</th>
 			<th>
-				@Html.DisplayNameFor(model => model.RegistrationDate)
-			</th>
-			<th>
 				@Html.DisplayNameFor(model => model.ActiveFlag)
 			</th>
 			<th>
-				會員狀態編輯
+				@Html.DisplayNameFor(model => model.RegistrationDate)
 			</th>
-
+			<th>
+				動作
+			</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -73,19 +70,49 @@
 				<td>
 					@Html.DisplayFor(modelItem => item.Phone)
 				</td>
-				<th>
+				<td>
+					@Html.DisplayFor(modelItem => item.ActiveFlagText)
+				</td>
+				<td>
 					@Html.DisplayFor(modelItem => item.RegistrationDate)
-				</th>
-				<td>
-					@Html.DisplayFor(modelItem => item.ActiveFlag)
 				</td>
 				<td>
-					@Html.ActionLink("停權會員", "Delete", new { id = item.Id }, new { @class = "btn btn-primary" })
+							@if (item.ActiveFlag)
+							{
+								using (Html.BeginForm("Delete", "Members", new { id = item.Id }, FormMethod.Post))
+								{
+									@Html.AntiForgeryToken()
+									<span>&nbsp;</span>
+									<input type="submit" value="刪除" class="btn btn-danger" />
+								}
+							}
+							else
+							{
+								using (Html.BeginForm("Reduction", "Members", new { id = item.Id }, FormMethod.Post))
+								{
+									@Html.AntiForgeryToken()
+									<span>&nbsp;</span>
+									<input type="submit" value="復原" class="btn btn-success" />
+								}
+							}
 				</td>
+
+
+				@*<td>
+					@Html.ActionLink("Details", "Details", new { id = item.Id })
+				</td>*@
+				
+				@*<td>
+						@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+						@Html.ActionLink("Details", "Details", new { id=item.Id }) |
+						@Html.ActionLink("Delete", "Delete", new { id=item.Id })
+					</td>*@
 			</tr>
 		}
 	</tbody>
 </table>
+
+
 @section Scripts{
 	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"></script>
