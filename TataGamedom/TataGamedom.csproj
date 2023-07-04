@@ -206,6 +206,7 @@
     <Compile Include="Controllers\NewsCommentsController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
+    <Compile Include="Controllers\PostsApiController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\StockInSheetsController.cs" />
     <Compile Include="Files\Mails\Class1.cs" />
@@ -225,6 +226,7 @@
     <Compile Include="Models\Dtos\Orders\OrderDto.cs" />
     <Compile Include="Models\Dtos\Orders\OrderIndexDto.cs" />
     <Compile Include="Models\Dtos\Orders\OrderInfoDto.cs" />
+    <Compile Include="Models\Dtos\PostsComments\PostsAndCommntsListDto.cs" />
     <Compile Include="Models\Dtos\StockInSheets\StockInSheetDto.cs" />
     <Compile Include="Models\Dtos\StockInSheets\StockInSheetIndexDto.cs" />
     <Compile Include="Models\Dtos\Boards\BoardCreateDto.cs" />
