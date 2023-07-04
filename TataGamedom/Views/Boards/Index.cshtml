@@ -76,8 +76,8 @@
             <div class="modal-body">
                 <form id="changeBoardImgdForm">
                     <div class="row mx-3">
-                        <span class="opacity-75 small mt-4" ">上傳討論版封面</span>
-                        <input type="file" class="d-block form-control mt-2" id="boardCoverAdd" name="CoverFile">
+                        <span class="opacity-75 small mt-4" ">上傳看板封面</span>
+                        <input type="file" class="d-block form-control mt-2" id="boardCoverChange" name="CoverFile">
                     </div>
                 </form>
             </div>
@@ -357,9 +357,22 @@
                 $('#AddModal').modal('show');
             })
             $('#addBtn').on('click', function () {
-                console.log('Hi!')
-                var formData = new FormData($("#addBoardForm")[0]);
-                AddBoard(formData);
+                // 顯示確認對話框
+                Swal.fire({
+                    title: '確認',
+                    text: '此動作將新增一個看板，你確定嗎？',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '確定',
+                    cancelButtonText: '取消'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // 使用者選擇確定，執行 SaveEdit()
+                        var formData = new FormData($("#addBoardForm")[0]);
+                        AddBoard(formData);
+                        document.getElementById('boardCoverAdd').value = '';
+                    }
+                })
             })
             $('#uploadNewCover').on('click', function () {
                 // 顯示確認對話框
@@ -375,7 +388,7 @@
                         // 使用者選擇確定，執行 SaveEdit()
                         var formData = new FormData($("#changeBoardImgdForm")[0]);
                         changeBoardImg(formData);
-                        document.getElementById('boardCoverAdd').value = '';
+                        document.getElementById('boardCoverChange').value = '';
                     }
                 });
             })
