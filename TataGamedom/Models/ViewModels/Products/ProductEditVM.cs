@@ -11,7 +11,9 @@ namespace TataGamedom.Models.ViewModels.Products
 		public int Id { get; set; }
 		[Display(Name = "商品編號")]
 		public string Index { get; set; }
-		[Display(Name = "遊戲名稱")]
+		[Display(Name = "遊戲編號")]
+		public int GameId { get; set; }
+        [Display(Name = "遊戲名稱")]
 		public string GameName { get; set; }
         public string Description { get; set; }
         [Display(Name = "虛擬商品")]
@@ -23,7 +25,10 @@ namespace TataGamedom.Models.ViewModels.Products
 		[Display(Name = "平台")]
 		[Required]
 		public int GamePlatform { get; set; }
-		[Display(Name = "狀態")]
+		[Display(Name = "系統需求")]
+		[Required]
+		public string SystemRequire { get; set; }
+        [Display(Name = "狀態")]
 		[Required]
 		public int ProductStatus { get; set; }
 		[Display(Name = "發售日")]
