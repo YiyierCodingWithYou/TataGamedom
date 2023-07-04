@@ -78,5 +78,13 @@ WHERE P.Id =@Id";
 				return conn.QueryFirstOrDefault<Product>(sql, new { GameId = vm.GameId, GamePlatformId=vm.GamePlatform });
 			}
 		}
+		public List<ProductEditImgVM> GetImgs(int id)
+		{
+			using (var conn = new SqlConnection(_connStr))
+			{
+				string sql = "SELECT*FROM ProductImages WHERE ProductId = @ProductId";
+				return conn.Query<ProductEditImgVM>(sql, new { ProductId = id }).ToList();
+			}
+		}
 	}
 }
