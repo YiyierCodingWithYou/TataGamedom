@@ -1,5 +1,7 @@
 Working On
-[v]進貨單CRU
+退貨單
+[v] Dto VM Exts
+[] CRUD
 
 
 To Do
@@ -69,3 +71,6 @@ Completed
 
 07/03
 [v] 庫存 detail => 庫存明細CRU
+[v] 進貨單CRU
+
+07/04

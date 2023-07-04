@@ -222,6 +222,9 @@
     <Compile Include="Models\Dtos\Games\GameIndexDto.cs" />
     <Compile Include="Models\Dtos\Members\LoginDto.cs" />
     <Compile Include="Models\Dtos\Members\RegisterDto.cs" />
+    <Compile Include="Models\Dtos\OrderItemReturns\OrderItemReturnDetailDto.cs" />
+    <Compile Include="Models\Dtos\OrderItemReturns\OrderItemReturnDto.cs" />
+    <Compile Include="Models\Dtos\OrderItemReturns\OrderItemReturnIndexDto.cs" />
     <Compile Include="Models\Dtos\Orders\OrderDto.cs" />
     <Compile Include="Models\Dtos\Orders\OrderIndexDto.cs" />
     <Compile Include="Models\Dtos\Orders\OrderInfoDto.cs" />
@@ -356,6 +359,9 @@
     <Compile Include="Models\ViewModels\News\NewsIndexVM.cs" />
     <Compile Include="Models\ViewModels\Members\RegisterVM.cs" />
     <Compile Include="Models\ViewModels\Members\ResetPasswordVM.cs" />
+    <Compile Include="Models\ViewModels\OrderItemReturns\OrderItemReturnDetailVM.cs" />
+    <Compile Include="Models\ViewModels\OrderItemReturns\OrderItemReturnIndexVM.cs" />
+    <Compile Include="Models\ViewModels\OrderItemReturns\OrderItemReturnVM.cs" />
     <Compile Include="Models\ViewModels\Orders\OrderCreateVM.cs" />
     <Compile Include="Models\ViewModels\Orders\OrderEditVM.cs" />
     <Compile Include="Models\ViewModels\Orders\OrderIndexVM.cs" />
