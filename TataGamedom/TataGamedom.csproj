@@ -519,7 +519,6 @@
     <Content Include="Views\Games\AddProduct.cshtml" />
     <Content Include="Views\BackendMembers\NotAuthorize.cshtml" />
     <Content Include="Views\Products\EditProduct.cshtml" />
-    <Content Include="Views\Boards\test.cshtml" />
     <Content Include="Views\NewsComments\Details.cshtml" />
     <Content Include="Views\Inventory\Create.cshtml" />
     <Content Include="Views\Inventory\Edit.cshtml" />
