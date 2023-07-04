@@ -56,5 +56,13 @@ namespace TataGamedom.Models.ViewModels
 		[Display(Name = "大頭貼")]
 		[StringLength(100)]
 		public string IconImg { get; set; }
+
+		[Display(Name = "權限名稱")]
+		public int BackendMembersRoleId { get; set; }
+
+		[Display(Name = "權限名稱")]
+		public string BackendMembersRoleName { get; set; }
+
+
 	}
 }

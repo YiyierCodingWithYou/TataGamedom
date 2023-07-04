@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using Dapper;
 using TataGamedom.Models.Dtos;
 using TataGamedom.Models.EFModels;
@@ -54,8 +55,14 @@ namespace TataGamedom.Models.Infra.DapperRepositories
 
 		public void Register(RegisterDto dto)
 		{
-			throw new NotImplementedException();
-			//先不創帳號
+			using (var conn = new SqlConnection(_connstr))
+			{
+				string sql = @"INSERT INTO BackendMembers (Account, Password,Birthday, Email, Name, Phone,BackendMembersRoleId, RegistrationDate, IsConfirmed)
+VALUES (@Account, @Password,@Birthday, @Email, @Name, @Phone,@BackendMembersRoleId ,GETDATE() )";
+
+				conn.Execute(sql, dto);
+			}
+
 		}
 
 
