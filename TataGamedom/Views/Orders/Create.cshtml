@@ -34,7 +34,8 @@
 
         <div class="mb-3">
             @Html.LabelFor(model => model.OrderStatusId, htmlAttributes: new { @class = "form-label col-md-2" })
-                @Html.DropDownListFor(model => model.OrderStatusId, orderStatusId, new { @class = "form-select" })
+            @Html.DropDownListFor(model => model.OrderStatusId, orderStatusId, new { @class = "form-select" })
+           @* public static MvcHtmlString DropDownList(this HtmlHelper htmlHelper, string name, IEnumerable<SelectListItem>selectList, string optionLabel, object htmlAttributes)*@
                 @Html.ValidationMessageFor(model => model.OrderStatusId, "", new { @class = "text-danger" })
         </div>
 

@@ -29,9 +29,11 @@ namespace TataGamedom.Models.ViewModels.OrderItemReturns
 		public string Reason { get; set; }
 
 		[Display(Name = "退貨日期")]
+		[DataType(DataType.Date)]
 		public DateTime IssuedAt { get; set; }
 
 		[Display(Name = "完成日期")]
+		[DataType(DataType.Date)]
 		public DateTime? CompletedAt { get; set; }
 
 		[Display(Name = "退款狀態")]

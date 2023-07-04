@@ -1,7 +1,6 @@
 Working On
 退貨單
-[v] Dto VM Exts
-[] CRUD
+[v] CRUD
 
 
 To Do
@@ -74,3 +73,5 @@ Completed
 [v] 進貨單CRU
 
 07/04
+退貨單
+[v] Dto VM Exts

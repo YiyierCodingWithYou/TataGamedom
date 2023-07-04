@@ -17,8 +17,6 @@ namespace TataGamedom.Models.Dtos.OrderItemReturns
 
 		public string OrderItemIndex { get; set; }
 
-		public string Reason { get; set; }
-
 		public DateTime IssuedAt { get; set; }
 
 		public DateTime? CompletedAt { get; set; }
@@ -39,7 +37,6 @@ namespace TataGamedom.Models.Dtos.OrderItemReturns
 				Index = dto.Index,
 				OrderIndex = dto.OrderIndex,
 				OrderItemIndex = dto.OrderItemIndex,
-				Reason = dto.Reason,
 				IssuedAt = dto.IssuedAt,
 				CompletedAt = dto.CompletedAt,
 				IsRefunded = dto.IsRefunded,
