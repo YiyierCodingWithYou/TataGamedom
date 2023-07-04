@@ -171,7 +171,7 @@ namespace TataGamedom.Controllers
 			var fileExtension = Path.GetExtension(fileName).ToLower();
 			if (!validImageExtensions.Contains(fileExtension))
 			{
-				return ApiResult.Fail("請檢查檔案");
+				return ApiResult.Fail("請檢查圖檔");
 			}
 
 
@@ -235,11 +235,13 @@ namespace TataGamedom.Controllers
 				BoardAbout = provider.FormData["BoardAbout"],
 				BoardHeaderCoverImg = null
 			};
+			
+			string fileName = string.Empty;
 
 			if (provider.FileData.Count > 0)
 			{
 				var fileData = provider.FileData[0];
-				var fileName = fileData.Headers.ContentDisposition.FileName.Trim('\"');
+				fileName = fileData.Headers.ContentDisposition.FileName.Trim('\"');
 				var localFilePath = fileData.LocalFileName;
 
 				var uniqueFileName = GetUniqueFileName(fileName); // 生成唯一的檔案名
@@ -251,6 +253,14 @@ namespace TataGamedom.Controllers
 				vm.BoardHeaderCoverImgPath = new FileInfo(destinationFilePath)?.FullName;
 				vm.BoardHeaderCoverImg = uniqueFileName;
 			}
+
+			var validImageExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+			var fileExtension = Path.GetExtension(fileName).ToLower();
+			if (!validImageExtensions.Contains(fileExtension))
+			{
+				return ApiResult.Fail("新增失敗");
+			}
+
 
 			if (vm == null || !ModelState.IsValid)
 			{
