@@ -50,5 +50,26 @@ namespace TataGamedom.Models.Services
 
 			return editProfileVM;
 		}
+
+
+		public Result Register(RegisterDto dto)
+		{
+			//判斷帳號是否已被使用
+			if (_repo.ExistAccount(dto.Account))
+			{
+				//丟出異常，或者傳回Result
+				return Result.Fail($"帳號{dto.Account}已存在，請更換後再試一次");
+			}
+			//將密碼進行雜湊
+			var salt = HashUtility.GetSalt();
+			var hashPwd = HashUtility.ToSHA256(dto.Password, salt);
+			dto.Password = hashPwd;
+
+			//新增一筆紀錄
+			_repo.Register(dto);
+
+			//todo 寄發email
+			return Result.Success();
+		}
 	}
 }

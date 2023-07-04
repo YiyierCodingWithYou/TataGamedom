@@ -19,10 +19,11 @@ namespace TataGamedom.Models.ViewModels.Members
 		[StringLength(30)]
 		public string Account { get; set; }
 
-
+		[Display(Name = "密碼")]
 		[StringLength(70)]
 		public string Password { get; set; }
 		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]
+		[Display(Name = "生日")]
 		public DateTime Birthday { get; set; }
 
 		[Display(Name = "信箱")]
@@ -32,7 +33,7 @@ namespace TataGamedom.Models.ViewModels.Members
 
 		[StringLength(10)]
 		public string Phone { get; set; }
-
+		[Display(Name = "權限名稱")]
 		public int BackendMembersRoleId { get; set; }
 
 		[Display(Name="權限名稱")]
@@ -46,7 +47,7 @@ namespace TataGamedom.Models.ViewModels.Members
 		{
 			get
 			{
-				return ActiveFlag == true ? "使用中" : "停權中";
+				return ActiveFlag == true ? "使用中" : "停權";
 			}
 		}
 
