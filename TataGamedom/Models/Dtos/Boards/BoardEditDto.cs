@@ -10,5 +10,6 @@ namespace TataGamedom.Models.Dtos.Boards
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public string BoardAbout { get; set; }
+		public string BoardHeaderCoverImg { get; set; }
 	}
 }
