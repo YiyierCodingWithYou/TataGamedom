@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Http.ModelBinding;
 using System.Web.Mvc;
 using TataGamedom.Models.EFModels;
 using TataGamedom.Models.Infra;
@@ -38,7 +39,12 @@ namespace TataGamedom.Controllers
 			ProductService service = new ProductService(repo);
 
 			var product = service.Get(id);
-			ViewBag.GamePlatform = new SelectList(db.GamePlatformsCodes, "Id", "Name", product.GamePlatform);
+
+			var platformsCodes = db.GamePlatformsCodes
+				.Where(code => !code.Products.Any(p => p.GameId == product.GameId) || code.Id == product.GamePlatform)
+				.AsEnumerable();
+
+			ViewBag.GamePlatform = new SelectList(platformsCodes, "Id", "Name", product.GamePlatform);
 			ViewBag.ProductStatus = new SelectList(db.ProductStatusCodes, "Id", "Name", product.ProductStatus);
 			return View(product);
 		}
@@ -54,7 +60,14 @@ namespace TataGamedom.Controllers
 				return View(vm);
 			}
 			var editResult = UpdateProduct(vm);
-			return View(vm);
+			if (editResult.IsFail)
+			{
+				ModelState.AddModelError("", "商品編輯失敗！");
+				ViewBag.GamePlatform = new SelectList(db.GamePlatformsCodes, "Id", "Name");
+				ViewBag.ProductStatus = new SelectList(db.ProductStatusCodes, "Id", "Name");
+				return View(vm);
+			}
+			return RedirectToAction("Index");
 		}
 
 		private Result UpdateProduct(ProductEditVM vm)
@@ -62,7 +75,6 @@ namespace TataGamedom.Controllers
 			IProductRepository repo = new ProductDapperRepository();
 			ProductService service = new ProductService(repo);
 			return service.Edit(vm);
-
 		}
 	}
 }

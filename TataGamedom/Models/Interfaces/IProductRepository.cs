@@ -14,6 +14,8 @@ namespace TataGamedom.Models.Interfaces
 
 		ProductEditVM GetGameById(int id);
 
-		Product GetGameByIndex(ProductEditVM vm);
+		Product GetGameByGameIdAndGPId(ProductEditVM vm);
+
+		bool Update(ProductEditVM vm);
 	}
 }
