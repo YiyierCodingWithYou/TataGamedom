@@ -348,6 +348,7 @@
     <Compile Include="Models\ViewModels\Games\GameEditVM.cs" />
     <Compile Include="Models\ViewModels\Games\GameIndexVM.cs" />
     <Compile Include="Models\ViewModels\Members\LoginVM.cs" />
+    <Compile Include="Models\ViewModels\Members\MembersListVM.cs" />
     <Compile Include="Models\ViewModels\Members\Role.cs" />
     <Compile Include="Models\ViewModels\News\NewsCommentIndexVM.cs" />
     <Compile Include="Models\ViewModels\News\NewsCreateVM.cs" />
@@ -531,6 +532,7 @@
     <Content Include="Views\BackendMembers\Register.cshtml" />
     <Content Include="Views\BackendMembers\ConfirmRegister.cshtml" />
     <Content Include="Views\BackendMembersList\Create.cshtml" />
+    <Content Include="Views\Members\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -139,7 +139,7 @@ namespace TataGamedom.Controllers
 
 					using (var con = new SqlConnection(_connstr))
 					{
-						string sql = @"INSERT INTO News (Title, Content, BackendMemberId, NewsCategoryId, GamesId, CoverImg, ScheduleDate, ActiveFlag)
+						string sql = @"INSERT INTO News (Title, Content, BackendMemberId, NewsCategoryId, GamesId, CoverImg, ScheduleDate, ActiveFlag,DeleteDatetime)
                                VALUES (@Title, @Content, @BackendMemberId, @NewsCategoryId, @GamesId, @CoverImg, @ScheduleDate, @ActiveFlag);
                                SELECT CAST(SCOPE_IDENTITY() AS INT)";
 
@@ -171,7 +171,7 @@ namespace TataGamedom.Controllers
 			using (var con = new SqlConnection(_connstr))
 			{
 				string sql = @"SELECT n.Id, n.Title, n.Content, n.BackendMemberId, n.NewsCategoryId, n.GamesId, n.CoverImg, 
-                   n.ScheduleDate, n.ActiveFlag, n.DeleteDatetime, n.DeleteBackendMemberId as DeleteBackendMemberName,
+                   n.ScheduleDate, n.ActiveFlag, n.DeleteDatetime, n.DeleteBackendMemberId ,b.Name AS DeleteBackendMemberName,
                    b.Name AS BackendMemberName, gc.Name AS GameClassificationName
                    FROM News AS n
                    JOIN BackendMembers AS b ON b.Id = n.BackendMemberId
@@ -215,7 +215,7 @@ namespace TataGamedom.Controllers
 						string sql = @"UPDATE News SET Title = @Title, Content = @Content, BackendMemberId = @BackendMemberId,
                 NewsCategoryId = @NewsCategoryId, GamesId = @GamesId, CoverImg = @CoverImg,
                 ScheduleDate = @ScheduleDate, ActiveFlag = @ActiveFlag, DeleteDatetime = GETDATE(),
-                DeleteBackendMemberId = @DeleteBackendMemberId
+                DeleteBackendMemberId = @BackendMemberId
                 WHERE Id = @Id";
 
 						con.Execute(sql, news);
