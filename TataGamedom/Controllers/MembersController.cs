@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -11,19 +12,82 @@ using TataGamedom.Models.Infra.DapperRepositories;
 using TataGamedom.Models.Interfaces;
 using TataGamedom.Models.Services;
 using TataGamedom.Models.ViewModels;
+using TataGamedom.Models.ViewModels.Members;
+using Dapper;
+using TataGamedom.Models.ViewModels.News;
 
 namespace TataGamedom.Controllers
 {
     public class MembersController : Controller
     {
 		private AppDbContext db = new AppDbContext();
+		private string _connstr = System.Configuration.ConfigurationManager.ConnectionStrings["AppDbContext"].ToString();
+
 
 		[Authorize]
 		public ActionResult MembersList()
 		{
-			var Members = db.Members;
-			return View(Members.ToList());
+			using (var con = new SqlConnection(_connstr))
+			{
+				string sql = @"SELECT Id,Name,Account,Birthday,Email,Phone,RegistrationDate,ActiveFlag
+FROM Members
+";
+				var list = con.Query<MembersListVM>(sql);
+
+				return View(list);
+			}
 		}
+
+
+		[Authorize]
+		public ActionResult Details(int? id)
+		{
+			using (var con = new SqlConnection(_connstr))
+			{
+				string sql = @"SELECT * FROM Members
+WHERE Id = @Id";
+
+				var detials = con.Query<MembersListVM>(sql, new { Id = id }).SingleOrDefault();
+
+				return View(detials);
+			}
+		}
+
+
+
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken]
+		public ActionResult Delete(int id)
+		{
+			using (var con = new SqlConnection(_connstr))
+			{
+				string sql = @"UPDATE Members SET ActiveFlag = 0 WHERE Id = @Id";
+
+				con.Execute(sql, new { Id = id });
+			}
+
+			return RedirectToAction("MembersList");
+		}
+
+
+
+		[HttpPost, ActionName("Reduction")]
+		[ValidateAntiForgeryToken]
+		public ActionResult Reduction(int id)
+		{
+			using (var con = new SqlConnection(_connstr))
+			{
+				string sql = @"UPDATE Members SET ActiveFlag = 1 WHERE Id = @Id";
+
+				con.Execute(sql, new { Id = id });
+			}
+
+			return RedirectToAction("MembersList");
+		}
+
+
+
+
 		// GET: Members
 		public ActionResult Register()
 		{
