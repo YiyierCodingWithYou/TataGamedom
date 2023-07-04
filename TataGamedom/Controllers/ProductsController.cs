@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Http.ModelBinding;
@@ -75,6 +76,31 @@ namespace TataGamedom.Controllers
 			IProductRepository repo = new ProductDapperRepository();
 			ProductService service = new ProductService(repo);
 			return service.Edit(vm);
+		}
+		[Authorize]
+		public ActionResult EditProducImg(int id)
+		{
+			var viewModel = new ProductEditImgVM();
+			var currentUserAccount = User.Identity.Name;
+			var memberInDb = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
+
+			// 根据商品ID从数据库中获取所有相关的图片记录
+			var productImages = db.ProductImages
+				.Where(pi => pi.ProductId == id)
+				.ToList();
+
+			// 设置视图模型的商品ID和图片ID
+			viewModel.ProductId = id;
+			viewModel.Id = productImages.Select(pi => pi.Id).ToList();
+
+			// 设置视图模型的图片列表
+			viewModel.Image = productImages.Select(pi => pi.Image).ToList();
+
+			// 设置最后修改时间和修改者信息
+			viewModel.ModifiedTime = DateTime.Now;
+			viewModel.ModifiedTimeBackendMemberId = memberInDb != null ? memberInDb.Id : 0;
+
+			return View(viewModel);
 		}
 	}
 }

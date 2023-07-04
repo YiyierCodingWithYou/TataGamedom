@@ -1,0 +1,94 @@
+﻿@model TataGamedom.Models.ViewModels.Products.ProductEditImgVM
+
+@{
+    ViewBag.Title = "EditProducImg";
+}
+
+<h2>EditProducImg</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>ProductEditImgVM</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProductId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ProductId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ProductId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @Html.HiddenFor(model => model.Id)
+        <div class="form-group">
+            @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @for (int i = 0; i < Model.Image.Count; i++)
+                {
+                    <div class="mb-3 col-6">
+                        <img src="/Files/Uploads/@Model.Image[i]" style="width: 100%" />
+                        @Html.HiddenFor(model => model.Image[i])
+                        <button type="button" class="btn btn-danger btn-sm delete-btn" alt="@Model.Image[i]" data-id="@Model.Id[i]">Delete</button>
+                    </div>
+                }
+                <input type="file" name="file1" class="form-control" multiple="multiple" />
+                @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ModifiedTime, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ModifiedTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ModifiedTime, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ModifiedTimeBackendMemberId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ModifiedTimeBackendMemberId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ModifiedTimeBackendMemberId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $('.delete-btn').click(function () {
+                var productId = $(this).data('id');
+                // 发送删除请求到后台
+                $.ajax({
+                    url: '/Product/DeleteImage',
+                    type: 'POST',
+                    data: { id: productId },
+                    success: function (result) {
+                        // 处理成功删除的逻辑，例如移除对应的图片和按钮等
+                        console.log('Image deleted successfully');
+                        // 刷新页面或执行其他操作
+                    },
+                    error: function () {
+                        console.error('Error deleting image');
+                        // 处理删除失败的逻辑
+                    }
+                });
+            });
+        });
+    </script>
+}

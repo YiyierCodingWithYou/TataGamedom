@@ -79,5 +79,10 @@ namespace TataGamedom.Models.Services
 			return Result.Success();
 		}
 
+		public List<ProductEditImgVM> GetImgs(int id)
+		{
+			var result = _repo.GetImgs(id);
+			return result;
+		}
 	}
 }
