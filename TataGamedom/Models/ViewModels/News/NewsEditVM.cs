@@ -40,7 +40,7 @@ namespace TataGamedom.Models.ViewModels.News
 		[StringLength(100)]
 		public string CoverImg { get; set; }
 		[Display(Name = "上線時間")]
-		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]
+		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd hh:mm}")]
 		public DateTime ScheduleDate { get; set; }
 		[Display(Name = "新聞狀態")]
 		public bool ActiveFlag { get; set; }
@@ -52,14 +52,17 @@ namespace TataGamedom.Models.ViewModels.News
 				return ActiveFlag == true ? "上線" : "隱藏";
 			}
 		}
-
+		[Display(Name = "最後編輯時間")]
+		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd  hh:mm}")]
 		public DateTime? DeleteDatetime { get; set; }
-
+		[Display(Name = "最後修改人員")]
 		public int? DeleteBackendMemberId { get; set; }
 
 		public BackendMember BackendMember { get; set; }
 		[Display(Name = "最後修改人員")]
 		public string BackendMemberName { get; set; }
+		[Display(Name = "最後修改人員")]
+		public string DeleteBackendMemberName { get; set; }
 
 		[Display(Name = "遊戲分類")]
 		public string GameClassificationName { get; set; }
