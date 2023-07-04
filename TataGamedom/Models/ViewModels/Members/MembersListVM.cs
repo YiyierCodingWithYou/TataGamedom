@@ -3,26 +3,21 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-using TataGamedom.Models.EFModels;
 
 namespace TataGamedom.Models.ViewModels.Members
 {
-	public class BackendMembersListVM
+	public class MembersListVM
 	{
 		public int Id { get; set; }
-		[Display(Name = "管理員名稱")]
+		[Display(Name = "會員名稱")]
 
 		[StringLength(50)]
 		public string Name { get; set; }
-		[Display(Name = "管理員帳號")]
+		[Display(Name = "會員帳號")]
 
 		[StringLength(30)]
 		public string Account { get; set; }
 
-		[Display(Name = "密碼")]
-		[DataType(DataType.Password)]
-		[StringLength(70)]
-		public string Password { get; set; }
 		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]
 		[Display(Name = "生日")]
 		public DateTime Birthday { get; set; }
@@ -34,13 +29,7 @@ namespace TataGamedom.Models.ViewModels.Members
 
 		[StringLength(10)]
 		public string Phone { get; set; }
-		[Display(Name = "權限名稱")]
-		public int BackendMembersRoleId { get; set; }
 
-		[Display(Name="權限名稱")]
-		public string BackendMembersRoleName { get; set; }
-		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]
-		public DateTime? RegistrationDate { get; set; }
 		[Display(Name = "帳號狀態")]
 		public bool ActiveFlag { get; set; }
 
@@ -52,6 +41,8 @@ namespace TataGamedom.Models.ViewModels.Members
 			}
 		}
 
-		public virtual BackendMembersRolesCode BackendMembersRolesCode { get; set; }
+		[Display(Name="創建時間")]
+		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]
+		public DateTime RegistrationDate { get; set; }
 	}
 }

@@ -61,7 +61,7 @@ namespace TataGamedom.Models.ViewModels.News
 		public BackendMember BackendMember { get; set; }
 		[Display(Name = "最後修改人員")]
 		public string BackendMemberName { get; set; }
-
+		[Display(Name = "最後修改人員")]
 		public string DeleteBackendMemberName { get; set; }
 
 		[Display(Name = "遊戲分類")]
