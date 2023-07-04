@@ -234,13 +234,16 @@ namespace TataGamedom.Controllers
 			}
 			return View(vm);
 		}
-
+		[Authorize]
 		public ActionResult AddProduct(int id)
 		{
 			IGameRepository repo = new GameDapperRepository();
 			GameService service = new GameService(repo);
-			ViewBag.Platform = new SelectList(db.GamePlatformsCodes, "Id", "Name");
 			var game = service.GetGameByIdForAddProduct(id);
+			var platforms = db.GamePlatformsCodes.Where(code => !code.Products.Any(p => p.GameId == id));
+			ViewBag.Platform = new SelectList(platforms, "Id", "Name");
+			ViewBag.PlatformOptionsCount = platforms.Count();
+
 			return View(game);
 		}
 		[HttpPost]
@@ -249,7 +252,7 @@ namespace TataGamedom.Controllers
 			var currentUserAccount = User.Identity.Name;
 			var memberInDb = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
 			vm.CreateBackendMemberId = memberInDb.Id;
-	
+
 			if (files != null && files.Length > 0)
 			{
 				List<string> savedFileNames = new List<string>();
@@ -264,12 +267,20 @@ namespace TataGamedom.Controllers
 				}
 				vm.ProductImg = savedFileNames;
 			}
-			if(!ModelState.IsValid) return View(vm);
+			if (!ModelState.IsValid)
+			{
+				IGameRepository repo = new GameDapperRepository();
+				GameService service = new GameService(repo);
+				var game = service.GetGameByIdForAddProduct(vm.Id);
+				ViewBag.Platform = new SelectList(db.GamePlatformsCodes.Where(code => !code.Products.Any(p => p.GameId == vm.Id)), "Id", "Name");
+				return View(vm);
+			}
 			//新增商品
 			var productResult = CreateProduct(vm);
 			if (productResult.IsFail)
 			{
 				ModelState.AddModelError("", "該商品已存在！");
+				ViewBag.Platform = new SelectList(db.GamePlatformsCodes, "Id", "Name");
 				return View(vm);
 			}
 			//新增商品圖片
