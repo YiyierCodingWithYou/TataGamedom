@@ -85,14 +85,21 @@
 					@*<td>
 							@Html.DisplayFor(modelItem => item.RegistrationDate)
 						</td>*@
-					<td>
-						@Html.DisplayFor(modelItem => item.ActiveFlagText)
-					</td>
+				<td>
+					@if (item.ActiveFlag == false)
+					{
+						<button class="btn btn-danger btn-sm ">停權</button>
+					}
+					else if (item.ActiveFlag == true)
+					{
+						<button class="btn btn-success btn-sm ">使用中</button>
+					}
+				</td>
 					<td>
 						@Html.DisplayFor(modelItem => item.BackendMembersRoleName)
 					</td>
 					<td>
-						@Html.ActionLink("修改權限", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })
+						@Html.ActionLink("修改權限", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-sm" })
 						@*@Html.ActionLink("Details", "Details", new { id = item.Id }) |
 							@Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
 					</td>

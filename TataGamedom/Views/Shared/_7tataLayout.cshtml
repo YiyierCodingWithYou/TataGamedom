@@ -109,7 +109,7 @@
 					@if (User.Identity.IsAuthenticated)
 					{
 						<li>@Html.ActionLink("新聞管理", "Index", "NEWS", new { area = "" }, new { @class = "nav-link" })</li>
-						<li><a href="#">新聞分類管理</a></li>
+						<li>@Html.ActionLink("新聞分類管理", "Index", "NewsCategory", new { area = "" }, new { @class = "nav-link" })</li>
 						<li>@Html.ActionLink("新聞留言管理", "Index", "NewsComments", new { area = "" }, new { @class = "nav-link" })</li>
 					}
 				</ul>

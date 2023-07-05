@@ -203,6 +203,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\MembersController.cs" />
+    <Compile Include="Controllers\NewsCategoryController.cs" />
     <Compile Include="Controllers\NewsCommentsController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
@@ -352,6 +353,7 @@
     <Compile Include="Models\ViewModels\Members\LoginVM.cs" />
     <Compile Include="Models\ViewModels\Members\MembersListVM.cs" />
     <Compile Include="Models\ViewModels\Members\Role.cs" />
+    <Compile Include="Models\ViewModels\News\NewsCategoryVM.cs" />
     <Compile Include="Models\ViewModels\News\NewsCommentIndexVM.cs" />
     <Compile Include="Models\ViewModels\News\NewsCreateVM.cs" />
     <Compile Include="Models\ViewModels\News\NewsCriteria.cs" />
@@ -387,9 +389,12 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\login.css" />
     <Content Include="Content\layoutStyle1.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
+    <Content Include="Files\Images\arniya.jpg" />
+    <Content Include="Files\Images\controller.png" />
     <Content Include="Files\Images\otter.png" />
     <Content Include="Files\Mails\77_gmail.com 20230628_174620.txt" />
     <Content Include="Files\Uploads\zelda.jpg" />
@@ -453,6 +458,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\login.js" />
     <Content Include="Scripts\layoutScript1.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config" />
@@ -535,6 +541,12 @@
     <Content Include="Views\BackendMembers\ConfirmRegister.cshtml" />
     <Content Include="Views\BackendMembersList\Create.cshtml" />
     <Content Include="Views\Members\Details.cshtml" />
+    <Content Include="Views\NewsCategory\Create.cshtml" />
+    <Content Include="Views\NewsCategory\Delete.cshtml" />
+    <Content Include="Views\NewsCategory\Details.cshtml" />
+    <Content Include="Views\NewsCategory\Edit.cshtml" />
+    <Content Include="Views\NewsCategory\Index.cshtml" />
+    <Content Include="Views\BackendMembers\LoginTEST.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

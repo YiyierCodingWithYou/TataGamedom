@@ -104,9 +104,10 @@ namespace TataGamedom.Controllers
 		public ActionResult Create()
 		{
 			ViewBag.BackendMemberId = new SelectList(db.BackendMembers, "Id", "Name");
-			//ViewBag.DeleteBackendMemberId = new SelectList(db.BackendMembers, "Id", "Name");
-			ViewBag.GamesId = new SelectList(db.GameClassificationsCodes, "Id", "Name");
 			ViewBag.NewsCategoryId = new SelectList(db.NewsCategoryCodes, "Id", "Name");
+
+			var gamesList = db.GameClassificationsCodes.OrderBy(g => g.Id).Skip(1).ToList();
+			ViewBag.GamesId = new SelectList(gamesList, "Id", "Name");
 			return View();
 		}
 
@@ -139,7 +140,7 @@ namespace TataGamedom.Controllers
 
 					using (var con = new SqlConnection(_connstr))
 					{
-						string sql = @"INSERT INTO News (Title, Content, BackendMemberId, NewsCategoryId, GamesId, CoverImg, ScheduleDate, ActiveFlag,DeleteDatetime)
+						string sql = @"INSERT INTO News (Title, Content, BackendMemberId, NewsCategoryId, GamesId, CoverImg, ScheduleDate, ActiveFlag)
                                VALUES (@Title, @Content, @BackendMemberId, @NewsCategoryId, @GamesId, @CoverImg, @ScheduleDate, @ActiveFlag);
                                SELECT CAST(SCOPE_IDENTITY() AS INT)";
 
@@ -188,7 +189,9 @@ namespace TataGamedom.Controllers
 
 				ViewBag.BackendMemberId = new SelectList(db.BackendMembers, "Id", "Name", news.BackendMemberId);
 				ViewBag.DeleteBackendMemberId = new SelectList(db.BackendMembers, "Id", "Name", news.DeleteBackendMemberId);
-				ViewBag.GamesId = new SelectList(db.GameClassificationsCodes, "Id", "Name", news.GamesId);
+				var gamesList = db.GameClassificationsCodes.OrderBy(g => g.Id).Skip(1).ToList();
+				ViewBag.GamesId = new SelectList(gamesList, "Id", "Name");
+				//ViewBag.GamesId = new SelectList(db.GameClassificationsCodes, "Id", "Name", news.GamesId);
 				ViewBag.NewsCategoryId = new SelectList(db.NewsCategoryCodes, "Id", "Name", news.NewsCategoryId);
 
 				return View(news);
@@ -227,7 +230,8 @@ namespace TataGamedom.Controllers
 
 			ViewBag.BackendMemberId = new SelectList(db.BackendMembers, "Id", "Name", news.BackendMemberId);
 			ViewBag.DeleteBackendMemberId = new SelectList(db.BackendMembers, "Id", "Name", news.DeleteBackendMemberId);
-			//ViewBag.GamesId = new SelectList(db.Games, "Id", "ChiName", news.GamesId);
+			var gamesList = db.GameClassificationsCodes.OrderBy(g => g.Id).Skip(1).ToList();
+			ViewBag.GamesId = new SelectList(gamesList, "Id", "Name");
 			ViewBag.NewsCategoryId = new SelectList(db.NewsCategoryCodes, "Id", "Name", news.NewsCategoryId);
 
 			return View(news);
