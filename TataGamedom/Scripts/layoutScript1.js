@@ -33,6 +33,22 @@ function updateDateTime() {
   timeSpan.textContent = formattedDateTime;
 }
 
+$(document).on("click", "li", function (event) {
+    var link = $(this).find("a");
+    if (link.length) {
+        var href = link.attr("href");
+        console.log("Selected link:", href);
+        window.location.href = href; // 或者使用 window.location.replace(href)
+    }
+});
+
+var pathname = window.location.pathname; // 取得路徑部分
+var parts = pathname.split('/'); // 以斜線分割路徑成為陣列
+var value = parts[1]; // 取得指定位置的值，例如取得 "BackendMembers"
+console.log("Value:", value);
+
+
+
 updateDateTime();
 setInterval(updateDateTime, 1000);
 

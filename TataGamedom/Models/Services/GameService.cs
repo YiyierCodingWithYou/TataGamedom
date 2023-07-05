@@ -59,14 +59,35 @@ namespace TataGamedom.Models.Services
 
 		public Result UpdateGame(GameEditVM vm)
 		{
+			var game = _repo.GetGameById(vm.Id);
+			if (game == null)
+			{
+				return Result.Fail("查無該筆遊戲");
+			}
+
+			// 检查是否存在重复的中文游戏名称
+			if (_repo.IsDuplicateChineseName(vm.Id, vm.ChiName))
+			{
+				return Result.Fail("已存在此中文名稱之遊戲");
+			}
+
+			// 检查是否存在重复的英文游戏名称
+			if (_repo.IsDuplicateEnglishName(vm.Id, vm.EngName))
+			{
+				return Result.Fail("已存在此英文名稱之遊戲");
+			}
+
 			var dto = vm.ToDto();
+			dto.ModifiedTime=DateTime.Now;
 			var updateResult = _repo.UpddateGame(dto);
 			if (!updateResult)
 			{
 				return Result.Fail("更新失敗");
 			}
+
 			return Result.Success();
 		}
+
 
 		public Result CreateGame(GameCreateVM vm)
 		{
@@ -190,6 +211,7 @@ namespace TataGamedom.Models.Services
 		public GameAddProductVM GetGameByIdForAddProduct(int id)
 		{
 			var game = _repo.GetGameByIdForAddProduct(id);
+			if (game == null) { return null; }
 			return new GameAddProductVM
 			{
 				//Id = game.Id,
