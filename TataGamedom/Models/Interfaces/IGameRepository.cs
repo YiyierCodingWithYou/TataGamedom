@@ -44,5 +44,9 @@ namespace TataGamedom.Models.Interfaces
 
 		bool CreateProduct(Product product);
 		bool CreateProductImg(ProductImage productImage);
+
+		bool IsDuplicateChineseName(int gameId, string chiName);
+
+		bool IsDuplicateEnglishName(int gameId, string engName);
 	}
 }
