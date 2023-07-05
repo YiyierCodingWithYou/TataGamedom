@@ -1,7 +1,14 @@
 ﻿
 @{
-    ViewBag.Title = "NotAuthorize";
+	ViewBag.Title = "NotAuthorize";
 }
 
-<h2>哈哈你權限不夠啦</h2>
 
+<div style="text-align: center;">
+	<img src="~/Files/Images/arniya.jpg" alt="權限不夠啦哈哈">
+</div>
+
+
+<div class="mt-5" style="text-align: center;">
+	@Html.ActionLink("好啦點我登入", "login", null, new { @class = "btn btn-primary btn-lg" })
+</div>
