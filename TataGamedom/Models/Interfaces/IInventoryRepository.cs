@@ -12,13 +12,18 @@ namespace TataGamedom.Models.Interfaces
         IEnumerable<InventoryVM> Search();
 
         IEnumerable<InventoryItemVM> Info(int? productId);
+
 		int GetMaxIdInDb();
+
 		void Create(InventoryItemCreateDto dto);
+
 		string GetProductIndex(int productId);
+
 		void Update(InventoryItemDto dto);
+
 		InventoryItemDto GetByIndex(string index);
 
-		void bulkUpdate();
+		int bulkCreate();
 
 	}
 }
