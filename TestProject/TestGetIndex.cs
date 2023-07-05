@@ -10,7 +10,7 @@ namespace TestProject
 	public class TestGetIndex
 	{
 		[Test]
-		public void ¥Ø«eOrderIndexMax¬°300()
+		public void ç›®å‰OrderIndexMaxç‚º300()
 		{
 			var dto = new OrderDto { CreatedAt = new DateTime(2023,06,30),ShipmemtMethodId = 1 , MemberId = 1 , Id = 1 };
 			var orderIndexGenerator = new IndexGenerator(300);
@@ -23,7 +23,7 @@ namespace TestProject
 
 
 		//[Test]
-		//public void ¦pªGId¥¼³Q¶Ç¤J() //·|³Q¾É¤J0
+		//public void å¦‚æœIdæœªè¢«å‚³å…¥() //æœƒè¢«å°å…¥0
 		//{
 		//	throw new NotImplementedException();
 		//	//var dto = new OrderDto { CreatedAt = new DateTime(2023, 06, 30), ShipmemtMethodId = 1, MemberId = 1 };
@@ -36,19 +36,19 @@ namespace TestProject
 		//}
 
 		[Test]
-		public void ¥Ø«eInventoryItemId³Ì¤j­È¬°701_ProductId¬°1_Index¬°PC001()
+		public void ç›®å‰InventoryItemIdæœ€å¤§å€¼ç‚º701_ProductIdç‚º1_Indexç‚ºPC001()
 		{
-			var dto = new InventoryItemCreateDto { ProductId = 1, StockInSheetIndex = "¶i³f³æ½s¸¹50" };
+			var dto = new InventoryItemCreateDto { ProductId = 1, StockInSheetIndex = "é€²è²¨å–®ç·¨è™Ÿ50" };
 			var orderIndexGenerator = new IndexGenerator(701);
 
-			string expectedIndex = "PC001¶i³f³æ½s¸¹50702";
+			string expectedIndex = "PC001é€²è²¨å–®ç·¨è™Ÿ50702";
 			string actualIndex = orderIndexGenerator.GetSKU(dto, "PC001");
 
 			Assert.That(actualIndex, Is.EqualTo(expectedIndex));
 		}
 
 		[Test]
-		public void ¥Ø«eStockInSheetId³Ì¤j­È¬°50_SupplierId¬°10()
+		public void ç›®å‰StockInSheetIdæœ€å¤§å€¼ç‚º50_SupplierIdç‚º10()
 		{
 			var dto = new StockInSheetDto { OrderRequestDate = new DateTime(2023,06,30),SupplierId = 10};
 			var StockInSheetIndexGenerator = new IndexGenerator(50);
@@ -60,13 +60,13 @@ namespace TestProject
 		}
 
 		[Test]
-		public void ¥Ø«eOrderItemReturnsId³Ì¤j­È¬°92_OrderItemId¬°7002¹ïÀ³¨ìOrderId­q³æ½s¸¹213()
+		public void ç›®å‰OrderItemReturnsIdæœ€å¤§å€¼ç‚º92_OrderItemIdç‚º7002å°æ‡‰åˆ°OrderIdè¨‚å–®ç·¨è™Ÿ213()
 		{
 			var dto = new OrderItemReturnDto { IssuedAt = new DateTime(2023, 06, 30) };
 			var orderItemReturnIndexGenerator = new IndexGenerator(92);
 
-			string expectedIndex = "20230630­q³æ½s¸¹21393";
-			string actualIndex = orderItemReturnIndexGenerator.GetOrderItemReturnIndex(dto, "­q³æ½s¸¹213");
+			string expectedIndex = "20230630è¨‚å–®ç·¨è™Ÿ21393";
+			string actualIndex = orderItemReturnIndexGenerator.GetOrderItemReturnIndex(dto, "è¨‚å–®ç·¨è™Ÿ213");
 
 			Assert.That(actualIndex, Is.EqualTo(expectedIndex));
 		}
