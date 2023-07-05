@@ -1,0 +1,198 @@
+﻿@model TataGamedom.Models.ViewModels.Coupons.CouponEditVM
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>CouponEditVM</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Discount, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Discount, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Discount, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DiscountTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @foreach (var discountType in Model.DiscountTypeCode)
+            {
+                <label class="radio-inline form-check-label">
+                    <input type="radio" name="DiscountTypeId" value="@discountType.Id" id="discountType_@discountType.Id" @(discountType.Id == Model.DiscountTypeId ? "checked" : "")>
+                    @discountType.Name
+                </label>
+            }
+            @Html.ValidationMessageFor(model => model.DiscountTypeId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Threshold, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Threshold, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Threshold, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.StartTime, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control", type = "date", id = "startTimeInput" } })
+            @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.StartTime)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.EndTime, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", type = "date", id = "endTimeInput" } })
+            @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.EndTime)
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ModifiedTime, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.ModifiedTime, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", type="date" } })
+            @Html.ValidationMessageFor(model => model.ModifiedTime, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ModifiedBackendMemberName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.ModifiedBackendMemberName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            @Html.ValidationMessageFor(model => model.ModifiedBackendMemberName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+<script>
+    // 获取开始时间输入框元素
+    var startTimeInput = document.getElementById('startTimeInput');
+
+    // 获取结束时间输入框元素
+    var endTimeInput = document.getElementById('endTimeInput');
+
+    // 获取保存按钮元素
+    var saveButton = document.querySelector('input[type="submit"]');
+
+    // 获取当前日期
+    var currentDate = new Date().toISOString().split('T')[0];
+
+    // 设置开始时间输入框的最小值为当前日期
+    startTimeInput.min = currentDate;
+
+    // 设置结束时间输入框的最小值为当前日期
+    endTimeInput.min = currentDate;
+
+    // 检查开始时间和结束时间的值
+    function checkTimeInputs() {
+        var selectedStartDate = startTimeInput.value;
+        var selectedEndDate = endTimeInput.value;
+
+        if (selectedEndDate < currentDate) {
+            disableFormFields();
+            hideSaveButton();
+        } else if (selectedStartDate < currentDate) {
+            disableStartTimeField();
+            showSaveButton();
+        } else {
+            enableFormFields();
+            showSaveButton();
+        }
+    }
+
+    // 禁用表單中的所有欄位
+    function disableFormFields() {
+        var form = document.querySelector('form');
+        var inputs = form.querySelectorAll('input, select, textarea');
+
+        inputs.forEach(function (input) {
+            input.disabled = true;
+        });
+    }
+
+    // 禁用开始时间欄位
+    function disableStartTimeField() {
+        startTimeInput.disabled = true;
+    }
+
+    // 啟用表單中的所有欄位
+    function enableFormFields() {
+        var form = document.querySelector('form');
+        var inputs = form.querySelectorAll('input, select, textarea');
+
+        inputs.forEach(function (input) {
+            input.disabled = false;
+        });
+    }
+
+    // 隱藏保存按鈕
+    function hideSaveButton() {
+        saveButton.style.display = 'none';
+    }
+
+    // 顯示保存按鈕
+    function showSaveButton() {
+        saveButton.style.display = 'block';
+    }
+
+    // 初始化時檢查一次
+    checkTimeInputs();
+
+    // 監聽開始時間輸入框的值變化事件
+    startTimeInput.addEventListener('change', function () {
+        checkTimeInputs();
+    });
+
+    // 監聽結束時間輸入框的值變化事件
+    endTimeInput.addEventListener('change', function () {
+        checkTimeInputs();
+    });
+</script>
+}

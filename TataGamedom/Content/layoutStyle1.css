@@ -7,6 +7,7 @@
 body {
   color: #444246;
   background-color: whitesmoke;
+  display:flex;
 }
 
 ul,
@@ -317,10 +318,9 @@ span {
 }
 
 .container{
-margin-right: 10%;
-margin-left: 10%;
-margin-top: 80px;
-margin-bottom: 5%;
+width: 95%;
+margin-top: 55px;
+align-items:center;
 }
 
 @keyframes animate-height {
