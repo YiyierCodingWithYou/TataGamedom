@@ -16,6 +16,18 @@ namespace TataGamedom.Models.Infra.DapperRepositories
 		{
 			_connStr = System.Configuration.ConfigurationManager.ConnectionStrings["AppDbContext"].ToString();
 		}
+
+		public bool Create(CouponCreateVM vm)
+		{
+			using (var conn = new SqlConnection(_connStr))
+			{
+				string sql = @"INSERT INTO Coupons (Name, Discount, DiscountTypeId, Description, CreatedTime, CreatedBackendMemberId, Threshold, StartTime, EndTime, ActiveFlag)
+VALUES(@Name, @Discount, @DiscountTypeId, @Description, @CreatedTime, @CreatedBackendMemberId, @Threshold, @StartTime, @EndTime, @ActiveFlag)";
+				var rowAffected = conn.Execute(sql,vm);
+				return rowAffected > 0;
+			}
+		}
+
 		public IEnumerable<CouponIndexVM> Get()
 		{
 			using (var conn = new SqlConnection(_connStr))

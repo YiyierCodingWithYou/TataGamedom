@@ -24,9 +24,9 @@
 <h2>優惠券管理列表</h2>
 
 <div class="mb-3" style="text-align: right;">
-    @Html.ActionLink("新增遊戲", "Create", null, new { @class = "btn btn-primary" })
+    @Html.ActionLink("新增優惠券", "Create", null, new { @class = "btn btn-primary" })
 </div>
-<div class="text-center">
+<div>
     <table class="table" id="myTable">
         <thead>
             <tr>
@@ -97,11 +97,11 @@
                     <td>
                         @if (item.ActiveFlag == false)
                         {
-                            <text>刪除</text>
+                            <text>非活動中</text>
                         }
                         else if (item.ActiveFlag == true)
                         {
-                            <text>公開</text>
+                            <text>活動中</text>
                         }
                     </td>
                     <td>
