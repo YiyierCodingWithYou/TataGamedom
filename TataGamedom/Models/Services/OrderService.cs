@@ -86,8 +86,8 @@ M.[Name], O.OrderStatusId, O.ShipmentStatusId, O.PaymentStatusId,O.Id
 		{
 			int maxId =  _repo.GetMaxIdInDb();
 			var indexGenerator = new IndexGenerator(maxId);
-
 			dto.Index = indexGenerator.GetOrderIndex(dto);
+
 			_repo.Create(dto);
 			return Result.Success();
 		}

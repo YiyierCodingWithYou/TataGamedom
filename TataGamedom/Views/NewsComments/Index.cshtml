@@ -67,11 +67,18 @@
 					@Html.DisplayFor(modelItem => item.Time)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.ActiveFlagText)
+					@if (item.ActiveFlag == false)
+					{
+						<button class="btn btn-danger btn-sm ">已隱藏</button>
+					}
+					else if (item.ActiveFlag == true)
+					{
+						<button class="btn btn-success btn-sm ">公開</button>
+					}
 				</td>
 
 				<td>
-					@Html.ActionLink("詳細", "Details", new { id = item.Id }, new { @class = "btn btn-primary" })
+					@Html.ActionLink("詳細", "Details", new { id = item.Id }, new { @class = "btn btn-primary btn-sm" })
 					@*@Html.ActionLink("新增新聞", "Create", null, new { @class = "btn btn-danger" })*@
 					@*@Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
 				</td>
