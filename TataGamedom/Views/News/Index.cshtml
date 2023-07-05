@@ -4,20 +4,20 @@
 @using System.Security.Claims
 
 @*@{
-	ViewBag.Title = "Index";
-	var gamesId = ViewBag.GamesId as SelectList;
-	var newsCriteria = ViewBag.NewsCriteria as TataGamedom.Models.ViewModels.News.NewsCriteria;
-	string s_gameId = newsCriteria.GamesId.HasValue ? newsCriteria.GamesId.Value.ToString() : "";
+		ViewBag.Title = "Index";
+		var gamesId = ViewBag.GamesId as SelectList;
+		var newsCriteria = ViewBag.NewsCriteria as TataGamedom.Models.ViewModels.News.NewsCriteria;
+		string s_gameId = newsCriteria.GamesId.HasValue ? newsCriteria.GamesId.Value.ToString() : "";
 
 
 
-	var userIdentity = (ClaimsIdentity)User.Identity;
-	var claims = userIdentity.Claims;
-	var roleClaimType = userIdentity.RoleClaimType;
-	var roles = claims.Where(c => c.Type == roleClaimType).ToList();
+		var userIdentity = (ClaimsIdentity)User.Identity;
+		var claims = userIdentity.Claims;
+		var roleClaimType = userIdentity.RoleClaimType;
+		var roles = claims.Where(c => c.Type == roleClaimType).ToList();
 
-	var a = "b";
-}*@
+		var a = "b";
+	}*@
 @section Styles{
 
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" rel="stylesheet" />
@@ -40,35 +40,12 @@
 <div class="mb-3" style="text-align: right;">
 	@Html.ActionLink("新增新聞", "Create", null, new { @class = "btn btn-primary" })
 </div>
-@*<section class="container-fluid">
-	<form method="get">
-		<div class="row">
 
-			<div class="mb-3 col-md-3">
-				<label for="s_gameId">遊戲分類</label>
-				<select name="GamesId" id="s_gameId" class="form-select">
-					@foreach (var item in gamesId)
-					{
-						<option value="@item.Value" @(s_gameId == item.Value ? "selected" : "") )>@item.Text</option>
-					}
-				</select>
-			</div>
 
-			<div class="mb-3 col-md-3">
-				<label for="s_name">搜尋新聞</label>
-				<input type="text" class="form-control" name="Title" id="s_name" value="@newsCriteria.Title">
-			</div>
 
-			<div class="mb-3 col-md-3 align-self-end">
-				<button class="btn btn-primary">查詢</button>
-			</div>
-
-			<div style="text-align: right" class="mb-3 col-md-3 align-self-end">
-				@Html.ActionLink("新增新聞", "Create", null, new { @class = "btn btn-danger" })
-			</div>
-		</div>
-	</form>
-</section>*@
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newsCategoryModal">
+	打開 News Category Modal
+</button>
 
 
 <table class="table" id="myTable">
@@ -132,7 +109,15 @@
 					@Html.DisplayFor(modelItem => item.LikeCount)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.ActiveFlagText)
+					@*@Html.DisplayFor(modelItem => item.ActiveFlagText)*@
+					@if (item.ActiveFlag == false)
+					{
+						<button class="btn btn-danger btn-sm ">已隱藏</button>
+					}
+					else if (item.ActiveFlag == true)
+					{
+						<button class="btn btn-success btn-sm ">公開</button>
+					}
 				</td>
 				<td>
 					<a href="@Url.Action("Index", "NewsComments", new { newsId = item.Id })">
@@ -182,5 +167,7 @@
 				}
 			});
 		});
+
+
 	</script>
 }

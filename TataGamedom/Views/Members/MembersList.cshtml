@@ -9,6 +9,8 @@
 	<link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
 	<link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet" />
 	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 	<style>
 		thead {
 			background-color: goldenrod;
@@ -71,37 +73,45 @@
 					@Html.DisplayFor(modelItem => item.Phone)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.ActiveFlagText)
+					@if (item.ActiveFlag == false)
+					{
+						<button class="btn btn-danger btn-sm">停權</button>
+					}
+					else if (item.ActiveFlag == true)
+					{
+						<button class="btn btn-success btn-sm">使用中</button>
+					}
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.RegistrationDate)
 				</td>
 				<td>
-							@if (item.ActiveFlag)
-							{
-								using (Html.BeginForm("Delete", "Members", new { id = item.Id }, FormMethod.Post))
-								{
-									@Html.AntiForgeryToken()
-									<span>&nbsp;</span>
-									<input type="submit" value="刪除" class="btn btn-danger" />
-								}
-							}
-							else
-							{
-								using (Html.BeginForm("Reduction", "Members", new { id = item.Id }, FormMethod.Post))
-								{
-									@Html.AntiForgeryToken()
-									<span>&nbsp;</span>
-									<input type="submit" value="復原" class="btn btn-success" />
-								}
-							}
+					@if (item.ActiveFlag)
+					{
+						using (Html.BeginForm("Delete", "Members", new { id = item.Id }, FormMethod.Post))
+						{
+							@Html.AntiForgeryToken()
+							<span>&nbsp;</span>
+							<input type="submit" value="停權" class="btn btn-danger btn-sm" id="deleteButton-@item.Id" />
+						}
+					}
+					else
+					{
+						using (Html.BeginForm("Reduction", "Members", new { id = item.Id }, FormMethod.Post))
+						{
+
+							@Html.AntiForgeryToken()
+							<span>&nbsp;</span>
+							<input type="submit" value="復原" class="btn btn-success btn-sm" id="restoreButton-@item.Id" />
+						}
+					}
 				</td>
 
 
 				@*<td>
-					@Html.ActionLink("Details", "Details", new { id = item.Id })
-				</td>*@
-				
+						@Html.ActionLink("Details", "Details", new { id = item.Id })
+					</td>*@
+
 				@*<td>
 						@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
 						@Html.ActionLink("Details", "Details", new { id=item.Id }) |
@@ -110,6 +120,7 @@
 			</tr>
 		}
 	</tbody>
+
 </table>
 
 
@@ -124,6 +135,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
 
 	<script>
+		//mytable
 		$(document).ready(function () {
 			$('#myTable').DataTable({
 				responsive: true,
@@ -132,5 +144,46 @@
 				}
 			});
 		});
+
+
+		//$(document).ready(function () {
+		//	$('.delete-button').click(function (event) {
+		//		event.preventDefault(); // 防止點擊按鈕時觸發表單的提交動作
+
+		//		var buttonId = $(this).attr('id'); // 取得按鈕的 id
+		//		var id = buttonId.split('-')[1]; // 從按鈕的 id 中取得相關的 id 值
+
+		//		// 發送 Ajax 請求
+		//		$.ajax({
+		//			url: '/Members/Delete/' + id, // 替換為你的刪除動作的路徑
+		//			type: 'POST',
+		//			data: {
+		//				__RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+		//			},
+		//			success: function (result) {
+		//				// 處理成功回應的邏輯
+		//				// 例如：重新載入特定區域或執行其他動作
+		//				location.reload(); // 刷新整個頁面
+		//			},
+		//			error: function () {
+		//				// 處理錯誤回應的邏輯
+		//			}
+		//		});
+		//	});
+
+		//	$('.restore-button').click(function (event) {
+		//		event.preventDefault(); // 防止點擊按鈕時觸發表單的提交動作
+
+		//		var buttonId = $(this).attr('id'); // 取得按鈕的 id
+		//		var id = buttonId.split('-')[1]; // 從按鈕的 id 中取得相關的 id 值
+
+		//		// 發送 Ajax 請求
+		//		$.ajax({
+		//			url: '/Members/Reduction/' + id, // 替換為你的復原動作的路徑
+		//			type: 'POST',
+		//			data: {
+		//				__RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+		//			},
+		//			success: function (result) {
 	</script>
 }
