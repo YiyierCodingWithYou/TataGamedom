@@ -207,6 +207,7 @@
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\OrderItemReturnsController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
+    <Compile Include="Controllers\PostsApiController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\StockInSheetsController.cs" />
     <Compile Include="Files\Mails\Class1.cs" />
@@ -229,6 +230,7 @@
     <Compile Include="Models\Dtos\Orders\OrderDto.cs" />
     <Compile Include="Models\Dtos\Orders\OrderIndexDto.cs" />
     <Compile Include="Models\Dtos\Orders\OrderInfoDto.cs" />
+    <Compile Include="Models\Dtos\PostsComments\PostsAndCommntsListDto.cs" />
     <Compile Include="Models\Dtos\StockInSheets\StockInSheetDto.cs" />
     <Compile Include="Models\Dtos\StockInSheets\StockInSheetIndexDto.cs" />
     <Compile Include="Models\Dtos\Boards\BoardCreateDto.cs" />
@@ -355,6 +357,7 @@
     <Compile Include="Models\ViewModels\Games\GameEditVM.cs" />
     <Compile Include="Models\ViewModels\Games\GameIndexVM.cs" />
     <Compile Include="Models\ViewModels\Members\LoginVM.cs" />
+    <Compile Include="Models\ViewModels\Members\MembersListVM.cs" />
     <Compile Include="Models\ViewModels\Members\Role.cs" />
     <Compile Include="Models\ViewModels\News\NewsCommentIndexVM.cs" />
     <Compile Include="Models\ViewModels\News\NewsCreateVM.cs" />
@@ -370,6 +373,7 @@
     <Compile Include="Models\ViewModels\Orders\OrderEditVM.cs" />
     <Compile Include="Models\ViewModels\Orders\OrderIndexVM.cs" />
     <Compile Include="Models\ViewModels\Orders\OrderInfoVM.cs" />
+    <Compile Include="Models\ViewModels\Products\ProductEditImgVM.cs" />
     <Compile Include="Models\ViewModels\Products\ProductEditVM.cs" />
     <Compile Include="Models\ViewModels\Products\ProductIndexVM.cs" />
     <Compile Include="Models\ViewModels\StockInSheets\StockInSheetIndexVM.cs" />
@@ -529,13 +533,18 @@
     <Content Include="Views\Games\AddProduct.cshtml" />
     <Content Include="Views\BackendMembers\NotAuthorize.cshtml" />
     <Content Include="Views\Products\EditProduct.cshtml" />
-    <Content Include="Views\Boards\test.cshtml" />
     <Content Include="Views\NewsComments\Details.cshtml" />
     <Content Include="Views\Inventory\Create.cshtml" />
     <Content Include="Views\Inventory\Edit.cshtml" />
     <Content Include="Views\StockInSheets\Index.cshtml" />
     <Content Include="Views\StockInSheets\Create.cshtml" />
     <Content Include="Views\StockInSheets\Edit.cshtml" />
+    <Content Include="Views\Products\EditProducImg2.cshtml" />
+    <Content Include="Views\Products\EditProducImg.cshtml" />
+    <Content Include="Views\BackendMembers\Register.cshtml" />
+    <Content Include="Views\BackendMembers\ConfirmRegister.cshtml" />
+    <Content Include="Views\BackendMembersList\Create.cshtml" />
+    <Content Include="Views\Members\Details.cshtml" />
     <Content Include="Views\OrderItemReturns\Index.cshtml" />
     <Content Include="Views\OrderItemReturns\Details.cshtml" />
     <Content Include="Views\OrderItemReturns\Edit.cshtml" />

@@ -20,7 +20,7 @@
 <h2>討論區列表</h2>
 
 <div class="d-flex">
-    <button type="button" class="btn btn-primary ms-auto me-0 mb-2" id="addBoardBtn">新增看板</button>
+    <button type="button" class="btn btn-primary ms-auto me-0 mb-2" id="callAddBoardBtn">新增看板</button>
 </div>
 
 
@@ -37,7 +37,7 @@
 </table>
 
 
-<div class="modal" id="myModal" tabindex="-1">
+<div class="modal" id="myModal" tabindex="-2">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -57,9 +57,33 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-warning" id="editBtn">Edit</button>
-                <button type="button" class="btn btn-primary visually-hidden" id="saveBtn">Save changes</button>
-                <button type="button" class="btn btn-secondary" id="closeBtn" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="editBtn">編輯</button>
+                <button type="button" class="btn btn-outline-warning visually-hidden ms-0 me-auto" id="changeCoverBtn">修改封面</button>
+                <button type="button" class="btn btn-warning visually-hidden" id="saveBtn">儲存變更</button>
+                <button type="button" class="btn btn-secondary" id="closeBtn" data-bs-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="changeImgMd" tabindex="2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">修改封面</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="changeBoardImgdForm">
+                    <div class="row mx-3">
+                        <span class="opacity-75 small mt-4">上傳看板封面</span>
+                        <input type="file" class="d-block form-control mt-2" id="boardCoverChange" name="CoverFile">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer ">
+                <button type="button" class="btn btn-warning" id="uploadNewCover">變更圖片</button>
+                <button type="button" class="btn btn-secondary" id="closeBtn" data-bs-dismiss="modal">關閉</button>
             </div>
         </div>
     </div>
@@ -73,16 +97,20 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                        <span class="opacity-75 small">看板Id</span><input type="text" class="d-block form-control" id="boardIdAdd">
-                        <span class="opacity-75 small">看板名稱</span><input type="text" class="d-block form-control" id="boardNameAdd">
-                        <span class="opacity-75 small">看板封面</span><input type="file" class="d-block form-control" id="boardCoverAdd">
-                        <br/>
-                        <span class="opacity-75 small">關於</span><textarea type="text" id="boardAboutAdd"></textarea>>
-                </div>
+                <form id="addBoardForm">
+                    <div class="row mx-3">
+                        <span class="opacity-75 small mt-4">看板名稱</span>
+                        <input type="text" class="d-block form-control mt-2" id="boardNameAdd" name="Name">
+                        <span class="opacity-75 small mt-4">看板封面</span>
+                        <input type="file" class="d-block form-control mt-2" id="boardCoverAdd" name="CoverFile">
+                        <br />
+                        <span class="opacity-75 small mt-4">關於</span>
+                        <textarea class="mt-2" type="text" id="boardAboutAdd" name="BoardAbout"></textarea>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="AddBtn">Add</button>
+                <button type="button" class="btn btn-primary" id="addBtn">Add</button>
                 <button type="button" class="btn btn-secondary" id="closeBtn" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -103,10 +131,9 @@
 
         const baseAddress = 'https://localhost:44398';
         let boardId;
-        let coverImg;
+        let updatedImageURL;
         let editedName;
         let editedAbout;
-
 
         $("#boardName").on("keyup", function () {
             editedName = $("#boardName").text();
@@ -118,6 +145,20 @@
         })
         $('#myModal').on('hidden.bs.modal', InitEditBtn)
 
+        function InitEditBtn() {
+            // 將看板名稱和關於欄位變回不可編輯的形式
+            $("#boardName").attr("contenteditable", "false");
+            $("#boardAbout").attr("contenteditable", "false");
+            // 隱藏保存按鈕，顯示編輯按鈕
+            $("#saveBtn").addClass("visually-hidden");
+            $("#changeCoverBtn").addClass("visually-hidden");
+            $("#editBtn").removeClass("visually-hidden");
+        }
+        function clearForm() {
+            document.getElementById('boardNameAdd').value = '';
+            document.getElementById('boardCoverAdd').value = '';
+            document.getElementById('boardAboutAdd').value = '';
+        }
         function SaveEdit() {
             ditedName = $("#boardName").text();
             editedAbout = $("#boardAbout").text();
@@ -158,14 +199,83 @@
                     })
                 })
         }
-        function InitEditBtn() {
-            // 將看板名稱和關於欄位變回不可編輯的形式
-            $("#boardName").attr("contenteditable", "false");
-            $("#boardAbout").attr("contenteditable", "false");
+        function AddBoard(formdata) {
+            //var formData = new FormData($("#yourFormId")[0]);
 
-            // 隱藏保存按鈕，顯示編輯按鈕
-            $("#saveBtn").addClass("visually-hidden");
-            $("#editBtn").removeClass("visually-hidden");
+            $.ajax({
+                type: 'POST',
+                url: `${baseAddress}/api/BoardsApi`,
+                data: formdata,
+                contentType: false,
+                processData: false
+            })
+
+                .done(data => {
+                    console.log(data);
+                    if (data.IsSuccess) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '成功',
+                            text: JSON.stringify(data.Message)
+                        }).then(() => {
+                            $('#boardtable').DataTable().ajax.reload();
+                            clearForm()
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '失敗',
+                            text: JSON.stringify(data.Message)
+                        });
+                    }
+                })
+                .fail(err => {
+                    console.log('no...')
+                    Swal.fire({
+                        icon: 'error',
+                        title: '失敗',
+                        text: err.statusText
+                    })
+                })
+        }
+        function changeBoardImg(formdata) {
+            //var formData = new FormData($("#yourFormId")[0]);
+            $.ajax({
+                type: 'PUT',
+                url: `${baseAddress}/api/BoardsApi/${boardId}/Image`,
+                data: formdata,
+                contentType: false,
+                processData: false
+            })
+                .done(data => {
+                    console.log(data);
+                    if (data.IsSuccess) {
+                        updatedImageURL = `${baseAddress}${data.OptionContent}`
+                        Swal.fire({
+                            icon: 'success',
+                            title: '成功',
+                            text: JSON.stringify(data.Message)
+                        }).then(() => {
+                            $('#boardtable').DataTable().ajax.reload();
+                            $('#boardImage').attr('src', updatedImageURL);
+                            clearForm();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '失敗',
+                            text: JSON.stringify(data.Message)
+                        });
+                    }
+                })
+                .fail(err => {
+                    console.log('no...')
+                    Swal.fire({
+                        icon: 'error',
+                        title: '失敗',
+                        text: err.statusText
+                    })
+                })
         }
 
         $(document).ready(function () {
@@ -209,7 +319,6 @@
                         });
                     }
                 })
-
             // 點擊編輯按鈕時的事件處理函式
             $("#editBtn").on("click", function () {
                 // 將看板名稱和關於欄位變成可編輯的形式
@@ -219,8 +328,12 @@
                 // 隱藏編輯按鈕，顯示保存按鈕
                 $("#editBtn").addClass("visually-hidden");
                 $("#saveBtn").removeClass("visually-hidden");
-            });
+                $("#changeCoverBtn").removeClass("visually-hidden");
 
+            });
+            $("#changeCoverBtn").on("click", function () {
+                $('#changeImgMd').modal('show');
+            })
             // 點擊保存按鈕時的事件處理函式
             $("#saveBtn").on("click", function () {
 
@@ -239,25 +352,46 @@
                         InitEditBtn()
                     }
                 });
-
-
-
-
-                //// 獲取編輯後的看板名稱和關於內容
-                //SaveEdit();
-                //// 將看板名稱和關於欄位變回不可編輯的形式
-                //$("#boardName").attr("contenteditable", "false");
-                //$("#boardAbout").attr("contenteditable", "false");
-
-                //// 隱藏保存按鈕，顯示編輯按鈕
-                //$("#saveBtn").addClass("visually-hidden");
-                //$("#editBtn").removeClass("visually-hidden");
             });
-
-            $('#addBoardBtn').on('click', function () {
+            $('#callAddBoardBtn').on('click', function () {
                 $('#AddModal').modal('show');
             })
-
+            $('#addBtn').on('click', function () {
+                // 顯示確認對話框
+                Swal.fire({
+                    title: '確認',
+                    text: '此動作將新增一個看板，你確定嗎？',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '確定',
+                    cancelButtonText: '取消'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // 使用者選擇確定，執行 SaveEdit()
+                        var formData = new FormData($("#addBoardForm")[0]);
+                        AddBoard(formData);
+                        document.getElementById('boardCoverAdd').value = '';
+                    }
+                })
+            })
+            $('#uploadNewCover').on('click', function () {
+                // 顯示確認對話框
+                Swal.fire({
+                    title: '確認',
+                    text: '此動作將更新封面，你確定嗎？',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '確定',
+                    cancelButtonText: '取消'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // 使用者選擇確定，執行 SaveEdit()
+                        var formData = new FormData($("#changeBoardImgdForm")[0]);
+                        changeBoardImg(formData);
+                        document.getElementById('boardCoverChange').value = '';
+                    }
+                });
+            })
         });
 
 

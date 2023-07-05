@@ -114,7 +114,10 @@
 					@Html.DisplayFor(modelItem => item.Title)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.ScheduleDate)
+					@*@Html.DisplayFor(modelItem => item.ScheduleDate)*@
+					<span>@item.ScheduleDate.ToShortDateString()</span>
+					<br />
+					<span>@item.ScheduleDate.ToShortTimeString()</span>
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.BackendMemberName)

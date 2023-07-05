@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Mvc;
 using TataGamedom.Filters;
 using TataGamedom.Models.EFModels;
+using TataGamedom.Models.Infra;
 using TataGamedom.Models.ViewModels.Members;
 using TataGamedom.Models.ViewModels.News;
 
@@ -21,7 +22,8 @@ namespace TataGamedom.Controllers
         private AppDbContext db = new AppDbContext();
         private string _connstr = System.Configuration.ConfigurationManager.ConnectionStrings["AppDbContext"].ToString();
 		// GET: BackendMembersList
-        
+
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
 		public ActionResult Index()
         {
             using (var con = new SqlConnection(_connstr))
@@ -39,6 +41,7 @@ LEFT JOIN BackendMembersRolesCodes AS bmr ON bmr.Id = bm.BackendMembersRoleId";
         }
 
 		// GET: BackendMembersList/Details/5
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
 		public ActionResult Details(int? id)
         {
             if (id == null)
@@ -53,8 +56,9 @@ LEFT JOIN BackendMembersRolesCodes AS bmr ON bmr.Id = bm.BackendMembersRoleId";
             return View(backendMember);
         }
 
-        // GET: BackendMembersList/Edit/5
-        public ActionResult Edit(int? id)
+		// GET: BackendMembersList/Edit/5
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
+		public ActionResult Edit(int? id)
         {
             if (id == null)
             {
@@ -86,6 +90,7 @@ LEFT JOIN BackendMembersRolesCodes AS bmr ON bmr.Id = bm.BackendMembersRoleId";
         // POST: BackendMembersList/Edit/5
         // 若要免於大量指派 (overposting) 攻擊，請啟用您要繫結的特定屬性，
         // 如需詳細資料，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
+        [AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(BackendMembersListVM list)
@@ -107,46 +112,129 @@ LEFT JOIN BackendMembersRolesCodes AS bmr ON bmr.Id = bm.BackendMembersRoleId";
             ViewBag.BackendMembersRoleId = new SelectList(db.BackendMembersRolesCodes, "Id", "Name", list.BackendMembersRoleId);
             return View(list);
         }
-			//public ActionResult Edit([Bind(Include = "Id,Name,Account,Password,Birthday,Email,Phone,BackendMembersRoleId,RegistrationDate,ActiveFlag")] BackendMember backendMember)
-			//{
-			//    if (ModelState.IsValid)
-			//    {
-			//        db.Entry(backendMember).State = EntityState.Modified;
-			//        db.SaveChanges();
-			//        return RedirectToAction("Index");
-			//    }
-			//    ViewBag.BackendMembersRoleId = new SelectList(db.BackendMembersRolesCodes, "Id", "Name", backendMember.BackendMembersRoleId);
-			//    return View(backendMember);
-			//}
 
 
-			// GET: BackendMembersList/Delete/5
-			public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            BackendMember backendMember = db.BackendMembers.Find(id);
-            if (backendMember == null)
-            {
-                return HttpNotFound();
-            }
-            return View(backendMember);
-        }
+		//// GET: BackendMembersList/Delete/5
+		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
+		//public ActionResult Delete(int? id)
+  //      {
+  //          if (id == null)
+  //          {
+  //              return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+  //          }
+  //          BackendMember backendMember = db.BackendMembers.Find(id);
+  //          if (backendMember == null)
+  //          {
+  //              return HttpNotFound();
+  //          }
+  //          return View(backendMember);
+  //      }
 
-        // POST: BackendMembersList/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            BackendMember backendMember = db.BackendMembers.Find(id);
-            db.BackendMembers.Remove(backendMember);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+		//// POST: BackendMembersList/Delete/5
+		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
+		//[HttpPost, ActionName("Delete")]
+  //      [ValidateAntiForgeryToken]
+  //      public ActionResult DeleteConfirmed(int id)
+  //      {
+  //          BackendMember backendMember = db.BackendMembers.Find(id);
+  //          db.BackendMembers.Remove(backendMember);
+  //          db.SaveChanges();
+  //          return RedirectToAction("Index");
+  //      }
 
-        protected override void Dispose(bool disposing)
+
+		// GET: BackendMembersList/Create
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
+		public ActionResult Create()
+		{
+			ViewBag.BackendMembersRoleId = new SelectList(db.BackendMembersRolesCodes, "Id", "Name");
+			return View();
+		}
+
+		// POST: BackendMembersList/Create
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Create(BackendMembersListVM list)
+		{
+			if (ModelState.IsValid)
+			{
+		
+				using (var con = new SqlConnection(_connstr))
+				{
+					string sql = @"INSERT INTO BackendMembers (Name, Account, Password, Birthday, Email, Phone, RegistrationDate, BackendMembersRoleId, ActiveFlag)
+                           VALUES (@Name, @Account, @Password, @Birthday, @Email, @Phone, GETDATE(), @BackendMembersRoleId, 1);
+                           SELECT CAST(SCOPE_IDENTITY() as int);";
+
+                    //雜湊密碼
+					var salt = HashUtility.GetSalt();
+					var hashPwd = HashUtility.ToSHA256(list.Password, salt);
+
+					var parameters = new
+					{
+						list.Name,
+						list.Account,
+						Password = hashPwd,
+						list.Birthday,
+						list.Email,
+						list.Phone,
+						list.BackendMembersRoleId
+					};
+
+                    con.Query<int>(sql, parameters);
+
+					ViewBag.BackendMembersRoleId = new SelectList(db.BackendMembersRolesCodes, "Id", "Name", list.BackendMembersRoleId);
+
+					return RedirectToAction("Index");
+				}
+			}
+			return View(list);
+		}
+
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken]
+		public ActionResult Delete(int id)
+		{
+			var currentUserAccount = User.Identity.Name;
+			var backendMember = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
+
+			if (backendMember != null)
+			{
+				using (var con = new SqlConnection(_connstr))
+				{
+					string sql = @"UPDATE BackendMembers SET ActiveFlag = 0
+WHERE Id = @Id";
+
+					con.Execute(sql, new { BackendMemberId = backendMember.Id, Id = id });
+				}
+			}
+			return RedirectToAction("Index");
+		}
+
+
+
+		[HttpPost, ActionName("Reduction")]
+		[ValidateAntiForgeryToken]
+		public ActionResult Reduction(int id)
+		{
+			var currentUserAccount = User.Identity.Name;
+			var backendMember = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
+
+			if (backendMember != null)
+			{
+				using (var con = new SqlConnection(_connstr))
+				{
+					string sql = @"UPDATE BackendMembers SET ActiveFlag = 1
+WHERE Id = @Id";
+
+					con.Execute(sql, new { BackendMemberId = backendMember.Id, Id = id });
+				}
+			}
+			return RedirectToAction("Index");
+		}
+
+
+		protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
