@@ -10,5 +10,7 @@ namespace TataGamedom.Models.Interfaces
 	public interface ICouponRepository
 	{
 		IEnumerable<CouponIndexVM> Get();
+
+		bool Create(CouponCreateVM vm);
 	}
 }
