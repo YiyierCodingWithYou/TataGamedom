@@ -546,7 +546,6 @@
     <Content Include="Views\StockInSheets\Index.cshtml" />
     <Content Include="Views\StockInSheets\Create.cshtml" />
     <Content Include="Views\StockInSheets\Edit.cshtml" />
-    <Content Include="Views\Products\EditProducImg2.cshtml" />
     <Content Include="Views\Products\EditProducImg.cshtml" />
     <Content Include="Views\BackendMembers\Register.cshtml" />
     <Content Include="Views\BackendMembers\ConfirmRegister.cshtml" />
