@@ -26,10 +26,42 @@ namespace TataGamedom.Controllers
 		private AppDbContext db = new AppDbContext();
 
 		// GET: BackendMembers
+		[Authorize]
 		public ActionResult Index()
 		{
 			return View();
 		}
+
+		public ActionResult LoginTest()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult LoginTest(LoginVM vm)
+		{
+			if (ModelState.IsValid == false) return View();
+			Result result = ValidLogin(vm);
+
+			if (result.IsSuccess != true)
+			{
+				ModelState.AddModelError("", result.ErrorMessage);
+				return View(vm);
+			}
+			const bool rememberMe = false;
+
+			var processResult = ProcessLogin(vm.Account, rememberMe);
+			Response.Cookies.Add(processResult.cookie);
+
+			// 在登录成功后的逻辑中获取BackendMembersRoleId，并存储在Session中
+			int backendMembersRoleId = GetBackendMembersRoleIdByUsername(vm.Account); // 根据用户名查询BackendMembersRoleId的逻辑，你需要根据实际情况实现该方法
+			HttpContext.Session["BackendMembersRoleId"] = backendMembersRoleId;
+
+			return Redirect(processResult.returnUrl);
+		}
+
+
 
 		public ActionResult Login()
 		{
@@ -60,7 +92,7 @@ namespace TataGamedom.Controllers
 			return Redirect(processResult.returnUrl);
 		}
 
-	
+
 
 		//[HttpPost]
 		//[ValidateAntiForgeryToken]
@@ -88,7 +120,7 @@ namespace TataGamedom.Controllers
 			return Redirect("/BackendMembers/Login");
 		}
 
-
+		[Authorize]
 		public ActionResult EditProfile()
 		{
 			var currentUserAccount = User.Identity.Name;
@@ -98,6 +130,7 @@ namespace TataGamedom.Controllers
 			return View(model);
 		}
 
+		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult EditProfile(EditProfileVM vm)
