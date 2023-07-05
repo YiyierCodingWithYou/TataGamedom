@@ -17,5 +17,8 @@ namespace TataGamedom.Models.Interfaces
 		string GetProductIndex(int productId);
 		void Update(InventoryItemDto dto);
 		InventoryItemDto GetByIndex(string index);
+
+		void bulkUpdate();
+
 	}
 }
