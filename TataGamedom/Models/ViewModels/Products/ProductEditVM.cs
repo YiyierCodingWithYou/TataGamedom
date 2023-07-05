@@ -15,11 +15,13 @@ namespace TataGamedom.Models.ViewModels.Products
 		public int GameId { get; set; }
         [Display(Name = "遊戲名稱")]
 		public string GameName { get; set; }
-        public string Description { get; set; }
+		[Display(Name = "遊戲介紹")]
+		public string Description { get; set; }
         [Display(Name = "虛擬商品")]
 		[Required]
 		public bool IsVirtual { get; set; }
 		[Display(Name = "售價")]
+		[Range(1, int.MaxValue, ErrorMessage = "數字必須大於0")]
 		[Required]
 		public int Price { get; set; }
 		[Display(Name = "平台")]
@@ -32,6 +34,7 @@ namespace TataGamedom.Models.ViewModels.Products
 		[Required]
 		public int ProductStatus { get; set; }
 		[Display(Name = "發售日")]
+		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
 		[Required]
 		public DateTime SaleDate { get; set; }
 		[Display(Name = "最後修改者")]
