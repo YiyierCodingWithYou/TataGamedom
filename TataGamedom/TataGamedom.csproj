@@ -334,6 +334,8 @@
     <Compile Include="Models\Services\OrderService.cs" />
     <Compile Include="Models\Services\ProductService.cs" />
     <Compile Include="Models\Services\StockInSheetService.cs" />
+    <Compile Include="Models\ViewModels\Coupons\CouponCreateVM.cs" />
+    <Compile Include="Models\ViewModels\Coupons\CouponEditVM.cs" />
     <Compile Include="Models\ViewModels\Coupons\CouponIndexVM.cs" />
     <Compile Include="Models\ViewModels\CustomerServices\FAQIndexVM.cs" />
     <Compile Include="Models\ViewModels\CustomerServices\FAQsCreateVM.cs" />
@@ -392,7 +394,6 @@
     <Content Include="favicon.ico" />
     <Content Include="Files\Images\otter.png" />
     <Content Include="Files\Mails\77_gmail.com 20230628_174620.txt" />
-    <Content Include="Files\Uploads\zelda.jpg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="lib\datatables\css\dataTables.bootstrap.css" />
@@ -535,6 +536,8 @@
     <Content Include="Views\BackendMembers\ConfirmRegister.cshtml" />
     <Content Include="Views\BackendMembersList\Create.cshtml" />
     <Content Include="Views\Members\Details.cshtml" />
+    <Content Include="Views\Coupons\Create.cshtml" />
+    <Content Include="Views\Coupons\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
