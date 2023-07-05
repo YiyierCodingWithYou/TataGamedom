@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace TataGamedom.Models.Dtos.PostsComments
+namespace TataGamedom.Models.ViewModels.PostsComments
 {
-	public class PostsAndCommentsListDto
+	public class PostsCommentsListVm
 	{
+		public int BoardId { get; set; }
+		public string BoardName { get; set; }
 		public string Type { get; set; }
 		public int ID { get; set; }
 		public int? RespondedPost { get; set; }
@@ -18,6 +20,10 @@ namespace TataGamedom.Models.Dtos.PostsComments
 		public int LikesCount { get; set; }
 		public int UnlikesCount { get; set; }
 		public int CommentsCount { get; set; }
+		public bool ActiveFlag { get; set; }
+		public DateTime DeleteDateTime { get; set; }
+		public int DeleteBackendMemberId { get; set; }
+		public int DeleteMemberName { get; set; }
 
 	}
 }
