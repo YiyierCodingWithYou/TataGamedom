@@ -16,6 +16,8 @@ namespace TataGamedom.Models.Infra.DapperRepositories
 	public class GameDapperRepository : IGameRepository
 	{
 		private string _connStr;
+		private AppDbContext db = new AppDbContext();
+
 		public GameDapperRepository()
 		{
 			_connStr = System.Configuration.ConfigurationManager.ConnectionStrings["AppDbContext"].ToString();
@@ -207,6 +209,15 @@ VALUES(@Index, @GameId, @IsVirtual, @Price, @GamePlatformId, @SystemRequire, @Pr
 				var rowAffected = conn.Execute(sql, productImage);
 				return rowAffected > 0;
 			}
+		}
+		public bool IsDuplicateChineseName(int gameId, string chiName)
+		{
+			return db.Games.Any(g => g.Id != gameId && g.ChiName == chiName);
+		}
+
+		public bool IsDuplicateEnglishName(int gameId, string engName)
+		{
+			return db.Games.Any(g => g.Id != gameId && g.EngName == engName);
 		}
 	}
 }

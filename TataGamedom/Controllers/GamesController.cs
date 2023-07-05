@@ -177,9 +177,20 @@ namespace TataGamedom.Controllers
 					return RedirectToAction("Index");
 				}
 				ModelState.AddModelError(string.Empty, editResult.ErrorMessage);
-				return View(vm);
+				List<GameClassificationsCode> gameClassifications2 = GetGameClassifications();
+				GameEditVM model2 = new GameEditVM
+				{
+					GameClassification = gameClassifications2
+				};
+				return View(model2);
+				
 			}
-			return View(vm);
+			List<GameClassificationsCode> gameClassifications3 = GetGameClassifications();
+			GameEditVM model3 = new GameEditVM
+			{
+				GameClassification = gameClassifications3
+			};
+			return View(model3);
 		}
 		private void CreateGameClassification(GameEditVM vm)
 		{
