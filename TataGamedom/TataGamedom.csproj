@@ -205,6 +205,7 @@
     <Compile Include="Controllers\MembersController.cs" />
     <Compile Include="Controllers\NewsCommentsController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
+    <Compile Include="Controllers\OrderItemReturnsController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\PostsApiController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
@@ -223,6 +224,9 @@
     <Compile Include="Models\Dtos\Games\GameIndexDto.cs" />
     <Compile Include="Models\Dtos\Members\LoginDto.cs" />
     <Compile Include="Models\Dtos\Members\RegisterDto.cs" />
+    <Compile Include="Models\Dtos\OrderItemReturns\OrderItemReturnDetailDto.cs" />
+    <Compile Include="Models\Dtos\OrderItemReturns\OrderItemReturnDto.cs" />
+    <Compile Include="Models\Dtos\OrderItemReturns\OrderItemReturnIndexDto.cs" />
     <Compile Include="Models\Dtos\Orders\OrderDto.cs" />
     <Compile Include="Models\Dtos\Orders\OrderIndexDto.cs" />
     <Compile Include="Models\Dtos\Orders\OrderInfoDto.cs" />
@@ -289,7 +293,10 @@
     <Compile Include="Models\EFModels\StockInStatusCode.cs" />
     <Compile Include="Models\EFModels\Supplier.cs" />
     <Compile Include="Models\Infra\ApiResult.cs" />
+    <Compile Include="Models\Infra\DapperRepositories\OrderItemReturnRepository.cs" />
     <Compile Include="Models\Infra\SimpleHelper.cs" />
+    <Compile Include="Models\Interfaces\IOrderItemReturnRepository.cs" />
+    <Compile Include="Models\Services\OrderItemReturnService.cs" />
     <Compile Include="Models\ViewModels\Boards\BoardCreateEditorVM.cs" />
     <Compile Include="Models\ViewModels\Boards\BoardListVM.cs" />
     <Compile Include="Models\Dtos\Members\EditProfileDto.cs" />
@@ -359,6 +366,9 @@
     <Compile Include="Models\ViewModels\News\NewsIndexVM.cs" />
     <Compile Include="Models\ViewModels\Members\RegisterVM.cs" />
     <Compile Include="Models\ViewModels\Members\ResetPasswordVM.cs" />
+    <Compile Include="Models\ViewModels\OrderItemReturns\OrderItemReturnDetailVM.cs" />
+    <Compile Include="Models\ViewModels\OrderItemReturns\OrderItemReturnIndexVM.cs" />
+    <Compile Include="Models\ViewModels\OrderItemReturns\OrderItemReturnVM.cs" />
     <Compile Include="Models\ViewModels\Orders\OrderCreateVM.cs" />
     <Compile Include="Models\ViewModels\Orders\OrderEditVM.cs" />
     <Compile Include="Models\ViewModels\Orders\OrderIndexVM.cs" />
@@ -535,6 +545,11 @@
     <Content Include="Views\BackendMembers\ConfirmRegister.cshtml" />
     <Content Include="Views\BackendMembersList\Create.cshtml" />
     <Content Include="Views\Members\Details.cshtml" />
+    <Content Include="Views\OrderItemReturns\Index.cshtml" />
+    <Content Include="Views\OrderItemReturns\Details.cshtml" />
+    <Content Include="Views\OrderItemReturns\Edit.cshtml" />
+    <Content Include="Views\OrderItemReturns\Create.cshtml" />
+    <Content Include="Views\OrderItemReturns\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

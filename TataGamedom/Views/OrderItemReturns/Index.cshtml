@@ -1,0 +1,73 @@
+﻿@model IEnumerable<TataGamedom.Models.ViewModels.OrderItemReturns.OrderItemReturnIndexVM>
+
+@{
+    ViewBag.Title = "退貨單列表";
+}
+
+<h2>退貨單列表</h2>
+
+<p>
+    @Html.ActionLink("新增退貨單", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Index)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderIndex)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderItemIndex)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IssuedAt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompletedAt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsRefunded)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsReturned)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsResellable)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Index)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderIndex)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderItemIndex)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IssuedAt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CompletedAt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsRefunded)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsReturned)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsResellable)
+        </td>
+        <td>
+            @Html.ActionLink("明細", "Details", new { orderIndex = item.OrderIndex })
+        </td>
+    </tr>
+}
+
+</table>

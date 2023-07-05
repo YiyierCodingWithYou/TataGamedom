@@ -68,38 +68,54 @@ namespace TataGamedom.Controllers
 		{
             if (!ModelState.IsValid) return View(vm);
 
-			PrepareCreateOrderDataSource(vm.OrderStatusId, vm.PaymentStatusId, vm.ShipmemtMethodId, vm.ShipmentStatusId);
-            Result result = _service.Create(vm.ToDto());	
+			PrepareCreateOrderDataSource(vm.OrderStatusId, vm.PaymentStatusId, vm.ShipmentStatusId, vm.ShipmemtMethodId);
+
+            Result result = vm.MemberId != 0 && db.Members.Any(m => m.Id == vm.MemberId) == false ? Result.Fail("該會員編號不存在") 
+							: _service.Create(vm.ToDto());	
+
 			if (result.IsSuccess)
 			{
 				return RedirectToAction("Index");
 			}
 			else 
 			{
-                ModelState.AddModelError(string.Empty, result.ErrorMessage);
+                ModelState.AddModelError("MemberId", result.ErrorMessage);
                 return View(vm);
             }
 
 		}
 		private void PrepareCreateOrderDataSource(int? orderStatusId, int? paymentStatusId, int? shipmemtMethodId, int? shipmentStatusId)
-		{
-			var orderStatusSelectList = new List<SelectListItem>();
-			foreach (var osc in db.OrderStatusCodes) { orderStatusSelectList.Add(new SelectListItem { Value = osc.Id.ToString(), Text = osc.Name}); }
-			ViewBag.OrderStatuses = orderStatusSelectList;
+        {
+            #region Foreach SelectListItem
+            var orderStatusSelectList = new List<SelectListItem>(); 
+            foreach (var osc in db.OrderStatusCodes.Where(o => o.Id != 4)) 
+			{ 
+				orderStatusSelectList.Add(new SelectListItem { Value = osc.Id.ToString(), Text = osc.Name}); 
+			}
 
             var paymentStatusSelectList = new List<SelectListItem>();
-            foreach (var psc in db.PaymentStatusCodes) { paymentStatusSelectList.Add(new SelectListItem { Value = psc.Id.ToString(), Text = psc.Name }); }
-            ViewBag.PaymentStatuses = paymentStatusSelectList;
-
-            var shipmemtMethodSelectList = new List<SelectListItem>();
-            foreach (var smc in db.ShipmemtMethods) { shipmemtMethodSelectList.Add(new SelectListItem { Value = smc.Id.ToString(), Text = smc.Name }); }
-            ViewBag.ShipmemtMethods = shipmemtMethodSelectList;
+            foreach (var psc in db.PaymentStatusCodes.Where(p => p.Id <= 2)) 
+			{ 
+				paymentStatusSelectList.Add(new SelectListItem { Value = psc.Id.ToString(), Text = psc.Name }); 
+			}
 
             var shipmentStatusSelectList = new List<SelectListItem>();
-            foreach (var ssc in db.ShipmentStatusesCodes) { shipmentStatusSelectList.Add(new SelectListItem { Value = ssc.Id.ToString(), Text = ssc.Name }); }
-            ViewBag.ShipmentStatuses = shipmentStatusSelectList;
+            foreach (var ssc in db.ShipmentStatusesCodes.Where(s => s.Id <= 4)) 
+			{ 
+				shipmentStatusSelectList.Add(new SelectListItem { Value = ssc.Id.ToString(), Text = ssc.Name }); 
+			}
 
-		}
+            var shipmemtMethodSelectList = new List<SelectListItem>();
+            foreach (var smc in db.ShipmemtMethods)
+            {
+                shipmemtMethodSelectList.Add(new SelectListItem { Value = smc.Id.ToString(), Text = smc.Name });
+            }
+            #endregion
+            ViewBag.OrderStatuses = orderStatusSelectList;
+            ViewBag.PaymentStatuses = paymentStatusSelectList;
+			ViewBag.ShipmentStatuses = shipmentStatusSelectList;
+            ViewBag.ShipmemtMethods = shipmemtMethodSelectList;
+        }
 
 		public ActionResult Info(string index)
 		{

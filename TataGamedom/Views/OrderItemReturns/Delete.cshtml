@@ -1,0 +1,88 @@
+﻿@model TataGamedom.Models.ViewModels.OrderItemReturns.OrderItemReturnVM
+
+@{
+    ViewBag.Title = "刪除退貨單";
+}
+
+<h2>刪除退貨單</h2>
+
+<p class="text-danger">您確定要刪除此記錄?</p>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Index)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Index)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OrderItemId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OrderItemId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Reason)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Reason)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IssuedAt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IssuedAt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CompletedAt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CompletedAt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsRefunded)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsRefunded)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsReturned)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsReturned)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsResellable)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsResellable)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

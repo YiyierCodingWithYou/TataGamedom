@@ -1,0 +1,89 @@
+﻿@model IEnumerable<TataGamedom.Models.ViewModels.OrderItemReturns.OrderItemReturnDetailVM>
+
+@{
+    ViewBag.Title = "退貨單明細";
+}
+
+<h2>退貨單明細</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Index)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderIndex)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderItemIndex)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderItemProductPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InventoryItemIndex)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Reason)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IssuedAt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompletedAt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsRefunded)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsReturned)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsResellable)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Index)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderIndex)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderItemIndex)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderItemProductPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InventoryItemIndex)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Reason)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IssuedAt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CompletedAt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsRefunded)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsReturned)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsResellable)
+        </td>
+        <td>
+            @Html.ActionLink("編輯", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("刪除", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

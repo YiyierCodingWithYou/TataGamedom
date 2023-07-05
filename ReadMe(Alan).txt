@@ -1,5 +1,48 @@
 Working On
-[v]進貨單CRU
+調整
+Orders Create
+[v] 隱藏退貨、退款選項, 寄送方式下拉式debug
+[v] 檢查會員編號是否存在
+[] 貨態追蹤代碼對應寄送方式e.g. 7-11 11碼
+
+[] dataType => date設定成不能選擇今天以後的
+
+
+
+
+調整
+Orders
+[] C : 隱藏退貨、退款選項, 寄送方式下拉式debug, 貨態追蹤代碼對應寄送方式e.g. 7-11 11碼
+[] R : Detail  OrderItem Create debug，應改成新增訂單明細至該筆訂單  ;  View => 訂單主檔的部分跟訂單明細的部分拆開，商品圖套用 ; 回首頁
+[] U : 畫面呈現正在編輯哪筆訂單，及寄信功能; 下拉選單三種狀態的對應
+[] D : 新增讓空的主檔可以被刪除、被關聯的主檔被刪除會被提醒
+
+OrderItemReturn
+[] C : 一筆OrderItem只能被退貨一次，下拉清單不顯示已被退貨過的選項 ; 檢查編號是否產生
+[] R : Index 退款/退貨/重新入庫 改成文字 ; Detail 售價改#,# 退貨原訂單代碼獨立出來 
+[] U : Detail Edit 一筆OrderItem只能被退貨一次，下拉清單不顯示已被退貨過的選項
+[] D
+
+
+Inventory
+[] C : View 要改
+[] R : Index View要改 ;  detail 遊戲名稱獨立出來 / 新增篩選分頁, 已售出未售出
+[] U : Get 呈現原本的值(參考Order)
+[] D : 讓沒被關聯的可以刪
+
+
+StockInSheets
+[] C : Quantiry? 反正規化? ProductId? 
+[] R
+[] U : 若改成已入庫，到貨日自動getDate
+[] D
+
+#統一調整 
+Edit dataType => 沒get到日期 編號 ; Edit => 沒get到日期
+檢查VM 售價及成本 改#,#  or 套用自訂attribution
+清單頁 => 排序篩選分頁
+
+
 
 
 To Do
@@ -69,3 +112,9 @@ Completed
 
 07/03
 [v] 庫存 detail => 庫存明細CRU
+[v] 進貨單CRU
+
+07/04
+退貨單
+[v] Dto VM Exts
+[v] CRUD
