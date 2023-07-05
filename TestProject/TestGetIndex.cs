@@ -1,4 +1,5 @@
 using TataGamedom.Models.Dtos.InventoryItems;
+using TataGamedom.Models.Dtos.OrderItemReturns;
 using TataGamedom.Models.Dtos.Orders;
 using TataGamedom.Models.Dtos.StockInSheets;
 using TataGamedom.Models.Infra;
@@ -58,5 +59,16 @@ namespace TestProject
 			Assert.That(actualIndex, Is.EqualTo(expectedIndex));
 		}
 
+		[Test]
+		public void 目前OrderItemReturnsId最大值為92_OrderItemId為7002對應到OrderId訂單編號213()
+		{
+			var dto = new OrderItemReturnDto { IssuedAt = new DateTime(2023, 06, 30) };
+			var orderItemReturnIndexGenerator = new IndexGenerator(92);
+
+			string expectedIndex = "20230630訂單編號21393";
+			string actualIndex = orderItemReturnIndexGenerator.GetOrderItemReturnIndex(dto, "訂單編號213");
+
+			Assert.That(actualIndex, Is.EqualTo(expectedIndex));
+		}
 	}
 }

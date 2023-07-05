@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using TataGamedom.Models.Dtos.InventoryItems;
+using TataGamedom.Models.Dtos.OrderItemReturns;
 using TataGamedom.Models.Dtos.Orders;
 using TataGamedom.Models.Dtos.StockInSheets;
 using TataGamedom.Models.Interfaces;
@@ -37,5 +38,12 @@ namespace TataGamedom.Models.Infra
 		/// </summary>
 		/// <returns></returns>
 		public string GetStockInSheetIndex(StockInSheetDto dto) => string.Concat(dto.OrderRequestDate.ToString("yyyyMMdd"), dto.SupplierId, _Id + 1);
+
+		/// <summary>
+		/// "命名規則: IssuedAt + 對應到的訂單Index + Id"
+		/// </summary>
+		public string GetOrderItemReturnIndex(OrderItemReturnDto dto, string orderIndex)
+			=> string.Concat(dto.IssuedAt.ToString("yyyyMMdd"), orderIndex, _Id + 1);
+		
 	}
 }
