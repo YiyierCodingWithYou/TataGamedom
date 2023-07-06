@@ -567,6 +567,7 @@
     <Content Include="Views\NewsCategory\Index.cshtml" />
     <Content Include="Views\BackendMembers\LoginTEST.cshtml" />
     <Content Include="Views\PostsComments\Index.cshtml" />
+    <Content Include="Views\Members\_MembersList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
