@@ -54,13 +54,28 @@ namespace TataGamedom.Controllers
 			var memberInDb = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
 
 			var savedFileName = SaveFile(file1);
-			if (savedFileName == null)
-			{
-				ModelState.AddModelError("GameCoverImg", "請選擇檔案");
-				return View(vm);
-			}
+			//if (savedFileName == string.Empty)
+			//{
+			//	ModelState.AddModelError("GameCoverImg", "請選擇檔案");
+			//	List<GameClassificationsCode> gameClassifications = GetGameClassifications();
+			//	GameCreateVM model = new GameCreateVM
+			//	{
+			//		GameClassification = gameClassifications
+			//	};
+			//	return View(model);
+			//}
 			vm.GameCoverImg = savedFileName;
 			vm.CreatedBackendMemberId = memberInDb.Id;
+			//if (vm.SelectedGameClassification.Count == 0)
+			//{
+			//	ModelState.AddModelError("SelectedGameClassification", "請選擇遊戲分類！");
+			//	List<GameClassificationsCode> gameClassifications = GetGameClassifications();
+			//	GameCreateVM model = new GameCreateVM
+			//	{
+			//		GameClassification = gameClassifications
+			//	};
+			//	return View(model);
+			//}
 			if (ModelState.IsValid)
 			{
 				List<int> selectedGameClassifications = vm.SelectedGameClassification;
@@ -86,10 +101,26 @@ namespace TataGamedom.Controllers
 					return RedirectToAction("Index");
 				}
 				ModelState.AddModelError(string.Empty, createResult.ErrorMessage);
-				return View(vm);
+				List<GameClassificationsCode> gameClassifications2 = GetGameClassifications();
+				GameCreateVM model2 = new GameCreateVM
+				{
+					GameClassification = gameClassifications2
+				};
+				return View(model2);
 			}
+
 			return View(vm);
 		}
+
+		//private void GetGameClassificationsForEdit()
+		//{
+		//	List<GameClassificationsCode> gameClassifications = GetGameClassifications();
+		//	GameCreateVM model = new GameCreateVM
+		//	{
+		//		GameClassification = gameClassifications
+		//	};
+		//	return View(model);
+		//}
 
 		private void CreateGameBoard(GameCreateVM vm)
 		{
@@ -177,9 +208,20 @@ namespace TataGamedom.Controllers
 					return RedirectToAction("Index");
 				}
 				ModelState.AddModelError(string.Empty, editResult.ErrorMessage);
-				return View(vm);
+				List<GameClassificationsCode> gameClassifications2 = GetGameClassifications();
+				GameEditVM model2 = new GameEditVM
+				{
+					GameClassification = gameClassifications2
+				};
+				return View(model2);
+
 			}
-			return View(vm);
+			List<GameClassificationsCode> gameClassifications3 = GetGameClassifications();
+			GameEditVM model3 = new GameEditVM
+			{
+				GameClassification = gameClassifications3
+			};
+			return View(model3);
 		}
 		private void CreateGameClassification(GameEditVM vm)
 		{

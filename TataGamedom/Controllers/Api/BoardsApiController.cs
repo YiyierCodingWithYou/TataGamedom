@@ -31,9 +31,9 @@ namespace TataGamedom.Controllers
 			{
 				return null;
 			}
-			return db.Boards.Select(board=> new BoardListVM
+			return db.Boards.Select(board => new BoardListVM
 			{
-				Id= board.Id,
+				Id = board.Id,
 				BoardHeaderCoverImg = "/Files/Uploads/" + board.BoardHeaderCoverImg,
 				Name = board.Name,
 				GameName = board.GameId != null ? (board.Game.ChiName + " | " + board.Game.EngName) : "",
@@ -86,7 +86,7 @@ namespace TataGamedom.Controllers
 			BoardEditDto dto = new BoardEditDto
 			{
 				Id = vm.Id ?? 0,
-				Name= vm.Name,
+				Name = vm.Name,
 				BoardAbout = vm.BoardAbout,
 			};
 
@@ -130,10 +130,10 @@ namespace TataGamedom.Controllers
 		[ResponseType(typeof(ApiResult))]
 		public async Task<ApiResult> PutBoardImg(int id)
 		{
-			string uniqueFileName="", BoardHeaderCoverImgPath="", fileName="";
+			string uniqueFileName = "", BoardHeaderCoverImgPath = "", fileName = "";
 
-			var  board = db.Boards.Find(id);
-			if(board == null)
+			var board = db.Boards.Find(id);
+			if (board == null)
 			{
 				return ApiResult.Fail("NotFound");
 			}
@@ -152,7 +152,7 @@ namespace TataGamedom.Controllers
 			{
 				return ApiResult.Fail("說好的檔案呢");
 			}
-			
+
 			else
 			{
 				var fileData = provider.FileData[0];
@@ -235,7 +235,7 @@ namespace TataGamedom.Controllers
 				BoardAbout = provider.FormData["BoardAbout"],
 				BoardHeaderCoverImg = null
 			};
-			
+
 			string fileName = string.Empty;
 
 			if (provider.FileData.Count > 0)
@@ -323,21 +323,33 @@ namespace TataGamedom.Controllers
 		}
 
 
-		// DELETE: api/BoardsApi/5
-		//[ResponseType(typeof(Board))]
-		//public IHttpActionResult DeleteBoard(int id)
-		//{
-		//	Board board = db.Boards.Find(id);
-		//	if (board == null)
-		//	{
-		//		return NotFound();
-		//	}
+		//DELETE: api/BoardsApi/5
+		[ResponseType(typeof(ApiResult))]
+		public ApiResult DeleteBoard(int id)
+		{
+			Board board = db.Boards.Find(id);
 
-		//	db.Boards.Remove(board);
-		//	db.SaveChanges();
+			if (board == null)
+			{
+				return ApiResult.Fail("找不到這筆資料");
+			}
+			if (board.GameId != null)
+			{
+				return ApiResult.Fail("無法刪除遊戲相關版");
+			}
 
-		//	return Ok(board);
-		//}
+			try
+			{
+				db.Boards.Remove(board);
+				db.SaveChanges();
+				return ApiResult.Success("完成刪除");
+			}
+			catch (Exception ex)
+			{
+				return ApiResult.Fail("無法刪除：" + ex.Message);
+			}
+
+		}
 
 		protected override void Dispose(bool disposing)
 		{

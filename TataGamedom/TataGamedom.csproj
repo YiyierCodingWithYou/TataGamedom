@@ -251,9 +251,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Api\CommentsApiController.cs" />
     <Compile Include="Controllers\BackendMembersController.cs" />
     <Compile Include="Controllers\BackendMembersListController.cs" />
-    <Compile Include="Controllers\BoardsApiController.cs" />
+    <Compile Include="Controllers\Api\BoardsApiController.cs" />
     <Compile Include="Controllers\FAQController.cs" />
     <Compile Include="Controllers\BoardsController.cs" />
     <Compile Include="Controllers\CouponsController.cs" />
@@ -262,11 +263,13 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\MembersController.cs" />
+    <Compile Include="Controllers\NewsCategoryController.cs" />
     <Compile Include="Controllers\NewsCommentsController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\OrderItemReturnsController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
-    <Compile Include="Controllers\PostsApiController.cs" />
+    <Compile Include="Controllers\Api\PostsApiController.cs" />
+    <Compile Include="Controllers\PostsCommentsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\StockInSheetsController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
@@ -290,7 +293,6 @@
     <Compile Include="Models\Dtos\Orders\OrderDto.cs" />
     <Compile Include="Models\Dtos\Orders\OrderIndexDto.cs" />
     <Compile Include="Models\Dtos\Orders\OrderInfoDto.cs" />
-    <Compile Include="Models\Dtos\PostsComments\PostsAndCommntsListDto.cs" />
     <Compile Include="Models\Dtos\StockInSheets\StockInSheetDto.cs" />
     <Compile Include="Models\Dtos\StockInSheets\StockInSheetIndexDto.cs" />
     <Compile Include="Models\Dtos\Boards\BoardCreateDto.cs" />
@@ -403,7 +405,10 @@
     <Compile Include="Models\Services\OrderService.cs" />
     <Compile Include="Models\Services\ProductService.cs" />
     <Compile Include="Models\Services\StockInSheetService.cs" />
+    <Compile Include="Models\ViewModels\Coupons\CouponCreateVM.cs" />
+    <Compile Include="Models\ViewModels\Coupons\CouponEditVM.cs" />
     <Compile Include="Models\ViewModels\Coupons\CouponIndexVM.cs" />
+    <Compile Include="Models\ViewModels\Coupons\EditCouponProductsVM.cs" />
     <Compile Include="Models\ViewModels\CustomerServices\FAQIndexVM.cs" />
     <Compile Include="Models\ViewModels\CustomerServices\FAQsCreateVM.cs" />
     <Compile Include="Models\ViewModels\GameComments\GameCommentDetailVM.cs" />
@@ -421,6 +426,7 @@
     <Compile Include="Models\ViewModels\Members\LoginVM.cs" />
     <Compile Include="Models\ViewModels\Members\MembersListVM.cs" />
     <Compile Include="Models\ViewModels\Members\Role.cs" />
+    <Compile Include="Models\ViewModels\News\NewsCategoryVM.cs" />
     <Compile Include="Models\ViewModels\News\NewsCommentIndexVM.cs" />
     <Compile Include="Models\ViewModels\News\NewsCreateVM.cs" />
     <Compile Include="Models\ViewModels\News\NewsCriteria.cs" />
@@ -435,6 +441,7 @@
     <Compile Include="Models\ViewModels\Orders\OrderEditVM.cs" />
     <Compile Include="Models\ViewModels\Orders\OrderIndexVM.cs" />
     <Compile Include="Models\ViewModels\Orders\OrderInfoVM.cs" />
+    <Compile Include="Models\ViewModels\PostsComments\PostsCommentsListVm.cs" />
     <Compile Include="Models\ViewModels\Products\ProductEditImgVM.cs" />
     <Compile Include="Models\ViewModels\Products\ProductEditVM.cs" />
     <Compile Include="Models\ViewModels\Products\ProductIndexVM.cs" />
@@ -459,12 +466,14 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\login.css" />
     <Content Include="Content\layoutStyle1.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
+    <Content Include="Files\Images\arniya.jpg" />
+    <Content Include="Files\Images\controller.png" />
     <Content Include="Files\Images\otter.png" />
     <Content Include="Files\Mails\77_gmail.com 20230628_174620.txt" />
-    <Content Include="Files\Uploads\zelda.jpg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="lib\datatables\css\dataTables.bootstrap.css" />
@@ -525,6 +534,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\login.js" />
     <Content Include="Scripts\layoutScript1.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config" />
@@ -601,7 +611,6 @@
     <Content Include="Views\StockInSheets\Index.cshtml" />
     <Content Include="Views\StockInSheets\Create.cshtml" />
     <Content Include="Views\StockInSheets\Edit.cshtml" />
-    <Content Include="Views\Products\EditProducImg2.cshtml" />
     <Content Include="Views\Products\EditProducImg.cshtml" />
     <Content Include="Views\BackendMembers\Register.cshtml" />
     <Content Include="Views\BackendMembers\ConfirmRegister.cshtml" />
@@ -612,6 +621,17 @@
     <Content Include="Views\OrderItemReturns\Edit.cshtml" />
     <Content Include="Views\OrderItemReturns\Create.cshtml" />
     <Content Include="Views\OrderItemReturns\Delete.cshtml" />
+    <Content Include="Views\Coupons\Create.cshtml" />
+    <Content Include="Views\Coupons\Edit.cshtml" />
+    <Content Include="Views\NewsCategory\Create.cshtml" />
+    <Content Include="Views\NewsCategory\Delete.cshtml" />
+    <Content Include="Views\NewsCategory\Details.cshtml" />
+    <Content Include="Views\NewsCategory\Edit.cshtml" />
+    <Content Include="Views\NewsCategory\Index.cshtml" />
+    <Content Include="Views\BackendMembers\LoginTEST.cshtml" />
+    <Content Include="Views\PostsComments\Index.cshtml" />
+    <Content Include="Views\Members\_MembersList.cshtml" />
+    <Content Include="Views\Coupons\EditCouponProducts.cshtml" />
     <Content Include="Views\Orders\DeleteFail.cshtml" />
     <Content Include="Views\Suppliers\Create.cshtml" />
     <Content Include="Views\Suppliers\Delete.cshtml" />
@@ -622,7 +642,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Controllers\FrontApi\" />
     <Folder Include="Data\" />
+    <Folder Include="Models\Dtos\PostsComments\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

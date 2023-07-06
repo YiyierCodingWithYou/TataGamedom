@@ -25,6 +25,11 @@ namespace TataGamedom.Models.Services
 			{
 				return Result.Fail("帳密錯誤");
 			}
+			if (backendmember.ActiveFlag == false)
+			{
+				return Result.Fail("權限不足無法登入");
+			}
+
 			var salt = HashUtility.GetSalt();
 			var hashPwd = HashUtility.ToSHA256(dto.Password, salt);
 

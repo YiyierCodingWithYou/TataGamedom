@@ -1,0 +1,40 @@
+﻿@model TataGamedom.Models.ViewModels.LoginVM
+
+@{
+	ViewBag.Title = "Login";
+	<link href="~/Content/login.css" rel="stylesheet" type="text/css" />
+}
+
+<div class="login-box">
+	<h2>Login</h2>
+	@using (Html.BeginForm("LoginTest", "BackendMembers", FormMethod.Post, new { @class = "" }))
+	{
+		@Html.AntiForgeryToken()
+		<div class="user-box">
+				<input type="text" name="Account" required="" class="rounded">
+				<label>Username</label>
+		</div>
+		<div class="user-box">
+			<input type="password" name="Password" required="" class="rounded">
+			<label>Password</label>
+		</div>
+
+		<div class="d-flex">
+			<a class="mx-auto">
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				<input type="submit" value="Submit" class="border-0 bg-transparent text-light fw-bold" />
+			</a>
+		</div>
+	}
+</div>
+@section Scripts {
+	@Scripts.Render("~/bundles/jqueryval")
+
+	<script>
+
+	</script>
+
+}

@@ -1,0 +1,92 @@
+﻿@model IEnumerable<TataGamedom.Models.ViewModels.News.NewsCategoryVM>
+
+@{
+	ViewBag.Title = "Index";
+}
+@section Styles{
+
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+	<link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet" />
+	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css" rel="stylesheet">
+
+	<style>
+		thead {
+			background-color: goldenrod;
+			color: white;
+		}
+
+		.vertical-align-middle {
+			vertical-align: middle;
+		}
+	</style>
+}
+<h2>新聞類別列表</h2>
+<div class="container">
+<p>
+	@Html.ActionLink("新增類別", "Create", null, new { @class = "btn btn-danger" })
+</p>
+<div id="tableContainer">
+	<table class="table" id="myTable">
+		<thead>
+			<tr>
+				<th>
+					@Html.DisplayNameFor(model => model.Name)
+				</th>
+				<th>
+					編輯
+				</th>
+				<th>
+					刪除
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.Name)
+					</td>
+					<td>
+						<a href="@Url.Action("Edit", new { id = item.Id })">
+							<i class="fas fa-edit ms-2"></i>
+						</a>
+					</td>
+					<td>
+						@Html.ActionLink("刪除", "Delete", new { id = item.Id }, new {@class="btn btn-danger btn-sm"})
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+	</div>
+@section Scripts{
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap.min.js"></script>
+	<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+	<script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap.min.js"></script>
+	<script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.1/datatables.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/jquery.unobtrusive-ajax/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+
+
+	<script>
+
+
+
+	@if (TempData.ContainsKey("SuccessMessage"))
+	{
+    <text>
+        $(document).ready(function() {
+            alert("@TempData["SuccessMessage"].ToString()");
+        });
+    </text>
+	}
+
+
+	</script>
+}

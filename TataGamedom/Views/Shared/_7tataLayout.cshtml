@@ -1,67 +1,67 @@
 ﻿<!DOCTYPE html>
 <html lang="zh-Hank">
 <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name="description" content="獺獺玩國提供最優質的電玩新聞、討論區以及商城服務" />
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-		  integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-		  crossorigin="anonymous" referrerpolicy="no-referrer" />
-	<title>獺獺玩國 TataGamedom</title>
-	@Styles.Render("~/Content/css")
-	@Scripts.Render("~/bundles/modernizr")
-	@RenderSection("Styles", required: false)
-	@Styles.Render("~/Content/layoutStyle1.css")
-	<script src="https://code.jquery.com/jquery-3.7.0.slim.js"
-			integrity="sha256-7GO+jepT9gJe9LB4XFf8snVOjX3iYNb0FHYr5LI1N5c="
-			crossorigin="anonymous"></script>
-	<script src="https://cdn.tiny.cloud/1/6rb3trl2hzooj95cl84vg4l75mca64j5ttuvcm0fu1gumuih/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-	@using System.Web.Security
-	@using TataGamedom.Filters
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="獺獺玩國提供最優質的電玩新聞、討論區以及商城服務" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>獺獺玩國 TataGamedom</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("Styles", required: false)
+    @Styles.Render("~/Content/layoutStyle1.css")
+    <script src="https://code.jquery.com/jquery-3.7.0.slim.js"
+            integrity="sha256-7GO+jepT9gJe9LB4XFf8snVOjX3iYNb0FHYr5LI1N5c="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.tiny.cloud/1/6rb3trl2hzooj95cl84vg4l75mca64j5ttuvcm0fu1gumuih/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    @using System.Web.Security
+    @using TataGamedom.Filters
 </head>
 
 
 <body>
 
-	<div class="title">
-		<h1 id="title">獺獺玩國TaTaGameDoM</h1>
-	</div>
-	
-	<nav id="user-nav">
-		<div class="time">
-			現在時間：<span id="timeSpan"></span>
-		</div>
+    <div class="title">
+        <h1 id="title">獺獺玩國TaTaGameDoM</h1>
+    </div>
 
-		@{ if (User.Identity.IsAuthenticated)
-			{
-				<div class="user">
-					<ul>
-						<li>
-							<a href="/BackendMembers/Index">@Html.Raw(User.Identity.Name)</a>
-							<ul>
-								<li><a href="/BackendMembers/EditProfile/">維護個人資料</a></li>
-								<li><a href="/BackendMembers/EditPassword/">修改密碼</a></li>
-								<li><a href="/BackendMembers/Logout/">登出</a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-			}
-		}
-	</nav>
+    <nav id="user-nav">
+        <div class="time">
+            現在時間：<span id="timeSpan"></span>
+        </div>
 
-	<nav id="side-nav" class="width">
-		<a id="logo" href="#">
-			<img src="~/Files/Images/otter.png" alt="" class="otterlogo">
-		</a>
+        @{ if (User.Identity.IsAuthenticated)
+            {
+                <div class="user">
+                    <ul>
+                        <li>
+                            <a href="/BackendMembers/Index">@Html.Raw(User.Identity.Name)</a>
+                            <ul>
+                                <li><a href="/BackendMembers/EditProfile/">維護個人資料</a></li>
+                                <li><a href="/BackendMembers/EditPassword/">修改密碼</a></li>
+                                <li><a href="/BackendMembers/Logout/">登出</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            }
+        }
+    </nav>
+
+    <nav id="side-nav" class="width">
+        <a id="logo" href="#">
+            <img src="~/Files/Images/otter.png" alt="" class="otterlogo">
+        </a>
         <ul>
-            <li>
+            <li id="home">
                 <a href="/HOME/INDEX">
                     <i class="fa fa-house"></i>
                     <span>後台首頁</span>
                 </a>
             </li>
-            <li class="selected">
+            <li id="members" class="selected">
                 <a href="">
                     <i class="fa fa-user"></i>
                     <span>獺獺使用者</span>
@@ -83,7 +83,7 @@
                 </ul>
             </li>
 
-            <li>
+            <li id="boards">
                 <a href="#">
                     <i class="fa fa-comment"></i>
                     <span>獺獺討論區</span>
@@ -91,8 +91,8 @@
                 <ul>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li><a href="#">看板管理</a></li>
-                        <li><a href="#">貼文／留言管理</a></li>
+                        <li>@Html.ActionLink("討論區管理", "Index", "Boards", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("貼文／留言管理", "Index", "PostsComments", new { area = "" }, new { @class = "nav-link" })</li>
                         <li><a href="#">版主審核</a></li>
                         <li><a href="#">檢舉審核</a></li>
                         <li><a href="#">水桶名單管理</a></li>
@@ -100,7 +100,7 @@
                 </ul>
             </li>
 
-            <li>
+            <li id="news">
                 <a href="#">
                     <i class="fa fa-newspaper"></i>
                     <span>獺獺新聞</span>
@@ -109,13 +109,13 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li>@Html.ActionLink("新聞管理", "Index", "NEWS", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li><a href="#">新聞分類管理</a></li>
+                        <li>@Html.ActionLink("新聞分類管理", "Index", "NewsCategory", new { area = "" }, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("新聞留言管理", "Index", "NewsComments", new { area = "" }, new { @class = "nav-link" })</li>
                     }
                 </ul>
             </li>
 
-            <li>
+            <li id="stores">
                 <a href="#">
                     <i class="fa fa-store"></i>
                     <span>獺獺商城</span>
@@ -130,7 +130,7 @@
                     }
                 </ul>
             </li>
-            <li>
+            <li id="orders">
                 <a href="#">
                     <i class="fa fa-truck-moving"></i>
                     <span>獺獺訂單</span>
@@ -144,7 +144,7 @@
                     }
                 </ul>
             </li>
-            <li>
+            <li id="inventory">
                 <a href="#">
                     <i class="fa fa-cart-flatbed"></i>
                     <span>獺獺庫存</span>
@@ -158,7 +158,7 @@
                     }
                 </ul>
             </li>
-            <li>
+            <li id="service">
                 <a href="#">
                     <i class="fa fa-circle-info"></i>
                     <span>獺獺客服</span>
@@ -173,18 +173,18 @@
                 </ul>
             </li>
         </ul>
-		<a id="toggle">
-			<i class="fa fa-chevron-circle-right"></i>
-		</a>
-	</nav>
+        <a id="toggle">
+            <i class="fa fa-chevron-circle-right"></i>
+        </a>
+    </nav>
 
-	<div class="container body-content">
-		@RenderBody()
-	</div>
-	@Scripts.Render("~/bundles/jquery")
-	@Scripts.Render("~/bundles/bootstrap")
-	@RenderSection("scripts", required: false)
-	<script src="~/Scripts/layoutScript1.js"></script>
+    <div class="container-fluid container-tata">
+        @RenderBody()
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script src="~/Scripts/layoutScript1.js"></script>
 
 </body>
 

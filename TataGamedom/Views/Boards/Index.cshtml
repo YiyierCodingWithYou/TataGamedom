@@ -57,6 +57,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" id="deleBtn">刪除</button>
                 <button type="button" class="btn btn-primary" id="editBtn">編輯</button>
                 <button type="button" class="btn btn-outline-warning visually-hidden ms-0 me-auto" id="changeCoverBtn">修改封面</button>
                 <button type="button" class="btn btn-warning visually-hidden" id="saveBtn">儲存變更</button>
@@ -105,7 +106,7 @@
                         <input type="file" class="d-block form-control mt-2" id="boardCoverAdd" name="CoverFile">
                         <br />
                         <span class="opacity-75 small mt-4">關於</span>
-                        <textarea class="mt-2" type="text" id="boardAboutAdd" name="BoardAbout"></textarea>
+                        <textarea class="mt-2 form-control" type="text" id="boardAboutAdd" name="BoardAbout"></textarea>
                     </div>
                 </form>
             </div>
@@ -144,7 +145,6 @@
             console.log(editedAbout);
         })
         $('#myModal').on('hidden.bs.modal', InitEditBtn)
-
         function InitEditBtn() {
             // 將看板名稱和關於欄位變回不可編輯的形式
             $("#boardName").attr("contenteditable", "false");
@@ -153,6 +153,7 @@
             $("#saveBtn").addClass("visually-hidden");
             $("#changeCoverBtn").addClass("visually-hidden");
             $("#editBtn").removeClass("visually-hidden");
+            $("#deleBtn").removeClass("visually-hidden");
         }
         function clearForm() {
             document.getElementById('boardNameAdd').value = '';
@@ -160,7 +161,7 @@
             document.getElementById('boardAboutAdd').value = '';
         }
         function SaveEdit() {
-            ditedName = $("#boardName").text();
+            editedName = $("#boardName").text();
             editedAbout = $("#boardAbout").text();
             $.ajax({
                 type: 'PUT',
@@ -277,6 +278,39 @@
                     })
                 })
         }
+        function DeleBoard(formdata) {
+            $.ajax({
+                type: 'DELETE',
+                url: `${baseAddress}/api/BoardsApi/${boardId}`
+            })
+                .done(data => {
+                    console.log(data);
+                    if (data.IsSuccess) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '成功',
+                            text: JSON.stringify(data.Message)
+                        }).then(() => {
+                            $('#boardtable').DataTable().ajax.reload();
+                            clearForm()
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '失敗',
+                            text: JSON.stringify(data.Message)
+                        });
+                    }
+                })
+                .fail(err => {
+                    console.log('no...')
+                    Swal.fire({
+                        icon: 'error',
+                        title: '失敗',
+                        text: err.statusText
+                    })
+                })
+        }
 
         $(document).ready(function () {
             $('#boardtable').DataTable
@@ -316,6 +350,10 @@
                             coverImg = data.BoardHeaderCoverImg;
                             editedName = data.Name;
                             editedAbout = data.BoardAbout;
+
+                            if (data.GameName !== '') {
+                                $("#deleBtn").addClass("visually-hidden");
+                            }
                         });
                     }
                 })
@@ -375,7 +413,6 @@
                 })
             })
             $('#uploadNewCover').on('click', function () {
-                // 顯示確認對話框
                 Swal.fire({
                     title: '確認',
                     text: '此動作將更新封面，你確定嗎？',
@@ -385,9 +422,23 @@
                     cancelButtonText: '取消'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // 使用者選擇確定，執行 SaveEdit()
                         var formData = new FormData($("#changeBoardImgdForm")[0]);
                         changeBoardImg(formData);
+                        document.getElementById('boardCoverChange').value = '';
+                    }
+                });
+            })
+            $('#deleBtn').on('click', function () {
+                Swal.fire({
+                    title: '刪除討論區？',
+                    text: '此動作將刪除討論區且無法還原，請確認後再執行',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '確定',
+                    cancelButtonText: '取消'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        DeleBoard();
                         document.getElementById('boardCoverChange').value = '';
                     }
                 });
