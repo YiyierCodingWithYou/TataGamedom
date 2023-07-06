@@ -109,5 +109,21 @@ WHERE [Index] = @Index;";
 				return inventoryItem.ToDto();
 			}
 		}
+
+		public int bulkCreate()
+		{
+			using (var connection = new SqlConnection(Connstr)) 
+			{
+				using (var trans = connection.BeginTransaction()) 
+				{
+					string sql = @"";
+
+					var executeResult = connection.Execute(sql,trans);
+					trans.Commit();
+
+					return executeResult;
+				}
+			}
+		}
 	}
 }
