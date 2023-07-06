@@ -4,6 +4,9 @@ Working On
 [v] Export() 重構成StringBuilder
 [v] Export() Excel
 
+[] import Excel
+	[]檔案驗證
+
 Order
 
 InventoryItem

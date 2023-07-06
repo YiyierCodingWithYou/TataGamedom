@@ -354,6 +354,7 @@
     <Compile Include="Models\EFModels\Supplier.cs" />
     <Compile Include="Models\Infra\ApiResult.cs" />
     <Compile Include="Models\Infra\DapperRepositories\OrderItemReturnRepository.cs" />
+    <Compile Include="Models\Infra\ImportExcelHelper.cs" />
     <Compile Include="Models\Infra\OrderEmailHelper.cs" />
     <Compile Include="Models\Infra\SimpleHelper.cs" />
     <Compile Include="Models\Interfaces\IOrderItemReturnRepository.cs" />
