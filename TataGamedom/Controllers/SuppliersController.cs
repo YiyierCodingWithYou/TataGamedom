@@ -116,32 +116,25 @@ namespace TataGamedom.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
-        public FileResult Export() 
+        
+        public FileResult ExportCSV() 
         {
-            string[] columnNames = new string[] { "Id", "Name", "Phone", "Email"};
+            string csv = GetSuppliersCSV();
+
+            return File(Encoding.UTF8.GetBytes(csv), "text/csv; charset=utf-8", "Suppliers.csv");
+        }
+
+        public string GetSuppliersCSV() 
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("Id,Name,Phone,Email");
             var suppliers = db.Suppliers.ToList();
-
-            string csv = string.Empty;
-
-            foreach (string columnName in columnNames) 
-            {
-                csv += columnName + ","; 
-            }
-            csv += "\r\n";
-
             foreach (var supplier in suppliers) 
             {
-                csv += supplier.Id.ToString().Replace(",", ";") + ',';
-                csv += supplier.Name.Replace(",", ";") + ',';
-                csv += supplier.Phone.Replace(",", ";") + ',';
-                csv += supplier.Email.Replace(",", ";") + ',';
-                
-                csv += "\r\n";
+                builder.AppendLine($"{supplier.Name},{supplier.Name },{supplier.Phone},{supplier.Email}");
             }
-
-            byte[] bytes = Encoding.UTF8.GetBytes(csv);
-            return File(bytes, "text/csv; charset=utf-8", "Suppliers.csv");
+            
+            return builder.ToString();
         }
 
         protected override void Dispose(bool disposing)
