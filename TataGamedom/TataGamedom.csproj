@@ -211,6 +211,7 @@
     <Compile Include="Controllers\PostsApiController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\StockInSheetsController.cs" />
+    <Compile Include="Controllers\SuppliersController.cs" />
     <Compile Include="Files\Mails\Class1.cs" />
     <Compile Include="Files\Uploads\Class1.cs" />
     <Compile Include="Filters\AuthorizeFilter.cs" />
@@ -553,6 +554,11 @@
     <Content Include="Views\OrderItemReturns\Create.cshtml" />
     <Content Include="Views\OrderItemReturns\Delete.cshtml" />
     <Content Include="Views\Orders\DeleteFail.cshtml" />
+    <Content Include="Views\Suppliers\Create.cshtml" />
+    <Content Include="Views\Suppliers\Delete.cshtml" />
+    <Content Include="Views\Suppliers\Details.cshtml" />
+    <Content Include="Views\Suppliers\Edit.cshtml" />
+    <Content Include="Views\Suppliers\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
