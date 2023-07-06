@@ -24,18 +24,10 @@ namespace TataGamedom.Models.Infra
 
 			SendFromGmail(from, to, subject, body);
 		}
-		public virtual void SendFromGmail(string from, string to, string subject, string body)
+		public override void SendFromGmail(string from, string to, string subject, string body)
 		{
-			// todo 以下是開發時,測試之用, 只是建立text file, 不真的寄出信
-			//var path = HttpContext.Current.Server.MapPath("~/files/Mails");
-			//CreateTextFile(path, from, to, subject, body);
-			//return;
-
-			// 以下是實作程式, 可以視需要真的寄出信, 或者只是單純建立text file,供開發時使用
-			// ref https://dotblogs.com.tw/chichiblog/2018/04/20/122816
 			var smtpAccount = from;
 
-			// TODO 請在這裡填入密碼,或從web.config裡讀取
 			var smtpPassword = "pjchjpfhtpfihggj";
 
 			var smtpServer = "smtp.gmail.com";
@@ -52,22 +44,9 @@ namespace TataGamedom.Models.Infra
 			using (var client = new SmtpClient(smtpServer, SmtpPort))
 			{
 				client.EnableSsl = true;
-				client.Credentials = new NetworkCredential(smtpAccount, smtpPassword);//寄信帳密 
-				client.Send(mms); //寄出信件
+				client.Credentials = new NetworkCredential(smtpAccount, smtpPassword);
+				client.Send(mms);
 			}
 		}
-
-//		private void CreateTextFile(string path, string from, string to, string subject, string body)
-//		{
-//			var fileName = $"{to.Replace("@", "_")} {DateTime.Now.ToString("yyyyMMdd_HHmmss")}.txt";
-//			var fullPath = Path.Combine(path, fileName);
-
-//			var contents = $@"from:{from}
-//to:{to}
-//subject:{subject}
-
-//{body}";
-//			File.WriteAllText(fullPath, contents, Encoding.UTF8);
-//		}
 	}
 }

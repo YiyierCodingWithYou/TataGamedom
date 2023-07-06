@@ -1,9 +1,12 @@
 ﻿using ClosedXML.Excel;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Configuration.Provider;
 using System.Data;
 using System.Data.Entity;
 using System.Data.OleDb;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -11,6 +14,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using TataGamedom.Models.EFModels;
+using TataGamedom.Models.Infra;
 
 namespace TataGamedom.Controllers
 {
@@ -119,7 +123,6 @@ namespace TataGamedom.Controllers
             return RedirectToAction("Index");
         }
 
-        
         public FileResult ExportCSV() 
         {
             string csv = GetSuppliersCSV();
@@ -133,7 +136,7 @@ namespace TataGamedom.Controllers
 
             foreach (var supplier in db.Suppliers) 
             {
-                builder.AppendLine($"{supplier.Name},{supplier.Name },{supplier.Phone},{supplier.Email}");
+                builder.AppendLine($"{supplier.Name},{supplier.Name },{supplier.Phone},{supplier.Email},");
             }
             
             return builder.ToString();
@@ -170,12 +173,52 @@ namespace TataGamedom.Controllers
             }
         }
 
-        public ActionResult ImportExcel() 
+        [HttpPost]
+        public ActionResult Index(ImportExcelHelper importedfile) 
         {
+			if (ModelState.IsValid)
+			{
+				string path = Server.MapPath("~/Files/Uploads" + importedfile.file.FileName);
+				importedfile.file.SaveAs(path);
 
-        }
+				//寫入連接到 Microsoft Access 和 Excel檔 的Provider
+				string excelConnectionString = $@"Provider='Microsoft.ACE.OLEDB.12.0';
+Data Source='" + path + "';" +
+"Extended Properties='Excel 12.0 Xml;IMEX=1'";
 
-        protected override void Dispose(bool disposing)
+
+				OleDbConnection excelConnection = new OleDbConnection(excelConnectionString);
+
+				excelConnection.Open();
+				string tableName = excelConnection.GetSchema("Tables").Rows[0]["TABLE_NAME"].ToString();
+				excelConnection.Close();
+
+				string cmdText = $@"SELECT * FROM {tableName}";
+				OleDbCommand cmd = new OleDbCommand(cmdText, excelConnection);
+
+				excelConnection.Open();
+				OleDbDataReader reader = cmd.ExecuteReader();
+				SqlBulkCopy sqlBulk = new SqlBulkCopy(ConfigurationManager.ConnectionStrings["AppDbContext"].ToString());
+				sqlBulk.DestinationTableName = "Suppliers";
+				sqlBulk.ColumnMappings.Add("Name", "Name");
+				sqlBulk.ColumnMappings.Add("Phone", "Phone");
+				sqlBulk.ColumnMappings.Add("Email", "Email");
+				sqlBulk.WriteToServer(reader);
+				excelConnection.Close();
+
+				ViewBag.Result = "成功建立資料";
+			}
+            ViewBag.ImportExcelHelper = new ImportExcelHelper();
+			return View();
+		}
+		[HttpPost]
+		public ActionResult Reset()
+		{
+			Session["ExcelData"] = null;
+			return RedirectToAction("Index");
+		}
+
+		protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
