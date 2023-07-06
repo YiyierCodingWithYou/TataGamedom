@@ -159,7 +159,14 @@ LEFT JOIN BackendMembersRolesCodes AS bmr ON bmr.Id = bm.BackendMembersRoleId";
 		{
 			if (ModelState.IsValid)
 			{
-		
+
+				if (SameAccount(list.Account))
+				{
+					ModelState.AddModelError("Account", "帳號已存在，請更換帳號");
+					ViewBag.BackendMembersRoleId = new SelectList(db.BackendMembersRolesCodes, "Id", "Name", list.BackendMembersRoleId);
+					return View(list);
+				}
+
 				using (var con = new SqlConnection(_connstr))
 				{
 					string sql = @"INSERT INTO BackendMembers (Name, Account, Password, Birthday, Email, Phone, RegistrationDate, BackendMembersRoleId, ActiveFlag)
@@ -170,25 +177,37 @@ LEFT JOIN BackendMembersRolesCodes AS bmr ON bmr.Id = bm.BackendMembersRoleId";
 					var salt = HashUtility.GetSalt();
 					var hashPwd = HashUtility.ToSHA256(list.Password, salt);
 
-					var parameters = new
-					{
-						list.Name,
-						list.Account,
-						Password = hashPwd,
-						list.Birthday,
-						list.Email,
-						list.Phone,
-						list.BackendMembersRoleId
-					};
+					//var parameters = new
+					//{
+					//	list.Name,
+					//	list.Account,
+					//	Password = hashPwd,
+					//	list.Birthday,
+					//	list.Email,
+					//	list.Phone,
+					//	list.BackendMembersRoleId
+					//};
 
-                    con.Query<int>(sql, parameters);
+                    con.Query<int>(sql);
 
 					ViewBag.BackendMembersRoleId = new SelectList(db.BackendMembersRolesCodes, "Id", "Name", list.BackendMembersRoleId);
 
 					return RedirectToAction("Index");
 				}
+
 			}
 			return View(list);
+		}
+
+
+		private bool SameAccount(string account)
+		{
+			using (var con = new SqlConnection(_connstr))
+			{
+				string sql = "SELECT COUNT(*) FROM BackendMembers WHERE Account = @Account";
+				int count = con.ExecuteScalar<int>(sql, new { Account = account });
+				return count > 0;
+			}
 		}
 
 		[HttpPost, ActionName("Delete")]

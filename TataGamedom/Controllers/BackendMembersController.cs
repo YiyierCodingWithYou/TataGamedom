@@ -32,37 +32,6 @@ namespace TataGamedom.Controllers
 			return View();
 		}
 
-		public ActionResult LoginTest()
-		{
-			return View();
-		}
-
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult LoginTest(LoginVM vm)
-		{
-			if (ModelState.IsValid == false) return View();
-			Result result = ValidLogin(vm);
-
-			if (result.IsSuccess != true)
-			{
-				ModelState.AddModelError("", result.ErrorMessage);
-				return View(vm);
-			}
-			const bool rememberMe = false;
-
-			var processResult = ProcessLogin(vm.Account, rememberMe);
-			Response.Cookies.Add(processResult.cookie);
-
-			// 在登录成功后的逻辑中获取BackendMembersRoleId，并存储在Session中
-			int backendMembersRoleId = GetBackendMembersRoleIdByUsername(vm.Account); // 根据用户名查询BackendMembersRoleId的逻辑，你需要根据实际情况实现该方法
-			HttpContext.Session["BackendMembersRoleId"] = backendMembersRoleId;
-
-			return Redirect(processResult.returnUrl);
-		}
-
-
-
 		public ActionResult Login()
 		{
 			return View();
@@ -91,27 +60,6 @@ namespace TataGamedom.Controllers
 
 			return Redirect(processResult.returnUrl);
 		}
-
-
-
-		//[HttpPost]
-		//[ValidateAntiForgeryToken]
-		//public ActionResult Login(LoginVM vm)
-		//{
-		//	if (ModelState.IsValid == false) return View();
-		//	Result result = ValidLogin(vm);
-
-		//	if (result.IsSuccess != true)
-		//	{
-		//		ModelState.AddModelError("", result.ErrorMessage);
-		//		return View(vm);
-		//	}
-		//	const bool rememberMe = false;
-
-		//	var processResult = ProcessLogin(vm.Account, rememberMe);
-		//	Response.Cookies.Add(processResult.cookie);
-		//	return Redirect(processResult.returnUrl);
-		//}
 
 		public ActionResult Logout()
 		{
@@ -173,84 +121,8 @@ namespace TataGamedom.Controllers
 			return View();
 		}
 
-		//public ActionResult Register()
-		//{
-		//	return View();
-		//}
-
-		//[HttpPost]
-		//[ValidateAntiForgeryToken]
-		//public ActionResult Register(RegisterVM vm)
-		//{
-
-		//	ViewBag.BackendMembersRoleId = new SelectList(db.BackendMembersRolesCodes, "Id", "Name");
-
-		//	if (ModelState.IsValid == false) return View(vm);
-
-
-		//	// 建立新會員
-		//	Result result = RegisterBackendmember(vm);
-		//	if (result.IsSuccess)
-		//	{
-
-		//		// 生成email連結
-		//		var urlTemplate = Request.Url.Scheme + "://" +
-		//			Request.Url.Authority + "/" +
-		//			"Members/ActiveRegister?memberId={0}&confirmCode={1}";
-		//		// 若成功，寄送郵件
-		//		Result mailResult = ProcessRegister(vm.Account, vm.Email, urlTemplate);
-
-		//		if (mailResult.IsSuccess)
-		//		{
-		//			vm.RegistrationDate = DateTime.Now;
-		//			return View("ConfirmRegister");
-		//		}
-		//		else
-		//		{
-		//			ModelState.AddModelError(string.Empty, mailResult.ErrorMessage);
-		//			return View(vm);
-		//		}
-		//	}
-		//	else
-		//	{
-		//		ModelState.AddModelError(string.Empty, result.ErrorMessage);
-		//		return View(vm);
-		//	}
-		//}
-
 
 		//分一下 之後再改3層
-
-		//private Result RegisterBackendmember(RegisterVM vm)
-		//{
-		//	IBackendMemberRepositiry repo = new BackendMemberDapperRepository();
-		//	BackendMemberService service = new BackendMemberService(repo);
-		//	return service.Register(vm.ToDto());
-		//}
-
-		//private Result ProcessRegister(string account, string email, string urlTemplate)
-		//{
-		//	var db = new AppDbContext();
-
-		//	//檢查account, email正確性
-		//	var memberInDb = db.Members.FirstOrDefault(m => m.Account == account);
-
-		//	if (memberInDb == null) return Result.Fail("帳號或email錯誤"); //故意不告知確切錯誤原因
-
-		//	if (string.Compare(email, memberInDb.Email, StringComparison.CurrentCultureIgnoreCase) != 0) return Result.Fail("帳號或email錯誤");
-
-		//	//更新紀錄，重給一個confirmCode
-		//	var confirmCode = Guid.NewGuid().ToString("N");
-		//	memberInDb.ConfirmCode = confirmCode;
-		//	db.SaveChanges();
-
-		//	//發email
-		//	var url = string.Format(urlTemplate, memberInDb.Id, confirmCode);
-		//	new EmailHelper().SendConfirmRegisterEmail(url, memberInDb.Name, email);
-		//	return Result.Success();
-		//}
-
-
 
 
 		private EditProfileVM GetBackendMemberProfile(string account)

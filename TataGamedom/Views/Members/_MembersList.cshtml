@@ -1,0 +1,55 @@
+﻿@model IEnumerable<TataGamedom.Models.ViewModels.Members.MembersListVM>
+
+@foreach (var item in Model)
+{
+	<tr>
+		<td>
+			@Html.DisplayFor(modelItem => item.Name)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Account)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Birthday)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Email)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Phone)
+		</td>
+		<td>
+			@if (item.ActiveFlag == false)
+			{
+				<button class="btn btn-danger btn-sm">停權</button>
+			}
+			else if (item.ActiveFlag == true)
+			{
+				<button class="btn btn-success btn-sm">使用中</button>
+			}
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.RegistrationDate)
+		</td>
+		<td>
+			@if (item.ActiveFlag)
+			{
+				using (Html.BeginForm("Delete", "Members", new { id = item.Id }, FormMethod.Post, new { @class = "delete-form" }))
+				{
+					@Html.AntiForgeryToken()
+					<span>&nbsp;</span>
+					<input type="submit" value="停權" class="btn btn-danger btn-sm delete-button" data-id="@item.Id" />
+				}
+			}
+			else
+			{
+				using (Html.BeginForm("Reduction", "Members", new { id = item.Id }, FormMethod.Post, new { @class = "reduction-form" }))
+				{
+					@Html.AntiForgeryToken()
+					<span>&nbsp;</span>
+					<input type="submit" value="復原" class="btn btn-success btn-sm reduction-button" data-id="@item.Id" />
+				}
+			}
+		</td>
+	</tr>
+}

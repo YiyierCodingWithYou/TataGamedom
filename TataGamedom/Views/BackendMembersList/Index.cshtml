@@ -21,8 +21,10 @@
 	</style>
 }
 <h2>後台人員列表</h2>
-<div class="mb-3">
-	@Html.ActionLink("新增管理者", "Create", "BackendMembersList", new { area = "" }, new { @class = "btn btn-danger" })
+
+<div class="container">
+	<div class="mb-3">
+		@Html.ActionLink("新增管理者", "Create", "BackendMembersList", new { area = "" }, new { @class = "btn btn-danger" })
 	</div>
 	<table class="table" id="myTable">
 		<thead>
@@ -85,16 +87,16 @@
 					@*<td>
 							@Html.DisplayFor(modelItem => item.RegistrationDate)
 						</td>*@
-				<td>
-					@if (item.ActiveFlag == false)
-					{
-						<button class="btn btn-danger btn-sm ">停權</button>
-					}
-					else if (item.ActiveFlag == true)
-					{
-						<button class="btn btn-success btn-sm ">使用中</button>
-					}
-				</td>
+					<td>
+						@if (item.ActiveFlag == false)
+						{
+							<button class="btn btn-danger btn-sm ">停權</button>
+						}
+						else if (item.ActiveFlag == true)
+						{
+							<button class="btn btn-success btn-sm ">使用中</button>
+						}
+					</td>
 					<td>
 						@Html.DisplayFor(modelItem => item.BackendMembersRoleName)
 					</td>
@@ -107,6 +109,7 @@
 			}
 		</tbody>
 	</table>
+</div>
 	@section Scripts{
 		<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"></script>
