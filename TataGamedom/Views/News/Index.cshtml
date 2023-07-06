@@ -1,23 +1,5 @@
 ﻿@model IEnumerable<TataGamedom.Models.ViewModels.News.NewsIndexVM>
-@using PagedList;
-@using PagedList.Mvc;
-@using System.Security.Claims
 
-@*@{
-		ViewBag.Title = "Index";
-		var gamesId = ViewBag.GamesId as SelectList;
-		var newsCriteria = ViewBag.NewsCriteria as TataGamedom.Models.ViewModels.News.NewsCriteria;
-		string s_gameId = newsCriteria.GamesId.HasValue ? newsCriteria.GamesId.Value.ToString() : "";
-
-
-
-		var userIdentity = (ClaimsIdentity)User.Identity;
-		var claims = userIdentity.Claims;
-		var roleClaimType = userIdentity.RoleClaimType;
-		var roles = claims.Where(c => c.Type == roleClaimType).ToList();
-
-		var a = "b";
-	}*@
 @section Styles{
 
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" rel="stylesheet" />
@@ -40,12 +22,6 @@
 <div class="mb-3" style="text-align: right;">
 	@Html.ActionLink("新增新聞", "Create", null, new { @class = "btn btn-primary" })
 </div>
-
-
-
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newsCategoryModal">
-	打開 News Category Modal
-</button>
 
 
 <table class="table" id="myTable">

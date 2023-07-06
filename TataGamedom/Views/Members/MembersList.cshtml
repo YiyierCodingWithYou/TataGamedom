@@ -23,167 +23,119 @@
 	</style>
 }
 <h2>會員列表</h2>
-
-<table class="table" id="myTable">
-	<thead>
-		<tr>
-			<th>
-				@Html.DisplayNameFor(model => model.Name)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Account)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Birthday)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Email)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Phone)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.ActiveFlag)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.RegistrationDate)
-			</th>
-			<th>
-				動作
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in Model)
-		{
+<div class="container">
+	<table class="table" id="myTable">
+		<thead>
 			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.Name)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Account)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Birthday)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Email)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Phone)
-				</td>
-				<td>
-					@if (item.ActiveFlag == false)
-					{
-						<button class="btn btn-danger btn-sm">停權</button>
-					}
-					else if (item.ActiveFlag == true)
-					{
-						<button class="btn btn-success btn-sm">使用中</button>
-					}
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.RegistrationDate)
-				</td>
-				<td>
-					@if (item.ActiveFlag)
-					{
-						using (Html.BeginForm("Delete", "Members", new { id = item.Id }, FormMethod.Post))
-						{
-							@Html.AntiForgeryToken()
-							<span>&nbsp;</span>
-							<input type="submit" value="停權" class="btn btn-danger btn-sm" id="deleteButton-@item.Id" />
-						}
-					}
-					else
-					{
-						using (Html.BeginForm("Reduction", "Members", new { id = item.Id }, FormMethod.Post))
-						{
-
-							@Html.AntiForgeryToken()
-							<span>&nbsp;</span>
-							<input type="submit" value="復原" class="btn btn-success btn-sm" id="restoreButton-@item.Id" />
-						}
-					}
-				</td>
-
-
-				@*<td>
-						@Html.ActionLink("Details", "Details", new { id = item.Id })
-					</td>*@
-
-				@*<td>
-						@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-						@Html.ActionLink("Details", "Details", new { id=item.Id }) |
-						@Html.ActionLink("Delete", "Delete", new { id=item.Id })
-					</td>*@
+				<th>
+					@Html.DisplayNameFor(model => model.Name)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Account)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Birthday)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Email)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Phone)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.ActiveFlag)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.RegistrationDate)
+				</th>
+				<th>
+					動作
+				</th>
 			</tr>
-		}
-	</tbody>
+		</thead>
+		<tbody id="tableBodyContainer">
 
-</table>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.Name)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Account)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Birthday)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Email)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Phone)
+					</td>
+					<td>
+						@if (item.ActiveFlag == false)
+						{
+							<button class="btn btn-danger btn-sm">停權</button>
+						}
+						else if (item.ActiveFlag == true)
+						{
+							<button class="btn btn-success btn-sm">使用中</button>
+						}
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.RegistrationDate)
+					</td>
+					<td>
+						@if (item.ActiveFlag)
+						{
+							using (Html.BeginForm("Delete", "Members", new { id = item.Id }, FormMethod.Post))
+							{
+								@Html.AntiForgeryToken()
+								<span>&nbsp;</span>
+								<input type="submit" value="停權" class="btn btn-danger btn-sm" id="deleteButton-@item.Id" />
+							}
+						}
+						else
+						{
+							using (Html.BeginForm("Reduction", "Members", new { id = item.Id }, FormMethod.Post))
+							{
 
+								@Html.AntiForgeryToken()
+								<span>&nbsp;</span>
+								<input type="submit" value="復原" class="btn btn-success btn-sm" id="restoreButton-@item.Id" />
+							}
+						}
+					</td>
+				</tr>
+			}
+		</tbody>
 
-@section Scripts{
-	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"></script>
-	<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-	<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap.min.js"></script>
-	<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
-	<script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap.min.js"></script>
-	<script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.1/datatables.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+	</table>
+	</div>
 
-	<script>
-		//mytable
-		$(document).ready(function () {
-			$('#myTable').DataTable({
-				responsive: true,
-				language: {
-					url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/zh-HANT.json',
-				}
+	@section Scripts{
+		<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"></script>
+		<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+		<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap.min.js"></script>
+		<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+		<script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap.min.js"></script>
+		<script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.1/datatables.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+
+		<script>
+			//mytable
+			$(document).ready(function () {
+				$('#myTable').DataTable({
+					responsive: true,
+					language: {
+						url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/zh-HANT.json',
+					}
+				});
 			});
-		});
 
 
-		//$(document).ready(function () {
-		//	$('.delete-button').click(function (event) {
-		//		event.preventDefault(); // 防止點擊按鈕時觸發表單的提交動作
 
-		//		var buttonId = $(this).attr('id'); // 取得按鈕的 id
-		//		var id = buttonId.split('-')[1]; // 從按鈕的 id 中取得相關的 id 值
-
-		//		// 發送 Ajax 請求
-		//		$.ajax({
-		//			url: '/Members/Delete/' + id, // 替換為你的刪除動作的路徑
-		//			type: 'POST',
-		//			data: {
-		//				__RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-		//			},
-		//			success: function (result) {
-		//				// 處理成功回應的邏輯
-		//				// 例如：重新載入特定區域或執行其他動作
-		//				location.reload(); // 刷新整個頁面
-		//			},
-		//			error: function () {
-		//				// 處理錯誤回應的邏輯
-		//			}
-		//		});
-		//	});
-
-		//	$('.restore-button').click(function (event) {
-		//		event.preventDefault(); // 防止點擊按鈕時觸發表單的提交動作
-
-		//		var buttonId = $(this).attr('id'); // 取得按鈕的 id
-		//		var id = buttonId.split('-')[1]; // 從按鈕的 id 中取得相關的 id 值
-
-		//		// 發送 Ajax 請求
-		//		$.ajax({
-		//			url: '/Members/Reduction/' + id, // 替換為你的復原動作的路徑
-		//			type: 'POST',
-		//			data: {
-		//				__RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-		//			},
-		//			success: function (result) {
-	</script>
-}
+		</script>
+	}

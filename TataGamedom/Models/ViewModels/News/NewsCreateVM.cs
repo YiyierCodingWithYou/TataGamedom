@@ -32,6 +32,7 @@ namespace TataGamedom.Models.ViewModels.News
 		}
 		[Display(Name = "新增人員")]
 		public int BackendMemberId { get; set; }
+		[Required]
 		[Display(Name = "新聞類別")]
 		public int? NewsCategoryId { get; set; }
 		[Display(Name = "遊戲類別")]
@@ -39,6 +40,7 @@ namespace TataGamedom.Models.ViewModels.News
 		[Display(Name = "前台圖片")]
 		[StringLength(100)]
 		public string CoverImg { get; set; }
+		[Required]
 		[Display(Name = "上線時間")]
 		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]
 		public DateTime ScheduleDate { get; set; }
