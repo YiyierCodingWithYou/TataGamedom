@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using TataGamedom.Models.EFModels;
@@ -113,6 +114,34 @@ namespace TataGamedom.Controllers
             db.Suppliers.Remove(supplier);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public FileResult Export() 
+        {
+            string[] columnNames = new string[] { "Id", "Name", "Phone", "Email"};
+            var suppliers = db.Suppliers.ToList();
+
+            string csv = string.Empty;
+
+            foreach (string columnName in columnNames) 
+            {
+                csv += columnName + ","; 
+            }
+            csv += "\r\n";
+
+            foreach (var supplier in suppliers) 
+            {
+                csv += supplier.Id.ToString().Replace(",", ";") + ',';
+                csv += supplier.Name.Replace(",", ";") + ',';
+                csv += supplier.Phone.Replace(",", ";") + ',';
+                csv += supplier.Email.Replace(",", ";") + ',';
+                
+                csv += "\r\n";
+            }
+
+            byte[] bytes = Encoding.UTF8.GetBytes(csv);
+            return File(bytes, "text/csv; charset=utf-8", "Suppliers.csv");
         }
 
         protected override void Dispose(bool disposing)
