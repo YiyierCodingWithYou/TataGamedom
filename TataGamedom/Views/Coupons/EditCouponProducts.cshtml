@@ -1,0 +1,99 @@
+﻿@model TataGamedom.Models.ViewModels.Coupons.EditCouponProductsVM
+
+@{
+    ViewBag.Title = "EditCouponProducts";
+}
+
+<h2>EditCouponProducts</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>EditCouponProductsVM</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CouponName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.CouponName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CouponName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <h4>商品列表</h4>
+    @foreach (var product in Model.AvailableProducts)
+    {
+        bool isSelected = Model.SelectedProductIds.Contains(product.Id);
+        if (!isSelected)
+        {
+            <div>
+                <input type="checkbox" class="productCheckbox" name="SelectedProductIds" value="@product.Id">
+                <label>@product.Game.ChiName (@product.GamePlatformsCode.Name)</label>
+            </div>
+        }
+    }
+
+    <h4>已套用活動之商品</h4>
+    @foreach (var productId in Model.SelectedProductIds)
+    {
+        var product = Model.AvailableProducts.FirstOrDefault(p => p.Id == productId);
+        if (product != null)
+        {
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="selectedProductCheckbox" name="SelectedProductIds" value="@product.Id" checked readonly> @product.Game.ChiName (@product.GamePlatformsCode.Name)
+                </label>
+            </div>
+        }
+    }
+    @*<h4>商品列表</h4>
+        @foreach (var product in Model.AvailableProducts)
+        {
+            bool isSelected = Model.SelectedProductIds.Contains(product.Id);
+            <div>
+                <input type="checkbox" class="productCheckbox" name="SelectedProductIds" value="@product.Id" @(isSelected ? "checked" : "")>
+                <label>@product.Game.ChiName (@product.GamePlatformsCode.Name)</label>
+            </div>
+        }
+
+        <h4>已套用活動之商品</h4>
+        @foreach (var productId in Model.SelectedProductIds)
+        {
+            var product = Model.AvailableProducts.FirstOrDefault(p => p.Id == productId);
+            if (product != null)
+            {
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" class="selectedProductCheckbox" name="SelectedProductIds" value="@product.Id" checked readonly> @product.Game.ChiName
+                    </label>
+                </div>
+            }
+        }*@
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
