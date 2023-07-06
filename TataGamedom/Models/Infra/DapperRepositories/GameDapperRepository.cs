@@ -128,8 +128,8 @@ GROUP BY G.Id, G.ChiName, G.IsRestrict, G.CreatedTime, BM.Name";
 		{
 			using (var conn = new SqlConnection(_connStr))
 			{
-				string sql = @"INSERT INTO Boards(Name , GameId, BoardHeaderCoverImg) VALUES(@Name , @GameId, @BoardHeaderCoverImg);";
-				var rowAffected = conn.Execute(sql, new { Name = game.ChiName, GameId = game.Id, BoardHeaderCoverImg = game.GameCoverImg });
+				string sql = @"INSERT INTO Boards(Name , GameId, BoardHeaderCoverImg, BoardAbout,CreatedTime, CreatedBackendMemberId) VALUES(@Name , @GameId, @BoardHeaderCoverImg, @BoardAbout, @CreatedTime, @CreatedBackendMemberId);";
+				var rowAffected = conn.Execute(sql, new { Name = game.ChiName, GameId = game.Id, BoardHeaderCoverImg = game.GameCoverImg, BoardAbout=game.Description,CreatedTime = game.CreatedTime, CreatedBackendMemberId = game.CreatedBackendMemberId });
 				return rowAffected > 0;
 			}
 		}
