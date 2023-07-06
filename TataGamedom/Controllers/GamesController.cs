@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using TataGamedom.Models.EFModels;
@@ -48,46 +50,46 @@ namespace TataGamedom.Controllers
 		}
 
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public ActionResult Create(GameCreateVM vm, HttpPostedFileBase file1)
 		{
 			var currentUserAccount = User.Identity.Name;
 			var memberInDb = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
-
 			var savedFileName = SaveFile(file1);
-			//if (savedFileName == string.Empty)
-			//{
-			//	ModelState.AddModelError("GameCoverImg", "請選擇檔案");
-			//	List<GameClassificationsCode> gameClassifications = GetGameClassifications();
-			//	GameCreateVM model = new GameCreateVM
-			//	{
-			//		GameClassification = gameClassifications
-			//	};
-			//	return View(model);
-			//}
+			if (savedFileName == string.Empty)
+			{
+				ModelState.AddModelError("GameCoverImg", "請選擇檔案");
+				List<GameClassificationsCode> gameClassifications0 = GetGameClassifications();
+				GameCreateVM model0 = new GameCreateVM
+				{
+					GameClassification = gameClassifications0
+				};
+				return View(model0);
+			}
 			vm.GameCoverImg = savedFileName;
 			vm.CreatedBackendMemberId = memberInDb.Id;
-			//if (vm.SelectedGameClassification.Count == 0)
-			//{
-			//	ModelState.AddModelError("SelectedGameClassification", "請選擇遊戲分類！");
-			//	List<GameClassificationsCode> gameClassifications = GetGameClassifications();
-			//	GameCreateVM model = new GameCreateVM
-			//	{
-			//		GameClassification = gameClassifications
-			//	};
-			//	return View(model);
-			//}
+			if (vm.SelectedGameClassification.Count == 0)
+			{
+				ModelState.AddModelError("SelectedGameClassification", "請選擇遊戲分類！");
+				List<GameClassificationsCode> gameClassifications1 = GetGameClassifications();
+				GameCreateVM model1 = new GameCreateVM
+				{
+					GameClassification = gameClassifications1
+				};
+				return View(model1);
+			}
+			List<int> selectedGameClassifications = vm.SelectedGameClassification;
 			if (ModelState.IsValid)
 			{
-				List<int> selectedGameClassifications = vm.SelectedGameClassification;
-				if (selectedGameClassifications.Count > 2)
+				if (vm.SelectedGameClassification.Count > 2)
 				{
 					ModelState.AddModelError("SelectedGameClassification", "最多只能選擇兩個遊戲分類！");
-					List<GameClassificationsCode> gameClassifications = GetGameClassifications();
-					GameCreateVM model = new GameCreateVM
+					List<GameClassificationsCode> gameClassifications2 = GetGameClassifications();
+					GameCreateVM model2 = new GameCreateVM
 					{
-						GameClassification = gameClassifications
+						GameClassification = gameClassifications2
 					};
-					return View(model);
+					return View(model2);
 
 				}
 				Result createResult = CreateGame(vm);
@@ -101,26 +103,20 @@ namespace TataGamedom.Controllers
 					return RedirectToAction("Index");
 				}
 				ModelState.AddModelError(string.Empty, createResult.ErrorMessage);
-				List<GameClassificationsCode> gameClassifications2 = GetGameClassifications();
-				GameCreateVM model2 = new GameCreateVM
+				List<GameClassificationsCode> gameClassifications3 = GetGameClassifications();
+				GameCreateVM model3 = new GameCreateVM
 				{
-					GameClassification = gameClassifications2
+					GameClassification = gameClassifications3
 				};
-				return View(model2);
+				return View(model3);
 			}
-
-			return View(vm);
+			var gameClassifications = GetGameClassifications();
+			GameCreateVM model = new GameCreateVM
+			{
+				GameClassification = gameClassifications
+			};
+			return View(model);
 		}
-
-		//private void GetGameClassificationsForEdit()
-		//{
-		//	List<GameClassificationsCode> gameClassifications = GetGameClassifications();
-		//	GameCreateVM model = new GameCreateVM
-		//	{
-		//		GameClassification = gameClassifications
-		//	};
-		//	return View(model);
-		//}
 
 		private void CreateGameBoard(GameCreateVM vm)
 		{
