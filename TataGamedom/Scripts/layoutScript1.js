@@ -37,8 +37,9 @@ $(document).on("click", "li", function (event) {
     var link = $(this).find("a");
     if (link.length) {
         var href = link.attr("href");
+        event.stopPropagation();
         console.log("Selected link:", href);
-        window.location.href = href; // 或者使用 window.location.replace(href)
+        window.location.replace(href)
     }
 });
 
