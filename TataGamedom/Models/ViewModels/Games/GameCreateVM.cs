@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using TataGamedom.Models.EFModels;
 using TataGamedom.Models.ViewModels.Coupons;
+using TataGamedom.Models.ViewModels.Members;
 
 namespace TataGamedom.Models.ViewModels.Games
 {
@@ -25,8 +26,7 @@ namespace TataGamedom.Models.ViewModels.Games
 
 		public List<GameClassificationsCode> GameClassification { get; set; }
 		[Display(Name = "遊戲類別（複選最多兩項）")]
-		[Required]
-		[SelectedGameClassification(ErrorMessage ="")]
+		//[Required]
 		public List<int> SelectedGameClassification { get; set; } = new List<int>();
 
 		[Display(Name = "遊戲介紹")]
@@ -39,8 +39,7 @@ namespace TataGamedom.Models.ViewModels.Games
 
 		[Display(Name = "封面圖片")]
 		[StringLength(100)]
-		[Required]
-		[GameCoverImg(ErrorMessage = "請上傳遊戲封面")]
+		//[Required]
 		public string GameCoverImg { get; set; }
 
 		[Display(Name = "創建時間")]
@@ -50,36 +49,55 @@ namespace TataGamedom.Models.ViewModels.Games
 
 		public int CreatedBackendMemberId { get; set; }
 
-		public class GameCoverImgAttribute : ValidationAttribute
+		//public class GameCoverImgAttribute : ValidationAttribute
+		//{
+		//	protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+		//	{
+		//		var model = (GameCreateVM)validationContext.ObjectInstance;
+
+		//		if (model.GameCoverImg == null || model.GameCoverImg == string.Empty)
+		//		{
+		//			return new ValidationResult("請上傳遊戲封面", new[] { nameof(GameCoverImg) });
+		//		}
+
+		//		return ValidationResult.Success;
+		//	}
+		//}
+		//public class SelectedGameClassificationAttribute : ValidationAttribute
+		//{
+		//	protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+		//	{
+		//		var model = (GameCreateVM)validationContext.ObjectInstance;
+
+		//		if (model.SelectedGameClassification == null || model.SelectedGameClassification.Count == 0)
+		//		{
+		//			return new ValidationResult("請選擇遊戲分類！", new[] { nameof(SelectedGameClassification) });
+		//		}
+		//		if(model.SelectedGameClassification.Count > 2)
+		//		{
+		//			return new ValidationResult("最多只能選擇兩項分類！", new[] { nameof(SelectedGameClassification) });
+		//		}
+
+		//		return ValidationResult.Success;
+		//	}
+		//}
+		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{
-			protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+			var model = validationContext.ObjectInstance as GameCreateVM;
+
+			if (model.GameCoverImg == null || model.GameCoverImg == string.Empty)
 			{
-				var model = (GameCreateVM)validationContext.ObjectInstance;
+				yield return new ValidationResult("請上傳遊戲封面", new[] { nameof(GameCoverImg) });
 
-				if (model.GameCoverImg==null)
-				{
-					return new ValidationResult(ErrorMessage);
-				}
-
-				return ValidationResult.Success;
 			}
-		}
-		public class SelectedGameClassificationAttribute : ValidationAttribute
-		{
-			protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+
+			if (model.SelectedGameClassification == null || model.SelectedGameClassification.Count == 0)
 			{
-				var model = (GameCreateVM)validationContext.ObjectInstance;
-
-				if (model.GameClassification == null)
-				{
-					return new ValidationResult("請選擇遊戲分類！");
-				}
-				else if (model.SelectedGameClassification.Count > 2)
-				{
-					return new ValidationResult("最多只能選擇兩項分類！");
-				}
-
-				return ValidationResult.Success;
+				yield return new ValidationResult("請選擇遊戲分類！", new[] { nameof(SelectedGameClassification) });
+			}
+			if (model.SelectedGameClassification.Count > 2)
+			{
+				yield return new ValidationResult("最多只能選擇兩項分類！", new[] { nameof(SelectedGameClassification) });
 			}
 		}
 	}
