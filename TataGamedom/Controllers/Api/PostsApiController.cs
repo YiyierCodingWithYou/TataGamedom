@@ -12,6 +12,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using TataGamedom.Models.EFModels;
 using TataGamedom.Models.Infra;
+using TataGamedom.Models.ViewModels.Games;
 using TataGamedom.Models.ViewModels.PostsComments;
 
 namespace TataGamedom.Controllers
@@ -39,13 +40,17 @@ namespace TataGamedom.Controllers
                     NULL AS RespondedPost,
                     NULL AS RespondedComment,
                     m.Id AS MemberId,
-	                m.Name AS MemberName,
+	                m.Account AS MemberAccount,
                     p.Content,
                     p.Datetime,
 					SUM(CASE WHEN puv.Type = 1 THEN 1 ELSE 0 END) AS LikesCount,
                     SUM(CASE WHEN puv.Type = 0 THEN 1 ELSE 0 END) AS UnlikesCount,
                     COUNT(DISTINCT pc.Id) AS CommentsCount,
                     p.ActiveFlag, 
+					CASE p.ActiveFlag
+						WHEN 1 THEN N'顯示'
+						WHEN 0 THEN N'隱藏'
+					END AS ActiveFlagText,
 					p.DeleteDatetime, 
 					p.DeleteBackendMemberId, 
 					p.DeleteMemberId
@@ -57,7 +62,7 @@ namespace TataGamedom.Controllers
                     LEFT JOIN PostUpDownVotes puv ON p.Id = puv.PostId
                     LEFT JOIN PostComments pc ON p.Id = pc.PostId
                 GROUP BY
-                    bd.Id, bd.Name, p.Id, m.Id, m.Name, p.Content, p.BoardId, p.Datetime, p.ActiveFlag, p.DeleteDatetime, p.DeleteBackendMemberId, p.DeleteMemberId
+                    bd.Id, bd.Name, p.Id, m.Id, m.Account, p.Content, p.BoardId, p.Datetime, p.ActiveFlag, p.DeleteDatetime, p.DeleteBackendMemberId, p.DeleteMemberId
 
                 UNION ALL
 
@@ -69,15 +74,19 @@ namespace TataGamedom.Controllers
                     p.Id AS RespondedPost,
                     pc.ParentId AS RespondedComment,
                     m.Id AS MemberId,
-	                m.Name AS MemberName,
+	                m.Account AS MemberAccount,
                     pc.Content,
                     pc.Datetime,
 					SUM(CASE WHEN pcuv.Type = 1 THEN 1 ELSE 0 END) AS LikesCount,
                     SUM(CASE WHEN pcuv.Type = 0 THEN 1 ELSE 0 END) AS UnlikesCount,
-                   (SELECT COUNT(*) -- 子查詢計算該評論的所有子評論數量
+                   (SELECT COUNT(*)
 					FROM PostComments pc_sub
 					WHERE pc_sub.ParentId = pc.Id				) AS CommentsCount,
                     pc.ActiveFlag,
+					CASE pc.ActiveFlag
+						WHEN 1 THEN N'顯示'
+						WHEN 0 THEN N'隱藏'
+					END AS ActiveFlagText,
 					pc.DeleteDatetime, 
 					pc.DeleteBackendMemberId, 
 					pc.DeleteMemberId
@@ -89,7 +98,7 @@ namespace TataGamedom.Controllers
                     LEFT JOIN PostCommentUpDownVotes pcuv ON pc.Id = pcuv.PostCommentId
                     LEFT JOIN PostComments pc_parent ON pc.ParentId = pc_parent.Id
                 GROUP BY
-					bd.Id, bd.Name, pc.Id, p.Id, m.Id, m.Name, pc.Content, pc.ParentId, pc.Datetime, pc.DeleteDatetime, pc.DeleteBackendMemberId, pc.DeleteMemberId, pc.ActiveFlag
+					bd.Id, bd.Name, pc.Id, p.Id, m.Id, m.Account, pc.Content, pc.ParentId, pc.Datetime, pc.DeleteDatetime, pc.DeleteBackendMemberId, pc.DeleteMemberId, pc.ActiveFlag
 
 				Order by
 					Datetime desc
@@ -106,17 +115,99 @@ namespace TataGamedom.Controllers
 		}
 
 		// GET: api/PostsApi/5
-		//[ResponseType(typeof(Post))]
-		//public IHttpActionResult GetPost(int id)
-		//{
-		//	Post post = db.Posts.Find(id);
-		//	if (post == null)
-		//	{
-		//		return NotFound();
-		//	}
+		[ResponseType(typeof(Post))]
+		public IEnumerable<PostsCommentsListVm> GetPostsAndCommntsList(int id)
+		{
+			using (var connection = new SqlConnection(_connStr))
+			{
+				connection.Open();
 
-		//	return Ok(post);
-		//}
+				string query = @"
+				SELECT
+					bd.Id AS BoardId,
+					bd.Name AS BoardName,
+                    'Post' AS Type,
+                    p.Id AS ID,
+                    NULL AS RespondedPost,
+                    NULL AS RespondedComment,
+                    m.Id AS MemberId,
+	                m.Account AS MemberAccount,
+                    p.Content,
+                    p.Datetime,
+					SUM(CASE WHEN puv.Type = 1 THEN 1 ELSE 0 END) AS LikesCount,
+                    SUM(CASE WHEN puv.Type = 0 THEN 1 ELSE 0 END) AS UnlikesCount,
+                    COUNT(DISTINCT pc.Id) AS CommentsCount,
+                    p.ActiveFlag, 
+					CASE p.ActiveFlag
+						WHEN 1 THEN N'顯示'
+						WHEN 0 THEN N'隱藏'
+					END AS ActiveFlagText,
+					p.DeleteDatetime, 
+					p.DeleteBackendMemberId, 
+					p.DeleteMemberId
+
+                FROM
+                    Posts p
+                    JOIN Members m ON p.MemberId = m.Id
+                    JOIN Boards bd ON p.BoardId = bd.Id
+                    LEFT JOIN PostUpDownVotes puv ON p.Id = puv.PostId
+                    LEFT JOIN PostComments pc ON p.Id = pc.PostId
+				WHERE
+					p.Id = @Id
+                GROUP BY
+                    bd.Id, bd.Name, p.Id, m.Id, m.Account, p.Content, p.BoardId, p.Datetime, p.ActiveFlag, p.DeleteDatetime, p.DeleteBackendMemberId, p.DeleteMemberId
+
+                UNION ALL
+
+                SELECT
+					bd.Id AS BoardName,
+					bd.Name AS BoardName,
+                    'Comment' AS Type,
+                    pc.Id AS ID,
+                    p.Id AS RespondedPost,
+                    pc.ParentId AS RespondedComment,
+                    m.Id AS MemberId,
+	                m.Account AS MemberAccount,
+                    pc.Content,
+                    pc.Datetime,
+					SUM(CASE WHEN pcuv.Type = 1 THEN 1 ELSE 0 END) AS LikesCount,
+                    SUM(CASE WHEN pcuv.Type = 0 THEN 1 ELSE 0 END) AS UnlikesCount,
+                   (SELECT COUNT(*)
+					FROM PostComments pc_sub
+					WHERE pc_sub.ParentId = pc.Id				) AS CommentsCount,
+                    pc.ActiveFlag,
+					CASE pc.ActiveFlag
+						WHEN 1 THEN N'顯示'
+						WHEN 0 THEN N'隱藏'
+					END AS ActiveFlagText,
+					pc.DeleteDatetime, 
+					pc.DeleteBackendMemberId, 
+					pc.DeleteMemberId
+                FROM
+                    PostComments pc
+                    JOIN Members m ON pc.MemberId = m.Id
+                    JOIN Posts p ON pc.PostId = p.Id
+					JOIN Boards bd ON p.BoardId = bd.Id
+                    LEFT JOIN PostCommentUpDownVotes pcuv ON pc.Id = pcuv.PostCommentId
+                    LEFT JOIN PostComments pc_parent ON pc.ParentId = pc_parent.Id
+				WHERE
+					pc.PostId = @Id
+                GROUP BY
+					bd.Id, bd.Name, pc.Id, p.Id, m.Id, m.Account, pc.Content, pc.ParentId, pc.Datetime, pc.DeleteDatetime, pc.DeleteBackendMemberId, pc.DeleteMemberId, pc.ActiveFlag
+
+				Order by
+					Datetime
+                ";
+
+
+				//var result = connection.Query<PostsAndCommntsListDto>(query);
+
+				//return result;
+
+				IEnumerable<PostsCommentsListVm> result = connection.Query<PostsCommentsListVm>(query, new { Id = id });
+				return result;
+			}
+		}
 
 
 

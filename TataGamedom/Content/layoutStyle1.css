@@ -24,24 +24,30 @@ span {
 h2{
     text-align:center;
     font-size:x-large;
+    font-weight:600;
+    display:block;
 }
 
-.title{
-  position: fixed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  left: 10px;
-  top: 0;
-  text-align: center;
-  height: 50px;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(5px);  
-  min-width: 100px;
-  align-items: center;
-  border-radius: 10px;
-  font-size: 0.8em;
-  margin-top: 5px;
+
+.title {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: 10px;
+    top: 0;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-align: center;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+    min-width: 100px;
+    align-items: center;
+    border-radius: 10px;
+    font-size: 0.8em;
+    margin-top: 5px;
+    z-index: 5 !important;
 }
 
 .title:before {
@@ -85,10 +91,11 @@ h2{
   font-size: 0.8em;
   backdrop-filter: blur(5px);
   }
-  
-  .time{
-  margin-left:15px;
-  }
+
+.time {
+    margin-left: 15px;
+    margin-right: 15px;
+}
 
   #user-nav{
       z-index:3;
@@ -111,6 +118,7 @@ h2{
 #user-nav .user > ul {
   display: block;
   height: 100%;
+  width:100%;
   cursor: pointer;
 }
 
@@ -163,7 +171,7 @@ h2{
   position: fixed;
   top: 75px;
   left: 10px;
-  z-index: 2;
+  z-index: 3;
 }
 
 #side-nav a {
@@ -330,9 +338,19 @@ h2{
 }
 
 .container-tata {
-    margin-right: 5rem;
-    margin-left: 5rem;
-    margin-top: 5rem;
+    margin-right: 0;
+    margin-left: 3rem;
+    margin-top: 4rem;
+    margin-bottom: 3rem;
+    padding-top: 4rem;
+    padding-bottom: 2rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
+    background-color: snow;
+    border-radius: 1rem 1rem 0 0;
+    box-shadow: 0 0 15px 2px rgba(212, 175, 55, 0.1);
+    /*box-shadow: rgba(218, 165, 32, 0.2) 5px 0, rgba(218, 165, 32, 0.2) -5px 0,rgba(218, 165, 32, 0.2) 10px 0, rgba(218, 165, 32, 0.2) -10px 0, rgba(218, 165, 32, 0.05) 15px -5px, rgba(218, 165, 32, 0.05) -15px -5px;*/
+    min-height: calc(100vh - 4rem);
 }
 
 @keyframes animate-height {

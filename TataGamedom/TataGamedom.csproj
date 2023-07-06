@@ -192,13 +192,19 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Api\BoardsModeratorsApiController.cs" />
+    <Compile Include="Controllers\Api\BoardsModeratorsApplicationsApiController.cs" />
+    <Compile Include="Controllers\Api\BucketLogsApiController.cs" />
     <Compile Include="Controllers\Api\CommentsApiController.cs" />
+    <Compile Include="Controllers\Api\ReportsApiController.cs" />
     <Compile Include="Controllers\BackendMembersController.cs" />
     <Compile Include="Controllers\BackendMembersListController.cs" />
     <Compile Include="Controllers\Api\BoardsApiController.cs" />
     <Compile Include="Controllers\FAQController.cs" />
     <Compile Include="Controllers\BoardsController.cs" />
     <Compile Include="Controllers\CouponsController.cs" />
+    <Compile Include="Controllers\FrontApi\FrontPostCommentReportsApiController.cs" />
+    <Compile Include="Controllers\FrontApi\FrontPostReportsApiController.cs" />
     <Compile Include="Controllers\GameCommentsController.cs" />
     <Compile Include="Controllers\GamesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -570,7 +576,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\FrontApi\" />
     <Folder Include="Data\" />
     <Folder Include="Models\Dtos\PostsComments\" />
   </ItemGroup>
