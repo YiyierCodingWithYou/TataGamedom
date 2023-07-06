@@ -1,7 +1,9 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -123,19 +125,50 @@ namespace TataGamedom.Controllers
 
             return File(Encoding.UTF8.GetBytes(csv), "text/csv; charset=utf-8", "Suppliers.csv");
         }
-
         public string GetSuppliersCSV() 
         {
             var builder = new StringBuilder();
             builder.AppendLine("Id,Name,Phone,Email");
-            var suppliers = db.Suppliers.ToList();
-            foreach (var supplier in suppliers) 
+
+            foreach (var supplier in db.Suppliers) 
             {
                 builder.AppendLine($"{supplier.Name},{supplier.Name },{supplier.Phone},{supplier.Email}");
             }
             
             return builder.ToString();
         }
+
+        public FileResult ExportExcel()
+        {
+            using (var workBook = new XLWorkbook())
+            {
+                var workSheet = workBook.Worksheets.Add("Suppliers");
+                var currentRow = 1;
+                workSheet.Cell(currentRow, 1).Value = "Id";
+                workSheet.Cell(currentRow, 2).Value = "Name";
+                workSheet.Cell(currentRow, 3).Value = "Phone";
+                workSheet.Cell(currentRow, 4).Value = "Email";
+
+                foreach (var supplier in db.Suppliers)
+                {
+                    currentRow++;
+                    workSheet.Cell(currentRow, 1).Value = supplier.Id;
+                    workSheet.Cell(currentRow, 2).Value = supplier.Name;
+                    workSheet.Cell(currentRow, 3).Value = supplier.Phone;
+                    workSheet.Cell(currentRow, 4).Value = supplier.Email;
+                }
+
+                using (var stream = new MemoryStream())
+                {
+                    workBook.SaveAs(stream);
+                    var content = stream.ToArray();
+                    return File(content,
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "Suppliers.xlsx");
+                }
+            }
+        }
+
 
         protected override void Dispose(bool disposing)
         {
