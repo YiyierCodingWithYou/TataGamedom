@@ -41,5 +41,6 @@ namespace TataGamedom.Models.Services
 
         public InventoryItemDto GetByIndex(string index) => _repo.GetByIndex(index);
 		
+        public int BulkCreate() => _repo.bulkCreate();
 	}
 }

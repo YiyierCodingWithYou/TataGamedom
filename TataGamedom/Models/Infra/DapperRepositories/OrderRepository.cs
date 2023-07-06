@@ -123,18 +123,18 @@ WHERE O.[Index] = @Index
 MemberId = @MemberId , OrderStatusId = @OrderStatusId, ShipmentStatusId = @ShipmentStatusId , CreatedAt = @CreatedAt, CompletedAt = @CompletedAt,
 ShipmemtMethodId = @ShipmemtMethodId, RecipientName = @RecipientName, ToAddress = @ToAddress, SentAt= @SentAt, DeliveredAt = @DeliveredAt, 
 TrackingNum = @TrackingNum
-WHERE [Index] = @Index";
+WHERE Id = @Id";
 				connection.ExecuteScalar(sql,dto);
 			}
         }
 
-   //     public void Delete(string index)
-   //     {
-   //         var dbContext = new AppDbContext();
-			//var order = dbContext.Orders.SingleOrDefault(o => o.Index == index);
-			//if (order == null) { return;}
-			//dbContext.Orders.Remove(order);
-			//dbContext.SaveChanges();
-   //     }
-    }
+		public void Delete(string index)
+		{
+			var dbContext = new AppDbContext();
+			var order = dbContext.Orders.SingleOrDefault(o => o.Index == index);
+			if (order == null) { return; }
+			dbContext.Orders.Remove(order);
+			dbContext.SaveChanges();
+		}
+	}
 }
