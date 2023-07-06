@@ -1,21 +1,15 @@
 ﻿@model IEnumerable<TataGamedom.Models.EFModels.Supplier>
 
 @{
-    ViewBag.Title = "Index";
-    var importExcelHelper = ViewBag.ImportExcelHelper as TataGamedom.Models.Infra.ImportExcelHelper;
+    ViewBag.Title = "廠商清單";
 }
 
-<h2>Index</h2>
+<h2>廠商清單</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
-    <h4>@ViewBag.Result</h4>
-    @using (Html.BeginForm("Index", "ImportExcel", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-        @Html.TextBoxFor(model => importExcelHelper.file, new { type = "file" })
-        <button id="submitButton" type="submit">Submit</button>
-        @Html.ValidationMessageFor(model => importExcelHelper.file)
-    }
+    @Html.ActionLink("新增單筆", "Create")
+    <br />
+    @Html.ActionLink("匯入多筆", "ImportExcel")
 </p>
 <table class="table">
     <tr>
@@ -53,10 +47,4 @@
 
 </table>
 
-<script>
-    var uploadButton = document.getElementById('uploadButton');
-    uploadButton.addEventListener('click', function() {
-        window.location.href = '@Url.Action("ImportExcel", "Suppliers")';
-    });
-</script>
 

@@ -13,22 +13,27 @@ namespace TataGamedom.Models.Infra
     public class ImportExcelHelper : IValidatableObject
     {
         [Required(ErrorMessage ="請選取檔案")]
-        public HttpPostedFileBase file { get; set; }
+        public HttpPostedFileBase File { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var file = validationContext.ObjectInstance as HttpPostedFileBase;
+            var importExcel = validationContext.ObjectInstance as ImportExcelHelper;
             
-            if (file == null || file.ContentLength == 0) 
+            if (importExcel.File == null || importExcel.File.ContentLength == 0) 
             {
-                yield return new ValidationResult("請選取檔案", new List<string> {"file"});
+                yield return new ValidationResult("請選取檔案", new List<string> {"File"});
             }
 
             var validExtensions = new[] { ".xls", ".xlsx" };
-            var fileExtension = Path.GetExtension(file.FileName);
-            if (validExtensions.Any(e => e.Equals(fileExtension, StringComparison.OrdinalIgnoreCase)) == false) 
+
+            if (Path.GetExtension(importExcel.File.FileName) == null) 
             {
-                yield return new ValidationResult("僅能上傳Excel檔", new List<string> { "file" });
+                yield return new ValidationResult("僅能上傳Excel檔", new List<string> { "File" });
+            }
+
+            if (validExtensions.Any(e => e.Equals(Path.GetExtension(importExcel.File.FileName), StringComparison.OrdinalIgnoreCase)) == false) 
+            {
+                yield return new ValidationResult("僅能上傳Excel檔", new List<string> { "File" });
             }
         }
     }

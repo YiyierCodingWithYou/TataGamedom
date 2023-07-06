@@ -1,12 +1,6 @@
 Working On
-[v] 加入內建Controller SuppliersController 測試輸出CSV檔
-[v] Export() 成功輸出CSV檔
-[v] Export() 重構成StringBuilder
-[v] Export() Excel
 
-[] import Excel
-	[v]Server端(未測試)
-	[]檔案驗證
+[] import Excel 檔案驗證
 
 Order
 
@@ -136,3 +130,11 @@ View => 訂單主檔的部分跟訂單明細的部分拆開，商品圖套用 ; 回首頁
 [v] D :  新增讓空的主檔可以被刪除、被關聯的主檔被刪除會被提醒
 [v] 寄信功能，問是否需要寄信; 
 [v] 新增自訂驗證
+
+07/06
+[v] 加入內建Controller SuppliersController 測試輸出CSV檔
+[v] Export() 成功輸出CSV檔
+[v] Export() 重構成StringBuilder
+[v] Export() Excel
+[v] import Excel
+	[v]Client => Server
