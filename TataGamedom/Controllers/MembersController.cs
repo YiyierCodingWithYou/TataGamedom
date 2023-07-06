@@ -24,6 +24,7 @@ namespace TataGamedom.Controllers
 		private string _connstr = System.Configuration.ConfigurationManager.ConnectionStrings["AppDbContext"].ToString();
 
 
+
 		[Authorize]
 		public ActionResult MembersList()
 		{

@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using TataGamedom.Models.EFModels;
+using TataGamedom.Models.ViewModels.News;
 
 namespace TataGamedom.Controllers
 {
@@ -16,9 +17,15 @@ namespace TataGamedom.Controllers
 		[Authorize]
 		// GET: NewsCategory
 		public ActionResult Index()
-        {
-            return View(db.NewsCategoryCodes.ToList());
-        }
+		{
+			var newsCategories = db.NewsCategoryCodes.ToList().Select(nc => new NewsCategoryVM
+			{
+				Id = nc.Id,
+				Name = nc.Name
+			});
+
+			return View(newsCategories);
+		}
 		[Authorize]
 		// GET: NewsCategory/Details/5
 		public ActionResult Details(int? id)
@@ -47,40 +54,51 @@ namespace TataGamedom.Controllers
 		[Authorize]
 		[HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name")] NewsCategoryCode newsCategoryCode)
-        {
+		public ActionResult Create([Bind(Include = "Name")] NewsCategoryVM newsCategoryVM)
+		{
 			if (ModelState.IsValid)
 			{
-				// 檢查是否有重複的名稱
-				if (db.NewsCategoryCodes.Any(nc => nc.Name == newsCategoryCode.Name))
+				if (db.NewsCategoryCodes.Any(nc => nc.Name == newsCategoryVM.Name))
 				{
 					ModelState.AddModelError("", "名稱已存在，請使用其他名稱。");
-					return View(newsCategoryCode);
+					return View(newsCategoryVM);
 				}
 
+				NewsCategoryCode newsCategoryCode = new NewsCategoryCode
+				{
+					Name = newsCategoryVM.Name
+				};
+				TempData["SuccessMessage"] = $"成功新增{newsCategoryCode.Name}。";
 				db.NewsCategoryCodes.Add(newsCategoryCode);
 				db.SaveChanges();
 				return RedirectToAction("Index");
 			}
 
-			return View(newsCategoryCode);
-        }
+			return View(newsCategoryVM);
+		}
 
 		// GET: NewsCategory/Edit/5
 		[Authorize]
 		public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            NewsCategoryCode newsCategoryCode = db.NewsCategoryCodes.Find(id);
-            if (newsCategoryCode == null)
-            {
-                return HttpNotFound();
-            }
-            return View(newsCategoryCode);
-        }
+		{
+			if (id == null)
+			{
+				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+			}
+			NewsCategoryCode newsCategoryCode = db.NewsCategoryCodes.Find(id);
+			if (newsCategoryCode == null)
+			{
+				return HttpNotFound();
+			}
+
+			NewsCategoryVM newsCategoryVM = new NewsCategoryVM
+			{
+				Id = newsCategoryCode.Id,
+				Name = newsCategoryCode.Name
+			};
+
+			return View(newsCategoryVM);
+		}
 
 		// POST: NewsCategory/Edit/5
 		// 若要免於大量指派 (overposting) 攻擊，請啟用您要繫結的特定屬性，
@@ -88,46 +106,64 @@ namespace TataGamedom.Controllers
 		[Authorize]
 		[HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name")] NewsCategoryCode newsCategoryCode)
-        {
-            if (ModelState.IsValid)
-            {
-				if (db.NewsCategoryCodes.Any(nc => nc.Id != newsCategoryCode.Id && nc.Name == newsCategoryCode.Name))
+		public ActionResult Edit([Bind(Include = "Id,Name")] NewsCategoryVM newsCategoryVM)
+		{
+			if (ModelState.IsValid)
+			{
+				NewsCategoryCode newsCategoryCode = db.NewsCategoryCodes.Find(newsCategoryVM.Id);
+				if (newsCategoryCode == null)
 				{
-					ModelState.AddModelError("", "名稱已存在，請使用其他名稱。");
-					return View(newsCategoryCode);
+					return HttpNotFound();
 				}
 
+				if (db.NewsCategoryCodes.Any(nc => nc.Id != newsCategoryCode.Id && nc.Name == newsCategoryVM.Name))
+				{
+					ModelState.AddModelError("", "名稱已存在，請使用其他名稱。");
+					return View(newsCategoryVM);
+				}
+
+				newsCategoryCode.Name = newsCategoryVM.Name;
+
 				db.Entry(newsCategoryCode).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(newsCategoryCode);
-        }
+				db.SaveChanges();
+				return RedirectToAction("Index");
+			}
+
+			return View(newsCategoryVM);
+		}
 
 		// GET: NewsCategory/Delete/5
 		[Authorize]
 		public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            NewsCategoryCode newsCategoryCode = db.NewsCategoryCodes.Find(id);
-            if (newsCategoryCode == null)
-            {
-                return HttpNotFound();
-            }
-            return View(newsCategoryCode);
-        }
+		{
+			if (id == null)
+			{
+				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+			}
+
+			NewsCategoryCode newsCategoryCode = db.NewsCategoryCodes.Find(id);
+
+			if (newsCategoryCode == null)
+			{
+				return HttpNotFound();
+			}
+
+			NewsCategoryVM newsCategory = new NewsCategoryVM
+			{
+				Id = newsCategoryCode.Id,
+				Name = newsCategoryCode.Name
+			};
+
+			return View(newsCategory);
+		}
 
 		// POST: NewsCategory/Delete/5
 		[Authorize]
 		[HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            NewsCategoryCode newsCategoryCode = db.NewsCategoryCodes.Find(id);
+		public ActionResult DeleteConfirmed(int id)
+		{
+			NewsCategoryCode newsCategoryCode = db.NewsCategoryCodes.Find(id);
 
 			if (newsCategoryCode == null)
 			{
@@ -137,17 +173,18 @@ namespace TataGamedom.Controllers
 			// 檢查是否存在關聯鍵
 			if (HasAssociatedRecords(newsCategoryCode))
 			{
-                //ModelState.AddModelError("", "無法刪除該記錄，因為它與其他資料有關聯。");
-                //return View("Delete", newsCategoryCode);
-                TempData["ErrorMessage"] = "無法刪除該記錄，因為它與其他資料有關聯。";
-                return RedirectToAction("DELETE");
-            }
-
-
-			db.NewsCategoryCodes.Remove(newsCategoryCode);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+				TempData["ErrorMessage"] = $"無法刪除{newsCategoryCode.Name}該新聞類別，因為它與其他資料有關聯。";
+				return RedirectToAction("Delete");
+			}
+			else
+			{
+				db.NewsCategoryCodes.Remove(newsCategoryCode);
+				db.SaveChanges();
+				TempData["SuccessMessage"] = $"成功刪除{newsCategoryCode.Name}。";
+			
+			}
+			return RedirectToAction("Index");
+		}
 
 		private bool HasAssociatedRecords(NewsCategoryCode newsCategoryCode)
 		{

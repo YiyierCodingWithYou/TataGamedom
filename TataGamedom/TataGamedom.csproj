@@ -568,6 +568,7 @@
     <Content Include="Views\NewsCategory\Index.cshtml" />
     <Content Include="Views\BackendMembers\LoginTEST.cshtml" />
     <Content Include="Views\PostsComments\Index.cshtml" />
+    <Content Include="Views\Members\_MembersList.cshtml" />
     <Content Include="Views\Coupons\EditCouponProducts.cshtml" />
   </ItemGroup>
   <ItemGroup>
