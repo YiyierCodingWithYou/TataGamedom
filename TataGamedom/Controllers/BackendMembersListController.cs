@@ -177,18 +177,18 @@ LEFT JOIN BackendMembersRolesCodes AS bmr ON bmr.Id = bm.BackendMembersRoleId";
 					var salt = HashUtility.GetSalt();
 					var hashPwd = HashUtility.ToSHA256(list.Password, salt);
 
-					//var parameters = new
-					//{
-					//	list.Name,
-					//	list.Account,
-					//	Password = hashPwd,
-					//	list.Birthday,
-					//	list.Email,
-					//	list.Phone,
-					//	list.BackendMembersRoleId
-					//};
+					var parameters = new
+					{
+						list.Name,
+						list.Account,
+						Password = hashPwd,
+						list.Birthday,
+						list.Email,
+						list.Phone,
+						list.BackendMembersRoleId
+					};
 
-                    con.Query<int>(sql);
+					con.Query<int>(sql, parameters);
 
 					ViewBag.BackendMembersRoleId = new SelectList(db.BackendMembersRolesCodes, "Id", "Name", list.BackendMembersRoleId);
 

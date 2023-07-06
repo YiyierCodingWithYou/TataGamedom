@@ -1,0 +1,28 @@
+﻿@model TataGamedom.Models.Infra.ImportExcelHelper
+
+
+@{ ViewBag.Title = "Excel匯入多筆";}
+
+
+<h2>@ViewBag.Result</h2>
+@using (Html.BeginForm("ImportExcel", "Suppliers", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    @Html.TextBoxFor(model => model.File, new { type = "file" })
+    <br />
+    <br />
+    <button id="submitButton" type="submit">Submit</button>
+    @Html.ValidationMessageFor(model => model.File)
+}
+
+<br />
+<br />
+
+@using (Html.BeginForm("Reset", "Suppliers"))
+{
+    <button id="reset">Reset</button>
+}
+
+
+
+
