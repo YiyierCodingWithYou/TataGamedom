@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using System.Web.Http.Description;
 using System.Web.Mvc;
 using TataGamedom.Models.EFModels;
+using TataGamedom.Models.Infra;
 using TataGamedom.Models.Infra.DapperRepositories;
 using TataGamedom.Models.Interfaces;
 using TataGamedom.Models.Services;
@@ -12,6 +14,7 @@ using TataGamedom.Models.ViewModels.Coupons;
 
 namespace TataGamedom.Controllers
 {
+[Route("Coupons/{couponId}")]
 	public class CouponsController : Controller
 	{
 		private AppDbContext db = new AppDbContext();
@@ -150,9 +153,9 @@ namespace TataGamedom.Controllers
 				.ToList();
 
 			var availableProducts = db.Products
-	.Include("Game")
-	.OrderBy(p => p.Game.ChiName) // 按照遊戲名稱排序
-	.ToList();
+				.Include("Game")
+				.OrderBy(p => p.Game.ChiName) // 按照遊戲名稱排序
+				.ToList();
 
 			var viewModel = new EditCouponProductsVM
 			{
@@ -220,5 +223,46 @@ namespace TataGamedom.Controllers
 
 			return RedirectToAction("Index");
 		}
+
+		//[HttpDelete]
+		//[ResponseType(typeof(ApiResult))]
+
+		//public ApiResult Delete(int couponId)
+		//{
+		//	Coupon coupon;
+		//	try {
+			
+		//	coupon = db.Coupons.FirstOrDefault(c => c.Id == couponId);
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//	return ApiResult.Fail(ex.Message);
+		//	}
+
+		//	if (coupon == null)
+		//	{
+		//		return ApiResult.Fail("該優惠券不存在！");
+		//	}
+		//	//活動已結束
+		//	if (coupon.EndTime < DateTime.Now)
+		//	{
+		//		return ApiResult.Fail("無法刪除已結束的優惠券");
+		//	}
+		//	//活動未開始
+		//	if ((coupon.StartTime > DateTime.Now)|| (coupon.StartTime <= DateTime.Now && coupon.EndTime > DateTime.Now))
+		//	{
+		//		var hasRelatedData = db.CouponsProducts.Any(cp => cp.CouponId == couponId); 
+		//		if (hasRelatedData) //有適用商品
+		//		{
+		//			return ApiResult.Fail("無法刪除有適用商品之優惠券");
+		//		}
+		//		//無適用商品
+		//		db.Coupons.Remove(coupon);
+		//		db.SaveChanges();
+		//		return ApiResult.Success("優惠券已成功刪除。");
+		//	}
+
+		//	return ApiResult.Fail("刪除失敗");
+		//}
 	}
 }

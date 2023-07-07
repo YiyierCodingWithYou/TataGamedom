@@ -15,9 +15,9 @@ namespace TataGamedom.Controllers
 	{
 		private AppDbContext db = new AppDbContext();
 		// GET: GameComments
-		public ActionResult Index(int? id)
+		public ActionResult Index(int? gameCommentId)
 		{
-			IEnumerable<GameCommentIndexVM> comments = GetComments(id);
+			IEnumerable<GameCommentIndexVM> comments = GetComments(gameCommentId);
 			return View(comments);
 		}
 
