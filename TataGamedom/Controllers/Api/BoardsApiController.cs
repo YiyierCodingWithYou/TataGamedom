@@ -92,7 +92,7 @@ namespace TataGamedom.Controllers
 
 			Board existingEntity = db.Boards.Find(id);
 
-			if (id != dto.Id)
+			if (id != vm.Id)
 			{
 				return ApiResult.Fail("修改失敗");
 			}
