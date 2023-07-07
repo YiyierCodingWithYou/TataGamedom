@@ -67,7 +67,7 @@ namespace TataGamedom.Controllers
                 UNION ALL
 
                 SELECT
-					bd.Id AS BoardName,
+					bd.Id AS BoardId,
 					bd.Name AS BoardName,
                     'Comment' AS Type,
                     pc.Id AS ID,

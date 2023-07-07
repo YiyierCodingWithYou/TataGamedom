@@ -218,6 +218,7 @@
     <Compile Include="Controllers\Api\PostsApiController.cs" />
     <Compile Include="Controllers\PostsCommentsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\StockInSheetsController.cs" />
     <Compile Include="Files\Mails\Class1.cs" />
     <Compile Include="Files\Uploads\Class1.cs" />
@@ -239,6 +240,7 @@
     <Compile Include="Models\Dtos\Orders\OrderDto.cs" />
     <Compile Include="Models\Dtos\Orders\OrderIndexDto.cs" />
     <Compile Include="Models\Dtos\Orders\OrderInfoDto.cs" />
+    <Compile Include="Models\Dtos\Reports\ReportsConfirmDto.cs" />
     <Compile Include="Models\Dtos\StockInSheets\StockInSheetDto.cs" />
     <Compile Include="Models\Dtos\StockInSheets\StockInSheetIndexDto.cs" />
     <Compile Include="Models\Dtos\Boards\BoardCreateDto.cs" />
@@ -388,6 +390,8 @@
     <Compile Include="Models\ViewModels\Products\ProductEditImgVM.cs" />
     <Compile Include="Models\ViewModels\Products\ProductEditVM.cs" />
     <Compile Include="Models\ViewModels\Products\ProductIndexVM.cs" />
+    <Compile Include="Models\ViewModels\Reports\ReportListVm.cs" />
+    <Compile Include="Models\ViewModels\Reports\ReportsConfirmVm.cs" />
     <Compile Include="Models\ViewModels\StockInSheets\StockInSheetIndexVM.cs" />
     <Compile Include="Models\ViewModels\StockInSheets\StockInSheetVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -573,6 +577,7 @@
     <Content Include="Views\NewsCategory\Index.cshtml" />
     <Content Include="Views\BackendMembers\LoginTEST.cshtml" />
     <Content Include="Views\PostsComments\Index.cshtml" />
+    <Content Include="Views\Reports\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -32,7 +32,7 @@
     </style>
 }
 
-<h2>留言列表列表</h2>
+<h2>討論區貼文/留言列表</h2>
 
 
 
@@ -130,6 +130,7 @@
                                 text: JSON.stringify(data.Message)
                             }).then(() => {
                                 $('#postsCommentsTable').DataTable().ajax.reload();
+                                $('#littleTable').DataTable().ajax.reload();
                             });
                         } else {
                             Swal.fire({
@@ -161,6 +162,7 @@
                                 text: JSON.stringify(data.Message)
                             }).then(() => {
                                 $('#postsCommentsTable').DataTable().ajax.reload();
+                                $('#littleTable').DataTable().ajax.reload();
                             });
                         } else {
                             Swal.fire({
@@ -192,6 +194,7 @@
                                 text: JSON.stringify(data.Message)
                             }).then(() => {
                                 $('#postsCommentsTable').DataTable().ajax.reload();
+                                $('#littleTable').DataTable().ajax.reload();
                             });
                         } else {
                             Swal.fire({
@@ -224,6 +227,7 @@
                                 text: JSON.stringify(data.Message)
                             }).then(() => {
                                 $('#postsCommentsTable').DataTable().ajax.reload();
+                                $('#littleTable').DataTable().ajax.reload();
                             });
                         } else {
                             Swal.fire({
