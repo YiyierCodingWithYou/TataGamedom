@@ -33,9 +33,9 @@
 				<th>
 					@Html.DisplayNameFor(model => model.Account)
 				</th>
-				<th>
+				@*<th>
 					@Html.DisplayNameFor(model => model.Birthday)
-				</th>
+				</th>*@
 				<th>
 					@Html.DisplayNameFor(model => model.Email)
 				</th>
@@ -45,12 +45,13 @@
 				<th>
 					@Html.DisplayNameFor(model => model.ActiveFlag)
 				</th>
-				<th>
+				@*<th>
 					@Html.DisplayNameFor(model => model.RegistrationDate)
-				</th>
+				</th>*@
 				<th>
-					動作
+					詳細資訊
 				</th>
+		
 			</tr>
 		</thead>
 		<tbody id="tableBodyContainer">
@@ -64,9 +65,9 @@
 					<td>
 						@Html.DisplayFor(modelItem => item.Account)
 					</td>
-					<td>
+					@*<td>
 						@Html.DisplayFor(modelItem => item.Birthday)
-					</td>
+					</td>*@
 					<td>
 						@Html.DisplayFor(modelItem => item.Email)
 					</td>
@@ -83,30 +84,13 @@
 							<button class="btn btn-success btn-sm">使用中</button>
 						}
 					</td>
-					<td>
+					@*<td>
 						@Html.DisplayFor(modelItem => item.RegistrationDate)
-					</td>
+					</td>*@
 					<td>
-						@if (item.ActiveFlag)
-						{
-							using (Html.BeginForm("Delete", "Members", new { id = item.Id }, FormMethod.Post))
-							{
-								@Html.AntiForgeryToken()
-								<span>&nbsp;</span>
-								<input type="submit" value="停權" class="btn btn-danger btn-sm" id="deleteButton-@item.Id" />
-							}
-						}
-						else
-						{
-							using (Html.BeginForm("Reduction", "Members", new { id = item.Id }, FormMethod.Post))
-							{
-
-								@Html.AntiForgeryToken()
-								<span>&nbsp;</span>
-								<input type="submit" value="復原" class="btn btn-success btn-sm" id="restoreButton-@item.Id" />
-							}
-						}
+						@Html.ActionLink("詳細資訊", "Details", new { Id = item.Id }, new { @class = "btn btn-primary" })
 					</td>
+					
 				</tr>
 			}
 		</tbody>

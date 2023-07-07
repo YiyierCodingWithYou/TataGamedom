@@ -85,9 +85,8 @@ namespace TataGamedom.Controllers
 				List<GameClassificationsCode> gameClassifications1 = GetGameClassifications();
 				GameCreateVM model1 = new GameCreateVM
 				{
-					GameClassification = gameClassifications1,
-					SelectedGameClassification = vm.SelectedGameClassification
-			};
+					GameClassification = gameClassifications1
+				};
 				return View(model1);
 			}
 			List<int> selectedGameClassifications = vm.SelectedGameClassification;

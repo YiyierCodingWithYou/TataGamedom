@@ -59,8 +59,8 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-danger" id="deleBtn">刪除</button>
                 <button type="button" class="btn btn-primary" id="editBtn">編輯</button>
-                <button type="button" class="btn btn-outline-warning visually-hidden ms-0 me-auto" id="changeCoverBtn">修改封面</button>
-                <button type="button" class="btn btn-warning visually-hidden" id="saveBtn">儲存變更</button>
+                <button type="button" class="btn btn-outline-warning d-none ms-0 me-auto" id="changeCoverBtn">修改封面</button>
+                <button type="button" class="btn btn-warning d-none" id="saveBtn">儲存變更</button>
                 <button type="button" class="btn btn-secondary" id="closeBtn" data-bs-dismiss="modal">關閉</button>
             </div>
         </div>
@@ -150,10 +150,10 @@
             $("#boardName").attr("contenteditable", "false");
             $("#boardAbout").attr("contenteditable", "false");
             // 隱藏保存按鈕，顯示編輯按鈕
-            $("#saveBtn").addClass("visually-hidden");
-            $("#changeCoverBtn").addClass("visually-hidden");
-            $("#editBtn").removeClass("visually-hidden");
-            $("#deleBtn").removeClass("visually-hidden");
+            $("#saveBtn").addClass("d-none");
+            $("#changeCoverBtn").addClass("d-none");
+            $("#editBtn").removeClass("d-none");
+            $("#deleBtn").removeClass("d-none");
         }
         function clearForm() {
             document.getElementById('boardNameAdd').value = '';
@@ -352,7 +352,7 @@
                             editedAbout = data.BoardAbout;
 
                             if (data.GameName !== '') {
-                                $("#deleBtn").addClass("visually-hidden");
+                                $("#deleBtn").addClass("d-none");
                             }
                         });
                     }
@@ -364,9 +364,9 @@
                 $("#boardAbout").attr("contenteditable", "true");
 
                 // 隱藏編輯按鈕，顯示保存按鈕
-                $("#editBtn").addClass("visually-hidden");
-                $("#saveBtn").removeClass("visually-hidden");
-                $("#changeCoverBtn").removeClass("visually-hidden");
+                $("#editBtn").addClass("d-none");
+                $("#saveBtn").removeClass("d-none");
+                $("#changeCoverBtn").removeClass("d-none");
 
             });
             $("#changeCoverBtn").on("click", function () {
@@ -388,6 +388,7 @@
                         // 使用者選擇確定，執行 SaveEdit()
                         SaveEdit();
                         InitEditBtn()
+                        $("#deleBtn").addClass("d-none");
                     }
                 });
             });

@@ -21,6 +21,12 @@ namespace TataGamedom.Models.Infra
 			int id = backendMember?.Id ?? 0;
 			return id;
 		}
+		public int memberIdByAccount(string account)
+		{
+			var member = db.Members.FirstOrDefault(x => x.Account == account);
+			int id = member?.Id ?? 0;
+			return id;
+		}
 	}
 
 	
