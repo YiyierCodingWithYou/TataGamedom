@@ -9,9 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReadMe", "ReadMe", "{18DD11
 	ProjectSection(SolutionItems) = preProject
 		ReadMe(Alan).txt = ReadMe(Alan).txt
 		TataGamedom\ReadMe(mao).txt = TataGamedom\ReadMe(mao).txt
+		ReadMe(Piplup).md = ReadMe(Piplup).md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{A14001AD-78B4-435F-B427-C1C999563D8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject", "TestProject\TestProject.csproj", "{A14001AD-78B4-435F-B427-C1C999563D8D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
