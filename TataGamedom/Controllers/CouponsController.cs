@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using System.Web.Http.Description;
 using System.Web.Mvc;
 using TataGamedom.Models.EFModels;
+using TataGamedom.Models.Infra;
 using TataGamedom.Models.Infra.DapperRepositories;
 using TataGamedom.Models.Interfaces;
 using TataGamedom.Models.Services;
@@ -11,6 +14,7 @@ using TataGamedom.Models.ViewModels.Coupons;
 
 namespace TataGamedom.Controllers
 {
+[Route("Coupons/{couponId}")]
 	public class CouponsController : Controller
 	{
 		private AppDbContext db = new AppDbContext();
@@ -52,42 +56,42 @@ namespace TataGamedom.Controllers
 			{
 				return View(GetCreateInfo());
 			}
-			
+
 			var currentUserAccount = User.Identity.Name;
 			var memberInDb = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
 			vm.CreatedBackendMemberId = memberInDb.Id;
 			var createResult = service.Create(vm);
 			if (createResult.IsFail)
 			{
-				ModelState.AddModelError("", "新增優惠券失敗");
+				ModelState.AddModelError("", createResult.ErrorMessage);
 				return View(createResult);
 			}
 			return RedirectToAction("Index");
 		}
 		public ActionResult Edit(int id)
 		{
-				List<DiscountTypeCode> discountTypes = db.DiscountTypeCodes.ToList();
+			List<DiscountTypeCode> discountTypes = db.DiscountTypeCodes.ToList();
 
-				var couponInDb = db.Coupons.FirstOrDefault(m => m.Id == id);
-				var modifiedBackendMember = db.BackendMembers.FirstOrDefault(m => m.Id == couponInDb.ModifiedBackendMemberId);
+			var couponInDb = db.Coupons.FirstOrDefault(m => m.Id == id);
+			var modifiedBackendMember = db.BackendMembers.FirstOrDefault(m => m.Id == couponInDb.ModifiedBackendMemberId);
 
-				var coupon = new CouponEditVM
-				{
-					Id = couponInDb.Id,
-					Name = couponInDb.Name,
-					Discount = couponInDb.Discount,
-					DiscountTypeCode = discountTypes,
-					DiscountTypeId = couponInDb.DiscountTypeId,
-					Description = couponInDb.Description,
-					ModifiedBackendMemberName = modifiedBackendMember != null ? modifiedBackendMember.Name : null,
-					Threshold = couponInDb.Threshold,
-					ModifiedTime = couponInDb.ModifiedTime,
-					StartTime = couponInDb.StartTime,
-					EndTime = couponInDb.EndTime,
-					ActiveFlag = couponInDb.ActiveFlag
-				};
+			var coupon = new CouponEditVM
+			{
+				Id = couponInDb.Id,
+				Name = couponInDb.Name,
+				Discount = couponInDb.Discount,
+				DiscountTypeCode = discountTypes,
+				DiscountTypeId = couponInDb.DiscountTypeId,
+				Description = couponInDb.Description,
+				ModifiedBackendMemberName = modifiedBackendMember != null ? modifiedBackendMember.Name : null,
+				Threshold = couponInDb.Threshold,
+				ModifiedTime = couponInDb.ModifiedTime,
+				StartTime = couponInDb.StartTime,
+				EndTime = couponInDb.EndTime,
+				ActiveFlag = couponInDb.ActiveFlag
+			};
 
-				return View(coupon);
+			return View(coupon);
 		}
 
 		[HttpPost]
@@ -135,5 +139,130 @@ namespace TataGamedom.Controllers
 			// 若資料驗證失敗，返回編輯頁面並顯示錯誤訊息
 			return View(vm);
 		}
+		public ActionResult EditCouponProducts(int id)
+		{
+			var coupon = db.Coupons.FirstOrDefault(c => c.Id == id);
+			if (coupon == null)
+			{
+				return HttpNotFound();
+			}
+
+			var couponProducts = db.CouponsProducts
+				.Where(cp => cp.CouponId == coupon.Id)
+				.Select(cp => cp.ProductId)
+				.ToList();
+
+			var availableProducts = db.Products
+				.Include("Game")
+				.OrderBy(p => p.Game.ChiName) // 按照遊戲名稱排序
+				.ToList();
+
+			var viewModel = new EditCouponProductsVM
+			{
+				Id = coupon.Id,
+				CouponName = coupon.Name,
+				Description = coupon.Description,
+				SelectedProductIds = couponProducts,
+				AvailableProducts = availableProducts
+			};
+
+			return View(viewModel);
+		}
+
+		[HttpPost]
+		public ActionResult EditCouponProducts(EditCouponProductsVM model)
+		{
+			var couponId = model.Id;
+
+			// 取得已存在的產品關聯資料
+			var existingCouponProducts = db.CouponsProducts
+				.Where(cp => cp.CouponId == couponId)
+				.ToList();
+
+			// 新增選取的產品關聯資料
+			if (model.SelectedProductIds != null)
+			{
+				foreach (var productId in model.SelectedProductIds)
+				{
+					bool isExisting = existingCouponProducts.Any(cp => cp.ProductId == productId);
+
+					if (!isExisting)
+					{
+						var couponProduct = new CouponsProduct
+						{
+							CouponId = couponId,
+							ProductId = productId
+						};
+						db.CouponsProducts.Add(couponProduct);
+					}
+				}
+			}
+
+			// 刪除取消選取的產品關聯資料並將取消選取的選項加回商品列表中
+			foreach (var couponProduct in existingCouponProducts)
+			{
+				bool isSelected = model.SelectedProductIds.Contains(couponProduct.ProductId);
+
+				if (!isSelected)
+				{
+					db.CouponsProducts.Remove(couponProduct);
+
+					// 將取消選取的選項加回商品列表中
+					var product = db.Products.FirstOrDefault(p => p.Id == couponProduct.ProductId);
+					if (product != null)
+					{
+						model.AvailableProducts.Add(product);
+					}
+				}
+			}
+
+			// 儲存變更
+			db.SaveChanges();
+
+			// 返回到相應的視圖或進行其他操作
+
+			return RedirectToAction("Index");
+		}
+
+		//[HttpDelete]
+		//[ResponseType(typeof(ApiResult))]
+
+		//public ApiResult Delete(int couponId)
+		//{
+		//	Coupon coupon;
+		//	try {
+			
+		//	coupon = db.Coupons.FirstOrDefault(c => c.Id == couponId);
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//	return ApiResult.Fail(ex.Message);
+		//	}
+
+		//	if (coupon == null)
+		//	{
+		//		return ApiResult.Fail("該優惠券不存在！");
+		//	}
+		//	//活動已結束
+		//	if (coupon.EndTime < DateTime.Now)
+		//	{
+		//		return ApiResult.Fail("無法刪除已結束的優惠券");
+		//	}
+		//	//活動未開始
+		//	if ((coupon.StartTime > DateTime.Now)|| (coupon.StartTime <= DateTime.Now && coupon.EndTime > DateTime.Now))
+		//	{
+		//		var hasRelatedData = db.CouponsProducts.Any(cp => cp.CouponId == couponId); 
+		//		if (hasRelatedData) //有適用商品
+		//		{
+		//			return ApiResult.Fail("無法刪除有適用商品之優惠券");
+		//		}
+		//		//無適用商品
+		//		db.Coupons.Remove(coupon);
+		//		db.SaveChanges();
+		//		return ApiResult.Success("優惠券已成功刪除。");
+		//	}
+
+		//	return ApiResult.Fail("刪除失敗");
+		//}
 	}
 }

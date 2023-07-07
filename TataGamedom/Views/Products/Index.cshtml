@@ -63,6 +63,7 @@
                 <th>
                     商品圖片
                 </th>
+                <th>刪除</th>
             </tr>
         </thead>
         <tbody>
@@ -106,6 +107,11 @@
                     <td>
                         <a href="@Url.Action("EditProducImg", new { id = item.Id })" class="icon-link">
                             <i class="fa-regular fa-image"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Delete", new { id = item.Id })" class="icon-link">
+                            <i class="fa-solid fa-trash-can"></i>
                         </a>
                     </td>
                 </tr>

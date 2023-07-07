@@ -1,36 +1,42 @@
-﻿@model TataGamedom.Models.EFModels.NewsCategoryCode
+﻿@model TataGamedom.Models.ViewModels.News.NewsCategoryVM
 
 @{
 	ViewBag.Title = "Delete";
 }
 
-<h2>Delete</h2>
+<H2>刪除新聞類別</H2>
 
-<div>
-	<p>確定要刪除此記錄嗎？</p>
-	<hr />
-	<dl class="dl-horizontal">
-		<dt>
-			@Html.DisplayNameFor(model => model.Name)
-		</dt>
-
-		<dd>
+<div class="container">
+	<H1>
+		您確定要刪除
+		<div class="text-danger m-3">
 			@Html.DisplayFor(model => model.Name)
-		</dd>
-
-	</dl>
+		</div>
+		此新聞類別嗎?
+	</H1>
+	<hr />
 
 	@using (Html.BeginForm())
 	{
 		@Html.AntiForgeryToken()
 
 		<div class="form-actions no-color">
-			<input type="submit" value="Delete" class="btn btn-default" /> 
-			@*@Html.ActionLink("Back to List", "Index")*@
+			<input type="submit" value="確定刪除" class="btn btn-primary" />
+			@Html.ActionLink("返回", "Index", null, new { @class = "btn btn-danger" })
 		</div>
 	}
 </div>
 
-<script>
 
+<script src="https://cdn.jsdelivr.net/jquery.unobtrusive-ajax/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+<script>
+@if (TempData.ContainsKey("ErrorMessage"))
+{
+    <text>
+        $(document).ready(function() {
+            alert("@TempData["ErrorMessage"].ToString()");
+            location.reload();
+        });
+    </text>
+}
 </script>

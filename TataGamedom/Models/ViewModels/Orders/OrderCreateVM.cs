@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using TataGamedom.Models.EFModels;
 
 namespace TataGamedom.Models.ViewModels.Orders
 {
-	public class OrderCreateVM
+	public class OrderCreateVM : IValidatableObject
 	{
 		public int Id { get; set; }
 
@@ -65,5 +66,27 @@ namespace TataGamedom.Models.ViewModels.Orders
 		[StringLength(20)]
 		[Display(Name = "貨態追蹤代碼")]
 		public string TrackingNum { get; set; }
+
+		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+		{
+			var db = new AppDbContext();
+			var model = validationContext.ObjectInstance as OrderCreateVM;
+
+			if (model.CompletedAt.HasValue && model.CompletedAt < model.CreatedAt) 
+			{
+				yield return new ValidationResult("訂單日期不得晚於完成日期", new List<string> { "CreatedAt", "CompletedAt" });
+			}
+
+			if (model.MemberId != 0 && db.Members.Any(m => m.Id == model.MemberId) == false) 
+			{
+				yield return new ValidationResult("該會員編號不存在", new List<string> { "MemberId" });
+			}
+
+			if (model.SentAt.HasValue && model.DeliveredAt.HasValue && model.DeliveredAt < model.SentAt)
+			{
+				yield return new ValidationResult("抵達日期不能晚於寄送日期", new List<string> { "SentAt", "CreatedAt" });
+			}
+		}
+
 	}
 }

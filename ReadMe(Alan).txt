@@ -1,21 +1,20 @@
 Working On
-調整
-Orders Create
-[v] 隱藏退貨、退款選項, 寄送方式下拉式debug
-[v] 檢查會員編號是否存在
-[] 貨態追蹤代碼對應寄送方式e.g. 7-11 11碼
 
-[] dataType => date設定成不能選擇今天以後的
+[] import Excel 檔案驗證
 
+Order
 
-
+InventoryItem
+[] 開始寫多筆同時新增
 
 調整
 Orders
-[] C : 隱藏退貨、退款選項, 寄送方式下拉式debug, 貨態追蹤代碼對應寄送方式e.g. 7-11 11碼
-[] R : Detail  OrderItem Create debug，應改成新增訂單明細至該筆訂單  ;  View => 訂單主檔的部分跟訂單明細的部分拆開，商品圖套用 ; 回首頁
-[] U : 畫面呈現正在編輯哪筆訂單，及寄信功能; 下拉選單三種狀態的對應
-[] D : 新增讓空的主檔可以被刪除、被關聯的主檔被刪除會被提醒
+[] C : []Create OrderItem
+	   []選已付款 => 每個日期都必填 ; 選已發貨 => 寄送日必填 ; 選已到達或已取貨 => 抵達日期必填
+	   []貨態追蹤代碼對應寄送方式e.g. 7-11 11碼,
+	   []dataType => date設定成不能選擇今天以後的
+[] R : []Detail  OrderItem Create debug，應改成新增訂單明細至該筆訂單 => 之後前端處理;  
+[] U : []下拉選單三種狀態的對應
 
 OrderItemReturn
 [] C : 一筆OrderItem只能被退貨一次，下拉清單不顯示已被退貨過的選項 ; 檢查編號是否產生
@@ -46,9 +45,7 @@ Edit dataType => 沒get到日期 編號 ; Edit => 沒get到日期
 
 
 To Do
-[] Order 變更物流狀態 => 寄信
 [] 進貨推薦清單
-[] Create Order 要檢查Member id是否存在
 
 []退貨單
 []Edit Order 變更物流狀態時寄信
@@ -61,6 +58,8 @@ To Do
 
 [] 更改假資料 OrderItem要少於對應的庫存item
 
+Orders Create
+[] 貨態追蹤代碼對應寄送方式e.g. 7-11 11碼 
 
 Completed
 06/26
@@ -99,7 +98,7 @@ Completed
 [v]Order Create IRepo repo Service []功能 => Index編碼
 
 07/01
-[v]Order Create View Controller 
+[v] Order Create View Controller 
 [v] Orders Create 修改DataAnnotations&下拉清單
 [v] debug Index Sql
 [v] Add Order Info()
@@ -118,3 +117,24 @@ Completed
 退貨單
 [v] Dto VM Exts
 [v] CRUD
+
+07/05
+Orders Create
+[v] 隱藏退貨、退款選項, 寄送方式下拉式debug
+[v] 檢查會員編號是否存在
+[v] 訂單完成日期>抵達日期>寄送日期>訂單日期 (完成一半)
+
+View => 訂單主檔的部分跟訂單明細的部分拆開，商品圖套用 ; 回首頁
+隱藏退貨、退款選項, 寄送方式下拉式debug
+畫面呈現正在編輯哪筆訂單
+[v] D :  新增讓空的主檔可以被刪除、被關聯的主檔被刪除會被提醒
+[v] 寄信功能，問是否需要寄信; 
+[v] 新增自訂驗證
+
+07/06
+[v] 加入內建Controller SuppliersController 測試輸出CSV檔
+[v] Export() 成功輸出CSV檔
+[v] Export() 重構成StringBuilder
+[v] Export() Excel
+[v] import Excel
+	[v]Client => Server

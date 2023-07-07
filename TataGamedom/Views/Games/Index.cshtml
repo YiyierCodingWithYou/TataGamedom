@@ -53,6 +53,7 @@
                 <th>編輯封面</th>
                 <th>評論管理</th>
                 <th>新增商品</th>
+                <th>刪除</th>
             </tr>
         </thead>
         <tbody>
@@ -88,13 +89,18 @@
                     </a>
                 </td>
                 <td>
-                    <a href="@Url.Action("Index","GameComments", new { id = item.Id })" class="icon-link">
+                    <a href="@Url.Action("Index","GameComments", new { gameCommentId = item.Id })" class="icon-link">
                         <i class="fa-regular fa-comments"></i>
                     </a>
                 </td>
                 <td>
                     <a href="@Url.Action("AddProduct", new { id = item.Id })" class="icon-link">
                         <i class="fa-solid fa-circle-plus"></i>
+                    </a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Delete", new { id = item.Id })" class="icon-link">
+                        <i class="fa-solid fa-trash-can"></i>
                     </a>
                 </td>
             </tr>

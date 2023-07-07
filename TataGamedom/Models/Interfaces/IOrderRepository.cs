@@ -23,7 +23,9 @@ namespace TataGamedom.Models.Interfaces
         IEnumerable<OrderInfoDto> GetOrderItemsInfo(string index);
 
 		OrderDto GetByIndex(string index);
-        void Update(OrderDto dto);
-        //void Delete(string index);
+        
+		void Update(OrderDto dto);
+        
+		void Delete(string index);
     }
 }
