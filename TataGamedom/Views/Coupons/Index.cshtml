@@ -60,6 +60,7 @@
                 </th>
                 <th>編輯</th>
                 <th>適用商品</th>
+                <th>刪除</th>
             </tr>
         </thead>
 
@@ -81,7 +82,7 @@
                     </td>
                     <td>
                         <span>@item.StartTime.ToString("yyyy/MM/dd")</span>
-                        <br/>
+                        <br />
                         <span>@item.StartTime.ToString("HH:mm:ss")</span>
                     </td>
                     <td>
@@ -115,6 +116,11 @@
                             <i class="fa-solid fa-circle-plus"></i>
                         </a>
                     </td>
+                    <td>
+                        <a href="#" class="icon-link" onclick="confirmDelete('@item.CouponId')">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </a>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -145,5 +151,54 @@
                 }
             });
         });
+        function confirmDelete(couponId) {
+            console.log(couponId);
+            Swal.fire({
+                title: '確定要刪除嗎？',
+                text: '刪除後將無法恢復。',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '確定',
+                cancelButtonText: '取消'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteCoupon(couponId);
+                }
+            });
+        }
+
+        function deleteCoupon(couponId) {
+            $.ajax({
+                url: `/api/CouponsApi/${couponId}`,
+                type: 'DELETE',
+                success: function (result) {
+                    if (result.IsSuccess) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '刪除成功',
+                            text: result.Message,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: '確定'
+                        }).then(() => {
+                            // 重新導向至 Index 頁面
+                            window.location.href = "/Coupons/Index";
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '刪除失敗',
+                            text: result.Message,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: '確定'
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
     </script>
 }
