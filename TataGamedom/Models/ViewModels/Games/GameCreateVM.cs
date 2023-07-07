@@ -26,7 +26,7 @@ namespace TataGamedom.Models.ViewModels.Games
 
 		public List<GameClassificationsCode> GameClassification { get; set; }
 		[Display(Name = "遊戲類別（複選最多兩項）")]
-		//[Required]
+		[Required]
 		public List<int> SelectedGameClassification { get; set; } = new List<int>();
 
 		[Display(Name = "遊戲介紹")]

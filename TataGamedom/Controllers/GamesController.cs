@@ -56,13 +56,24 @@ namespace TataGamedom.Controllers
 			var currentUserAccount = User.Identity.Name;
 			var memberInDb = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
 			var savedFileName = SaveFile(file1);
+			if(savedFileName == string.Empty && vm.SelectedGameClassification.Count == 0)
+			{
+				ModelState.AddModelError("GameCoverImg", "請選擇檔案");
+				ModelState.AddModelError("SelectedGameClassification", "請選擇遊戲分類！");
+				List<GameClassificationsCode> gameClassifications0 = GetGameClassifications();
+				GameCreateVM model0 = new GameCreateVM
+				{
+					GameClassification = gameClassifications0,
+				};
+				return View(model0);
+			}
 			if (savedFileName == string.Empty)
 			{
 				ModelState.AddModelError("GameCoverImg", "請選擇檔案");
 				List<GameClassificationsCode> gameClassifications0 = GetGameClassifications();
 				GameCreateVM model0 = new GameCreateVM
 				{
-					GameClassification = gameClassifications0
+					GameClassification = gameClassifications0,
 				};
 				return View(model0);
 			}
@@ -74,8 +85,9 @@ namespace TataGamedom.Controllers
 				List<GameClassificationsCode> gameClassifications1 = GetGameClassifications();
 				GameCreateVM model1 = new GameCreateVM
 				{
-					GameClassification = gameClassifications1
-				};
+					GameClassification = gameClassifications1,
+					SelectedGameClassification = vm.SelectedGameClassification
+			};
 				return View(model1);
 			}
 			List<int> selectedGameClassifications = vm.SelectedGameClassification;
