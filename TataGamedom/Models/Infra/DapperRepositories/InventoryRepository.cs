@@ -22,14 +22,20 @@ namespace TataGamedom.Models.Infra.DapperRepositories
             using (var connection = new SqlConnection(Connstr)) 
             {
                 string sql = @"SELECT 
-SUM(IIT.Cost) AS Total, P.IsVirtual AS ProductIsVirtual, G.ChiName AS GameName, G.GameCoverImg AS GameCoverImage,
-P.[Index] AS ProductIndex,IIT.ProductId,
-(SELECT COUNT(*) FROM OrderItems AS OI RIGHT JOIN InventoryItems AS II ON OI.InventoryItemId = II.Id
-WHERE II.ProductId = P.Id AND OI.ProductId IS NULL) AS [Count], P.Id
+P.IsVirtual AS ProductIsVirtual, G.ChiName AS GameName, G.GameCoverImg AS GameCoverImage, P.[Index] AS ProductIndex, IIT.ProductId,   
+
+P.Id,
+
+(SELECT COUNT(*) FROM OrderItems AS OI RIGHT JOIN InventoryItems AS II ON OI.InventoryItemId = II.Id WHERE II.ProductId = P.Id AND OI.ProductId IS NULL) 
+AS [Count],
+
+(SELECT SUM(II.Cost)FROM InventoryItems AS II LEFT JOIN OrderItems AS OI ON II.Id = OI.InventoryItemId WHERE II.ProductId = P.Id AND OI.InventoryItemId IS NULL)
+AS Total
+
 FROM InventoryItems AS IIT
-RIGHT JOIN Products AS P ON　IIT.ProductId = P.Id
+RIGHT JOIN Products AS P ON IIT.ProductId = P.Id
 RIGHT JOIN Games AS G ON P.GameId = G.Id 
-GROUP BY IIT.ProductId,P.IsVirtual, G.ChiName, G.GameCoverImg,P.[Index],P.Id
+GROUP BY IIT.ProductId, P.IsVirtual, G.ChiName, G.GameCoverImg, P.[Index], P.Id
 ORDER BY G.ChiName, P.[Index]
 ";
                 return connection.Query<InventoryVM>(sql);

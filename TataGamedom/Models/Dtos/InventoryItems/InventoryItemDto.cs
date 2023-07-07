@@ -55,6 +55,7 @@ namespace TataGamedom.Models.Dtos.InventoryItems
                 Id = dto.Id,
                 SKU = dto.Index,
                 ProductId = dto.ProductId,
+                StockInSheetId = dto.StockInSheetId,
                 StockInSheetIndex = dto.StockInSheetIndex,
                 Cost = dto.Cost,
                 GameKey = dto.GameKey,
