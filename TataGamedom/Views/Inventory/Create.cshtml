@@ -2,19 +2,19 @@
 
 @{
     ViewBag.Title = "新增庫存明細";
-    var productId = ViewBag.productId as IEnumerable<SelectListItem>;
-    productId = productId.Prepend(new SelectListItem { Value = "", Text = "請選擇..." });
+    var productIndex = ViewBag.productIndex as IEnumerable<SelectListItem>;
+    productIndex = productIndex.Prepend(new SelectListItem { Value = "", Text = "請選擇..." });
 
     var StockInSheetIndex = ViewBag.StockInSheetIndex as IEnumerable<SelectListItem>;
     StockInSheetIndex = StockInSheetIndex.Prepend(new SelectListItem { Value = "", Text = "請選擇..." });
 }
 
-@if (ViewBag.ShowConfirmation != null && (bool)ViewBag.ShowConfirmation)
+@*@if (ViewBag.ShowConfirmation != null && (bool)ViewBag.ShowConfirmation)
 {
     <div class="alert alert-warning">
         該庫存無紀錄，是否新增一筆庫存？
     </div>
-}
+}*@
 
 <h2>新增庫存明細</h2>
 
@@ -29,7 +29,7 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.ProductId, htmlAttributes: new { @class = "control-label col-md-2" })
-            @Html.DropDownListFor(model => model.ProductId, productId, new { @class = "form-select" })
+            @Html.DropDownListFor(model => model.ProductId, productIndex, new { @class = "form-select" })
             @Html.ValidationMessageFor(model => model.ProductId, "", new { @class = "text-danger" })
         </div>
 
@@ -52,6 +52,7 @@
         </div>
 
         <div class="form-group">
+            <br />
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

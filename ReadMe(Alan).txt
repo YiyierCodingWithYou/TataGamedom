@@ -1,12 +1,10 @@
 Working On
-Inventory
-[] C : View 要改
-[] R : [v]Index View要改
-	   
-	   [v]detail 遊戲名稱獨立出來
-	   [] 新增篩選分頁, 已售出未售出
-[] U : Get 呈現原本的值(參考Order)
-[] D : 讓沒被關聯的可以刪，在UI介面就擋掉
+
+OrderItemReturn
+[] C : 一筆OrderItem只能被退貨一次，下拉清單不顯示已被退貨過的選項 ; 檢查編號是否產生
+[] R : Index 退款/退貨/重新入庫 改成文字 ; Detail 售價改#,# 退貨原訂單代碼獨立出來 
+[] U : Detail Edit 一筆OrderItem只能被退貨一次，下拉清單不顯示已被退貨過的選項
+[] D
 
 
 Order
@@ -24,16 +22,20 @@ Orders
 [] R : []Detail  OrderItem Create debug，應改成新增訂單明細至該筆訂單 => 之後前端處理;  
 [] U : []下拉選單三種狀態的對應
 
-OrderItemReturn
-[] C : 一筆OrderItem只能被退貨一次，下拉清單不顯示已被退貨過的選項 ; 檢查編號是否產生
-[] R : Index 退款/退貨/重新入庫 改成文字 ; Detail 售價改#,# 退貨原訂單代碼獨立出來 
-[] U : Detail Edit 一筆OrderItem只能被退貨一次，下拉清單不顯示已被退貨過的選項
-[] D
 
+
+Inventory
+[] C : View 要改
+[] R : [v]Index View要改
+	   
+	   [v]detail 遊戲名稱獨立出來
+	   [] 新增篩選分頁, 已售出未售出
+[v] U : Get 呈現原本的值
+[] D : 讓沒被關聯的可以刪，在UI介面就擋掉
 
 
 StockInSheets
-[] C : Quantiry? 反正規化? ProductId? 
+[] C : Quantity? 反正規化? ProductId? 
 [] R
 [] U : 若改成已入庫，到貨日自動getDate
 [] D

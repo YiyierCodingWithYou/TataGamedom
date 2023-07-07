@@ -116,13 +116,13 @@ namespace TataGamedom.Controllers
 
 		private void PrepareCreateInventoryDataSource(int? productId, string StockInSheetIndex)
 		{
-			var productIdSelectList = new List<SelectListItem>();
+			var productIndexSelectList = new List<SelectListItem>();
 			foreach (var p in db.Products) 
 			{
-				productIdSelectList.Add(new SelectListItem { Value = p.Id.ToString(), Text = p.Index }); 
+				productIndexSelectList.Add(new SelectListItem { Value = p.Id.ToString(), Text = p.Index }); 
 			}
 
-			ViewBag.productId = productIdSelectList;
+			ViewBag.productIndex = productIndexSelectList;
 
 			var StockInSheetIndexSelectList = new List<SelectListItem>();
 			foreach (var sis in db.StockInSheets) 
