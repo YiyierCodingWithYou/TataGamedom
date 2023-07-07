@@ -177,7 +177,11 @@ namespace TataGamedom.Controllers
 		}
 		private (string returnUrl, HttpCookie cookie) ProcessLogin(string account, bool rememberMe)
 		{
-			var roles = string.Empty; // 在本範例, 沒有用到角色權限,所以存入空白
+			var db = new AppDbContext();
+
+			var memberInDb = db.BackendMembers.FirstOrDefault(m => m.Account == account);
+
+			var name = memberInDb.Name; // 在本範例, 沒有用到角色權限,所以存入空白
 
 			// 建立一張認證票
 			var ticket =
@@ -187,7 +191,7 @@ namespace TataGamedom.Controllers
 					DateTime.Now,   // 發行日
 					DateTime.Now.AddDays(31), // 到期日
 					rememberMe,     // 是否續存
-					roles,          // userdata
+					name,          // userdata
 					"/" // cookie位置
 				);
 
@@ -206,7 +210,7 @@ namespace TataGamedom.Controllers
 
 		private int GetBackendMembersRoleIdByUsername(string account)
 		{
-			using (var db = new AppDbContext()) // 用你的DbContext替代YourDbContext
+			using (var db = new AppDbContext()) // 
 			{
 				var backendMember = db.BackendMembers.FirstOrDefault(m => m.Account == account);
 				if (backendMember != null)
