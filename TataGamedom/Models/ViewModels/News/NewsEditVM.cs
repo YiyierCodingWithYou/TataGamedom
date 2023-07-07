@@ -52,9 +52,14 @@ namespace TataGamedom.Models.ViewModels.News
 				return ActiveFlag == true ? "上線" : "隱藏";
 			}
 		}
-		[Display(Name = "最後編輯時間")]
+		[Display(Name = "刪除時間")]
 		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd  hh:mm}")]
 		public DateTime? DeleteDatetime { get; set; }
+
+		[Display(Name = "最後編輯時間")]
+		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd  hh:mm}")]
+		public DateTime? EditDatetime { get; set; }
+
 		[Display(Name = "最後修改人員")]
 		public int? DeleteBackendMemberId { get; set; }
 

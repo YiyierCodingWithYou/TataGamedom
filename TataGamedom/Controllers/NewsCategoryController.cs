@@ -173,7 +173,7 @@ namespace TataGamedom.Controllers
 			// 檢查是否存在關聯鍵
 			if (HasAssociatedRecords(newsCategoryCode))
 			{
-				TempData["ErrorMessage"] = $"無法刪除{newsCategoryCode.Name}該新聞類別，因為它與其他資料有關聯。";
+				TempData["ErrorMessage"] = $"無法刪除{newsCategoryCode.Name}，請聯繫工程師。";
 				return RedirectToAction("Delete");
 			}
 			else

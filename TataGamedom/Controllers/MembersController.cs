@@ -26,14 +26,15 @@ namespace TataGamedom.Controllers
 
 
 		[Authorize]
-		public ActionResult MembersList()
+		public ActionResult MembersList(int? id)
 		{
 			using (var con = new SqlConnection(_connstr))
 			{
 				string sql = @"SELECT Id,Name,Account,Birthday,Email,Phone,RegistrationDate,ActiveFlag
-FROM Members
-";
-				var list = con.Query<MembersListVM>(sql);
+                       FROM Members
+                       ";
+
+				var list = con.Query<MembersListVM>(sql, new { Id = id });
 
 				return View(list);
 			}
@@ -43,14 +44,27 @@ FROM Members
 		[Authorize]
 		public ActionResult Details(int? id)
 		{
+			if (id == null)
+			{
+				// ID 為 null，執行適當的處理方式
+				return RedirectToAction("Index"); // 或是返回錯誤視圖等等
+			}
+
 			using (var con = new SqlConnection(_connstr))
 			{
-				string sql = @"SELECT * FROM Members
-WHERE Id = @Id";
+				string sql = @"SELECT Id,Name,Account,Birthday,Email,Phone,RegistrationDate,ActiveFlag
+                       FROM Members
+                       WHERE Id = @Id";
 
-				var detials = con.Query<MembersListVM>(sql, new { Id = id }).SingleOrDefault();
+				var details = con.Query<MembersListVM>(sql, new { Id = id }).SingleOrDefault();
 
-				return View(detials);
+				if (details == null)
+				{
+					// 根據 ID 查詢不到資料，執行適當的處理方式
+					return RedirectToAction("NotFound"); // 或是返回錯誤視圖等等
+				}
+
+				return View(details);
 			}
 		}
 

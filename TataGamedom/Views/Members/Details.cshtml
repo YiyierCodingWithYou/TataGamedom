@@ -4,98 +4,91 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>會員詳細資訊</h2>
 
-<div>
-    <h4>MembersListVM</h4>
+<div class="container">
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+	<dl class="dl-horizontal">
+		<dt>
+			@Html.DisplayNameFor(model => model.Name)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.Name)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Account)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.Account)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Account)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.Account)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Birthday)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.Birthday)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Birthday)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.Birthday)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.Email)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.Email)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Phone)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.Phone)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Phone)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.Phone)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ActiveFlag)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.ActiveFlag)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ActiveFlag)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.ActiveFlagText)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ActiveFlagText)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.RegistrationDate)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ActiveFlagText)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.RegistrationDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RegistrationDate)
-        </dd>
-
-    </dl>
+		<dd>
+			@Html.DisplayFor(model => model.RegistrationDate)
+		</dd>
+		<div>
+			@Html.ActionLink("返回", "MembersList", null, new { @class = "btn btn-primary btn-lg" })
+		</div>
+	</dl>
 </div>
 
 <div class="mb-5">
 	<div class="mb-3" style="display: flex; justify-content: flex-end;">
-		@Html.ActionLink("返回", "MembersList", null, new { @class = "btn btn-primary" })
+		
 		@if (Model.ActiveFlag)
 		{
 			using (Html.BeginForm("Delete", "Members", new { id = Model.Id }, FormMethod.Post))
 			{
 				@Html.AntiForgeryToken()
 				<span>&nbsp;</span>
-				<input type="submit" value="刪除" class="btn btn-danger" />
+				<input type="submit" value="停權" class="btn btn-danger btn-lg" />
 			}
 		}
 		else
 		{
-			using (Html.BeginForm("Reduction", "Memberst", new { id = Model.Id }, FormMethod.Post))
+			using (Html.BeginForm("Reduction", "Members", new { id = Model.Id }, FormMethod.Post))
 			{
 				@Html.AntiForgeryToken()
 				<span>&nbsp;</span>
-				<input type="submit" value="復原" class="btn btn-success" />
+				<input type="submit" value="復原" class="btn btn-success btn-lg" />
 			}
 		}
 	</div>
