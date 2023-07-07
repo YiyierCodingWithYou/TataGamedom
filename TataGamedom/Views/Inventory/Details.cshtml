@@ -1,14 +1,12 @@
 ﻿@model IEnumerable<TataGamedom.Models.ViewModels.InventoryItems.InventoryItemVM>
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "庫存明細";
 }
+<h2>
+    庫存明細: @Model.FirstOrDefault().GameName
+</h2>
 
-<h2>Details</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
@@ -22,9 +20,6 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.GameKey)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.GameName)
         </th>
         <th></th>
     </tr>
@@ -44,10 +39,7 @@
             @Html.DisplayFor(modelItem => item.GameKey)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.GameName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { Index=item.SKU }) |
+            @Html.ActionLink("編輯", "Edit", new { Index=item.SKU })
         </td>
     </tr>
 }

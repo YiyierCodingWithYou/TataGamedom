@@ -30,7 +30,7 @@ FROM InventoryItems AS IIT
 RIGHT JOIN Products AS P ON　IIT.ProductId = P.Id
 RIGHT JOIN Games AS G ON P.GameId = G.Id 
 GROUP BY IIT.ProductId,P.IsVirtual, G.ChiName, G.GameCoverImg,P.[Index],P.Id
-ORDER BY COUNT(IIT.ProductId) DESC
+ORDER BY G.ChiName, P.[Index]
 ";
                 return connection.Query<InventoryVM>(sql);
             }
