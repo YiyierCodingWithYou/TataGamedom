@@ -1,0 +1,174 @@
+﻿@section Styles{
+    <link href="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.5/af-2.6.0/b-2.4.0/b-colvis-2.4.0/b-html5-2.4.0/b-print-2.4.0/date-1.5.0/fc-4.3.0/fh-3.4.0/r-2.5.0/sb-1.5.0/sp-2.2.0/sl-1.7.0/datatables.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <style>
+        thead {
+            background-color: goldenrod;
+            color: white;
+        }
+
+        .vertical-align-middle {
+            vertical-align: middle;
+        }
+
+        table .text-gray {
+            color: lightgray !important;
+        }
+    </style>
+}
+
+
+<h2>Index</h2>
+
+<table class="table table-striped table-hover w-100" id="ReportTable">
+    <thead>
+        <tr>
+            <td>序號</td>
+            <td>類型</td>
+            <td>時間</td>
+            <td>檢舉人</td>
+            <td>原因</td>
+            <td>ReportedId</td>
+            <td>內容</td>
+            <td>被檢舉人</td>
+            <td>確認</td>
+            <td>處理說明</td>
+            <td>完成日</td>
+            <td>Staff</td>
+        </tr>
+    </thead>
+</table>
+
+<div class="modal modal-xl" id="myModal" tabindex="-2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body row">
+                <div class="reported col-md-6">
+                    <blockquote class="blockquote" id="ReportedContent">
+                        <p>A well-known quote, contained in a blockquote element.</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer" id="ReportedContent">
+                        某某人
+                        <cite title="Source Title" id="ReportedAccount">Source Title</cite><br />
+                        <cite title="Source Title" id="ReportedAccount">Source Title</cite>
+                    </figcaption>
+                    <figcaption class="blockquote-footer" id="ReportedContent">
+                        Someone famous in
+                    </figcaption>
+                </div>
+                <div class="from col-md-6 ">
+                    <figure>
+
+                    </figure>
+                    <div class="d-grid gap-2 btn-area">
+                        <p id="reportedAccount">我是檢舉人ㄌ</p>
+                        <div class="bg-tertiary shadow-sm p-4 rounded-1">
+                            <p id="reportedcontain">好不爽啊我檢舉</p>
+                        </div>
+                        <button id="prConfirmBtn" class="btn btn-outline-warning" type="button">
+                            完成
+                        </button>
+                        <button id="crConfirmBtn" class="btn btn-outline-primary" type="button">完成</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer align-items-center">
+                <button type="button" class="btn btn-secondary" id="closeBtn" data-bs-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.5/af-2.6.0/b-2.4.0/b-colvis-2.4.0/b-html5-2.4.0/b-print-2.4.0/date-1.5.0/fc-4.3.0/fh-3.4.0/r-2.5.0/sb-1.5.0/sp-2.2.0/sl-1.7.0/datatables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+
+
+    <script>
+        const baseAddress = 'https://localhost:44398';
+
+        $(document).ready(function () {
+            $('#ReportTable').DataTable
+                ({
+                    responsive: true,
+                    dom: "<'row'<'col-5 'Q><'col-7 d-flex justify-content-end align-items-center'<'mb-0 pb-0' B>>>flrtilp",
+                    buttons: ['copy', 'csv', 'excel'],
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/zh-HANT.json',
+                    },
+                    ajax: {
+                        type: 'GET',
+                        url: `${baseAddress}/api/ReportsApi`,
+                        dataSrc: function (data) { return data; }
+                    },
+                    columns: [
+                        { "data": "Index", "className": "text-center vertical-align-middle" },
+                        { "data": "Type", "className": "text-center vertical-align-middle" },
+                        {
+                            "data": "Datetime",
+                            "className": "text-center vertical-align-middle",
+                            "render": function (data, type, row) {
+                                let date = new Date(data);
+                                let formattedDateTime = date.toLocaleDateString('ja-JP');
+                                return formattedDateTime;
+                            }
+                        },
+                        { "data": "Account", "className": "text-center vertical-align-middle" },
+                        { "data": "Reason", "className": "text-center vertical-align-middle" },
+                        { "data": "ReportedId", "className": "text-center vertical-align-middle" },
+                        { "data": "ReportedContent", "className": "text-center vertical-align-middle" },
+                        { "data": "ReportedAccount", "className": "text-center vertical-align-middle" },
+                        { "data": "IsCommitText", "className": "text-center vertical-align-middle" },
+                        { "data": "ReviewComment", "className": "text-center vertical-align-middle" },
+                        { "data": "ReviewDatetime", "className": "text-center vertical-align-middle" },
+                        { "data": "ReviewerBackendMemberAccount", "className": "text-center vertical-align-middle" }
+                    ],
+                    columnDefs: [
+                        {
+                            target: 3,
+                            visible: false,
+                        },
+                        {
+                            target: 5,
+                            visible: false,
+                        },
+                        {
+                            target: 7,
+                            visible: false,
+                        },
+                        {
+                            target: 9,
+                            visible: false,
+                        },
+                        {
+                            target: 10,
+                            visible: false,
+                        },
+                        {
+                            target: 11,
+                            visible: false,
+                        },
+                    ],
+                    "rowCallback": function (row, data) {
+                        if (data.IsCommitText.includes('完成')) {
+                            $("td", row).addClass("text-gray"); // Change text color to gray for rows with ActiveFlag = false
+                        }
+
+                        $(row).on("dblclick", function () {
+                            $('#myModal').modal('show');
+
+                        });
+                    }
+                })
+        })
+    </script>
+
+}

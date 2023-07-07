@@ -33,7 +33,17 @@ function updateDateTime() {
   timeSpan.textContent = formattedDateTime;
 }
 
-$(document).on("click", "li", function (event) {
+$(document).on("click", "#user-nav li", function (event) {
+    var link = $(this).find("a");
+    if (link.length) {
+        var href = link.attr("href");
+        event.stopPropagation();
+        console.log("Selected link:", href);
+        window.location.replace(href)
+    }
+});
+
+$(document).on("click", "#side-nav li", function (event) {
     var link = $(this).find("a");
     if (link.length) {
         var href = link.attr("href");
