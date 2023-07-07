@@ -24,6 +24,18 @@ namespace TataGamedom.Controllers
 		private AppDbContext db = new AppDbContext();
 		private SimpleHelper simpleHelper = new SimpleHelper();
 
+
+
+		[System.Web.Http.HttpGet]
+		[System.Web.Http.Route("api/BoardsApi/NameList")]
+		public async Task<IEnumerable<string>> GetBoardNames()
+		{
+			if (db.Boards == null)
+			{
+				return null;
+			}
+			return db.Boards.Select(board => board.Name);
+		}
 		// GET: api/BoardsApi
 		public async Task<IEnumerable<BoardListVM>> GetBoards()
 		{
@@ -48,31 +60,31 @@ namespace TataGamedom.Controllers
 		}
 
 		// GET: api/BoardsApi/5
-		[ResponseType(typeof(BoardListVM))]
-		public IHttpActionResult GetBoard(int id)
-		{
-			Board board = db.Boards.Find(id);
-			if (board == null)
-			{
-				return NotFound();
-			}
-			var vm = new BoardListVM
-			{
-				Id = board.Id,
-				BoardHeaderCoverImg = "/Files/Uploads/" + board.BoardHeaderCoverImg,
-				Name = board.Name,
-				GameName = board.Game.ChiName + " | " + board.Game.EngName,
-				BoardAbout = board.BoardAbout,
-				FollowersCount = db.MembersBoards.Count(mb => mb.BoardId == board.Id),
-				LastPostedAt = db.Posts.Where(p => p.BoardId == board.Id)
-						  .OrderByDescending(p => p.Datetime)
-						  .Select(p => p.Datetime)
-						  .DefaultIfEmpty(DateTime.MinValue)
-						  .FirstOrDefault()
-			};
+		//[ResponseType(typeof(BoardListVM))]
+		//public IHttpActionResult GetBoard(int id)
+		//{
+		//	Board board = db.Boards.Find(id);
+		//	if (board == null)
+		//	{
+		//		return NotFound();
+		//	}
+		//	var vm = new BoardListVM
+		//	{
+		//		Id = board.Id,
+		//		BoardHeaderCoverImg = "/Files/Uploads/" + board.BoardHeaderCoverImg,
+		//		Name = board.Name,
+		//		GameName = board.Game.ChiName + " | " + board.Game.EngName,
+		//		BoardAbout = board.BoardAbout,
+		//		FollowersCount = db.MembersBoards.Count(mb => mb.BoardId == board.Id),
+		//		LastPostedAt = db.Posts.Where(p => p.BoardId == board.Id)
+		//				  .OrderByDescending(p => p.Datetime)
+		//				  .Select(p => p.Datetime)
+		//				  .DefaultIfEmpty(DateTime.MinValue)
+		//				  .FirstOrDefault()
+		//	};
 
-			return Ok(vm);
-		}
+		//	return Ok(vm);
+		//}
 
 		// PUT: api/BoardsApi/5
 		[ResponseType(typeof(ApiResult))]

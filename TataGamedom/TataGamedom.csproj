@@ -271,6 +271,7 @@
     <Compile Include="Controllers\Api\BucketLogsApiController.cs" />
     <Compile Include="Controllers\Api\CommentsApiController.cs" />
     <Compile Include="Controllers\Api\CouponsApiController.cs" />
+    <Compile Include="Controllers\Api\MembersApiController.cs" />
     <Compile Include="Controllers\Api\ReportsApiController.cs" />
     <Compile Include="Controllers\BackendMembersController.cs" />
     <Compile Include="Controllers\BackendMembersListController.cs" />
@@ -430,6 +431,8 @@
     <Compile Include="Models\Services\OrderService.cs" />
     <Compile Include="Models\Services\ProductService.cs" />
     <Compile Include="Models\Services\StockInSheetService.cs" />
+    <Compile Include="Models\ViewModels\BucketLogs\BucketLogListVm.cs" />
+    <Compile Include="Models\ViewModels\BucketLogs\BucketLogsAddVm.cs" />
     <Compile Include="Models\ViewModels\Coupons\CouponCreateVM.cs" />
     <Compile Include="Models\ViewModels\Coupons\CouponEditVM.cs" />
     <Compile Include="Models\ViewModels\Coupons\CouponIndexVM.cs" />
