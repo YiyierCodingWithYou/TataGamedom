@@ -266,14 +266,20 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Api\BoardsModeratorsApiController.cs" />
+    <Compile Include="Controllers\Api\BoardsModeratorsApplicationsApiController.cs" />
+    <Compile Include="Controllers\Api\BucketLogsApiController.cs" />
     <Compile Include="Controllers\Api\CommentsApiController.cs" />
     <Compile Include="Controllers\Api\CouponsApiController.cs" />
+    <Compile Include="Controllers\Api\ReportsApiController.cs" />
     <Compile Include="Controllers\BackendMembersController.cs" />
     <Compile Include="Controllers\BackendMembersListController.cs" />
     <Compile Include="Controllers\Api\BoardsApiController.cs" />
     <Compile Include="Controllers\FAQController.cs" />
     <Compile Include="Controllers\BoardsController.cs" />
     <Compile Include="Controllers\CouponsController.cs" />
+    <Compile Include="Controllers\FrontApi\FrontPostCommentReportsApiController.cs" />
+    <Compile Include="Controllers\FrontApi\FrontPostReportsApiController.cs" />
     <Compile Include="Controllers\GameCommentsController.cs" />
     <Compile Include="Controllers\GamesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -287,6 +293,7 @@
     <Compile Include="Controllers\Api\PostsApiController.cs" />
     <Compile Include="Controllers\PostsCommentsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\StockInSheetsController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
     <Compile Include="Files\Mails\Class1.cs" />
@@ -309,6 +316,7 @@
     <Compile Include="Models\Dtos\Orders\OrderDto.cs" />
     <Compile Include="Models\Dtos\Orders\OrderIndexDto.cs" />
     <Compile Include="Models\Dtos\Orders\OrderInfoDto.cs" />
+    <Compile Include="Models\Dtos\Reports\ReportsConfirmDto.cs" />
     <Compile Include="Models\Dtos\StockInSheets\StockInSheetDto.cs" />
     <Compile Include="Models\Dtos\StockInSheets\StockInSheetIndexDto.cs" />
     <Compile Include="Models\Dtos\Boards\BoardCreateDto.cs" />
@@ -462,6 +470,8 @@
     <Compile Include="Models\ViewModels\Products\ProductEditImgVM.cs" />
     <Compile Include="Models\ViewModels\Products\ProductEditVM.cs" />
     <Compile Include="Models\ViewModels\Products\ProductIndexVM.cs" />
+    <Compile Include="Models\ViewModels\Reports\ReportListVm.cs" />
+    <Compile Include="Models\ViewModels\Reports\ReportsConfirmVm.cs" />
     <Compile Include="Models\ViewModels\StockInSheets\StockInSheetIndexVM.cs" />
     <Compile Include="Models\ViewModels\StockInSheets\StockInSheetVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -647,6 +657,7 @@
     <Content Include="Views\NewsCategory\Index.cshtml" />
     <Content Include="Views\BackendMembers\LoginTEST.cshtml" />
     <Content Include="Views\PostsComments\Index.cshtml" />
+    <Content Include="Views\Reports\Index.cshtml" />
     <Content Include="Views\Members\_MembersList.cshtml" />
     <Content Include="Views\Coupons\EditCouponProducts.cshtml" />
     <Content Include="Views\Orders\DeleteFail.cshtml" />
@@ -659,7 +670,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\FrontApi\" />
     <Folder Include="Data\" />
     <Folder Include="Models\Dtos\PostsComments\" />
   </ItemGroup>
