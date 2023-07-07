@@ -279,13 +279,14 @@ M.[Name], O.OrderStatusId, O.ShipmentStatusId, O.PaymentStatusId,O.Id
 
 		// Todo 新增能到第一頁跟最後一頁的
 		public int PageItemNextNumber => (PageBarStartNumber + PageItemCount >= Pages) ? Pages : PageBarStartNumber + PageItemCount;
+        /*(PageBarStartNumber + PageItemCount >= Pages) ? Pages : PageBarStartNumber + PageItemCount;*/
 
-		private string urlTemplate;
+        private string urlTemplate;
 		public PageInfo(int totalRecords, int pageNum, int pageSize, string urlTemplate)
 		{
 			TotalRecords = totalRecords < 0 ? 0 : totalRecords;
 			PageNum = pageNum < 1 ? 1 : pageNum;
-			PageSize = pageSize < 1 ? 20 : pageSize;
+			PageSize = pageSize < 1 ? 10 : pageSize;
 			this.urlTemplate = urlTemplate;
 		}
 
