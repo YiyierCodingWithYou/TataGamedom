@@ -19,6 +19,7 @@ using TataGamedom.Models.Interfaces;
 using TataGamedom.Models.Services;
 using TataGamedom.Models.ViewModels.InventoryItems;
 using TataGamedom.Models.ViewModels.Orders;
+using System.Web.Script.Serialization;
 
 namespace TataGamedom.Controllers
 {
@@ -37,16 +38,29 @@ namespace TataGamedom.Controllers
 
         public ActionResult Details(int? productId)
         {
-            if (productId == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (productId == null) return View("");
+
+            //if (productId == null)
+            //{
+            //    TempData["ShowCreateConfirmation"] = true;
+            //    return RedirectToAction("Create");
+            //}
+
+			//
 
             var orderInfo = _service.GetItemInfo(productId);
-            return View(orderInfo);
-
+			return View(orderInfo);
         }
 
 		public ActionResult Create()
 		{
-			PrepareCreateInventoryDataSource(null, null);
+            //if (TempData["ShowCreateConfirmation"] != null)
+            //{
+            //    ViewBag.ShowConfirmation = true;
+            //}
+
+
+            PrepareCreateInventoryDataSource(null, null);
 			return View();
 		}
 
