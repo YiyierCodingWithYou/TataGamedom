@@ -172,7 +172,7 @@ namespace TataGamedom.Controllers
 			using (var con = new SqlConnection(_connstr))
 			{
 				string sql = @"SELECT n.Id, n.Title, n.Content, n.BackendMemberId, n.NewsCategoryId, n.GamesId, n.CoverImg, 
-                   n.ScheduleDate, n.ActiveFlag, n.DeleteDatetime, n.DeleteBackendMemberId ,b.Name AS DeleteBackendMemberName,
+                   n.ScheduleDate, n.ActiveFlag, n.EditDatetime, n.DeleteBackendMemberId ,b.Name AS DeleteBackendMemberName,
                    b.Name AS BackendMemberName, gc.Name AS GameClassificationName
                    FROM News AS n
                    JOIN BackendMembers AS b ON b.Id = n.BackendMemberId
@@ -217,7 +217,7 @@ namespace TataGamedom.Controllers
 					{
 						string sql = @"UPDATE News SET Title = @Title, Content = @Content, BackendMemberId = @BackendMemberId,
                 NewsCategoryId = @NewsCategoryId, GamesId = @GamesId, CoverImg = @CoverImg,
-                ScheduleDate = @ScheduleDate, ActiveFlag = @ActiveFlag, DeleteDatetime = GETDATE(),
+                ScheduleDate = @ScheduleDate, ActiveFlag = @ActiveFlag, EditDatetime = GETDATE(),
                 DeleteBackendMemberId = @BackendMemberId
                 WHERE Id = @Id";
 
@@ -301,7 +301,7 @@ namespace TataGamedom.Controllers
 			{
 				using (var con = new SqlConnection(_connstr))
 				{
-					string sql = @"UPDATE News SET ActiveFlag = 1, DeleteDatetime = GETDATE(), DeleteBackendMemberId = @BackendMemberId WHERE Id = @Id";
+					string sql = @"UPDATE News SET ActiveFlag = 1, EditDatetime = GETDATE(),DeleteDatetime = null, DeleteBackendMemberId = @BackendMemberId WHERE Id = @Id";
 
 					con.Execute(sql, new { BackendMemberId = backendMember.Id, Id = id });
 				}
@@ -321,7 +321,7 @@ namespace TataGamedom.Controllers
 			using (var con = new SqlConnection(_connstr))
 			{
 				string sql = @"SELECT n.Id, n.Title, n.Content, n.BackendMemberId, n.NewsCategoryId, n.GamesId, n.CoverImg, 
-                   n.ScheduleDate, n.ActiveFlag, n.DeleteDatetime, n.DeleteBackendMemberId,
+                   n.ScheduleDate, n.ActiveFlag, n.EditDatetime, n.DeleteBackendMemberId,
                    b.Name AS BackendMemberName, gc.Name AS GameClassificationName
                    FROM News AS n
                    JOIN BackendMembers AS b ON b.Id = n.BackendMemberId
