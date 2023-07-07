@@ -36,6 +36,18 @@ namespace TataGamedom.Models.Infra
 			//RecurringJob.AddOrUpdate(() => UpdateNewsScheduleDate(), Cron.Daily(12, 0)); // 設定每天中午12點觸發
 			//RecurringJob.AddOrUpdate(() => UpdateNewsScheduleDate(), "*/3 * * * *"); // 設定每3分鐘觸發一次
 			RecurringJob.AddOrUpdate(() => UpdateNewsScheduleDate(), "*/30 * * * * *"); // 設定每30秒觸發一次
+			RecurringJob.AddOrUpdate(() => UpdateCouponsScheduleDate(),Cron.Daily(16,0));//有時差問題，要每天定時的要-8小時
+		}
+
+		public void UpdateCouponsScheduleDate()
+		{
+			DateTime dateTime = DateTime.Now;
+			var couponList = db.Coupons.Where(c => c.StartTime <= dateTime && c.EndTime > dateTime && c.ModifiedTime==null).ToList();
+			foreach ( var c in couponList )
+			{
+				c.ActiveFlag = true;
+			}
+			db.SaveChanges();
 		}
 
 		public void UpdateNewsScheduleDate()
