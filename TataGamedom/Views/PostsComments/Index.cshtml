@@ -3,12 +3,17 @@
     @*<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" rel="stylesheet" />
         <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
         <link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet" />*@
-    <link href="https://cdn.datatables.net/v/bs5/dt-1.13.5/af-2.6.0/b-2.4.0/b-html5-2.4.0/date-1.5.0/sb-1.5.0/sl-1.7.0/datatables.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.5/af-2.6.0/b-2.4.0/b-colvis-2.4.0/b-html5-2.4.0/b-print-2.4.0/date-1.5.0/fc-4.3.0/fh-3.4.0/r-2.5.0/sb-1.5.0/sp-2.2.0/sl-1.7.0/datatables.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css" rel="stylesheet">
 
 
     <style>
-        thead {
+        #postsCommentsTable thead {
+            background-color: goldenrod;
+            color: white;
+        }
+
+        #littleTable thead {
             background-color: goldenrod;
             color: white;
         }
@@ -17,33 +22,41 @@
             vertical-align: middle;
         }
 
-        .text-gray {
+        table .text-gray {
             color: lightgray !important;
+        }
+
+        table .bg-orange {
+            background-color: rgba(255, 106, 0, 0.1) !important;
         }
     </style>
 }
 
-<h2>留言列表列表</h2>
+<h2>討論區貼文/留言列表</h2>
+
+
+
+<div id="buttonContainer"></div>
 
 <table class="table table-striped table-hover w-100" id="postsCommentsTable">
     <thead>
         <tr>
-            <td>看板名稱</td>
+            <td>看板</td>
             <td>類型</td>
             <td>內容</td>
-            <td>會員名</td>
-            <td>發表時間</td>
-            <td>Like數</td>
-            <td>Unlike數</td>
-            <td>回應數</td>
-            <td>顯示狀態</td>
-            <td>:D</td>
+            <td>會員</td>
+            <td>時間</td>
+            <td>Like</td>
+            <td>Unlike</td>
+            <td>回應</td>
+            <td>狀態</td>
+            <td></td>
         </tr>
     </thead>
 </table>
 
 
-<div class="modal" id="myModal" tabindex="-2">
+<div class="modal modal-xl" id="myModal" tabindex="-2">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -52,9 +65,25 @@
             </div>
             <div class="modal-body">
                 <p id="textContent"></p>
+                <p id="memberAccount"></p>
+                <table class="table table-hover w-100" id="littleTable">
+                    <thead>
+                        <tr>
+                            <td>看板</td>
+                            <td>類型</td>
+                            <td>內容</td>
+                            <td>會員</td>
+                            <td>時間</td>
+                            <td>Like</td>
+                            <td>Unlike</td>
+                            <td>回應</td>
+                            <td>狀態</td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                </table>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="editBtn">編輯</button>
+            <div class="modal-footer align-items-center">
                 <button type="button" class="btn btn-secondary" id="closeBtn" data-bs-dismiss="modal">關閉</button>
             </div>
         </div>
@@ -71,15 +100,20 @@
         <script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap.min.js"></script>
         <script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.1/datatables.min.js"></script>*@
 
-    <script src="https://cdn.datatables.net/v/bs5/dt-1.13.5/af-2.6.0/b-2.4.0/b-html5-2.4.0/date-1.5.0/sb-1.5.0/sl-1.7.0/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.5/af-2.6.0/b-2.4.0/b-colvis-2.4.0/b-html5-2.4.0/b-print-2.4.0/date-1.5.0/fc-4.3.0/fh-3.4.0/r-2.5.0/sb-1.5.0/sp-2.2.0/sl-1.7.0/datatables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+
 
     <script>
 
         const baseAddress = 'https://localhost:44398';
-        let thisData;
+        let postId
         let boardId;
         let Id;
+        let respondPost;
+        let selectData;
+
 
         $(document).ready(function () {
             function DelePost() {
@@ -96,6 +130,7 @@
                                 text: JSON.stringify(data.Message)
                             }).then(() => {
                                 $('#postsCommentsTable').DataTable().ajax.reload();
+                                $('#littleTable').DataTable().ajax.reload();
                             });
                         } else {
                             Swal.fire({
@@ -127,6 +162,7 @@
                                 text: JSON.stringify(data.Message)
                             }).then(() => {
                                 $('#postsCommentsTable').DataTable().ajax.reload();
+                                $('#littleTable').DataTable().ajax.reload();
                             });
                         } else {
                             Swal.fire({
@@ -158,6 +194,7 @@
                                 text: JSON.stringify(data.Message)
                             }).then(() => {
                                 $('#postsCommentsTable').DataTable().ajax.reload();
+                                $('#littleTable').DataTable().ajax.reload();
                             });
                         } else {
                             Swal.fire({
@@ -190,6 +227,7 @@
                                 text: JSON.stringify(data.Message)
                             }).then(() => {
                                 $('#postsCommentsTable').DataTable().ajax.reload();
+                                $('#littleTable').DataTable().ajax.reload();
                             });
                         } else {
                             Swal.fire({
@@ -206,14 +244,191 @@
                             text: err.statusText
                         })
                     })
+            }
+            function GetPostdata(id) {
+                $.ajax({
+                    type: 'GET',
+                    url: `${baseAddress}/api/PostsApi/${postId}`,
+                    success: function (data) {
+                        postData = JSON.stringify(data);
+                        $('#littleTable').DataTable().ajax.reload();
+                    },
+                    error: function (err) {
+                        console.log(err.statusText);
+                    }
+                });
+            }
+
+            function ClickFunction(data) {
+
+                Id = data.ID;
+                respondPost = data.RespondedPost;
+                boardName = data.BoardName;
+
+                if (data.Type === 'Post') {
+                    postId = Id;
+                    $('#textContent').text("I'm a post");
+                };
+
+                if (data.Type === 'Comment') {
+                    postId = respondPost;
+                    $('#textContent').text("I'm a Comment");
+                };
+
+                let memberAccount = data.MemberAccount
+                $('#memberAccount').text(data.MemberAccount);
+                littleTable.ajax.url(`${baseAddress}/api/PostsApi/${postId}`).load();
+                $('#myModal').modal('show');
+                boardName = data.BoardName;
 
             }
 
+            //TODO
+            let littleTable = $('#littleTable').DataTable({
+                dom: 'rtip',
+                responsive: true,
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/zh-HANT.json',
+                },
+                ajax: {
+                    type: 'GET',
+                    url: `${baseAddress}/api/PostsApi`,
+                    dataSrc: function (data) { return data; }
+                },
+                columns: [
+                    { "data": "BoardName", "className": "text-center vertical-align-middle", "width": "10%" },
+                    { "data": "Type", "className": "text-center vertical-align-middle", "width": "5%" },
+                    { "data": "Content", "className": "text-center vertical-align-middle w-25", "width": "800px" },
+                    { "data": "MemberAccount", "className": "text-center vertical-align-middle", "width": "10%" },
+                    {
+                        "data": "DateTime", "className": "text-center vertical-align-middle",
+                        "className": "text-center vertical-align-middle",
+                        "render": function (data, type, row) {
+                            let date = new Date(data);
+                            let formattedDate = date.toLocaleDateString('ja-JP');
+                            let formattedTime = date.toLocaleTimeString('ja-JP');
+                            let formattedDateTime = formattedDate + '<br/>' + formattedTime;
+                            return formattedDateTime;
+                        },
+                        "width": "10%"
+                    },
+                    { "data": "LikesCount", "className": "text-center vertical-align-middle", "width": "5%" },
+                    { "data": "UnlikesCount", "className": "text-center vertical-align-middle", "width": "5%" },
+                    { "data": "CommentsCount", "className": "text-center vertical-align-middle", "width": "5%" },
+                    {
+                        "data": "ActiveFlagText",
+                        "className": "text-center vertical-align-middle",
+                        "render": function (data, type, row) {
+                            if (type === "display") {
+                                if (data === '顯示') {
+                                    return '<i class="fas fa-check text-success small">顯示</i>'; // Font Awesome check icon for true (active)
+                                } else {
+                                    return '<i class="fas fa-times text-danger small">隱藏</i>'; // Font Awesome times icon for false (inactive)
+                                }
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: null,
+                        targets: -1,
+                        defaultContent: '',
+                        render: function (data, type, row) {
+                            if (type === "display") {
+                                if (data.Type === 'Post' && data.ActiveFlagText.includes('顯示')) {
+                                    return '<button class="btn btn-outline-warning changeBtn postDele">隱藏</button>';
+                                }
+                                if (data.Type === 'Comment' && data.ActiveFlagText.includes('顯示')) {
+                                    return '<button class="btn btn-outline-warning changeBtn commentDele">隱藏</button>';
+                                }
+                                if (data.Type === 'Post' && data.ActiveFlagText.includes('隱藏')) {
+                                    return '<button class="btn btn-outline-light changeBtn postRecover">還原</button>';
+                                }
+                                if (data.Type === 'Comment' && data.ActiveFlagText.includes('隱藏')) {
+                                    return '<button class="btn btn-outline-light changeBtn commentRecover">還原</button>';
+
+                                }
+                            }
+                        }
+                    }
+                ],
+                "rowCallback": function (row, data) {
+                    let type = 'Comment';
+                    let memberAccount = $('#memberAccount').text();
+                    //let memberAccount = 'sarahT';
+
+                    if (data.ActiveFlagText.includes('隱藏')) {
+                        $("td", row).addClass("text-gray"); // Change text color to gray for rows with ActiveFlag = false
+                    }
+                    if (data.Type === 'Post') {
+                        $(row).addClass("fw-bold"); // Change text color to gray for rows with ActiveFlag = false
+                    }
+                    if (data.MemberAccount === memberAccount) {
+                        $(row).addClass("bg-orange"); // Change text color to gray for rows with ActiveFlag = false
+                    }
+                    $(row).on("click",
+                        function () {
+                            Id = data.ID;
+                            respondPost = data.RespondedPost;
+                            boardName = data.BoardName;
+
+                            if (data.Type === 'Post') {
+                                postId = Id;
+                                $('#textContent').text("I'm a post");
+                            };
+
+                            if (data.Type === 'Comment') {
+                                postId = respondPost;
+                                $('#textContent').text("I'm a Comment");
+                            };
+
+                            let memberAccount = data.MemberAccount
+                            $('#memberAccount').text(data.MemberAccount);
+                            littleTable.ajax.url(`${baseAddress}/api/PostsApi/${postId}`).load();
+                            $('#myModal').modal('show');
+                            boardName = data.BoardName;
+                        }
+                    )
+                }
+            });
+
+
+
             let postTable = $('#postsCommentsTable').DataTable
                 ({
-                    dom: 'Qfrtip',
+                    dom: "<'row'<'col-5 'Q><'col-7 d-flex justify-content-end align-items-center'<'mb-0 pb-0' B>>>flrtilp",
+                    //dom: 'QBflrtilp',
                     responsive: true,
                     select: true,
+                    buttons: [
+                        'copy', 'csv', 'excel',
+                        {
+                            text: '批次隱藏',
+                            extend: 'selected',
+                            action: function (e, dt, node, config) {
+
+                                var rows = dt.rows({ selected: true }).count();
+
+                                var selectedRows = dt.rows({ selected: true }).data();
+                                var selectedData = [];
+
+                                // 循环遍历选中行的数据
+                                selectedRows.each(function (rowData) {
+                                    var type = rowData.Type;
+                                    var id = rowData.ID;
+                                    var activeFlag = rowData.ActiveFlag;
+                                    selectedData.push({ type: type, id: id, activeFlag: activeFlag });
+                                });
+
+                                var jsonData = JSON.stringify(selectedData);
+                                console.log(jsonData);
+
+                                alert('There are ' + rows + '(s) selected in the table ' + dt);
+                            }
+                        }
+                        /*                        'colvis'*/
+
+                    ],
                     language: {
                         url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/zh-HANT.json',
                     },
@@ -225,21 +440,29 @@
                     columns: [
                         { "data": "BoardName", "className": "text-center vertical-align-middle" },
                         { "data": "Type", "className": "text-center vertical-align-middle" },
-                        { "data": "Content", "className": "text-center vertical-align-middle" },
-                        { "data": "MemberName", "className": "text-center vertical-align-middle" },
-                        { "data": "DateTime", "className": "text-center vertical-align-middle" },
+                        { "data": "Content", "className": "text-center vertical-align-middle w-25" },
+                        { "data": "MemberAccount", "className": "text-center vertical-align-middle" },
+                        {
+                            "data": "DateTime",
+                            "className": "text-center vertical-align-middle",
+                            "render": function (data, type, row) {
+                                let date = new Date(data);
+                                let formattedDateTime = date.toLocaleDateString('ja-JP');
+                                return formattedDateTime;
+                            }
+                        },
                         { "data": "LikesCount", "className": "text-center vertical-align-middle" },
                         { "data": "UnlikesCount", "className": "text-center vertical-align-middle" },
                         { "data": "CommentsCount", "className": "text-center vertical-align-middle" },
                         {
-                            "data": "ActiveFlag",
+                            "data": "ActiveFlagText",
                             "className": "text-center vertical-align-middle",
                             "render": function (data, type, row) {
                                 if (type === "display") {
-                                    if (data === true) {
-                                        return '<i class="fas fa-check text-success"></i>'; // Font Awesome check icon for true (active)
+                                    if (data === '顯示') {
+                                        return '<i class="fas fa-check text-success small">顯示</i>'; // Font Awesome check icon for true (active)
                                     } else {
-                                        return '<i class="fas fa-times text-danger"></i>'; // Font Awesome times icon for false (inactive)
+                                        return '<i class="fas fa-times text-danger small">隱藏</i>'; // Font Awesome times icon for false (inactive)
                                     }
                                 }
                                 return data;
@@ -251,16 +474,16 @@
                             defaultContent: '',
                             render: function (data, type, row) {
                                 if (type === "display") {
-                                    if (data.Type === 'Post' && data.ActiveFlag === true) {
+                                    if (data.Type === 'Post' && data.ActiveFlagText.includes('顯示')) {
                                         return '<button class="btn btn-outline-warning changeBtn postDele">隱藏</button>';
                                     }
-                                    if (data.Type === 'Comment' && data.ActiveFlag === true) {
+                                    if (data.Type === 'Comment' && data.ActiveFlagText.includes('顯示')) {
                                         return '<button class="btn btn-outline-warning changeBtn commentDele">隱藏</button>';
                                     }
-                                    if (data.Type === 'Post' && data.ActiveFlag === false) {
+                                    if (data.Type === 'Post' && data.ActiveFlagText.includes('隱藏')) {
                                         return '<button class="btn btn-outline-light changeBtn postRecover">還原</button>';
                                     }
-                                    if (data.Type === 'Comment' && data.ActiveFlag === false) {
+                                    if (data.Type === 'Comment' && data.ActiveFlagText.includes('隱藏')) {
                                         return '<button class="btn btn-outline-light changeBtn commentRecover">還原</button>';
                                     }
 
@@ -269,32 +492,41 @@
                         }],
                     "bSort": true,
                     "rowCallback": function (row, data) {
-                        if (data.ActiveFlag === false) {
+                        if (data.ActiveFlagText.includes('隱藏')) {
                             $("td", row).addClass("text-gray"); // Change text color to gray for rows with ActiveFlag = false
                         }
                         $(row).on("click", function () {
                             Id = data.ID;
-                            $('#myModal').modal('show');
-                            $('#textContent').text("I'm a post");
+                        })
+                        $(row).on("dblclick", function () {
+                            Id = data.ID;
+                            respondPost = data.RespondedPost;
                             boardName = data.BoardName;
 
                             if (data.Type === 'Post') {
-                                $('#myModal').modal('show');
+                                postId = Id;
                                 $('#textContent').text("I'm a post");
-                                boardName = data.BoardName;
-                            }
+                            };
 
                             if (data.Type === 'Comment') {
-                                $('#myModal').modal('show');
+                                postId = respondPost;
                                 $('#textContent').text("I'm a Comment");
-                                boardName = data.BoardName;
-                            }
+                            };
+
+                            $('#memberAccount').text(data.MemberAccount);
+                            littleTable.ajax.url(`${baseAddress}/api/PostsApi/${postId}`).load();
+                            $('#myModal').modal('show');
+                            boardName = data.BoardName;
                         })
                     }
                 })
 
+
+
+
+
             $(document).on("click", ".postDele", function (event) {
-                $('#myModal').modal('hide');
+                //$('#myModal').modal('hide');
                 Swal.fire({
                     title: '刪除貼文',
                     text: '此動作將刪除貼文內容，你確定嗎？',
@@ -307,11 +539,12 @@
                         // 使用者選擇確定，執行 SaveEdit()
                         DelePost();
                         $('#postsCommentsTable').DataTable().ajax.reload();
+                        $('#littleTable').DataTable().ajax.reload();
                     }
                 })
             })
             $(document).on("click", ".commentDele", function (event) {
-                $('#myModal').modal('hide');
+/*                $('#myModal').modal('hide');*/
                 Swal.fire({
                     title: '刪除留言？',
                     text: '此動作將刪除留言內容，你確定嗎？',
@@ -323,11 +556,12 @@
                     if (result.isConfirmed) {
                         DeleComm();
                         $('#postsCommentsTable').DataTable().ajax.reload();
+                        $('#littleTable').DataTable().ajax.reload();
                     }
                 })
             })
             $(document).on("click", ".postRecover", function (event) {
-                $('#myModal').modal('hide');
+                //$('#myModal').modal('hide');
                 Swal.fire({
                     title: '復原貼文？',
                     text: '此動作將復原推文內容，你確定嗎？',
@@ -339,11 +573,12 @@
                     if (result.isConfirmed) {
                         RecoverPost();
                         $('#postsCommentsTable').DataTable().ajax.reload();
+                        $('#littleTable').DataTable().ajax.reload();
                     }
                 })
             })
             $(document).on("click", ".commentRecover", function (event) {
-                $('#myModal').modal('hide');
+                //$('#myModal').modal('hide');
                 Swal.fire({
                     title: '復原留言？',
                     text: '此動作將復原評論內容，你確定嗎？',
@@ -355,6 +590,7 @@
                     if (result.isConfirmed) {
                         RecoverComm();
                         $('#postsCommentsTable').DataTable().ajax.reload();
+                        $('#littleTable').DataTable().ajax.reload();
                     }
                 })
             })
