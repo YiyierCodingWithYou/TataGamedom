@@ -16,5 +16,6 @@ namespace TataGamedom.Models.ViewModels.BucketLogs
 		public DateTime StartTime { get; set; }
 		public DateTime? EndTime { get; set; }
 		public string IsNoticedText { get; set; }
+		public string BucketStatus { get; set; }
 	}
 }
