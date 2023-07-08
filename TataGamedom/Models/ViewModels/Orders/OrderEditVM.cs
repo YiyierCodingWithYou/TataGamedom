@@ -34,11 +34,14 @@ namespace TataGamedom.Models.ViewModels.Orders
 
         [Required(ErrorMessage = "{0} 必填")]
         [Display(Name = "訂單日期")]
-        [DataType(DataType.Date)]
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
+        public DateTime CreatedAt { get; set;}
+
 
         [Display(Name = "訂單完成日期")]
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime? CompletedAt { get; set; }
 
         [Required(ErrorMessage = "{0} 必填")]
@@ -57,11 +60,13 @@ namespace TataGamedom.Models.ViewModels.Orders
         public string ToAddress { get; set; }
 
         [Display(Name = "寄送日期")]
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime? SentAt { get; set; }
 
         [Display(Name = "抵達日期")]
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime? DeliveredAt { get; set; }
 
         [StringLength(20)]

@@ -94,13 +94,13 @@ namespace TataGamedom.Models.Dtos.Orders
                 OrderStatusId = dto.OrderStatusId,
                 ShipmentStatusId = dto.ShipmentStatusId,
                 PaymentStatusId = dto.PaymentStatusId,
-                CreatedAt = dto.CreatedAt,
-                CompletedAt = dto.CompletedAt,
+                CreatedAt = dto.CreatedAt.Date,
+                CompletedAt = dto.CompletedAt?.Date,
                 ShipmemtMethodId = dto.ShipmemtMethodId,
                 RecipientName = dto.RecipientName,
                 ToAddress = dto.ToAddress,
-                SentAt = dto.SentAt,
-                DeliveredAt = dto.DeliveredAt,
+                SentAt = dto.SentAt?.Date,
+                DeliveredAt = dto.DeliveredAt?.Date,
                 TrackingNum = dto.TrackingNum
             };
         }
@@ -109,6 +109,7 @@ namespace TataGamedom.Models.Dtos.Orders
 			return new OrderDto
 			{
                 Id = vm.Id,
+				Index= vm.Index,
                 MemberId = vm.MemberId,
                 OrderStatusId = vm.OrderStatusId,
                 ShipmentStatusId = vm.ShipmentStatusId,

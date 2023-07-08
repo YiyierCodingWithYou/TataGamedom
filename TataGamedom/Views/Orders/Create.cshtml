@@ -1,8 +1,13 @@
-﻿@model TataGamedom.Models.ViewModels.Orders.OrderCreateVM
+﻿<link href="~/Content/bootstrap theme.css" rel="stylesheet" />
+<link href="~/Content/layoutStyle1.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+
+@model TataGamedom.Models.ViewModels.Orders.OrderCreateVM
+
 
 @{
     ViewBag.Title = "新增訂單";
-
     var orderStatusId = ViewBag.OrderStatuses as IEnumerable<SelectListItem>;
     var paymentStatuses = ViewBag.PaymentStatuses as IEnumerable<SelectListItem>;
     var shipmemtMethods = ViewBag.ShipmemtMethods as IEnumerable<SelectListItem>;
@@ -12,103 +17,151 @@
     paymentStatuses = paymentStatuses.Prepend(new SelectListItem { Value = "", Text = "請選擇..." });
     shipmentStatuses = shipmentStatuses.Prepend(new SelectListItem { Value = "", Text = "請選擇..." });
     shipmemtMethods = shipmemtMethods.Prepend(new SelectListItem { Value = "", Text = "請選擇..." });
-
 }
 
 <h2>新增訂單</h2>
-
 
 @using (Html.BeginForm("Create", "Orders", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
-<div class="row">
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="mb-3">
-        @Html.LabelFor(model => model.MemberId, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.EditorFor(model => model.MemberId, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.MemberId, "", new { @class = "text-danger" })
-    </div>
+    <div class="row">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <div class="mb-3">
-        @Html.LabelFor(model => model.OrderStatusId, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.DropDownListFor(model => model.OrderStatusId, orderStatusId, new { @class = "form-select" })
-        @* public static MvcHtmlString DropDownList(this HtmlHelper htmlHelper, string name, IEnumerable<SelectListItem>selectList, string optionLabel, object htmlAttributes)*@
-        @Html.ValidationMessageFor(model => model.OrderStatusId, "", new { @class = "text-danger" })
-    </div>
+        <div class="col-md-6">
+            <div class="mt-4 mb-2 d-flex justify-content-end align-items-center">
+                @Html.LabelFor(model => model.MemberId, htmlAttributes: new { @class = "form-label col-md-2 " })
+                @Html.EditorFor(model => model.MemberId, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="d-flex justify-content-end">
+                @Html.ValidationMessageFor(model => model.MemberId, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-    <div class="mb-3">
-        @Html.LabelFor(model => model.PaymentStatusId, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.DropDownListFor(x => x.PaymentStatusId, paymentStatuses, new { @class = "form-select" })
-        @Html.ValidationMessageFor(model => model.PaymentStatusId, "", new { @class = "text-danger" })
-    </div>
+        <div class="col-md-6">
+            <div class="mt-4 mb-2 d-flex justify-content-start align-items-center">
+                @Html.LabelFor(model => model.OrderStatusId, htmlAttributes: new { @class = "form-label col-md-2" })
+                @Html.DropDownListFor(model => model.OrderStatusId, orderStatusId, new { @class = "form-select" })
+            </div>
+            <div class="d-flex justify-content-start">
+                @Html.ValidationMessageFor(model => model.OrderStatusId, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-    <div class="mb-3">
-        @Html.LabelFor(model => model.ShipmentStatusId, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.DropDownListFor(x => x.ShipmentStatusId, shipmentStatuses, new { @class = "form-select" })
-        @Html.ValidationMessageFor(model => model.ShipmentStatusId, "", new { @class = "text-danger" })
-    </div>
+        <div class="col-md-6">
+            <div class="mt-4 mb-2 d-flex justify-content-end align-items-center">
+                @Html.LabelFor(model => model.ShipmentStatusId, htmlAttributes: new { @class = "form-label col-md-2" })
+                @Html.DropDownListFor(x => x.ShipmentStatusId, shipmentStatuses, new { @class = "form-select" })
+            </div>
+            <div class="d-flex justify-content-end">
+                @Html.ValidationMessageFor(model => model.ShipmentStatusId, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-    <div class="mb-3">
-        @Html.LabelFor(model => model.CreatedAt, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.EditorFor(model => model.CreatedAt, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.CreatedAt, "", new { @class = "text-danger" })
-    </div>
+        <div class="col-md-6">
+            <div class="mt-4 mb-2 d-flex justify-content-start align-items-center">
+                @Html.LabelFor(model => model.PaymentStatusId, htmlAttributes: new { @class = "form-label col-md-2" })
+                @Html.DropDownListFor(x => x.PaymentStatusId, paymentStatuses, new { @class = "form-select" })
+            </div>
+            <div class="d-flex justify-content-start">
+                @Html.ValidationMessageFor(model => model.PaymentStatusId, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-    <div class="mb-3">
-        @Html.LabelFor(model => model.SentAt, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.EditorFor(model => model.SentAt, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.SentAt, "", new { @class = "text-danger" })
-    </div>
+        <div class="col-md-6">
+            <div class="mt-4 mb-2 d-flex justify-content-end align-items-center">
+                @Html.LabelFor(model => model.CreatedAt, htmlAttributes: new { @class = "form-label col-md-2" })
+                @Html.EditorFor(model => model.CreatedAt, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="d-flex justify-content-end">
+                @Html.ValidationMessageFor(model => model.CreatedAt, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-    <div class="mb-3">
-        @Html.LabelFor(model => model.DeliveredAt, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.EditorFor(model => model.DeliveredAt, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.DeliveredAt, "", new { @class = "text-danger" })
-    </div>
+        <div class="col-md-6">
+            <div class="mt-4 mb-2 d-flex justify-content-start align-items-center">
+                @Html.LabelFor(model => model.CompletedAt, htmlAttributes: new { @class = "form-label col-md-2" })
+                @Html.EditorFor(model => model.CompletedAt, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="d-flex justify-content-start">
+                @Html.ValidationMessageFor(model => model.CompletedAt, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-    <div class="mb-3">
-        @Html.LabelFor(model => model.CompletedAt, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.EditorFor(model => model.CompletedAt, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.CompletedAt, "", new { @class = "text-danger" })
-    </div>
+        <div class="col-md-6">
+            <div class="mt-4 mb-2 d-flex justify-content-end align-items-center">
+                @Html.LabelFor(model => model.ShipmemtMethodId, htmlAttributes: new { @class = "form-label col-md-2" })
+                @Html.DropDownListFor(x => x.ShipmemtMethodId, shipmentStatuses, new { @class = "form-select" })
+            </div>
+            <div class="d-flex justify-content-end">
+                @Html.ValidationMessageFor(model => model.ShipmemtMethodId, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-    <div class="mb-3">
-        @Html.LabelFor(model => model.ShipmemtMethodId, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.DropDownListFor(x => x.ShipmemtMethodId, shipmemtMethods, new { @class = "form-select" })
-        @Html.ValidationMessageFor(model => model.ShipmemtMethodId, "", new { @class = "text-danger" })
-    </div>
+        <div class="col-md-6">
+            <div class="mt-4 mb-2 d-flex justify-content-start align-items-center">
+                @Html.LabelFor(model => model.RecipientName, htmlAttributes: new { @class = "form-label col-md-2" })
+                @Html.EditorFor(model => model.RecipientName, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="d-flex justify-content-start">
+                @Html.ValidationMessageFor(model => model.RecipientName, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-    <div class="mb-3">
-        @Html.LabelFor(model => model.RecipientName, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.EditorFor(model => model.RecipientName, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.RecipientName, "", new { @class = "text-danger" })
-    </div>
+        <div class="col-md-6">
+            <div class="mt-4 mb-2 d-flex justify-content-end align-items-center">
+                @Html.LabelFor(model => model.ToAddress, htmlAttributes: new { @class = "form-label col-md-2" })
+                @Html.EditorFor(model => model.ToAddress, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="d-flex justify-content-end">
+                @Html.ValidationMessageFor(model => model.ToAddress, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-    <div class="mb-3">
-        @Html.LabelFor(model => model.ToAddress, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.EditorFor(model => model.ToAddress, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.ToAddress, "", new { @class = "text-danger" })
-    </div>
+        <div class="col-md-6">
+            <div class="mt-4 mb-2 d-flex justify-content-start align-items-center">
+                @Html.LabelFor(model => model.SentAt, htmlAttributes: new { @class = "form-label col-md-2" })
+                @Html.EditorFor(model => model.SentAt, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="d-flex justify-content-start">
+                @Html.ValidationMessageFor(model => model.SentAt, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-    <div class="mb-3">
-        @Html.LabelFor(model => model.TrackingNum, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.EditorFor(model => model.TrackingNum, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.TrackingNum, "", new { @class = "text-danger" })
-    </div>
+        <div class="col-md-6">
+            <div class="mt-4 mb-2 d-flex justify-content-end align-items-center">
+                @Html.LabelFor(model => model.DeliveredAt, htmlAttributes: new { @class = "form-label col-md-2" })
+                @Html.EditorFor(model => model.DeliveredAt, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="d-flex justify-content-end">
+                @Html.ValidationMessageFor(model => model.DeliveredAt, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-    <div class="mb-3">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create" class="btn btn-primary" />
+        <div class="col-md-6">
+                <div class="mt-4 mb-2 d-flex justify-content-start align-items-center">
+                    @Html.LabelFor(model => model.TrackingNum, htmlAttributes: new { @class = "form-label col-md-2" })
+                    @Html.EditorFor(model => model.TrackingNum, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                <div class="d-flex justify-content-start">
+                    @Html.ValidationMessageFor(model => model.TrackingNum, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    <div class="row">
+        <div class="col-md-6 d-flex justify-content-end">
+            <a href="@Url.Action("Index")" class="btn btn-outline-secondary" style="font-size:16px"><i class="bi bi-house-door"></i>回首頁</a>
+        </div>
+        <div class="col-md-6 d-flex justify-content-start">
+            <button type="submit" class="btn btn-warning" style="font-size:16px"><i class="bi bi-plus-circle"></i>新增訂單</button>
         </div>
     </div>
-</div>
+
+
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
