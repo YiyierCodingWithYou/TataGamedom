@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Windows.Forms;
 
 namespace TataGamedom.Models.ViewModels.Orders
 {
@@ -20,13 +21,19 @@ namespace TataGamedom.Models.ViewModels.Orders
         public string Index { get; set; }
 
         [Display(Name = "訂單日期")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime CreatedAt { get; set; }
 
         [Display(Name = "完成日期")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? CompletedAt { get; set; }
 
         [Display(Name = "總額")]
         public decimal? Total { get; set; }
+
+        [Display(Name = "貨態追蹤代碼")]
+        public string TrackingNum { get; set; }
+
 
         [Display(Name = "遊戲序號")]
         public string GameKey { get; set; }
