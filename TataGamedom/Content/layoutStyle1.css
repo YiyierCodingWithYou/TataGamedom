@@ -8,7 +8,7 @@
 
 body {
     color: #444246;
-    background-color: #F2E9E4;
+    background: linear-gradient(90deg, #FFB5A7,#FCD5CE, #F9DCC4,#FEC89A);
     display: flex;
     font-family: 'Noto Sans TC', sans-serif;
 }
@@ -341,7 +341,7 @@ h2{
     margin-right: 3rem;
     margin-left: 3rem;
     margin-top: 3rem;
-    margin-bottom: 1rem;
+    margin-bottom: 3rem;
     padding-top: 4rem;
     padding-bottom: 2rem;
     padding-right: 2rem;
@@ -350,7 +350,7 @@ h2{
     border-radius: 1rem 1rem 1rem 1rem;
 /*    box-shadow: 0 0 15px 2px rgba(212, 175, 55, 0.1);*/
     box-shadow: rgba(218, 165, 32, 0.3) 5px 5px, rgba(218, 165, 32, 0.2) 10px 10px ;
-    min-height: calc(100vh - 4rem);
+    min-height: calc(100vh - 6rem);
 }
 
 @keyframes animate-height {

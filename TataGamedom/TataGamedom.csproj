@@ -271,6 +271,7 @@
     <Compile Include="Controllers\Api\BucketLogsApiController.cs" />
     <Compile Include="Controllers\Api\CommentsApiController.cs" />
     <Compile Include="Controllers\Api\CouponsApiController.cs" />
+    <Compile Include="Controllers\Api\MembersApiController.cs" />
     <Compile Include="Controllers\Api\ReportsApiController.cs" />
     <Compile Include="Controllers\BackendMembersController.cs" />
     <Compile Include="Controllers\BackendMembersListController.cs" />
@@ -430,6 +431,8 @@
     <Compile Include="Models\Services\OrderService.cs" />
     <Compile Include="Models\Services\ProductService.cs" />
     <Compile Include="Models\Services\StockInSheetService.cs" />
+    <Compile Include="Models\ViewModels\BucketLogs\BucketLogListVm.cs" />
+    <Compile Include="Models\ViewModels\BucketLogs\BucketLogsAddVm.cs" />
     <Compile Include="Models\ViewModels\Coupons\CouponCreateVM.cs" />
     <Compile Include="Models\ViewModels\Coupons\CouponEditVM.cs" />
     <Compile Include="Models\ViewModels\Coupons\CouponIndexVM.cs" />
@@ -477,6 +480,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap theme.css" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -493,6 +497,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\bootstrap0707.css" />
     <Content Include="Content\login.css" />
     <Content Include="Content\layoutStyle1.css" />
     <Content Include="Content\PagedList.css" />
@@ -735,7 +740,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Shared\_TataLayout.cshtml" />
+    <Content Include="Views\Shared\_8TataLayout.cshtml" />
     <Content Include="Views\BackendMembers\Index.cshtml" />
     <Content Include="Views\BackendMembers\Login.cshtml" />
     <Content Include="Views\BackendMembers\EditProfile.cshtml" />
@@ -825,6 +830,7 @@
     <Content Include="Views\Suppliers\Index.cshtml" />
     <Content Include="Views\Suppliers\ImportExcel.cshtml" />
     <Content Include="Scripts\tinymce\langs\README.md" />
+    <Content Include="Views\Shared\View.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

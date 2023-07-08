@@ -37,7 +37,7 @@ namespace TataGamedom.Controllers
 
 
 			int totalRecord = _service.Search(criteria, sortInfo).Count();
-			int pageSize = 20;
+			int pageSize = 10;
 			PageInfo pageInfo = new PageInfo(totalRecord, pageNum, pageSize, "/Orders/Index/?PageNum={0}");
 			ViewBag.PageInfo = pageInfo;
 

@@ -23,13 +23,11 @@ namespace TataGamedom.Controllers
     {
         private AppDbContext db = new AppDbContext();
 
-        // GET: Suppliers
         public ActionResult Index()
         {
             return View(db.Suppliers.ToList());
         }
 
-        // GET: Suppliers/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -44,18 +42,14 @@ namespace TataGamedom.Controllers
             return View(supplier);
         }
 
-        // GET: Suppliers/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Suppliers/Create
-        // 若要避免過量張貼攻擊，請啟用您要繫結的特定屬性。
-        // 如需詳細資料，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Phone,Email")] Supplier supplier)
+        public ActionResult Create(Supplier supplier)
         {
             if (ModelState.IsValid)
             {
@@ -67,7 +61,6 @@ namespace TataGamedom.Controllers
             return View(supplier);
         }
 
-        // GET: Suppliers/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -82,12 +75,9 @@ namespace TataGamedom.Controllers
             return View(supplier);
         }
 
-        // POST: Suppliers/Edit/5
-        // 若要避免過量張貼攻擊，請啟用您要繫結的特定屬性。
-        // 如需詳細資料，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Phone,Email")] Supplier supplier)
+        public ActionResult Edit(Supplier supplier)
         {
             if (ModelState.IsValid)
             {
@@ -98,7 +88,6 @@ namespace TataGamedom.Controllers
             return View(supplier);
         }
 
-        // GET: Suppliers/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -113,7 +102,6 @@ namespace TataGamedom.Controllers
             return View(supplier);
         }
 
-        // POST: Suppliers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
