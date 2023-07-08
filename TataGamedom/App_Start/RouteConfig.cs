@@ -14,6 +14,12 @@ namespace TataGamedom
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
 			routes.MapRoute(
+				name: "ModeratorsApplications",
+				url: "Boards/Moderators/Applications",
+				defaults: new { controller = "Boards", action = "Applications" }
+			);
+
+			routes.MapRoute(
 				name: "Default",
 				url: "{controller}/{action}/{id}",
 				defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
