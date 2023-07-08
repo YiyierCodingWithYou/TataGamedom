@@ -271,6 +271,7 @@
     <Compile Include="Controllers\Api\BucketLogsApiController.cs" />
     <Compile Include="Controllers\Api\CommentsApiController.cs" />
     <Compile Include="Controllers\Api\CouponsApiController.cs" />
+    <Compile Include="Controllers\Api\MembersApiController.cs" />
     <Compile Include="Controllers\Api\ReportsApiController.cs" />
     <Compile Include="Controllers\BackendMembersController.cs" />
     <Compile Include="Controllers\BackendMembersListController.cs" />
@@ -321,6 +322,7 @@
     <Compile Include="Models\Dtos\StockInSheets\StockInSheetIndexDto.cs" />
     <Compile Include="Models\Dtos\Boards\BoardCreateDto.cs" />
     <Compile Include="Models\Dtos\Boards\BoardEditDto.cs" />
+    <Compile Include="Models\EFModels\AggregatedCounter.cs" />
     <Compile Include="Models\EFModels\Announcement.cs" />
     <Compile Include="Models\EFModels\AppDbContext.cs" />
     <Compile Include="Models\EFModels\ApprovalStatusCode.cs" />
@@ -333,6 +335,7 @@
     <Compile Include="Models\EFModels\BoardsModeratorsApplication.cs" />
     <Compile Include="Models\EFModels\BucketLog.cs" />
     <Compile Include="Models\EFModels\Cart.cs" />
+    <Compile Include="Models\EFModels\Counter.cs" />
     <Compile Include="Models\EFModels\Coupon.cs" />
     <Compile Include="Models\EFModels\CouponsProduct.cs" />
     <Compile Include="Models\EFModels\DiscountTypeCode.cs" />
@@ -342,10 +345,15 @@
     <Compile Include="Models\EFModels\GameClassificationsCode.cs" />
     <Compile Include="Models\EFModels\GameComment.cs" />
     <Compile Include="Models\EFModels\GamePlatformsCode.cs" />
+    <Compile Include="Models\EFModels\Hash.cs" />
     <Compile Include="Models\EFModels\InventoryItem.cs" />
     <Compile Include="Models\EFModels\Issue.cs" />
     <Compile Include="Models\EFModels\IssueStatusCode.cs" />
     <Compile Include="Models\EFModels\IssueTypesCode.cs" />
+    <Compile Include="Models\EFModels\Job.cs" />
+    <Compile Include="Models\EFModels\JobParameter.cs" />
+    <Compile Include="Models\EFModels\JobQueue.cs" />
+    <Compile Include="Models\EFModels\List.cs" />
     <Compile Include="Models\EFModels\Member.cs" />
     <Compile Include="Models\EFModels\MemberProductView.cs" />
     <Compile Include="Models\EFModels\MembersBoard.cs" />
@@ -373,8 +381,12 @@
     <Compile Include="Models\EFModels\ProductImage.cs" />
     <Compile Include="Models\EFModels\ProductStatusCode.cs" />
     <Compile Include="Models\EFModels\Reply.cs" />
+    <Compile Include="Models\EFModels\Schema.cs" />
+    <Compile Include="Models\EFModels\Server.cs" />
+    <Compile Include="Models\EFModels\Set.cs" />
     <Compile Include="Models\EFModels\ShipmemtMethod.cs" />
     <Compile Include="Models\EFModels\ShipmentStatusesCode.cs" />
+    <Compile Include="Models\EFModels\State.cs" />
     <Compile Include="Models\EFModels\StockInSheet.cs" />
     <Compile Include="Models\EFModels\StockInStatusCode.cs" />
     <Compile Include="Models\EFModels\Supplier.cs" />
@@ -430,6 +442,8 @@
     <Compile Include="Models\Services\OrderService.cs" />
     <Compile Include="Models\Services\ProductService.cs" />
     <Compile Include="Models\Services\StockInSheetService.cs" />
+    <Compile Include="Models\ViewModels\BucketLogs\BucketLogListVm.cs" />
+    <Compile Include="Models\ViewModels\BucketLogs\BucketLogsAddVm.cs" />
     <Compile Include="Models\ViewModels\Coupons\CouponCreateVM.cs" />
     <Compile Include="Models\ViewModels\Coupons\CouponEditVM.cs" />
     <Compile Include="Models\ViewModels\Coupons\CouponIndexVM.cs" />

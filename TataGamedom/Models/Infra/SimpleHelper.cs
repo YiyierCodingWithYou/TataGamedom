@@ -27,6 +27,13 @@ namespace TataGamedom.Models.Infra
 			int id = member?.Id ?? 0;
 			return id;
 		}
+
+		public int boardIdByName(string name)
+		{
+			var board = db.Boards.FirstOrDefault(x => x.Name == name);
+			int id = board?.Id ?? 0;
+			return id;
+		}
 	}
 
 	
