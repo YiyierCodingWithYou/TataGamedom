@@ -10,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using TataGamedom.Models.EFModels;
 using TataGamedom.Models.Infra;
+using TataGamedom.Models.ViewModels.BoardsModerators;
 
 namespace TataGamedom.Controllers.Api
 {
@@ -20,23 +21,36 @@ namespace TataGamedom.Controllers.Api
 		private SimpleHelper simpleHelper = new SimpleHelper();
 
 		// GET: api/BoardsModeratorsApi
-		public IQueryable<BoardsModerator> GetBoardsModerators()
+		public IEnumerable<BoardsModeratorListVm> GetBoardsModerators()
         {
-            return db.BoardsModerators;
-        }
-
-        // GET: api/BoardsModeratorsApi/5
-        [ResponseType(typeof(BoardsModerator))]
-        public IHttpActionResult GetBoardsModerator(int id)
-        {
-            BoardsModerator boardsModerator = db.BoardsModerators.Find(id);
-            if (boardsModerator == null)
+            if (db.BoardsModerators==null)
             {
-                return NotFound();
+                return null;
             }
+            return db.BoardsModerators.Select(m => new BoardsModeratorListVm
+            {
+                Id = m.Id,
+                BoardName = m.Board.Name,
+                MemberAccount = m.Member.Account,
+                LastOnlineTime = m.Member.LastOnlineTime??DateTime.MinValue,
+                StartDate = m.StartDate,
+                EndDate = m.EndDate,
+                Status = m.EndDate < DateTime.Now ? "退職" : "在職"
+            });
 
-            return Ok(boardsModerator);
-        }
+		}
+
+		// GET: api/BoardsModeratorsApi/5
+		[ResponseType(typeof(IEnumerable<String>))]
+		public IEnumerable<String> GetBoardsModerator(int boardId)
+        {
+			IEnumerable<string> boardsModerators = db.BoardsModerators
+				.Where(bm => bm.BoardId == boardId)
+				.Select(bm => bm.Member.Name)
+				.ToList();
+
+			return boardsModerators;
+		}
 
         // PUT: api/BoardsModeratorsApi/5
         [ResponseType(typeof(void))]
@@ -74,35 +88,73 @@ namespace TataGamedom.Controllers.Api
         }
 
         // POST: api/BoardsModeratorsApi
-        [ResponseType(typeof(BoardsModerator))]
-        public IHttpActionResult PostBoardsModerator(BoardsModerator boardsModerator)
+        [ResponseType(typeof(ApiResult))]
+        public ApiResult PostBoardsModerator(BoardsModeratorAddVm vm)
         {
-            if (!ModelState.IsValid)
+            int memberId = simpleHelper.memberIdByAccount(vm.MemberAccount);
+			int boardId = simpleHelper.boardIdByName(vm.BoardName);
+
+
+			if (db.BoardsModerators.Any(x => x.ModeratorMemberId == memberId))
             {
-                return BadRequest(ModelState);
+                return ApiResult.Fail("已經是版主了，不能再加囉!");
             }
 
-            db.BoardsModerators.Add(boardsModerator);
-            db.SaveChanges();
+			if (db.BoardsModerators.Count(x => x.BoardId == boardId ) >= 3)
+			{
+				return ApiResult.Fail("每版版主最多三人，不能再加囉!");
+			}
 
-            return CreatedAtRoute("DefaultApi", new { id = boardsModerator.Id }, boardsModerator);
-        }
+			BoardsModerator mod = new BoardsModerator
+            {
+                ModeratorMemberId = memberId,
+                BoardId = boardId,
+				StartDate = DateTime.Now,
+                EndDate = null
+			};
+
+			try
+			{
+				db.BoardsModerators.Add(mod);
+				db.SaveChanges();
+			}
+			catch (Exception ex)
+			{
+				return ApiResult.Fail("新增失敗：" + ex.Message);
+			}
+			return ApiResult.Success("新增成功");
+		}
 
         // DELETE: api/BoardsModeratorsApi/5
-        [ResponseType(typeof(BoardsModerator))]
-        public IHttpActionResult DeleteBoardsModerator(int id)
+        [ResponseType(typeof(ApiResult))]
+        public ApiResult DeleteBoardsModerator(int id)
         {
-            BoardsModerator boardsModerator = db.BoardsModerators.Find(id);
-            if (boardsModerator == null)
-            {
-                return NotFound();
-            }
+			BoardsModerator entity = db.BoardsModerators.Find(id);
 
-            db.BoardsModerators.Remove(boardsModerator);
-            db.SaveChanges();
+			if (entity == null)
+			{
+				return ApiResult.Fail("刪除失敗");
+			}
 
-            return Ok(boardsModerator);
-        }
+			if (entity.EndDate <= DateTime.Now)
+			{
+				return ApiResult.Fail("早就離職了啦");
+			}
+
+			try
+			{
+				entity.EndDate = DateTime.Now;
+				db.SaveChanges();
+			}
+			catch (Exception ex)
+			{
+				return ApiResult.Fail("解職失敗：" + ex.Message);
+			}
+
+			return ApiResult.Success("解職成功");
+		}
+
+
 
         protected override void Dispose(bool disposing)
         {
