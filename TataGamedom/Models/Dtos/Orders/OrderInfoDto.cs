@@ -23,7 +23,9 @@ namespace TataGamedom.Models.Dtos.Orders
         public DateTime? CompletedAt { get; set; }
         
         public decimal? Total { get; set; }
-        
+
+        public string TrackingNum { get; set; }
+
         public string GameKey { get; set; }
         
         public string OrderStatusCodeName { get; set; }
@@ -52,6 +54,7 @@ namespace TataGamedom.Models.Dtos.Orders
                 CreatedAt = dto.CreatedAt,
                 CompletedAt = dto.CompletedAt,
                 Total = dto.Total,
+                TrackingNum = dto.TrackingNum,
                 GameKey = dto.GameKey,
                 OrderStatusCodeName = dto.OrderStatusCodeName,
                 PaymentStatusCodeName = dto.PaymentStatusCodeName,

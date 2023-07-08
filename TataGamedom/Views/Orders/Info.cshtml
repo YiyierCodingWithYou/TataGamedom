@@ -70,6 +70,9 @@
                 @Html.DisplayNameFor(model => model.ShipmentStatusCodeName)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.TrackingNum)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.PaymentStatusCodeName)
             </th>
             <th>
@@ -95,6 +98,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ShipmentStatusCodeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TrackingNum)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.PaymentStatusCodeName)
