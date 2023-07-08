@@ -398,6 +398,10 @@
     <Compile Include="Models\Infra\Startup.cs" />
     <Compile Include="Models\Interfaces\IOrderItemReturnRepository.cs" />
     <Compile Include="Models\Services\OrderItemReturnService.cs" />
+    <Compile Include="Models\ViewModels\BoardsModerators\BoardsModeratorAddVm.cs" />
+    <Compile Include="Models\ViewModels\BoardsModerators\BoardsModeratorListVm.cs" />
+    <Compile Include="Models\ViewModels\BoardsModerators\BoardsModeratorsApplicationListVm.cs" />
+    <Compile Include="Models\ViewModels\BoardsModerators\BoardsModeratorsApplicationSubmitVm.cs" />
     <Compile Include="Models\ViewModels\Boards\BoardCreateEditorVM.cs" />
     <Compile Include="Models\ViewModels\Boards\BoardListVM.cs" />
     <Compile Include="Models\Dtos\Members\EditProfileDto.cs" />
