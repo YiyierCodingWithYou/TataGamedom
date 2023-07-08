@@ -22,7 +22,7 @@ namespace TataGamedom.Models.EFModels
         [StringLength(500)]
         public string ApplyReason { get; set; }
 
-        public int ApprovalStatusId { get; set; }
+        public int? ApprovalStatusId { get; set; }
 
         public bool? ApprovalResult { get; set; }
 

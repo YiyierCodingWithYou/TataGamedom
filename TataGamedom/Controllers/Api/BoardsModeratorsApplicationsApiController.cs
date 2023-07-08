@@ -8,111 +8,179 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.Results;
+using System.Web.Services.Description;
 using TataGamedom.Models.EFModels;
+using TataGamedom.Models.Infra;
+using TataGamedom.Models.ViewModels.BoardsModerators;
 
 namespace TataGamedom.Controllers.Api
 {
-    public class BoardsModeratorsApplicationsApiController : ApiController
-    {
-        private AppDbContext db = new AppDbContext();
+	public class BoardsModeratorsApplicationsApiController : ApiController
+	{
+		private AppDbContext db = new AppDbContext();
 
-        // GET: api/BoardsModeratorsApplicationsApi
-        public IQueryable<BoardsModeratorsApplication> GetBoardsModeratorsApplications()
-        {
-            return db.BoardsModeratorsApplications;
-        }
+		// GET: api/BoardsModeratorsApplicationsApi
+		public IEnumerable<BoardsModeratorsApplicationListVm> GetBoardsModeratorsApplications()
+		{
+			if (db.BoardsModeratorsApplications == null)
+			{
+				return null;
+			}
+			return db.BoardsModeratorsApplications.Select(m => new BoardsModeratorsApplicationListVm
+			{
+				Id = m.Id,
+				MemberAccount = m.Member.Account,
+				BoardName = m.Board.Name,
+				ApplyDate = m.ApplyDate,
+				AddOrRemove = m.AddOrRemove,
+				AddOrRemoveText = m.AddOrRemove ? "加入" : "離職",
+				ApplyReason = m.ApplyReason,
+				ApprovalResult = m.ApprovalResult,
+				ApprovalResultText = m.ApprovalResult == true ? "允許" : (m.ApprovalResult == false ? "拒絕" : null),
+				BackendMemberAccount = m.BackendMember.Account,
+				ApprovalStatusDate = m.ApprovalStatusDate ?? null
+			});
+		}
 
-        // GET: api/BoardsModeratorsApplicationsApi/5
-        [ResponseType(typeof(BoardsModeratorsApplication))]
-        public IHttpActionResult GetBoardsModeratorsApplication(int id)
-        {
-            BoardsModeratorsApplication boardsModeratorsApplication = db.BoardsModeratorsApplications.Find(id);
-            if (boardsModeratorsApplication == null)
-            {
-                return NotFound();
-            }
+		//PUT: api/BoardsModeratorsApplicationsApi/5
+		[ResponseType(typeof(ApiResult))]
+		public ApiResult PutBoardsModeratorsApplication(int id, BoardsModeratorsApplicationSubmitVm vm)
+		{
+			var backendMemberAccount = User.Identity.Name;
+			//int backendMemberId = simpleHelper.FindBackendmemberIdByAccount(backendMemberAccount);
+			int backendMemberId = 1;
 
-            return Ok(boardsModeratorsApplication);
-        }
 
-        // PUT: api/BoardsModeratorsApplicationsApi/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutBoardsModeratorsApplication(int id, BoardsModeratorsApplication boardsModeratorsApplication)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+			BoardsModeratorsApplication modApplication = db.BoardsModeratorsApplications.Find(id);
 
-            if (id != boardsModeratorsApplication.Id)
-            {
-                return BadRequest();
-            }
+			if (modApplication == null)
+			{
+				return ApiResult.Fail("Id錯誤");
+			}
 
-            db.Entry(boardsModeratorsApplication).State = EntityState.Modified;
+			if (modApplication.ApprovalResult != null)
+			{
+				return ApiResult.Fail("已經審核過啦");
+			}
 
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BoardsModeratorsApplicationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+			try
+			{
+				modApplication.ApprovalResult = vm.ApprovalResult;
+				modApplication.BackendMemberId = backendMemberId;
+				modApplication.ApprovalStatusDate = DateTime.Now;
+				db.SaveChanges();
+			}
+			catch (DbUpdateConcurrencyException ex)
+			{
+				return ApiResult.Fail("確認失敗，原因: "+ex);
+			}
 
-            return StatusCode(HttpStatusCode.NoContent);
-        }
+			if (!vm.ApprovalResult)
+			{
+				//寄信，告知感謝他的貢獻
+				try
+				{
+					modApplication.ApprovalResult = vm.ApprovalResult;
+					db.SaveChanges();
+				}
+				catch (DbUpdateConcurrencyException ex)
+				{
+					return ApiResult.Fail("處理過程中發生錯誤: " + ex);
+				}
+				return ApiResult.Success("完成確認，拒絕申請");
+			}
+			else
+			{
 
-        // POST: api/BoardsModeratorsApplicationsApi
-        [ResponseType(typeof(BoardsModeratorsApplication))]
-        public IHttpActionResult PostBoardsModeratorsApplication(BoardsModeratorsApplication boardsModeratorsApplication)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+				BoardsModeratorsApiController modApi = new BoardsModeratorsApiController();
+				BoardsModeratorAddVm addModVm = new BoardsModeratorAddVm
+				{
+					BoardName = vm.BoardName,
+					MemberAccount = vm.MemberAccount
+				};
 
-            db.BoardsModeratorsApplications.Add(boardsModeratorsApplication);
-            db.SaveChanges();
+				ApiResult addMod = modApi.PostBoardsModerator(addModVm);
 
-            return CreatedAtRoute("DefaultApi", new { id = boardsModeratorsApplication.Id }, boardsModeratorsApplication);
-        }
+				if (addMod.IsFail)
+				{
+					try
+					{
+						modApplication.ApprovalResult = null;
+						modApplication.BackendMemberId = null;
+						modApplication.ApprovalStatusDate = null;
+						db.SaveChanges();
+					}
+					catch (DbUpdateConcurrencyException ex)
+					{
+						return ApiResult.Fail("處理過程中發生錯誤: " + ex);
+					}
 
-        // DELETE: api/BoardsModeratorsApplicationsApi/5
-        [ResponseType(typeof(BoardsModeratorsApplication))]
-        public IHttpActionResult DeleteBoardsModeratorsApplication(int id)
-        {
-            BoardsModeratorsApplication boardsModeratorsApplication = db.BoardsModeratorsApplications.Find(id);
-            if (boardsModeratorsApplication == null)
-            {
-                return NotFound();
-            }
+					return ApiResult.Fail("不能再新增版主惹！" +addMod.Message);
+				}
 
-            db.BoardsModeratorsApplications.Remove(boardsModeratorsApplication);
-            db.SaveChanges();
+				//寄信
+				return ApiResult.Success("完成接受申請，並新增版主");
+			}
 
-            return Ok(boardsModeratorsApplication);
-        }
+		}
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+		// POST: api/BoardsModeratorsApplicationsApi
+		[ResponseType(typeof(BoardsModeratorsApplication))]
+		public IHttpActionResult PostBoardsModeratorsApplication(BoardsModeratorsApplication boardsModeratorsApplication)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
 
-        private bool BoardsModeratorsApplicationExists(int id)
-        {
-            return db.BoardsModeratorsApplications.Count(e => e.Id == id) > 0;
-        }
-    }
+			db.BoardsModeratorsApplications.Add(boardsModeratorsApplication);
+			db.SaveChanges();
+
+			return CreatedAtRoute("DefaultApi", new { id = boardsModeratorsApplication.Id }, boardsModeratorsApplication);
+		}
+
+		// DELETE: api/BoardsModeratorsApplicationsApi/5
+		[ResponseType(typeof(BoardsModeratorsApplication))]
+		public IHttpActionResult DeleteBoardsModeratorsApplication(int id)
+		{
+			BoardsModeratorsApplication boardsModeratorsApplication = db.BoardsModeratorsApplications.Find(id);
+			if (boardsModeratorsApplication == null)
+			{
+				return NotFound();
+			}
+
+			db.BoardsModeratorsApplications.Remove(boardsModeratorsApplication);
+			db.SaveChanges();
+
+			return Ok(boardsModeratorsApplication);
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				db.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		private bool BoardsModeratorsApplicationExists(int id)
+		{
+			return db.BoardsModeratorsApplications.Count(e => e.Id == id) > 0;
+		}
+	}
 }
+
+// GET: api/BoardsModeratorsApplicationsApi/5
+//[ResponseType(typeof(BoardsModeratorsApplication))]
+//public IHttpActionResult GetBoardsModeratorsApplication(int id)
+//{
+//	BoardsModeratorsApplication boardsModeratorsApplication = db.BoardsModeratorsApplications.Find(id);
+//	if (boardsModeratorsApplication == null)
+//	{
+//		return NotFound();
+//	}
+
+//	return Ok(boardsModeratorsApplication);
+//}

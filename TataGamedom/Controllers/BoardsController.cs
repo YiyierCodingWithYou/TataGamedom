@@ -14,6 +14,29 @@ namespace TataGamedom.Controllers
 			return View();
 		}
 
-
+		public ActionResult Boards()
+		{
+			return View();
+		}
+		public ActionResult PostsComments()
+		{
+			return View();
+		}
+		public ActionResult Moderators()
+		{
+			return View();
+		}
+		public ActionResult Applications()
+		{
+			return View();
+		}
+		public ActionResult Reports()
+		{
+			return View();
+		}
+		public ActionResult Buckets()
+		{
+			return View();
+		}
 	}
 }
