@@ -846,6 +846,12 @@
     <Content Include="Views\Suppliers\ImportExcel.cshtml" />
     <Content Include="Scripts\tinymce\langs\README.md" />
     <Content Include="Views\Shared\View.cshtml" />
+    <Content Include="Views\Boards\Boards.cshtml" />
+    <Content Include="Views\Boards\PostsComments.cshtml" />
+    <Content Include="Views\Boards\Reports.cshtml" />
+    <Content Include="Views\Boards\Buckets.cshtml" />
+    <Content Include="Views\Boards\Moderators.cshtml" />
+    <Content Include="Views\Boards\Applications.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
