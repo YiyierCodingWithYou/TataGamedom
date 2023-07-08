@@ -49,9 +49,13 @@ namespace TataGamedom.Controllers.Api
         bl.StartTime,
         bl.EndTime,
         CASE
-            WHEN bl.IsNoctified = 1 THEN 'Yes'
-            ELSE 'No'
-        END AS IsNoticedText
+            WHEN bl.IsNoctified = 1 THEN Ｎ'已通知'
+            ELSE Ｎ'未通知'
+        END AS IsNoticedText,
+		CASE
+			WHEN bl.EndTime >= GETDATE() THEN N'水桶中'
+			ELSE N'已結束'
+		END AS BucketStatus
     FROM
         BucketLogs bl
         JOIN Members m ON m.Id = bl.BucketMemberId
@@ -82,7 +86,7 @@ namespace TataGamedom.Controllers.Api
 				BoardId = simpleHelper.boardIdByName(vm.BoardName),
 				BucketReason = vm.BucketReason,
 				StartTime = DateTime.Now,
-				EndTime = DateTime.Now.AddDays(vm.Days),
+				EndTime = DateTime.Now.AddDays(vm.Days).Date.AddDays(1).AddSeconds(-1), //隔幾日後的 23:59 分
 				IsNoctified = false // 預設為未通知
 			};
 
@@ -98,6 +102,36 @@ namespace TataGamedom.Controllers.Api
 
 			return ApiResult.Success("新增成功");
 		}
+		// DELETE: api/BucketLogsApi/5
+		[ResponseType(typeof(BucketLog))]
+		public ApiResult DeleteBucketLog(int id)
+		{
+
+			BucketLog entity = db.BucketLogs.Find(id);
+
+			if (entity == null ) {
+
+				return ApiResult.Fail("刪除失敗");
+			}
+
+			if (entity.EndTime <= DateTime.Now)
+			{
+				return ApiResult.Fail("早就已結束水桶啦");
+			}
+
+			try
+			{
+				entity.EndTime = DateTime.Now;
+				db.SaveChanges();
+			}
+			catch (Exception ex)
+			{
+				return ApiResult.Fail("解除水桶失敗：" + ex.Message);
+			}
+
+			return ApiResult.Success("解除水桶成功");
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -161,21 +195,6 @@ namespace TataGamedom.Controllers.Api
 	//	return StatusCode(HttpStatusCode.NoContent);
 	//}
 
-	// DELETE: api/BucketLogsApi/5
-	//[ResponseType(typeof(BucketLog))]
-	//public IHttpActionResult DeleteBucketLog(int id)
-	//{
-	//	BucketLog bucketLog = db.BucketLogs.Find(id);
-	//	if (bucketLog == null)
-	//	{
-	//		return NotFound();
-	//	}
-
-	//	db.BucketLogs.Remove(bucketLog);
-	//	db.SaveChanges();
-
-	//	return Ok(bucketLog);
-	//}
 
 
 }

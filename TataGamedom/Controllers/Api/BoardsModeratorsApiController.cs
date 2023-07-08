@@ -9,15 +9,18 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using TataGamedom.Models.EFModels;
+using TataGamedom.Models.Infra;
 
 namespace TataGamedom.Controllers.Api
 {
     public class BoardsModeratorsApiController : ApiController
     {
         private AppDbContext db = new AppDbContext();
+		private string _connStr = System.Configuration.ConfigurationManager.ConnectionStrings["AppDbContext"].ToString(); //forDapper
+		private SimpleHelper simpleHelper = new SimpleHelper();
 
-        // GET: api/BoardsModeratorsApi
-        public IQueryable<BoardsModerator> GetBoardsModerators()
+		// GET: api/BoardsModeratorsApi
+		public IQueryable<BoardsModerator> GetBoardsModerators()
         {
             return db.BoardsModerators;
         }
