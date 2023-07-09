@@ -75,12 +75,32 @@ GROUP BY G.Id, G.ChiName,G.EngName,G.Description, G.IsRestrict, G.ModifiedTime, 
 		{
 			using (var conn = new SqlConnection(_connStr))
 			{
-				string sql = @"SELECT G.Id AS Id, G.ChiName AS ChiName, STRING_AGG(GCC.Name, ' , ') AS Classification, G.IsRestrict AS IsRestrict,BM.Name AS CreatedBackendMemberName, CONVERT(date,G.CreatedTime) AS CreatedTime
-FROM Games AS G
-LEFT JOIN GameClassificationGames AS GCG ON GCG.GameId = G.Id
-LEFT JOIN GameClassificationsCodes AS GCC ON GCC.Id = GCG.GameClassificationId
-JOIN BackendMembers AS BM ON BM.Id = G.CreatedBackendMemberId
-GROUP BY G.Id, G.ChiName, G.IsRestrict, G.CreatedTime, BM.Name";
+				string sql = @"SELECT
+    G.GameCoverImg,
+    G.Id AS Id,
+    CONCAT(G.ChiName, ' ｜ ', ISNULL(G.EngName, '')) AS ChiName,
+    G.IsRestrict AS IsRestrict,
+    BM.Name AS CreatedBackendMemberName,
+    G.CreatedTime,
+    BM2.Name AS ModifiedBackendMemberName,
+    G.ModifiedTime
+FROM
+    Games AS G
+    LEFT JOIN GameClassificationGames AS GCG ON GCG.GameId = G.Id
+    LEFT JOIN GameClassificationsCodes AS GCC ON GCC.Id = GCG.GameClassificationId
+    JOIN BackendMembers AS BM ON BM.Id = G.CreatedBackendMemberId
+    LEFT JOIN BackendMembers AS BM2 ON BM2.Id = G.ModifiedBackendMemberId
+GROUP BY
+    G.Id,
+    G.ChiName,
+    G.EngName,
+    G.IsRestrict,
+    G.CreatedTime,
+    BM.Name,
+    BM2.Name,
+    G.ModifiedTime,
+    G.GameCoverImg
+";
 
 				return conn.Query<GameIndexDto>(sql);
 			};

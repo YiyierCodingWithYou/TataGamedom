@@ -13,8 +13,11 @@ namespace TataGamedom.Models.Dtos.Games
 
 		[Display(Name = "名稱")]
 		public string ChiName { get; set; }
-		[Display(Name = "分類")]
-		public string Classification { get; set; }
+		[Display(Name = "封面")]
+		public string GameCoverImg { get; set; }
+
+		//[Display(Name = "分類")]
+		//public string Classification { get; set; }
 
 		[Display(Name = "年齡限制")]
 		public bool IsRestrict { get; set; }
@@ -24,5 +27,10 @@ namespace TataGamedom.Models.Dtos.Games
 
 		[Display(Name = "創建時間")]
 		public DateTime CreatedTime { get; set; }
+		[Display(Name = "最後修改者")]
+		public string ModifiedBackendMemberName { get; set; }
+		[Display(Name = "最後修改時間")]
+		public DateTime ModifiedTime { get; set; }
+
 	}
 }
