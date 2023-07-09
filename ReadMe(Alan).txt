@@ -1,6 +1,5 @@
 Working On
-	[v]庫存篩選搜尋
-
+    []改Index跟detail的View
 
 To Do
 
@@ -146,3 +145,6 @@ View => 訂單主檔的部分跟訂單明細的部分拆開，商品圖套用 ; 回首頁
 [v] Export() Excel
 [v] import Excel
 	[v]Client => Server
+
+07/09
+	[v]庫存篩選搜尋
