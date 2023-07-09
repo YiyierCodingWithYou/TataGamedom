@@ -33,7 +33,7 @@ namespace TataGamedom.Controllers.Api
 				string query = @"
       SELECT
         bl.Id,
-        m.Account,
+        m.Account as BucketMemberAccount,
         CASE
             WHEN bl.ModeratorMemberId IS NOT NULL THEN 'Moderator'
             WHEN bl.BackendMmemberId IS NOT NULL THEN 'Staff'
@@ -44,7 +44,7 @@ namespace TataGamedom.Controllers.Api
 			WHEN bl.BackendMmemberId IS NOT NULL THEN COALESCE(bm.Account, '')
 			ELSE ''
         END AS ActionAccount,
-        b.Name,
+        b.Name as BoardName,
         bl.BucketReason,
         bl.StartTime,
         bl.EndTime,

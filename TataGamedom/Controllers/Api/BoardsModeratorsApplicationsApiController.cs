@@ -56,7 +56,7 @@ namespace TataGamedom.Controllers.Api
 		}
 
 		//PUT: api/BoardsModeratorsApplicationsApi/Join/5
-		[System.Web.Http.HttpGet]
+		[System.Web.Http.HttpPut]
 		[System.Web.Http.Route("api/BoardsModeratorsApplicationsApi/Join/{id}")]
 		[ResponseType(typeof(ApiResult))]
 		public ApiResult PutBoardsModeratorsApplicationJoin(int id, BoardsModeratorsApplicationSubmitVm vm)
@@ -140,7 +140,7 @@ namespace TataGamedom.Controllers.Api
 		}
 
 		//PUT: api/BoardsModeratorsApplicationsApi/Left/5
-		[System.Web.Http.HttpGet]
+		[System.Web.Http.HttpPut]
 		[System.Web.Http.Route("api/BoardsModeratorsApplicationsApi/Left/{id}")]
 		[ResponseType(typeof(ApiResult))]
 		public ApiResult PutBoardsModeratorsApplicationLeft(int id, BoardsModeratorsApplicationSubmitVm vm)
