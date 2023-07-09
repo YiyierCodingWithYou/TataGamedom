@@ -25,6 +25,6 @@ namespace TataGamedom.Models.Interfaces
 		InventoryItemDto GetByIndex(string index);
 
 		int bulkCreate();
-
-	}
+        InventoryItemDto GetById(int? id);
+    }
 }

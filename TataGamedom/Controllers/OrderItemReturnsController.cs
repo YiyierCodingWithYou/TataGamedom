@@ -54,12 +54,11 @@ namespace TataGamedom.Controllers
 
         public ActionResult Edit(int? id)
         {
-            PrepareCreateDataSource(null);
-
             if(id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             var orderItemReturn = _service.GetById(id).ToVM();
-			return View(orderItemReturn);
+            PrepareCreateDataSource(orderItemReturn.Id);
+            return View(orderItemReturn);
         }
 
         [HttpPost]
@@ -98,7 +97,7 @@ namespace TataGamedom.Controllers
      
         }
 
-		private void PrepareCreateDataSource(int? orderItemId)
+		private void PrepareCreateDataSource(int? id)
 		{
 			var orderItemIdSelectList = new List<SelectListItem>();
 			foreach (var item in db.OrderItems.Where(item => !db.OrderItemReturns.Any(itemReturn => itemReturn.OrderItemId == item.Id)))
@@ -107,8 +106,32 @@ namespace TataGamedom.Controllers
 			}
 
 			ViewBag.OrderItemId = orderItemIdSelectList;
-		}
-		protected override void Dispose(bool disposing)
+			
+			ViewBag.IsRefunded = new SelectList(new List<SelectListItem>
+												{
+                                                    new SelectListItem { Value = "", Text =  "" },
+													new SelectListItem { Value = "0", Text = "未退款" },
+													new SelectListItem { Value = "1", Text = "已退款" } 
+												},"Value","Text",db.OrderItemReturns
+												);
+            
+			ViewBag.IsReturned = new SelectList(new List<SelectListItem>
+                                                {
+                                                    new SelectListItem { Value = "", Text =  "" },
+                                                    new SelectListItem { Value = "0", Text = "未退貨" },
+                                                    new SelectListItem { Value = "1", Text = "已退貨" }
+                                                }, "Value", "Text");
+            
+			ViewBag.IsResellable = new SelectList(new List<SelectListItem>
+                                                { 
+												  new SelectListItem { Value = "", Text = "" }, 
+												  new SelectListItem { Value = "0", Text = "不加入庫存" }, 
+												  new SelectListItem { Value = "1", Text = "重新加入庫存" } 
+											    }, "Value", "Text");
+
+
+        }
+        protected override void Dispose(bool disposing)
 		{
 			if (disposing) db.Dispose();
 			base.Dispose(disposing);

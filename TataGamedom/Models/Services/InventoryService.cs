@@ -44,5 +44,7 @@ namespace TataGamedom.Models.Services
 		
         public int BulkCreate() => _repo.bulkCreate();
 
+        public InventoryItemDto GetById(int? id) => _repo.GetById(id);
+       
     }
 }

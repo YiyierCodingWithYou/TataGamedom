@@ -1,4 +1,6 @@
 ﻿using Dapper;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -227,5 +229,15 @@ WHERE [Index] = @Index;";
 				}
 			}
 		}
-	}
+
+        public InventoryItemDto GetById(int? id)
+        {
+            using (var connection = new SqlConnection(Connstr))
+            {
+                string sql = @"SELECT * FROM InventoryItems WHERE [Id] = @Id";
+                var inventoryItem = connection.QuerySingleOrDefault<InventoryItem>(sql, new { Id = id });
+                return inventoryItem.ToDto();
+            }
+        }
+    }
 }

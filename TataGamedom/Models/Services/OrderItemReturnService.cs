@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Irony.Parsing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TataGamedom.Models.Dtos.InventoryItems;
 using TataGamedom.Models.Dtos.OrderItemReturns;
 using TataGamedom.Models.Dtos.Orders;
 using TataGamedom.Models.Dtos.StockInSheets;
@@ -58,16 +60,48 @@ namespace TataGamedom.Models.Services
         }
 
         
-
         public IEnumerable<OrderItemReturnDetailDto> GetByIndex(string orderIndex) => _repo.GetByIndex(orderIndex);
 
 		public OrderItemReturnDto GetById(int? id) => _repo.GetById(id);
-
+        
+        /// <summary>
+        /// 若選擇重新加入庫存 => 庫存新增一筆 *如果已重新加入庫存，不能執行
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
 		public Result Update(OrderItemReturnDto dto)
 		{
 			_repo.Update(dto);
-			return Result.Success();
+
+            if (dto.IsResellable == true)
+            {
+                IInventoryRepository repo = new InventoryRepository();
+                InventoryService service = new InventoryService(repo);
+
+                InventoryItemCreateDto itemBackToInventory = GetItemInfo(dto);
+                service.Create(itemBackToInventory);
+            }
+
+            //Todo 如果已重新加入庫存，不能執行
+
+            return Result.Success();
 		}
+
+        private InventoryItemCreateDto GetItemInfo(OrderItemReturnDto dto)
+        {
+            IInventoryRepository repo = new InventoryRepository();
+            InventoryService service = new InventoryService(repo);
+
+            OrderItem orderItem = GetOrderItem(dto);
+            InventoryItemDto itemInDb = service.GetById(orderItem.InventoryItemId);
+            return new InventoryItemCreateDto 
+            {
+                ProductId = itemInDb.ProductId,
+                StockInSheetId = itemInDb.StockInSheetId,
+                Cost = itemInDb.Cost,
+                GameKey = itemInDb.GameKey
+            };
+        }
 
         public Result Delete(int? id) 
         {

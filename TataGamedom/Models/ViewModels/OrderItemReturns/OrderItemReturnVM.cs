@@ -23,13 +23,15 @@ namespace TataGamedom.Models.ViewModels.OrderItemReturns
 		public string Reason { get; set; }
 
 		[Display(Name = "退貨日期")]
-		[DataType(DataType.Date)]
-		[Required(ErrorMessage = "{0} 必填")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
+        [Required(ErrorMessage = "{0} 必填")]
 		public DateTime IssuedAt { get; set; }
 
 		[Display(Name = "完成日期")]
-		[DataType(DataType.Date)]
-		public DateTime? CompletedAt { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
+        public DateTime? CompletedAt { get; set; }
 
 		[Display(Name = "退款狀態")]
 		[Required(ErrorMessage = "{0} 必填")]
