@@ -1,4 +1,50 @@
-﻿@model IEnumerable<TataGamedom.Models.ViewModels.InventoryItems.InventoryVM>
+﻿<link href="~/Content/bootstrap theme.css" rel="stylesheet" />
+<link href="~/Content/layoutStyle1.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+
+<style>
+    .fs16 {
+        font-size: 16px;
+    }
+
+    .fs14 {
+        font-size: 14px;
+    }
+
+    th {
+        font-size: 16px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        width: 100%;
+    }
+
+
+    .page-link {
+        color: antiquewhite;
+        background-color: tan;
+    }
+
+    .pagination .active .page-link {
+        background-color: peru;
+        border-color: goldenrod
+    }
+
+    .table {
+        justify-content: center;
+        align-items: center;
+        text-align: justify-all;
+        vertical-align: middle;
+    }
+</style>
+
+@model IEnumerable<TataGamedom.Models.ViewModels.InventoryItems.InventoryVM>
 
 @{
     ViewBag.Title = "庫存清單";
@@ -32,30 +78,31 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            <img src="~/Files/Uploads/@item.GameCoverImage" style="width: 100%" />
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProductIndex)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GameName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProductIsVirtual)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Count)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Total)
-        </td>
-        <td>
-            @Html.ActionLink("明細", "Details", new { productId = item.ProductId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <img src="~/Files/Uploads/@item.GameCoverImage" style="width: 100%" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductIndex)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductIsVirtual)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Count)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Total)
+            </td>
+            <td>
+                @Html.ActionLink("明細", "Details", new { productId = item.ProductId })
+            </td>
+        </tr>
+    }
 
 </table>

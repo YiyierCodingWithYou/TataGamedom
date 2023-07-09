@@ -32,7 +32,7 @@ namespace TataGamedom.Controllers
 
         public ActionResult Index()
         {
-            var inventory = _service.GetAll();
+            IEnumerable<InventoryVM> inventory = _service.GetAll();
             return View(inventory);
         }
 
@@ -40,26 +40,12 @@ namespace TataGamedom.Controllers
         {
             if (productId == null) return View("");
 
-            //if (productId == null)
-            //{
-            //    TempData["ShowCreateConfirmation"] = true;
-            //    return RedirectToAction("Create");
-            //}
-
-			//
-
-            var orderInfo = _service.GetItemInfo(productId);
+            IEnumerable<InventoryItemVM> orderInfo = _service.GetItemInfo(productId);
 			return View(orderInfo);
         }
 
 		public ActionResult Create()
 		{
-            //if (TempData["ShowCreateConfirmation"] != null)
-            //{
-            //    ViewBag.ShowConfirmation = true;
-            //}
-
-
             PrepareCreateInventoryDataSource(null, null);
 			return View();
 		}
@@ -90,7 +76,7 @@ namespace TataGamedom.Controllers
 			PrepareCreateInventoryDataSource(null, null);
 
 			if (index == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-			var order = _service.GetByIndex(index).ToVM();
+            InventoryItemVM order = _service.GetByIndex(index).ToVM();
 			return View(order);
 		}
 
@@ -116,16 +102,16 @@ namespace TataGamedom.Controllers
 
 		private void PrepareCreateInventoryDataSource(int? productId, string StockInSheetIndex)
 		{
-			var productIndexSelectList = new List<SelectListItem>();
-			foreach (var p in db.Products) 
+            List<SelectListItem> productIndexSelectList = new List<SelectListItem>();
+			foreach (Product p in db.Products) 
 			{
 				productIndexSelectList.Add(new SelectListItem { Value = p.Id.ToString(), Text = p.Index }); 
 			}
 
 			ViewBag.productIndex = productIndexSelectList;
 
-			var StockInSheetIndexSelectList = new List<SelectListItem>();
-			foreach (var sis in db.StockInSheets) 
+            List<SelectListItem> StockInSheetIndexSelectList = new List<SelectListItem>();
+			foreach (StockInSheet sis in db.StockInSheets) 
 			{
 				StockInSheetIndexSelectList.Add(new SelectListItem { Value = sis.Id.ToString(), Text = sis.Index }); 
 			}

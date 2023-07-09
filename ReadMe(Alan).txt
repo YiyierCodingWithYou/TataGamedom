@@ -1,10 +1,8 @@
 Working On
-	[]_Notification
-	
+	[]庫存篩選搜尋
 
 
 To Do
-	[]Client Validation
 
 	[] 進貨推薦清單
 
@@ -64,10 +62,12 @@ To Do
 	[] U : 若改成已入庫，到貨日自動getDate
 	[] D
 
-	#統一調整 
-	Edit dataType => 沒get到日期 編號 ; Edit => 沒get到日期
-	檢查VM 售價及成本 改#,#  or 套用自訂attribution
-	清單頁 => 排序篩選分頁
+		#統一調整 
+		Edit dataType => 沒get到日期 編號 ; Edit => 沒get到日期
+		檢查VM 售價及成本 改#,#  or 套用自訂attribution
+		清單頁 => 排序篩選分頁
+
+	[]Client Validation => JS
 
 Completed
 06/26
