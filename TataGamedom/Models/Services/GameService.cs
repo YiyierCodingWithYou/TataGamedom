@@ -29,7 +29,9 @@ namespace TataGamedom.Models.Services
 				{
 					Id = dto.Id,
 					ChiName = dto.ChiName,
-					Classification = dto.Classification,
+					ModifiedBackendMemberName = dto.ModifiedBackendMemberName,
+					ModifiedTime = dto.ModifiedTime,
+					GameCoverImg = dto.GameCoverImg,
 					IsRestrict = dto.IsRestrict,
 					CreatedBackendMemberName = dto.CreatedBackendMemberName,
 					CreatedTime = dto.CreatedTime,

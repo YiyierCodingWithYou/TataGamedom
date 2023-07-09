@@ -343,7 +343,6 @@
     <Compile Include="Models\Dtos\Games\GameCreateDto.cs" />
     <Compile Include="Models\Dtos\Games\GameEditCoverImgDto.cs" />
     <Compile Include="Models\Dtos\Games\GameEditDto.cs" />
-    <Compile Include="Models\Dtos\Games\GameIndexDto.cs" />
     <Compile Include="Models\Dtos\Members\LoginDto.cs" />
     <Compile Include="Models\Dtos\Members\RegisterDto.cs" />
     <Compile Include="Models\Dtos\OrderItemReturns\OrderItemReturnDetailDto.cs" />
@@ -426,7 +425,7 @@
     <Compile Include="Models\EFModels\StockInStatusCode.cs" />
     <Compile Include="Models\EFModels\Supplier.cs" />
     <Compile Include="Models\Infra\ApiResult.cs" />
-    <Compile Include="Models\Infra\AppDbContext.cs" />
+    <Compile Include="Models\Infra\NPOIHelper.cs" />
     <Compile Include="Models\Infra\DapperRepositories\OrderItemReturnRepository.cs" />
     <Compile Include="Models\Infra\ImportExcelHelper.cs" />
     <Compile Include="Models\Infra\OrderEmailHelper.cs" />
@@ -487,6 +486,7 @@
     <Compile Include="Models\ViewModels\Coupons\CouponCreateVM.cs" />
     <Compile Include="Models\ViewModels\Coupons\CouponEditVM.cs" />
     <Compile Include="Models\ViewModels\Coupons\CouponIndexVM.cs" />
+    <Compile Include="Models\ViewModels\Coupons\CouponsProductsIndexVM.cs" />
     <Compile Include="Models\ViewModels\Coupons\EditCouponProductsVM.cs" />
     <Compile Include="Models\ViewModels\CustomerServices\FAQIndexVM.cs" />
     <Compile Include="Models\ViewModels\CustomerServices\FAQsCreateVM.cs" />
@@ -553,6 +553,7 @@
     <Content Include="Content\login.css" />
     <Content Include="Content\layoutStyle1.css" />
     <Content Include="Content\PagedList.css" />
+    <Content Include="Content\YiyierStyle.css" />
     <Content Include="favicon.ico" />
     <Content Include="Files\Images\arniya.jpg" />
     <Content Include="Files\Images\controller.png" />
@@ -787,7 +788,6 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
@@ -890,6 +890,8 @@
     <Content Include="Views\Boards\Moderators.cshtml" />
     <Content Include="Views\Boards\Applications.cshtml" />
     <Content Include="Views\Games\Upload.cshtml" />
+    <Content Include="Views\Coupons\CouponsProductsIndex.cshtml" />
+    <Content Include="Views\Products\Upload.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

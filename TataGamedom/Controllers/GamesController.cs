@@ -158,38 +158,23 @@ namespace TataGamedom.Controllers
 				if (selectedGameClassifications.Count > 2)
 				{
 					ModelState.AddModelError("SelectedGameClassification", "最多只能選擇兩個遊戲分類！");
-					List<GameClassificationsCode> gameClassifications = GetGameClassifications();
-					GameEditVM model = new GameEditVM
-					{
-						GameClassification = gameClassifications
-					};
-					return View(model);
+					vm.GameClassification = GetGameClassifications();
+					return View(vm);
 				}
 				vm.ModifiedBackendMemberId = memberInDb.Id;
 				Result editResult = UpdateGames(vm);
 				if (editResult.IsSuccess)
 				{
-					//更新遊戲類別
 					UpdateGameClassification(vm);
 					CreateGameClassification(vm);
-
 					return RedirectToAction("Index");
 				}
-				ModelState.AddModelError(string.Empty, editResult.ErrorMessage);
-				List<GameClassificationsCode> gameClassifications2 = GetGameClassifications();
-				GameEditVM model2 = new GameEditVM
-				{
-					GameClassification = gameClassifications2
-				};
-				return View(model2);
-
+				ModelState.AddModelError(string.Empty, editResult.ErrorMessage);		
+				vm.GameClassification = GetGameClassifications();
+				return View(vm);
 			}
-			List<GameClassificationsCode> gameClassifications3 = GetGameClassifications();
-			GameEditVM model3 = new GameEditVM
-			{
-				GameClassification = gameClassifications3
-			};
-			return View(model3);
+			vm.GameClassification = GetGameClassifications();
+			return View(vm);
 		}
 		private void CreateGameClassification(GameEditVM vm)
 		{
@@ -473,11 +458,22 @@ namespace TataGamedom.Controllers
 						GameCoverImg = dataRow["GameCoverImg"].ToString(),
 					};
 
+					Board board = new Board()
+					{
+						Name = dataRow["ChiName"].ToString(),
+						GameId = int.Parse(dataRow["GameId"].ToString()),
+						BoardAbout = dataRow["Description"].ToString(),
+						BoardHeaderCoverImg = dataRow["GameCoverImg"].ToString()
+					};
+
 					try
 					{
 						var currentUserAccount = User.Identity.Name;
-						ImportAppDbContext dBConnect = new ImportAppDbContext();
-						dBConnect.InsertGames(game, currentUserAccount);
+						NPOIHelper games = new NPOIHelper();
+						games.InsertGames(game, currentUserAccount);
+
+						NPOIHelper boards = new NPOIHelper();
+						boards.InsertBoards(board, currentUserAccount);
 					}
 					catch (Exception ex)
 					{
