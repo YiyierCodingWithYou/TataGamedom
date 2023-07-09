@@ -103,6 +103,7 @@ namespace TataGamedom.Controllers.Api
 
 			bool hasActiveBucketLogs = db.BucketLogs.Any(bl =>
 			bl.BucketMemberId == bucketMemberId &&
+			bl.BoardId == boardId &&
 			bl.EndTime > DateTime.Now
 			);
 

@@ -64,8 +64,49 @@ function donuts(likeCount, dislikeCount, selectorId) {
     });
 }
 
-
-
+function PutApplication(IsAdd, endpoint) {
+  let AddId = $("#Id").text();
+  let MemberAccount = $("#Account").text();
+  let BoardName = $("#BoardName").text();
+  console.log(MemberAccount);
+  console.log(BoardName);
+  $.ajax({
+    type: "PUT",
+    url: `${baseAddress}/api/BoardsModeratorsApplicationsApi/${endpoint}/${AddId}`,
+    data: JSON.stringify({
+      ApprovalResult: `${IsAdd}`,
+      MemberAccount: MemberAccount,
+      BoardName: BoardName,
+    }),
+    contentType: "application/json",
+  })
+    .done((data) => {
+      console.log(data);
+      if (data.IsSuccess) {
+        Swal.fire({
+          icon: "success",
+          title: "成功",
+          text: JSON.stringify(data.Message),
+        }).then(() => {
+          $("#ApplicationTable").DataTable().ajax.reload();
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "失敗",
+          text: JSON.stringify(data.Message),
+        });
+      }
+    })
+    .fail((err) => {
+      console.log("no...");
+      Swal.fire({
+        icon: "error",
+        title: "失敗",
+        text: err.statusText,
+      });
+    });
+}
 // function GetModalText(){
 //   $('#AddOrRemoveText').text(addorRemoveText);
 //   $('#Id').text(id);
@@ -158,96 +199,90 @@ $(document).ready(function () {
         $("td", row).addClass("bg-orange"); // Change text color to gray for rows with ActiveFlag = false
       }
       $(row).on("dblclick", function () {
-        let id=data.Id;
-        let memberAccount=data.MemberAccount;
-        let boardName=data.BoardName;
-        let applyDate=data.ApplyDate;
-        let addorRemoveText=data.AddOrRemoveText;
-        let appplyReason=data.ApplyReason;
-        let approvalStatus=data.ApprovalStatus;
-        let approvalResultText=data.ApprovalResultText;
-        let backendMemberAccount=data.BackendMemberAccount;
-        let approvalStatusDate=data.ApprovalStatusDate;
-        console.log(boardName)
-        $('#BoardName').text(boardName);
-        $('#AddOrRemoveText').text(addorRemoveText);
-        $('#Id').text(id);
-        $('#ApplyReason').text(appplyReason);
-        $('#Account').text(memberAccount);
-        $('#ApplyDate').text(applyDate);
-        $('#ApprovalResultText').text(approvalResultText);
-        $('#BackendMemberAccount').text(backendMemberAccount);
-        $('#ApprovalStatusDate').text(approvalStatusDate);
-        $('#MemberPostAtBoardNum').text(1);
-        $('#MemberPostAtAllNum').text(5);
+        let id = data.Id;
+        let memberAccount = data.MemberAccount;
+        let boardName = data.BoardName;
+        let applyDate = data.ApplyDate;
+        let addorRemoveText = data.AddOrRemoveText;
+        let appplyReason = data.ApplyReason;
+        let approvalStatus = data.ApprovalStatus;
+        let approvalResultText = data.ApprovalResultText;
+        let backendMemberAccount = data.BackendMemberAccount;
+        let approvalStatusDate = data.ApprovalStatusDate;
+        console.log(boardName);
+        $("#BoardName").text(boardName);
+        $("#AddOrRemoveText").text(addorRemoveText);
+        $("#Id").text(id);
+        $("#ApplyReason").text(appplyReason);
+        $("#Account").text(memberAccount);
+        $("#ApplyDate").text(applyDate);
+        $("#ApprovalResultText").text(approvalResultText);
+        $("#BackendMemberAccount").text(backendMemberAccount);
+        $("#ApprovalStatusDate").text(approvalStatusDate);
+        $("#MemberPostAtBoardNum").text(1);
+        $("#MemberPostAtAllNum").text(5);
         
-        if (approvalStatus === '已完成') {
-          $('#OkBtn').attr('disabled', true);
-          $('#NoBtn').attr('disabled', true);
-        }else{
-          $('#OkBtn').attr('disabled', false);
-          $('#NoBtn').attr('disabled', false);
+        $("#OkBtn").attr("disabled", true);
+        $("#NoBtn").attr("disabled", true);
+        
+        if (data.ApprovalStatus.includes("已完成")) {
+          $("#OkBtn").attr("disabled", true);
+          $("#NoBtn").attr("disabled", true); 
+        } 
+        if (data.ApprovalStatus.includes("待處理")&&addorRemoveText.includes("離職")) {
+          $("#OkBtn").attr("disabled", false);
+          $("#NoBtn").attr("disabled", true);
+          $("#OkBtn").on("click", function () {
+            Swal.fire({
+              title: "確認",
+              text: "確認執行【允許版主離職】",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonText: "確定",
+              cancelButtonText: "取消",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                PutApplication(true, "left");
+              }
+            });
+          });
         }
-        
-        if (addorRemoveText === '離職') {
-          $('#OkBtn').attr('disabled', false);
-          $('#NoBtn').attr('disabled', true);
+        if (data.ApprovalStatus.includes("待處理")&&addorRemoveText.includes("加入")) {
+          $("#OkBtn").attr("disabled", false);
+          $("#NoBtn").attr("disabled", false);
+          $("#OkBtn").on("click", function () {
+            Swal.fire({
+              title: "確認",
+              text: "確認執行【允許版主申請】",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonText: "確定",
+              cancelButtonText: "取消",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                PutApplication(true, "Join");
+              }
+            });
+          });
+          $("#NoBtn").on("click", function () {
+            Swal.fire({
+              title: "確認",
+              text: "確認執行【拒絕版主申請】",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonText: "確定",
+              cancelButtonText: "取消",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                PutApplication(false, "Join");
+              }
+            });
+          });
         }
-        
-        if (addorRemoveText === '加入') {
-          $('#OkBtn').attr('disabled', false);
-          $('#NoBtn').attr('disabled', false);
-        }
-        
 
         $("#myModal").modal("show");
       });
     },
     order: [[0, "desc"]],
   });
-
-  $('#OkBtn').on('click',AddOK);
-  function AddOK() {
-    let AddId = $('#Id').text();
-    let MemberAccount = $('#Account').text();
-    let BoardName = $('#BoardName').text()
-    console.log(MemberAccount)
-    console.log(BoardName)
-    $.ajax({
-        type: 'PUT',
-        url: `${baseAddress}/api/BoardsModeratorsApplicationsApi/Join/${AddId}`,
-        data: JSON.stringify({
-            "ApprovalResult": true,
-            "MemberAccount": MemberAccount,
-            "BoardName": BoardName,
-        }),
-        contentType: "application/json"
-    })
-        .done(data => {
-            console.log(data);
-            if (data.IsSuccess) {
-                Swal.fire({
-                    icon: 'success',
-                    title: '成功',
-                    text: JSON.stringify(data.Message)
-                }).then(() => {
-                    $('#ApplicationTable').DataTable().ajax.reload();
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: '失敗',
-                    text: JSON.stringify(data.Message)
-                });
-            }
-        })
-        .fail(err => {
-            console.log('no...')
-            Swal.fire({
-                icon: 'error',
-                title: '失敗',
-                text: err.statusText
-            })
-        })
-  }
 });
