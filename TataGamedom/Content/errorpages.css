@@ -1,0 +1,215 @@
+﻿body {
+	height: 100vh;
+	background: #6ec1ec;
+	position: relative;
+	font-family: 'Open Sans' !important;
+}
+
+/* SVG STYLES */
+.ast0 {
+	fill: #FFFFFF;
+}
+
+.ast1 {
+	fill: none;
+	stroke: #1374A8;
+	stroke-width: 3;
+	stroke-miterlimit: 10;
+}
+
+.ast2 {
+	fill: #1374A8;
+}
+
+.ast3 {
+	font-family: 'Open Sans';
+	font-weight: 600;
+}
+
+.ast4 {
+	font-size: 28px;
+}
+
+.ast5 {
+	font-family: 'Open Sans';
+	font-weight: 800;
+}
+
+.ast6 {
+	font-size: 107.5141px;
+}
+
+.bst0 {
+	fill: #C7C7C7;
+}
+
+.bst1 {
+	fill: #FFFFFF;
+}
+
+.st0 {
+	fill: #332E2C;
+}
+
+.st1 {
+	fill: #998776;
+}
+
+.st2 {
+	fill: #736458;
+}
+
+.st3 {
+	fill: #544842;
+}
+
+.st4 {
+	fill: #C8B299;
+}
+
+.st5 {
+	fill: #010101;
+}
+
+.st6 {
+	fill: #FFFFFF;
+}
+
+.bo0 {
+	fill: #FFFFFF;
+	stroke: #898989;
+	stroke-width: 2;
+	stroke-miterlimit: 10;
+}
+
+.bo1 {
+	fill: #787878;
+}
+
+.bo2 {
+	font-family: 'Open Sans';
+	font-weight: 600;
+}
+
+.bo3 {
+	font-size: 28px;
+}
+
+.bo4 {
+	fill: #4C4C4D;
+}
+
+.bo5 {
+	font-family: 'Open Sans';
+	font-weight: 800;
+}
+
+.bo6 {
+	font-size: 107.5141px;
+}
+
+.bo7 {
+	fill: none;
+	stroke: #999999;
+	stroke-width: 0.25;
+	stroke-miterlimit: 10;
+}
+
+.st7 {
+	opacity: 0.5;
+	fill: #FFFFFF;
+}
+
+.st8 {
+	fill: #40403F;
+}
+
+.st9 {
+	opacity: 0.7;
+	fill: #F7EC13;
+}
+
+.st001 {
+	fill: #FFFFFF;
+}
+
+.otter {
+	position: absolute;
+	top: -100px;
+	left: 100px;
+	width: 500px;
+	padding: 0;
+	margin: 0;
+}
+
+.floating {
+	animation-name: floating;
+	animation-duration: 10s;
+	animation-iteration-count: infinite;
+}
+
+@keyframes floating {
+	0% {
+		transform: translateY(0%);
+	}
+
+	20% {
+		transform: translateY(10%);
+	}
+
+	80% {
+		transform: translateY(2%)
+	}
+
+	100% {
+		transform: translateY(0%);
+	}
+}
+
+.cloud1 {
+	width: 300px;
+	animation-name: clouds;
+	animation-duration: 3s;
+	animation-iteration-count: infinite;
+	position: relative;
+	bottom: -650px;
+	float: right;
+	margin-right: 100px;
+	opacity: .5;
+}
+
+.cloud2 {
+	width: 500px;
+	animation: clouds 3s linear infinite;
+	position: relative;
+	bottom: -650px;
+	float: left;
+	margin-left: -200px;
+	opacity: .5;
+	z-index: -1;
+}
+
+.cloud3 {
+	width: 500px;
+	animation: clouds 2s linear infinite;
+	position: relative;
+	bottom: -650px;
+	opacity: .5;
+	z-index: -1;
+}
+
+@keyframes clouds {
+	0% {
+		transform: translateY(100%);
+	}
+
+	100% {
+		transform: translateY(-650%);
+	}
+}
+
+.fourOfourmessage {
+	position: absolute;
+	top: 120px;
+	left: 500px;
+}

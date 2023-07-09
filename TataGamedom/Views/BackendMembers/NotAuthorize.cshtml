@@ -5,11 +5,21 @@
 
 
 <div style="text-align: center;">
-	<img src="~/Files/Images/arniya.jpg" alt="權限不夠啦哈哈">
+	<img src="~/Files/Images/arniya.jpg" alt="權限不足">
 </div>
 
 
 <div class="mt-5" style="text-align: center;">
-	@Html.ActionLink("好啦點我換帳號登入", "logout", null, new { @class = "btn btn-primary btn-lg" })
-	@Html.ActionLink("返回", "INDEX", null, new { @class = "btn btn-danger btn-lg" })
+	@Html.ActionLink("更換帳號登入", "logout", null, new { @class = "btn btn-primary btn-lg" })
+	<a href="#" class="btn btn-danger btn-lg" onclick="redirectToHome()">回首頁</a>
 </div>
+
+
+@section Scripts{
+	<script>
+		function redirectToHome() {
+			var baseUrl = window.location.origin;
+			window.location.href = baseUrl;
+		}
+	</script>
+	}

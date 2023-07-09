@@ -7,7 +7,7 @@
 <h2>編輯新聞</h2>
 <div class="container">
 
-	@using (Html.BeginForm())
+	@using (Html.BeginForm("Edit", "News", FormMethod.Post, new { enctype = "multipart/form-data" }))
 	{
 		@Html.AntiForgeryToken()
 
@@ -49,13 +49,15 @@
 
 			</div>
 
-
 			<div class="mt-3">
 				@Html.LabelFor(model => model.CoverImg, htmlAttributes: new { @class = "control-label col-md-2" })
 				<input type="file" name="file1" class="form-control" />
 				@*@Html.EditorFor(model => model.CoverImg, new { htmlAttributes = new { @class = "form-control" } })*@
 				@Html.ValidationMessageFor(model => model.CoverImg, "", new { @class = "text-danger" })
 
+			</div>
+			<div class="mb-3 col-6">
+				<img src="/Files/NewsImages/@Model.CoverImg" style="width: 100%" />
 			</div>
 
 			<div class="mt-3">
@@ -69,8 +71,8 @@
 			<div class="mt-3">
 				@Html.LabelFor(model => model.EditDatetime, htmlAttributes: new { @class = "control-label col-md-2" })
 
-				@Html.EditorFor(model => model.DeleteDatetime, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-				@Html.ValidationMessageFor(model => model.DeleteDatetime, "", new { @class = "text-danger" })
+				@Html.EditorFor(model => model.EditDatetime, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+				@Html.ValidationMessageFor(model => model.EditDatetime, "", new { @class = "text-danger" })
 
 			</div>
 
@@ -130,13 +132,15 @@
 </div>
 @section Scripts {
 	@Scripts.Render("~/bundles/jqueryval")
-	<script src="~/Scripts/tinymce/tinymce.min.js"></script>
+	@*<script src="~/Scripts/tinymce/tinymce.min.js"></script>*@
+	<script src="https://cdn.tiny.cloud/1/6rb3trl2hzooj95cl84vg4l75mca64j5ttuvcm0fu1gumuih/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
 	<script>
 		tinymce.init({
 			selector: 'textarea',
-			plugins: '',
-			toolbar: 'blocks fontfamily fontsize | bold italic underline strikethrough |  align lineheight | checklist numlist bullist indent outdent |',
+			plugins: 'image media',
+			toolbar: 'blocks fontfamily fontsize | bold italic underline strikethrough | image media align lineheight | checklist numlist bullist indent outdent |',
+			language: "zh_TW",
 			tinycomments_mode: 'embedded',
 			tinycomments_author: 'Author name',
 			mergetags_list: [
@@ -144,6 +148,39 @@
 				{ value: 'Email', title: 'Email' },
 			]
 		});
+		//tinymce.init({
+		//	selector: 'textarea',
+		//	plugins: 'image',
+		//	toolbar: 'blocks fontfamily fontsize | bold italic underline strikethrough | align lineheight | checklist numlist bullist indent outdent |',
+		//	tinycomments_mode: 'embedded',
+		//	tinycomments_author: 'Author name',
+		//	images_upload_url: "/Files/NewsImages",
+		//	language: "zh_TW",
+		//	mergetags_list: [
+		//		{ value: 'First.Name', title: 'First Name' },
+		//		{ value: 'Email', title: 'Email' },
+		//	],
+		// images_upload_handler: function (blobInfo, success, failure) {
+		//	var xhr, formData;
+
+		//	xhr = new XMLHttpRequest();
+		//	xhr.withCredentials = false;
+		//	xhr.open('POST', '/uploadImage'); // 上傳圖片的後端路由
+
+		//	xhr.onload = function () {
+		//		var response = JSON.parse(xhr.responseText);
+		//		if (xhr.status !== 200 || !response || response.error) {
+		//			failure('圖片上傳失敗');
+		//		} else {
+		//			success(response.url, { text: response.url }); // 返回圖片在 CDN 上的 URL，並在編輯器中顯示該 URL
+		//		}
+		//	};
+
+		//	formData = new FormData();
+		//	formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+		//	xhr.send(formData);
+		//}
 
 
 		$(document).ready(function () {

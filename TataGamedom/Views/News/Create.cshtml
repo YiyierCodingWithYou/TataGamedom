@@ -5,72 +5,139 @@
 }
 
 <h2>新增新聞</h2>
+	<div class="container ">
+		@using (Html.BeginForm("Create", "News", FormMethod.Post, new { enctype = "multipart/form-data" }))
+		{
+			@Html.AntiForgeryToken()
 
-<div class="container">
-	@using (Html.BeginForm("Create", "News", FormMethod.Post, new { enctype = "multipart/form-data" }))
-	{
-		@Html.AntiForgeryToken()
+			<div class="row">
+				<hr />
+				@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+				<div class="mt-3">
+					@Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+					@Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+					@Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+				</div>
 
-		<div class="row">
-			<hr />
-			@Html.ValidationSummary(true, "", new { @class = "text-danger" })
-			<div class="mt-3">
-				@Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
-				@Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-				@Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
-			</div>
+				<div class="mt-3">
+					@Html.LabelFor(model => model.NewsCategoryId, htmlAttributes: new { @class = "control-label col-md-2" })
+					@Html.DropDownList("NewsCategoryId", null, "", htmlAttributes: new { @class = "form-select", @onchange = "showHideGamesDiv();" })
+					@Html.ValidationMessageFor(model => model.NewsCategoryId, "", new { @class = "text-danger" })
+				</div>
 
-			<div class="mt-3">
-				@Html.LabelFor(model => model.NewsCategoryId, htmlAttributes: new { @class = "control-label col-md-2" })
-				@Html.DropDownList("NewsCategoryId", null, "", htmlAttributes: new { @class = "form-select", @onchange = "showHideGamesDiv();" })
-				@Html.ValidationMessageFor(model => model.NewsCategoryId, "", new { @class = "text-danger" })
-			</div>
+				<div class="mt-3" id="gamesDiv" style="display: none;">
+					@Html.LabelFor(model => model.GamesId, htmlAttributes: new { @class = "control-label col-md-2" })
+					@Html.DropDownList("GamesId", null, "", new { @class = "form-select" })
+					@Html.ValidationMessageFor(model => model.GamesId, "", new { @class = "text-danger" })
+				</div>
 
-			<div class="mt-3" id="gamesDiv" style="display: none;">
-				@Html.LabelFor(model => model.GamesId, htmlAttributes: new { @class = "control-label col-md-2" })
-				@Html.DropDownList("GamesId", null, "", new { @class = "form-select" })
-				@Html.ValidationMessageFor(model => model.GamesId, "", new { @class = "text-danger" })
-			</div>
+				<div class="mt-3">
+					@Html.LabelFor(model => model.Content, htmlAttributes: new { @class = "control-label col-md-2" })
 
-			<div class="mt-3">
-				@Html.LabelFor(model => model.Content, htmlAttributes: new { @class = "control-label col-md-2" })
+					@Html.TextAreaFor(model => model.Content, new { htmlAttributes = new { @class = "form-control" } })
+					@Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
+				</div>
 
-				@Html.TextAreaFor(model => model.Content, new { htmlAttributes = new { @class = "form-control" } })
-				@Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
-			</div>
+				<div class="mt-3">
+					@Html.LabelFor(model => model.CoverImg, htmlAttributes: new { @class = "control-label col-md-2" })
+					<input type="file" name="file1" class="form-control" />
+					@Html.ValidationMessageFor(model => model.CoverImg, "", new { @class = "text-danger" })
+				</div>
 
-			<div class="mt-3">
-				@Html.LabelFor(model => model.CoverImg, htmlAttributes: new { @class = "control-label col-md-2" })
-				<input type="file" name="file1" class="form-control" />
-				@Html.ValidationMessageFor(model => model.CoverImg, "", new { @class = "text-danger" })
-			</div>
-
-
-			<div class="mt-3">
-				@Html.LabelFor(model => model.ScheduleDate, htmlAttributes: new { @class = "control-label col-md-2" })
-				@Html.EditorFor(model => model.ScheduleDate, new { htmlAttributes = new { @class = "form-control" } })
-				@Html.ValidationMessageFor(model => model.ScheduleDate, "", new { @class = "text-danger" })
-			</div>
+				<div class="mt-3">
+					@Html.LabelFor(model => model.ScheduleDate, htmlAttributes: new { @class = "control-label col-md-2" })
+					@Html.EditorFor(model => model.ScheduleDate, new { htmlAttributes = new { @class = "form-control" } })
+					@Html.ValidationMessageFor(model => model.ScheduleDate, "", new { @class = "text-danger" })
+				</div>
 
 
-			<div class="mt-3">
-				<div class="col-md-offset-2 col-md-10">
-					<input type="submit" value="新增" class="btn btn-primary" />
-					@Html.ActionLink("取消", "Index", null, new { @class = "btn btn-primary" })
+				<div class="mt-3">
+					<div class="col-md-offset-2 col-md-10">
+						<input type="submit" value="新增" class="btn btn-primary" />
+						@Html.ActionLink("取消", "Index", null, new { @class = "btn btn-primary" })
+					</div>
 				</div>
 			</div>
-		</div>
-	}
+		}
 	</div>
 	@section Scripts {
 		@Scripts.Render("~/bundles/jqueryval")
-		<script src="~/Scripts/tinymce/tinymce.min.js"></script>
+		@*<script src="~/Scripts/tinymce/tinymce.min.js"></script>*@
+		<script src="https://cdn.tiny.cloud/1/6rb3trl2hzooj95cl84vg4l75mca64j5ttuvcm0fu1gumuih/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
 		<script>
+			//function getRelativePath(absolutePath) {
+			//	var baseUrl = window.location.protocol + '//' + window.location.host;
+			//	var relativePath = absolutePath.replace(baseUrl, '');
+			//	return relativePath;
+			//}
+
+			//tinymce.init({
+			//	selector: 'textarea',
+			//	plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+			//	toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+			//	images_upload_url: "/Files/NewsImages",
+			//	language: "zh_TW",
+			//	images_upload_handler: function (blobInfo, success, failure) {
+			//		var xhr, formData;
+
+			//		xhr = new XMLHttpRequest();
+			//		xhr.withCredentials = false;
+			//		xhr.open('POST', '/Files/NewsImages');
+
+			//		xhr.onload = function () {
+			//			if (xhr.status !== 200) {
+			//				failure('HTTP Error: ' + xhr.status);
+			//				return;
+			//			}
+
+			//			var response = JSON.parse(xhr.responseText);
+			//			var imageUrl = response.imageUrl; // 获取服务器返回的图片路径
+
+			//			// 将绝对路径转换为相对路径
+			//			var relativePath = getRelativePath(imageUrl);
+
+			//			var imageHtml = '<img src="' + relativePath + '" alt="">'; // 使用相对路径替换插入的图片路径
+			//			tinymce.activeEditor.insertContent(imageHtml);
+			//			success(relativePath, { text: relativePath });
+			//		};
+
+			//		formData = new FormData();
+			//		formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+			//		xhr.send(formData);
+			//	}
+			//});
+
+
+			//tinymce.init({
+			//	// 初始化參數設定[註1]
+			//	selector: "textarea", // 目標物件
+			//	//auto_focus: "editor1", // 聚焦物件
+			//	language: "zh_TW", // 語系(CDN沒有中文，需要下載原始source才有)
+			//	//theme: "modern", // 模板風格
+			//	plugins: "advlist autolink link image lists charmap print preview", // 套件設定: 進階清單、自動連結、連結、上傳圖片、清單、特殊字元表、列印、預覽
+			//	mobile: { // 行動裝置設定
+			//		theme: "mobile", // 模板風格
+			//		plugins: ["autosave", "lists", "autolink"],  // 套件設定: 自動儲存、清單、自動連結
+			//		toolbar: ["undo", "bold", "italic", "styleselect"]  // 工具列設定: 復原、粗體、斜體、樣式表
+			//	}
+			//});
+
+			//tinymce.init({
+			//	selector: 'textarea',
+			//	plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+			//	toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+			//	images_upload_url: "../../Files/newsimages/lulumi.png",
+			//	language: "zh_TW",
+			//});
+
+
 			tinymce.init({
 				selector: 'textarea',
-				plugins: '',
-				toolbar: 'blocks fontfamily fontsize | bold italic underline strikethrough |  align lineheight | checklist numlist bullist indent outdent |',
+				plugins: 'image media',
+				toolbar: 'blocks fontfamily fontsize | bold italic underline strikethrough | image media align lineheight | checklist numlist bullist indent outdent |',
+				language: "zh_TW",
 				tinycomments_mode: 'embedded',
 				tinycomments_author: 'Author name',
 				mergetags_list: [
