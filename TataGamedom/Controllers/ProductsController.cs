@@ -102,6 +102,7 @@ namespace TataGamedom.Controllers
 			//viewModel.ModifiedTimeBackendMemberId = memberInDb != null ? memberInDb.Id : 0;
 			return View(viewModel);
 		}
+
 		[HttpPost]
 		public ActionResult EditProducImg(ProductEditImgVM viewModel, HttpPostedFileBase[] file)
 		{
@@ -161,7 +162,6 @@ namespace TataGamedom.Controllers
 							}
 						}
 					}
-
 					// 保存更改到数据库
 					db.SaveChanges();
 				}
@@ -186,89 +186,5 @@ namespace TataGamedom.Controllers
 
 			return Json(new { success = false });
 		}
-		//	[HttpPost]
-		//	public ActionResult EditProducImg(ProductEditImgVM viewModel, HttpPostedFileBase[] file)
-		//	{
-		//		if (ModelState.IsValid)
-		//		{
-		//			// 获取当前用户信息
-		//			var currentUserAccount = User.Identity.Name;
-		//			var memberInDb = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
-
-		//			// 根据商品ID从数据库中获取商品记录
-		//			var product = db.Products.FirstOrDefault(p => p.Id == viewModel.ProductId);
-
-		//			if (product != null)
-		//			{
-		//				// 更新最后修改时间和修改者信息
-		//				product.ModifiedTime = DateTime.Now;
-		//				product.ModifiedBackendMemberId = memberInDb != null ? memberInDb.Id : 0;
-
-		//				// 更新图片列表
-		//				for (int i = 0; i < viewModel.Id.Count; i++)
-		//				{
-		//					if (i < viewModel.Image.Count)  // 验证索引是否在有效范围内
-		//					{
-		//						var imageId = viewModel.Id[i];
-		//						var image = viewModel.Image[i];
-		//						var productImage = db.ProductImages.FirstOrDefault(pi => pi.Id == imageId);
-
-		//						if (productImage != null)
-		//						{
-		//							productImage.Image = image;
-		//						}
-		//					}
-		//				}
-
-		//				// 保存更改到数据库
-		//				db.SaveChanges();
-
-		//				// 处理上传的新图片
-		//				if (file != null && file.Length > 0)
-		//				{
-		//					foreach (var uploadedFile in file)
-		//					{
-		//						if (uploadedFile != null && uploadedFile.ContentLength > 0)
-		//						{
-		//							// 将上传的图片保存到服务器文件系统或数据库
-		//							var fileName = Path.GetFileName(uploadedFile.FileName);
-		//							var filePath = Path.Combine(Server.MapPath("~/Files/Uploads"), fileName);
-		//							uploadedFile.SaveAs(filePath);
-
-		//							// 创建新的ProductImage记录并保存到数据库
-		//							var newProductImage = new ProductImage
-		//							{
-		//								ProductId = viewModel.ProductId,
-		//								Image = fileName,
-		//								// 设置其他属性值
-		//							};
-		//							db.ProductImages.Add(newProductImage);
-		//						}
-		//					}
-
-		//					// 保存新图片的更改到数据库
-		//					db.SaveChanges();
-		//				}
-		//			}
-
-		//			return View(viewModel);
-		//		}
-
-		//		return View(viewModel);
-		//	}
-		//	[HttpPost]
-		//	public ActionResult DeleteImage(int id)
-		//	{
-		//		var productImage = db.ProductImages.FirstOrDefault(pi => pi.Id == id);
-
-		//		if (productImage != null)
-		//		{
-		//			db.ProductImages.Remove(productImage);
-		//			db.SaveChanges();
-		//			return Json(new { success = true });
-		//		}
-
-		//		return Json(new { success = false });
-		//	}
 	}
 }

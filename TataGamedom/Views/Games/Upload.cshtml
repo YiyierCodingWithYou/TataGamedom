@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Upload";
+}
+
+<h2>匯入遊戲</h2>
+<h3>@ViewBag.Message</h3>
+
+<form method="post" action="Upload" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    <div>
+        <input name="file" type="file" accept=".xlsx,.xls" />
+    </div>
+
+    <br />
+
+    <div>
+        <button type="submit" class="btn btn-primary">匯入</button>
+    </div>
+</form>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
