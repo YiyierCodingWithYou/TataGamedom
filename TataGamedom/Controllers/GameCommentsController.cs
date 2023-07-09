@@ -52,8 +52,7 @@ namespace TataGamedom.Controllers
 			var result = service.Delete(vm);
 			if (result.IsFail)
 			{
-				return View("Error");
-				//return HttpNotFound("刪除評論失敗");
+				return HttpNotFound("刪除評論失敗");
 			}
 			return RedirectToAction("Index");
 		}

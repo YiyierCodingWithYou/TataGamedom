@@ -1,78 +1,85 @@
 ﻿@model TataGamedom.Models.ViewModels.Games.GameCreateVM
-<link href="~/Content/bootstrap theme.css" rel="stylesheet" />
 <link href="~/Content/layoutStyle1.css" rel="stylesheet" />
+<link href="~/Content/bootstrap theme.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link rel="stylesheet" href="~/Content/YiyierStyle.css">
 
 @{
     ViewBag.Title = "Create";
 }
 
-<h2>新增遊戲</h2>
+<h1 class="main_heading">新增遊戲</h1>
+<hr>
 
+<div class="container">
 
-@using (Html.BeginForm("Create", "Games", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
-
-    <div class="row">
-        <h4></h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="mb-3">
-            @Html.LabelFor(model => model.ChiName, htmlAttributes: new { @class = "form-label col-md-2" })
-
-            @Html.EditorFor(model => model.ChiName, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.ChiName, "", new { @class = "text-danger" })
-
-        </div>
-
-        <div class="mb-3">
-            @Html.LabelFor(model => model.EngName, htmlAttributes: new { @class = "form-label col-md-2" })
-            @Html.EditorFor(model => model.EngName, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.EngName, "", new { @class = "text-danger" })
-        </div>
-
-        <div class="mb-3">
-            @Html.LabelFor(model => model.SelectedGameClassification, htmlAttributes: new { @class = "form-label" })
-            <br />
-            @foreach (var category in Model.GameClassification.Skip(1))
-            {
-                <label class="checkbox-inline form-check-label">
-                    <input type="checkbox" name="SelectedGameClassification" value="@category.Id" /> @category.Name
-                </label>
-            }
-            @Html.ValidationMessageFor(model => model.SelectedGameClassification, "", new { @class = "text-danger" })
-        </div>
-
-        <div class="mb-3">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "form-label col-md-2" })
-            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", rows = 3 } })
-            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-        </div>
-        <div class="mb-3">
-            @Html.LabelFor(model => model.IsRestrict, htmlAttributes: new { @class = "form-label" })
-            <label class="form-check-label">
-                @Html.EditorFor(model => model.IsRestrict)
-            </label>
-            @Html.ValidationMessageFor(model => model.IsRestrict, "", new { @class = "text-danger" })
-        </div>
-
-        <div class="mb-5">
-            @Html.LabelFor(model => model.GameCoverImg, htmlAttributes: new { @class = "form-label col-md-2" })
-            <input type="file" name="GameCoverImg" class="form-control" />
-            @Html.ValidationMessageFor(model => model.GameCoverImg, "", new { @class = "text-danger" })
-        </div>
-
-        <div class="mb-5">
+    @using (Html.BeginForm("Create", "Games", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="mb-3">
-                <div style="text-align: right;">
-                    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-primary" })
-                    <input type="submit" value="新增" class="btn btn-primary" />
+                @Html.LabelFor(model => model.ChiName, htmlAttributes: new { @class = "form-label col-md-2" })
+
+                @Html.EditorFor(model => model.ChiName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ChiName, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(model => model.EngName, htmlAttributes: new { @class = "form-label col-md-2" })
+                @Html.EditorFor(model => model.EngName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EngName, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(model => model.SelectedGameClassification, htmlAttributes: new { @class = "form-label" })
+                <br />
+                <div class="form-control chooseBlock">
+                    @foreach (var category in Model.GameClassification.Skip(1))
+                    {
+                        <label class="checkbox-inline form-check-label">
+                            <input type="checkbox" name="SelectedGameClassification" value="@category.Id" /> @category.Name
+                        </label>
+                    }
+                </div>
+                @Html.ValidationMessageFor(model => model.SelectedGameClassification, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                <div class="row">
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "form-label col-md-12" })
+                    <div class="col-12">
+                        @Html.TextAreaFor(model => model.Description, new { htmlAttributes = new { @class = "form-control"}})
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                 </div>
             </div>
-        </div>
-    </div>
-}
+            <div class="mb-3">
+                @Html.LabelFor(model => model.IsRestrict, htmlAttributes: new { @class = "form-label" })
+                <label class="form-check-label">
+                    @Html.EditorFor(model => model.IsRestrict)
+                </label>
+                @Html.ValidationMessageFor(model => model.IsRestrict, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(model => model.GameCoverImg, htmlAttributes: new { @class = "form-label col-md-2" })
+                <input type="file" name="GameCoverImg" class="form-control" />
+                @Html.ValidationMessageFor(model => model.GameCoverImg, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-5">
+                <div class="mb-3">
+                    <div style="text-align: right;">
+                        @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-primary btnColor" })
+                        <input type="submit" value="新增" class="btn btn-primary btnColor" />
+                    </div>
+                </div>
+            </div>
+    }
+</div>
+
+
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

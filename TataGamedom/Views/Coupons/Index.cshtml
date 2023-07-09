@@ -25,7 +25,12 @@
 <h2>優惠券管理列表</h2>
 
 <div class="mb-3" style="text-align: right;">
-    @Html.ActionLink("新增優惠券", "Create", null, new { @class = "btn btn-primary" })
+    <div class="me-3 d-inline">
+        @Html.ActionLink("新增優惠券", "Create", null, new { @class = "btn btn-primary" })
+    </div>
+    <div class="d-inline">
+        @Html.ActionLink("優惠一覽", "CouponsProductsIndex", null, new { @class = "btn btn-primary" })
+    </div>
 </div>
 <div>
     <table class="table" id="myTable">
@@ -143,7 +148,7 @@
     <script>
         $(document).ready(function () {
             $('#myTable').DataTable({
-                dom: 'Qfrtip',
+                dom: 'Qrtip',
                 select: false,
                 responsive: true,
                 language: {
