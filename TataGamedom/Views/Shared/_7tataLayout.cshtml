@@ -23,6 +23,9 @@
         <h1 id="title">獺獺玩國TaTaGameDoM</h1>
     </div>
 
+    <div class="tataImg">
+    </div>
+
     <nav id="user-nav">
         <div class="time">
             現在時間：<span id="timeSpan"></span>
@@ -32,15 +35,15 @@
             {
                 <div class="user">
                     <ul>
-								<li>
-									@*<a href="/BackendMembers/Index">@Html.Raw(User.Identity.Name)</a>*@
-									<a href="/BackendMembers/Index">@(((FormsIdentity)User.Identity).Ticket.UserData)</a>
-									<ul>
-										<li><a href="/BackendMembers/EditProfile/">維護個人資料</a></li>
-										<li><a href="/BackendMembers/EditPassword/">修改密碼</a></li>
-										<li><a href="/BackendMembers/Logout/">登出</a></li>
-									</ul>
-								</li>
+                        <li>
+                            @*<a href="/BackendMembers/Index">@Html.Raw(User.Identity.Name)</a>*@
+                            <a href="/BackendMembers/Index">@(((FormsIdentity)User.Identity).Ticket.UserData)</a>
+                            <ul>
+                                <li><a href="/BackendMembers/EditProfile/">維護個人資料</a></li>
+                                <li><a href="/BackendMembers/EditPassword/">修改密碼</a></li>
+                                <li><a href="/BackendMembers/Logout/">登出</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             }
@@ -175,7 +178,7 @@
         </a>
     </nav>
 
-    <div class="container-fluid container-tata">
+    <div class="container-fluid container-tata position-relative">
         @RenderBody()
     </div>
     @Scripts.Render("~/bundles/jquery")
