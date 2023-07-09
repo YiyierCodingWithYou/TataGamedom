@@ -278,6 +278,7 @@
     <Compile Include="Controllers\FAQController.cs" />
     <Compile Include="Controllers\BoardsController.cs" />
     <Compile Include="Controllers\CouponsController.cs" />
+    <Compile Include="Controllers\FrontApi\ErrorController.cs" />
     <Compile Include="Controllers\FrontApi\FrontPostCommentReportsApiController.cs" />
     <Compile Include="Controllers\FrontApi\FrontPostReportsApiController.cs" />
     <Compile Include="Controllers\GameCommentsController.cs" />
@@ -440,6 +441,7 @@
     <Compile Include="Models\ViewModels\GameComments\GameCommentIndexVM.cs" />
     <Compile Include="Models\ViewModels\InventoryItems\InventoryVM.cs" />
     <Compile Include="Models\ViewModels\Games\GameAddProductVM.cs" />
+    <Compile Include="Models\ViewModels\Members\BackendMembersEditVM.cs" />
     <Compile Include="Models\ViewModels\Members\BackendMembersListVM.cs" />
     <Compile Include="Models\ViewModels\Members\EditPasswordVM.cs" />
     <Compile Include="Models\ViewModels\Members\EditProfileVM.cs" />
@@ -496,6 +498,8 @@
     <Content Include="Content\login.css" />
     <Content Include="Content\layoutStyle1.css" />
     <Content Include="Content\PagedList.css" />
+    <Content Include="Content\newsshow.css" />
+    <Content Include="Content\errorpages.css" />
     <Content Include="favicon.ico" />
     <Content Include="Files\Images\arniya.jpg" />
     <Content Include="Files\Images\controller.png" />
@@ -815,7 +819,6 @@
     <Content Include="Views\BackendMembers\LoginTEST.cshtml" />
     <Content Include="Views\PostsComments\Index.cshtml" />
     <Content Include="Views\Reports\Index.cshtml" />
-    <Content Include="Views\Members\_MembersList.cshtml" />
     <Content Include="Views\Coupons\EditCouponProducts.cshtml" />
     <Content Include="Views\Orders\DeleteFail.cshtml" />
     <Content Include="Views\Suppliers\Create.cshtml" />
@@ -826,10 +829,14 @@
     <Content Include="Views\Suppliers\ImportExcel.cshtml" />
     <Content Include="Scripts\tinymce\langs\README.md" />
     <Content Include="Views\Shared\View.cshtml" />
+    <Content Include="Views\News\Show - 複製.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Error\NotFound1.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
+    <Folder Include="Files\NewsImages\" />
     <Folder Include="Models\Dtos\PostsComments\" />
   </ItemGroup>
   <ItemGroup>
