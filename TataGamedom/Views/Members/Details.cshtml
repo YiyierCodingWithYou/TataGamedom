@@ -1,13 +1,13 @@
 ﻿@model TataGamedom.Models.ViewModels.Members.MembersListVM
 
 @{
-    ViewBag.Title = "Details";
+	ViewBag.Title = "Details";
 }
 
 <h2>會員詳細資訊</h2>
 
 <div class="container">
-    <hr />
+	<hr />
 	<dl class="dl-horizontal">
 		<dt>
 			@Html.DisplayNameFor(model => model.Name)
@@ -72,24 +72,51 @@
 
 <div class="mb-5">
 	<div class="mb-3" style="display: flex; justify-content: flex-end;">
-		
-		@if (Model.ActiveFlag)
+
+		@if (Model.ActiveFlag == true)
 		{
-			using (Html.BeginForm("Delete", "Members", new { id = Model.Id }, FormMethod.Post))
+			using (Html.BeginForm("Delete", "Members", new { id = Model.Id }, FormMethod.Post, new { id = "stopForm" }))
 			{
 				@Html.AntiForgeryToken()
 				<span>&nbsp;</span>
-				<input type="submit" value="停權" class="btn btn-danger btn-lg" />
+				<button id="btnStop" class="btn btn-danger btn-lg">停權</button>
+				//<input type="submit" value="停權" class="btn btn-danger btn-lg" />
 			}
 		}
-		else
+		@if (Model.ActiveFlag == false)
 		{
-			using (Html.BeginForm("Reduction", "Members", new { id = Model.Id }, FormMethod.Post))
+			using (Html.BeginForm("Reduction", "Members", new { id = Model.Id }, FormMethod.Post, new { id = "restoreForm" }))
 			{
 				@Html.AntiForgeryToken()
 				<span>&nbsp;</span>
-				<input type="submit" value="復原" class="btn btn-success btn-lg" />
+				<button id="btnRestore" class="btn btn-success btn-lg">復原</button>
+				//<input type="submit" value="復原" class="btn btn-success btn-lg" />
 			}
 		}
 	</div>
 </div>
+@section Scripts {
+
+	<script>
+        document.getElementById("btnStop").addEventListener("click", function (e) {
+            e.preventDefault();
+            var confirmed = confirm("您是否要停權該會員？");
+            if (confirmed) {
+                alert("已將會員停權！");
+                window.location.href = "@Url.Action("MembersList", "Members")";
+                document.getElementById("stopForm").submit();
+            }
+		});
+	</script>
+	<script>
+        document.getElementById("btnRestore").addEventListener("click", function (e) {
+            e.preventDefault();
+            var confirmed = confirm("您是否要復原該會員？");
+            if (confirmed) {
+                alert("復原成功！");
+                window.location.href = "@Url.Action("MembersList", "Members")";
+                document.getElementById("restoreForm").submit();
+            }
+        });
+	</script>
+}

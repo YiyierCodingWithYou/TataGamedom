@@ -8,6 +8,9 @@ using TataGamedom.Models.EFModels;
 using TataGamedom.Models.ViewModels.News;
 using PagedList;
 using TataGamedom.Filters;
+using System.Web;
+using System.IO;
+using TataGamedom.Models.Infra;
 
 namespace TataGamedom.Controllers
 {
@@ -18,7 +21,7 @@ namespace TataGamedom.Controllers
 
 
 		// GET: News
-		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
+		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		public ActionResult Index(NewsCriteria newsCriteria, int? page)
 		{
 			PrepareNewsDataSource(newsCriteria.GamesId);
@@ -41,7 +44,7 @@ namespace TataGamedom.Controllers
 		}
 
 
-
+		
 		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		//public ActionResult Index(NewsCriteria newsCriteria, int? page)
 		//{
@@ -100,7 +103,7 @@ namespace TataGamedom.Controllers
 		//	}
 		//}
 
-		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
+		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		public ActionResult Create()
 		{
 			ViewBag.BackendMemberId = new SelectList(db.BackendMembers, "Id", "Name");
@@ -112,40 +115,46 @@ namespace TataGamedom.Controllers
 		}
 
 
-		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
+		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Create(NewsCreateVM newsCreateVM)
+		public ActionResult Create(NewsCreateVM vm, HttpPostedFileBase file1)
 		{
 			if (ModelState.IsValid)
 			{
 				DateTime now = DateTime.Now;
 
-				if (newsCreateVM.ScheduleDate <= now)
+				if (vm.ScheduleDate <= now)
 				{
-					newsCreateVM.ActiveFlag = true;
+					vm.ActiveFlag = true;
 				}
 				else
 				{
-					newsCreateVM.ActiveFlag = false;
+					vm.ActiveFlag = false;
 				}
 
 				// 取得管理者的BackendMember ID
 				var currentUserAccount = User.Identity.Name;
 				var backendMember = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
+				var savedFileName = SaveFile(file1);
 
+				if (savedFileName == string.Empty )
+				{
+					ModelState.AddModelError("CoverImg", "請選擇檔案");
+				}
+				vm.CoverImg = savedFileName;
 				if (backendMember != null)
 				{
-					newsCreateVM.BackendMemberId = backendMember.Id;
+					vm.BackendMemberId = backendMember.Id;
 
 					using (var con = new SqlConnection(_connstr))
 					{
 						string sql = @"INSERT INTO News (Title, Content, BackendMemberId, NewsCategoryId, GamesId, CoverImg, ScheduleDate, ActiveFlag)
-                               VALUES (@Title, @Content, @BackendMemberId, @NewsCategoryId, @GamesId, @CoverImg, @ScheduleDate, @ActiveFlag);
-                               SELECT CAST(SCOPE_IDENTITY() AS INT)";
+		                             VALUES (@Title, @Content, @BackendMemberId, @NewsCategoryId, @GamesId, @CoverImg, @ScheduleDate, @ActiveFlag);
+		                             SELECT CAST(SCOPE_IDENTITY() AS INT)";
 
-						var id = con.Query<int>(sql, newsCreateVM).Single();
-						newsCreateVM.Id = id;
+						var id = con.Query<int>(sql, vm).Single();
+						vm.Id = id;
 					}
 
 					return RedirectToAction("Index");
@@ -156,12 +165,58 @@ namespace TataGamedom.Controllers
 			ViewBag.GamesId = new SelectList(db.GameClassificationsCodes, "Id", "Name");
 			ViewBag.NewsCategoryId = new SelectList(db.NewsCategoryCodes, "Id", "Name");
 
-			return View(newsCreateVM);
+			return View(vm);
 		}
 
 
+
+		//public ActionResult Create(NewsCreateVM newsCreateVM)
+		//{
+		//	if (ModelState.IsValid)
+		//	{
+		//		DateTime now = DateTime.Now;
+
+		//		if (newsCreateVM.ScheduleDate <= now)
+		//		{
+		//			newsCreateVM.ActiveFlag = true;
+		//		}
+		//		else
+		//		{
+		//			newsCreateVM.ActiveFlag = false;
+		//		}
+
+		//		// 取得管理者的BackendMember ID
+		//		var currentUserAccount = User.Identity.Name;
+		//		var backendMember = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
+
+		//		if (backendMember != null)
+		//		{
+		//			newsCreateVM.BackendMemberId = backendMember.Id;
+
+		//			using (var con = new SqlConnection(_connstr))
+		//			{
+		//				string sql = @"INSERT INTO News (Title, Content, BackendMemberId, NewsCategoryId, GamesId, CoverImg, ScheduleDate, ActiveFlag)
+		//                             VALUES (@Title, @Content, @BackendMemberId, @NewsCategoryId, @GamesId, @CoverImg, @ScheduleDate, @ActiveFlag);
+		//                             SELECT CAST(SCOPE_IDENTITY() AS INT)";
+
+		//				var id = con.Query<int>(sql, newsCreateVM).Single();
+		//				newsCreateVM.Id = id;
+		//			}
+
+		//			return RedirectToAction("Index");
+		//		}
+		//	}
+
+		//	ViewBag.BackendMemberId = new SelectList(db.BackendMembers, "Id", "Name");
+		//	ViewBag.GamesId = new SelectList(db.GameClassificationsCodes, "Id", "Name");
+		//	ViewBag.NewsCategoryId = new SelectList(db.NewsCategoryCodes, "Id", "Name");
+
+		//	return View(newsCreateVM);
+		//}
+
+
 		// GET: News/Edit
-		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
+		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		public ActionResult Edit(int? id)
 		{
 			if (id == null)
@@ -173,7 +228,7 @@ namespace TataGamedom.Controllers
 			{
 				string sql = @"SELECT n.Id, n.Title, n.Content, n.BackendMemberId, n.NewsCategoryId, n.GamesId, n.CoverImg, 
                    n.ScheduleDate, n.ActiveFlag, n.EditDatetime, n.DeleteBackendMemberId ,b.Name AS DeleteBackendMemberName,
-                   b.Name AS BackendMemberName, gc.Name AS GameClassificationName
+                   b.Name AS BackendMemberName, gc.Name AS GameClassificationName,n.coverimg
                    FROM News AS n
                    JOIN BackendMembers AS b ON b.Id = n.BackendMemberId
                    LEFT JOIN GameClassificationsCodes AS gc ON gc.Id = n.GamesId
@@ -198,28 +253,46 @@ namespace TataGamedom.Controllers
 			}
 		}
 
-		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
+		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Edit(NewsEditVM news)
+		public ActionResult Edit(NewsEditVM news, HttpPostedFileBase file1)
 		{
 			if (ModelState.IsValid)
 			{
-
 				// 取得管理者的BackendMember ID
 				var currentUserAccount = User.Identity.Name;
 				var backendMember = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
 
+				if (file1 != null) // 檢查是否選擇了新的檔案
+				{
+					var savedFileName = SaveFile(file1);
+					if (savedFileName == null)
+					{
+						ModelState.AddModelError("CoverImg", "請選擇檔案");
+						return View(news);
+					}
+					news.CoverImg = savedFileName;
+				}
+				else if (file1 == null && news.CoverImg == null) // 如果沒有選新檔案就抓原本的
+				{
+					using (var con = new SqlConnection(_connstr))
+					{
+						string sql = @"SELECT CoverImg FROM News WHERE Id = @Id";
+						var originalCoverImg = con.Query<string>(sql, new { Id = news.Id }).SingleOrDefault();
+						news.CoverImg = originalCoverImg;
+					}
+				}
 				if (backendMember != null)
 				{
 					news.BackendMemberId = backendMember.Id;
 					using (var con = new SqlConnection(_connstr))
 					{
 						string sql = @"UPDATE News SET Title = @Title, Content = @Content, BackendMemberId = @BackendMemberId,
-                NewsCategoryId = @NewsCategoryId, GamesId = @GamesId, CoverImg = @CoverImg,
-                ScheduleDate = @ScheduleDate, ActiveFlag = @ActiveFlag, EditDatetime = GETDATE(),
-                DeleteBackendMemberId = @BackendMemberId
-                WHERE Id = @Id";
+                    NewsCategoryId = @NewsCategoryId, GamesId = @GamesId, CoverImg = @CoverImg,
+                    ScheduleDate = @ScheduleDate, ActiveFlag = @ActiveFlag, EditDatetime = GETDATE(),
+                    DeleteBackendMemberId = @BackendMemberId
+                    WHERE Id = @Id";
 
 						con.Execute(sql, news);
 
@@ -237,7 +310,7 @@ namespace TataGamedom.Controllers
 			return View(news);
 		}
 
-		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
+		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		public ActionResult Delete(int? id)
 		{
 			if (id == null)
@@ -273,7 +346,7 @@ namespace TataGamedom.Controllers
 		}
 
 
-		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
+		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		public ActionResult Reduction(int? id)
 		{
 			if (id == null)
@@ -310,7 +383,7 @@ namespace TataGamedom.Controllers
 		}
 
 
-		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
+		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		public ActionResult Show(int? id)
 		{
 			if (id == null)
@@ -338,6 +411,24 @@ namespace TataGamedom.Controllers
 				return View(news);
 			}
 		}
+
+
+
+		private string SaveFile(HttpPostedFileBase file1)
+		{
+			var path = Server.MapPath("~/Files/NewsImages");
+
+			var helper = new UploadFileHelper(new GuidRenameProvider(),
+											new RequiredValidator(), // 必需上傳檔案
+											new ImageValidator(), // 必需是圖片檔案
+											new FileSizeValidator(1920 * 1920) // 必需小於1MB		
+											);
+			var fileName = helper.SaveFile(file1, path);
+
+			return fileName ?? string.Empty;
+		}
+
+
 
 		private void PrepareNewsDataSource(int? gamesId)
 		{

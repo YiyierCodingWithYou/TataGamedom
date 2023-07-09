@@ -174,7 +174,7 @@ namespace TataGamedom.Controllers
 			if (HasAssociatedRecords(newsCategoryCode))
 			{
 				TempData["ErrorMessage"] = $"無法刪除{newsCategoryCode.Name}，請聯繫工程師。";
-				return RedirectToAction("Delete");
+				return RedirectToAction("Index");
 			}
 			else
 			{
