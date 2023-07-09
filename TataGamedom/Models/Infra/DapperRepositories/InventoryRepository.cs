@@ -6,9 +6,11 @@ using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
+using TataGamedom.Controllers;
 using TataGamedom.Models.Dtos.InventoryItems;
 using TataGamedom.Models.EFModels;
 using TataGamedom.Models.Interfaces;
+using TataGamedom.Models.Services;
 using TataGamedom.Models.ViewModels.InventoryItems;
 
 namespace TataGamedom.Models.Infra.DapperRepositories
@@ -42,24 +44,118 @@ ORDER BY G.ChiName, P.[Index]
             }
         }
 
-        public IEnumerable<InventoryItemVM> Info(int? productId)
+        public IEnumerable<InventoryItemVM> Info(int? productId, InventoryCriteria criteria)
         {
             using (var connection = new SqlConnection(Connstr))
             {
-                string sql = @"
+				string sql = GetSql(productId, criteria);       
+                return connection.Query<InventoryItemVM>(sql, new { ProductId = productId, Index = criteria.Index });
+            }
+        }
+
+        private string GetSql(int? productId, InventoryCriteria criteria)
+        {
+			if (criteria.Index == null && criteria.SalesStatus == 1) 
+			{
+				return @"
 SELECT IIT.[Index] AS SKU, IIT.Cost AS Cost, IIT.GameKey AS GameKey, SIS.[Index] AS StockInSheetIndex, G.ChiName AS GameName
 FROM InventoryItems AS IIT
+LEFT JOIN OrderItems AS OI ON OI.InventoryItemId = IIT.Id
 JOIN StockInSheets AS SIS ON IIT.StockInSheetId = SIS.Id
 JOIN Products AS P ON IIT.ProductId = P.Id
 JOIN Games AS G ON P.GameId = G.Id
 WHERE IIT.ProductId = @productId
 ORDER BY SKU ";
-
-                return connection.Query<InventoryItemVM>(sql, new { ProductId = productId });
             }
+            if (criteria.Index == null && criteria.SalesStatus == 2)
+            {
+                return @"
+SELECT IIT.[Index] AS SKU, IIT.Cost AS Cost, IIT.GameKey AS GameKey, SIS.[Index] AS StockInSheetIndex, G.ChiName AS GameName
+FROM InventoryItems AS IIT
+LEFT JOIN OrderItems AS OI ON OI.InventoryItemId = IIT.Id
+JOIN StockInSheets AS SIS ON IIT.StockInSheetId = SIS.Id
+JOIN Products AS P ON IIT.ProductId = P.Id
+JOIN Games AS G ON P.GameId = G.Id
+WHERE IIT.ProductId = @productId AND OI.Id IS NULL
+ORDER BY SKU ";
+            }
+            if (criteria.Index == null && criteria.SalesStatus == 3)
+            {
+                return @"
+SELECT IIT.[Index] AS SKU, IIT.Cost AS Cost, IIT.GameKey AS GameKey, SIS.[Index] AS StockInSheetIndex, G.ChiName AS GameName
+FROM InventoryItems AS IIT
+LEFT JOIN OrderItems AS OI ON OI.InventoryItemId = IIT.Id
+JOIN StockInSheets AS SIS ON IIT.StockInSheetId = SIS.Id
+JOIN Products AS P ON IIT.ProductId = P.Id
+JOIN Games AS G ON P.GameId = G.Id
+WHERE IIT.ProductId = @productId AND OI.Id IS NOT NULL
+ORDER BY SKU ";
+            }
+            if (criteria.Index != null && criteria.SalesStatus == null)
+            {
+                return @"
+SELECT IIT.[Index] AS SKU, IIT.Cost AS Cost, IIT.GameKey AS GameKey, SIS.[Index] AS StockInSheetIndex, G.ChiName AS GameName
+FROM InventoryItems AS IIT
+LEFT JOIN OrderItems AS OI ON OI.InventoryItemId = IIT.Id
+JOIN StockInSheets AS SIS ON IIT.StockInSheetId = SIS.Id
+JOIN Products AS P ON IIT.ProductId = P.Id
+JOIN Games AS G ON P.GameId = G.Id
+WHERE IIT.ProductId = @productId
+AND IIT.[Index] LIKE '%' + @Index + '%'
+ORDER BY SKU ";
+            }
+
+            if (criteria.Index != null && criteria.SalesStatus == 1)
+            {
+                return @"
+SELECT IIT.[Index] AS SKU, IIT.Cost AS Cost, IIT.GameKey AS GameKey, SIS.[Index] AS StockInSheetIndex, G.ChiName AS GameName
+FROM InventoryItems AS IIT
+LEFT JOIN OrderItems AS OI ON OI.InventoryItemId = IIT.Id
+JOIN StockInSheets AS SIS ON IIT.StockInSheetId = SIS.Id
+JOIN Products AS P ON IIT.ProductId = P.Id
+JOIN Games AS G ON P.GameId = G.Id
+WHERE IIT.ProductId = @productId
+AND IIT.[Index] LIKE '%' + @Index + '%'
+ORDER BY SKU ";
+            }
+            if (criteria.Index != null && criteria.SalesStatus == 2)
+            {
+                return @"
+SELECT IIT.[Index] AS SKU, IIT.Cost AS Cost, IIT.GameKey AS GameKey, SIS.[Index] AS StockInSheetIndex, G.ChiName AS GameName
+FROM InventoryItems AS IIT
+LEFT JOIN OrderItems AS OI ON OI.InventoryItemId = IIT.Id
+JOIN StockInSheets AS SIS ON IIT.StockInSheetId = SIS.Id
+JOIN Products AS P ON IIT.ProductId = P.Id
+JOIN Games AS G ON P.GameId = G.Id
+WHERE IIT.ProductId = @productId AND OI.Id IS NULL
+AND IIT.[Index] LIKE '%' + @Index + '%'
+ORDER BY SKU ";
+            }
+            if (criteria.Index != null && criteria.SalesStatus == 3)
+            {
+                return @"
+SELECT IIT.[Index] AS SKU, IIT.Cost AS Cost, IIT.GameKey AS GameKey, SIS.[Index] AS StockInSheetIndex, G.ChiName AS GameName
+FROM InventoryItems AS IIT
+LEFT JOIN OrderItems AS OI ON OI.InventoryItemId = IIT.Id
+JOIN StockInSheets AS SIS ON IIT.StockInSheetId = SIS.Id
+JOIN Products AS P ON IIT.ProductId = P.Id
+JOIN Games AS G ON P.GameId = G.Id
+WHERE IIT.ProductId = @productId AND OI.Id IS NOT NULL
+AND IIT.[Index] LIKE '%' + @Index + '%'
+ORDER BY SKU ";
+            }
+			return @"
+SELECT IIT.[Index] AS SKU, IIT.Cost AS Cost, IIT.GameKey AS GameKey, SIS.[Index] AS StockInSheetIndex, G.ChiName AS GameName
+FROM InventoryItems AS IIT
+LEFT JOIN OrderItems AS OI ON OI.InventoryItemId = IIT.Id
+JOIN StockInSheets AS SIS ON IIT.StockInSheetId = SIS.Id
+JOIN Products AS P ON IIT.ProductId = P.Id
+JOIN Games AS G ON P.GameId = G.Id
+WHERE IIT.ProductId = @productId
+ORDER BY SKU ";
         }
 
-		public int GetMaxIdInDb()
+        public int GetMaxIdInDb()
 		{
 			using (var connection = new SqlConnection(Connstr))
 			{

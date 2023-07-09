@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using TataGamedom.Controllers;
 using TataGamedom.Models.Dtos.InventoryItems;
 using TataGamedom.Models.ViewModels.InventoryItems;
 
@@ -11,7 +12,7 @@ namespace TataGamedom.Models.Interfaces
     {
         IEnumerable<InventoryVM> Search();
 
-        IEnumerable<InventoryItemVM> Info(int? productId);
+        IEnumerable<InventoryItemVM> Info(int? productId, InventoryCriteria criteria);
 
 		int GetMaxIdInDb();
 

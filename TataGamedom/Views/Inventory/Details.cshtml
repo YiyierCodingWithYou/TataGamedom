@@ -2,10 +2,47 @@
 
 @{
     ViewBag.Title = "庫存明細";
+    var salesStatus = ViewBag.SalesStatusSelectList as IEnumerable<SelectListItem>;
+    salesStatus = salesStatus.Prepend(new SelectListItem { Value = "", Text = "" });
+    var criteria = ViewBag.Criteria as TataGamedom.Controllers.InventoryCriteria;
+    string salesStatusName = criteria.SalesStatus.HasValue ? criteria.SalesStatus.Value.ToString() : "";
+    var productId = ViewBag.ProductId;
+    string gameName = @Model.FirstOrDefault() == null ? string.Empty : @Model.FirstOrDefault().GameName;
 }
 <h2>
-    庫存明細: @Model.FirstOrDefault().GameName
+    庫存明細: @gameName
 </h2>
+
+<div class="row pt-2 pb-3">
+    <div class="col-6 align-items-end">
+        <div class="row justify-content-end">
+            <div class="col-md-8">
+                <form method="get">
+                    <div class="row fs14 text-secondary">
+                        <div class="mb-3 col-md-4">
+                            <label for="Index">SKU</label>
+                            <input type="text" class="form-control" name="Index" id="Index" value="@criteria.Index">
+                        </div>
+                        <div class="mb-3 col-md-4">
+                            <label for="salesStatus">紀錄區間</label>
+                            <select name="salesStatus" id="salesStatus" class="form-select">
+                                @foreach (var item in salesStatus)
+                                {
+                                  <option value="@item.Value" @(item.Value == salesStatusName ? "selected" : "")>@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <input type="hidden" name="productId" value="@productId">
+                        <div class="mt-4 mb-3 col-md-4">
+                            <button class="btn btn-primary"><i class="bi bi-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <table class="table">
     <tr>
@@ -24,25 +61,26 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.SKU)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StockInSheetIndex)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Cost)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GameKey)
-        </td>
-        <td>
-            @Html.ActionLink("編輯", "Edit", new { Index=item.SKU })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SKU)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StockInSheetIndex)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameKey)
+            </td>
+            <td>
+                @Html.ActionLink("編輯", "Edit", new { Index = item.SKU })
+            </td>
+        </tr>
+    }
 </table>
 
 <div>

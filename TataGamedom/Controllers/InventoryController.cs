@@ -36,12 +36,17 @@ namespace TataGamedom.Controllers
             return View(inventory);
         }
 
-        public ActionResult Details(int? productId)
+        public ActionResult Details(int? productId, InventoryCriteria criteria )
         {
             if (productId == null) return View("");
+            criteria = criteria ?? new InventoryCriteria();
+			ViewBag.SalesStatusSelectList = GetSalesStatusSelectList(criteria.SalesStatus);
+			ViewBag.ProductId = productId;
+            ViewBag.Criteria = criteria;
 
-            IEnumerable<InventoryItemVM> orderInfo = _service.GetItemInfo(productId);
-			return View(orderInfo);
+
+            IEnumerable<InventoryItemVM> inventorieInfo = _service.GetItemInfo(productId, criteria);
+			return View(inventorieInfo);
         }
 
 		public ActionResult Create()
@@ -118,6 +123,26 @@ namespace TataGamedom.Controllers
 			ViewBag.StockInSheetIndex = StockInSheetIndexSelectList;
 		}
 
+        private IEnumerable<SelectListItem> GetSalesStatusSelectList(int? salesStatus)
+        {
+            Dictionary<int, string> salesStatusName = new Dictionary<int, string> {
+                {1,"所有紀錄" },
+                {2,"僅顯示當前庫存" },
+                {3,"僅顯示過往庫存" },
+            };
 
-	}
+            foreach (var key in salesStatusName.Keys)
+            {
+                yield return new SelectListItem { Value = key.ToString(), Text = salesStatusName[key] };
+            }
+
+        }
+    }
+	public class InventoryCriteria
+    {
+		public int? SalesStatus { get; set; } = 0;
+
+        public string Index { get; set; }
+    }
+    
 }
