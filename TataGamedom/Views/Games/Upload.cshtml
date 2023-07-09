@@ -6,6 +6,8 @@
 <h3>@ViewBag.Message</h3>
 
 <form method="post" action="Upload" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
     <div>
         <input name="file" type="file" accept=".xlsx,.xls" />
     </div>
