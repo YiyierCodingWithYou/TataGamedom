@@ -22,21 +22,19 @@ namespace TataGamedom.Controllers
 
 		// GET: News
 		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
-		public ActionResult Index(NewsCriteria newsCriteria, int? page)
+		public ActionResult Index()
 		{
-			PrepareNewsDataSource(newsCriteria.GamesId);
-			ViewBag.NewsCriteria = newsCriteria;
-
 			using (var con = new SqlConnection(_connstr))
 			{
-				string sql = @"SELECT n.Id, n.Title, n.ScheduleDate, b.Name AS BackendMemberName, gc.Name AS GameClassificationName,
+				string sql = @"SELECT n.Id, n.Title, n.ScheduleDate, b.Name AS BackendMemberName,ncc.Name as NewsCategoryName,
             COUNT(nv.MemberId) AS ViewCount, COUNT(nl.MemberId) AS LikeCount, n.ActiveFlag
             FROM news AS n
             JOIN BackendMembers AS b ON b.Id = n.BackendMemberId 
+			LEFT JOIN NewsCategoryCodes AS ncc ON ncc.Id = n.NewsCategoryId
             LEFT JOIN GameClassificationsCodes AS gc ON gc.Id = n.GamesId
             LEFT JOIN NewsViews AS nv ON nv.NewsId = n.Id
             LEFT JOIN NewsLikes AS nl ON nl.NewsId = n.Id
-			GROUP BY n.Id, n.Title, n.ScheduleDate, b.Name, gc.Name, n.ActiveFlag";
+			GROUP BY n.Id, n.Title, n.ScheduleDate, b.Name, gc.Name, n.ActiveFlag,ncc.Name";
 				var news = con.Query<NewsIndexVM>(sql);
 
 				return View(news);
