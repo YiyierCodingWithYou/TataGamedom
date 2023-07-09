@@ -1,0 +1,64 @@
+﻿/* UNIVERSAL  */
+* {
+    box-sizing: border-box;
+}
+/* BODY */
+body {
+    font-family: sans-serif;
+    margin: 15px 250px;
+    font-size: 17px;
+    padding: 8px;
+}
+/* Div */
+.container1 {
+    background-color: rgb(229, 245, 245);
+    padding: 5px 20px 15px 20px;
+    border: 1px solid #0e0d0d;
+    border-radius: 4px;
+}
+/* All input elements */
+input[type="text"],
+input[type="email"],
+input[type="file"],
+.chooseBlock,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color:#f7f7f9
+}
+/* FOR h1 TAG */
+.main_heading {
+    font-size: 38px;
+    text-align: center;
+}
+.btnColor{
+    background-color:steelblue;
+}
+/* Submit element */
+/*input[type="submit"] {
+    width: 80px;
+    height: 40px;
+    border: none;
+    background-color: rgb(30, 204, 235);
+    border-radius: 4px;
+    color: white;
+}
+input[type="submit"] {
+    width: 80px;
+    height: 40px;
+    border: none;
+    background-color: rgb(30, 204, 235);
+    border-radius: 4px;
+    color: white;
+}*/
+input,
+select
+{
+    max-width:100%;
+}
+textarea {
+    max-width: 100%;
+    width:100%;
+}

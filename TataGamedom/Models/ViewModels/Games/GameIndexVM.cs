@@ -13,16 +13,22 @@ namespace TataGamedom.Models.ViewModels.Games
 
 		[Display(Name = "名稱")]
 		public string ChiName { get; set; }
-		[Display(Name = "分類")]
-		public string Classification { get; set; }
+		//[Display(Name = "分類")]
+		//public string Classification { get; set; }
 
 		[Display(Name = "年齡限制")]
 		public bool IsRestrict { get; set; }
+		[Display(Name = "封面")]
+		public string GameCoverImg { get; set; }
 
-		[Display(Name = "創建人員")]
+        [Display(Name = "創建者")]
 		public string CreatedBackendMemberName { get; set; }
 
 		[Display(Name = "創建時間")]
 		public DateTime CreatedTime { get; set; }
+		[Display(Name = "最後修改者")]
+		public string ModifiedBackendMemberName { get; set; }
+		[Display(Name = "最後修改時間")]
+		public DateTime? ModifiedTime { get; set; }
 	}
 }

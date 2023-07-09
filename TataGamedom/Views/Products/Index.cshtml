@@ -24,9 +24,11 @@
 
 <h2>商品管理列表</h2>
 
-<p>
-
-</p>
+<div class="mb-3" style="text-align: right;">
+    <div class="d-inline">
+        @Html.ActionLink("匯入商品", "Upload", null, new { @class = "btn btn-primary" })
+    </div>
+</div>
 <div class="text-center">
     <table class="table" id="myTable">
         <thead>
