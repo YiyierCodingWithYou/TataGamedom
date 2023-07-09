@@ -47,18 +47,20 @@ function AddNum() {
   })
     .done((data) => {
       appNum = data;
-      $('#AppNumber').text(appNum);
+      if(appNum>0){
+        $('#AppNumber').removeClass('d-none');
+        $('#AppNumber').text(appNum);
+      }
     })
     .fail((err) => {
       console.log(err);
     });
 }
 
-$("#AddMod").on("click", function () {});
 
 $(document).ready(function () {
   AddNum();
-  let postTable = $("#ModeratorTable").DataTable({
+    let moderatorTable = $("#ModeratorTable").DataTable({
     dom: "<'row'<'col-5 'Q><'col-7 d-flex justify-content-end align-items-center'<'mb-0 pb-0' B>>>flrtilp",
     //dom: 'QBflrtilp',
     responsive: true,

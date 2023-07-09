@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -19,6 +20,7 @@ namespace TataGamedom.Controllers.Api
 	public class BoardsModeratorsApplicationsApiController : ApiController
 	{
 		private AppDbContext db = new AppDbContext();
+		private SimpleHelper simpleHelper = new SimpleHelper();
 
 		// GET: api/BoardsModeratorsApplicationsApi/NApprovalNum
 		[System.Web.Http.HttpGet]
@@ -45,16 +47,19 @@ namespace TataGamedom.Controllers.Api
 				AddOrRemove = m.AddOrRemove,
 				AddOrRemoveText = m.AddOrRemove ? "加入" : "離職",
 				ApplyReason = m.ApplyReason,
+				ApprovalStatus = (m.ApprovalResult == null)?"待處理":"已完成",
 				ApprovalResult = m.ApprovalResult,
-				ApprovalResultText = m.ApprovalResult == true ? "允許" : (m.ApprovalResult == false ? "拒絕" : null),
-				BackendMemberAccount = m.BackendMember.Account,
+				ApprovalResultText = m.ApprovalResult == true ? "允許" : (m.ApprovalResult == false ? "拒絕" : "尚未審查"),
+				BackendMemberAccount = m.BackendMember.Account??"尚未審查",
 				ApprovalStatusDate = m.ApprovalStatusDate ?? null
 			});
 		}
 
-		//PUT: api/BoardsModeratorsApplicationsApi/5
+		//PUT: api/BoardsModeratorsApplicationsApi/Join/5
+		[System.Web.Http.HttpGet]
+		[System.Web.Http.Route("api/BoardsModeratorsApplicationsApi/Join/{id}")]
 		[ResponseType(typeof(ApiResult))]
-		public ApiResult PutBoardsModeratorsApplication(int id, BoardsModeratorsApplicationSubmitVm vm)
+		public ApiResult PutBoardsModeratorsApplicationJoin(int id, BoardsModeratorsApplicationSubmitVm vm)
 		{
 			var backendMemberAccount = User.Identity.Name;
 			//int backendMemberId = simpleHelper.FindBackendmemberIdByAccount(backendMemberAccount);
@@ -82,7 +87,7 @@ namespace TataGamedom.Controllers.Api
 			}
 			catch (DbUpdateConcurrencyException ex)
 			{
-				return ApiResult.Fail("確認失敗，原因: "+ex);
+				return ApiResult.Fail("確認失敗，原因: " + ex);
 			}
 
 			if (!vm.ApprovalResult)
@@ -125,7 +130,7 @@ namespace TataGamedom.Controllers.Api
 						return ApiResult.Fail("處理過程中發生錯誤: " + ex);
 					}
 
-					return ApiResult.Fail("不能再新增版主惹！" +addMod.Message);
+					return ApiResult.Fail("不能再新增版主惹！" + addMod.Message);
 				}
 
 				//寄信
@@ -133,6 +138,74 @@ namespace TataGamedom.Controllers.Api
 			}
 
 		}
+
+		//PUT: api/BoardsModeratorsApplicationsApi/Left/5
+		[System.Web.Http.HttpGet]
+		[System.Web.Http.Route("api/BoardsModeratorsApplicationsApi/Left/{id}")]
+		[ResponseType(typeof(ApiResult))]
+		public ApiResult PutBoardsModeratorsApplicationLeft(int id, BoardsModeratorsApplicationSubmitVm vm)
+		{
+			var backendMemberAccount = User.Identity.Name;
+			//int backendMemberId = simpleHelper.FindBackendmemberIdByAccount(backendMemberAccount);
+			int backendMemberId = 1;
+
+			BoardsModeratorsApplication modApplication = db.BoardsModeratorsApplications.Find(id);
+
+
+			int memberId = simpleHelper.memberIdByAccount(vm.MemberAccount);
+			int boardId = simpleHelper.boardIdByName(vm.BoardName);
+
+			int modId = db.BoardsModerators.Where(x=> x.ModeratorMemberId == memberId && x.BoardId == boardId && x.EndDate == null)
+											.Select(x => x.Id).FirstOrDefault();
+
+			if (modApplication == null)
+			{
+				return ApiResult.Fail("Id錯誤");
+			}
+
+			if (modApplication.ApprovalResult != null)
+			{
+				return ApiResult.Fail("已經審核過啦");
+			}
+
+			try
+			{
+				modApplication.ApprovalResult = true;
+				modApplication.BackendMemberId = backendMemberId;
+				modApplication.ApprovalStatusDate = DateTime.Now;
+				db.SaveChanges();
+			}
+			catch (DbUpdateConcurrencyException ex)
+			{
+				return ApiResult.Fail("確認失敗，原因: " + ex);
+			}
+
+
+
+			BoardsModeratorsApiController modApi = new BoardsModeratorsApiController();
+			ApiResult deleMod = modApi.DeleteBoardsModerator(modId);
+			if (deleMod.IsFail)
+			{
+				try
+				{
+					modApplication.ApprovalResult = null;
+					modApplication.BackendMemberId = null;
+					modApplication.ApprovalStatusDate = null;
+					db.SaveChanges();
+				}
+				catch (DbUpdateConcurrencyException ex)
+				{
+					return ApiResult.Fail("處理過程中發生錯誤: " + ex);
+				}
+
+				return ApiResult.Fail("有點錯誤" + deleMod.Message);
+			}
+
+			//寄信
+			return ApiResult.Success("完成接受申請，已經讓版主好好退休");
+		}
+
+
 
 		// POST: api/BoardsModeratorsApplicationsApi
 		[ResponseType(typeof(BoardsModeratorsApplication))]

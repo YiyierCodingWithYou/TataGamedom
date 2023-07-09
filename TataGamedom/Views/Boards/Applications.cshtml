@@ -1,7 +1,148 @@
 ﻿
-@{
-    ViewBag.Title = "Applications";
+@section Styles{
+    <link href="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.5/af-2.6.0/b-2.4.0/b-colvis-2.4.0/b-html5-2.4.0/b-print-2.4.0/date-1.5.0/fc-4.3.0/fh-3.4.0/r-2.5.0/sb-1.5.0/sp-2.2.0/sl-1.7.0/datatables.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/theme.min.css" rel="stylesheet" />
+
+
+
+    <style>
+        thead {
+            background-color: goldenrod;
+            color: white;
+        }
+
+        .vertical-align-middle {
+            vertical-align: middle;
+        }
+
+        table .text-gray {
+            color: lightgray !important;
+        }
+
+        .ui-widget.ui-widget-content.ui-autocomplete {
+            z-index: 1111;
+        }
+        .w-100px {
+            width:100px
+        }
+        .h-100px {
+            height: 100px
+        }
+        table .bg-orange {
+            background-color: rgba(255, 106, 0, 0.1) !important;
+        }
+    </style>
 }
 
-<h2>Applications</h2>
 
+<h2 class="text-center">Application</h2>
+
+<table class="table table-striped table-hover w-100 " id="ApplicationTable">
+    <thead>
+        <tr>
+            <td>序號</td>
+            <td>看板名稱</td>
+            <td>申請類型</td>
+            <td>申請人</td>
+            <td>申請日期</td>
+            <td>申請原因</td>
+            <td>審查狀態</td>
+            <td>審查結果</td>
+            <td>審查人員</td>
+            <td>審查日期</td>
+        </tr>
+    </thead>
+</table>
+
+
+
+<div class="modal modal-lg test1" id="myModal" tabindex="-2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><span class="badge text-bg-primary me-3" id="AddOrRemoveText">Type</span><span id="Id">Id</span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body row">
+                <div class="from col-md-6">
+                    <div class="d-grid gap-2 btn-area">
+
+                        <div class="bg-tertiary shadow-sm p-4 rounded-1">
+                            <p id="ApplyReason">想要當版主啦</p>
+                            <p class="text-end fs-6 text-secondary">
+                                —
+                                <span id="Account">申請帳號</span>
+                                <span id="ApplyDate">2021-07-21</span>
+                            </p>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mt-3">
+                            <label class="me-3">確認結果</label>
+                            <textarea id="ReviewComment" class="form-control w-100 p-0 m0"></textarea>
+                        </div>
+                        <button id="OkBtn" class="btn btn-outline-warning" type="button">
+                            允許
+                        </button>
+                        <button id="NoBtn" class="btn btn-outline-primary" type="button">拒絕</button>
+                        <p class="text-secondary text-center">
+                            審查結果
+                            <span class="badge text-bg-light" id="ApprovalResultText">
+                                尚未審查
+                            </span>
+                            確認人員
+                            <span class="badge text-bg-light" id="BackendMemberAccount">
+                                尚未審查
+                            </span>
+                            確認時間
+                            <span class="badge text-bg-light" id="ApprovalStatusDate">
+                                尚未審查
+                            </span>
+                        </p>
+
+                    </div>
+                </div>
+                <div class="reported col-md-6">
+
+                    <h6 class="h6 fw-bolder text-center text-decoration-underline mt-2">申請人資訊</h6>
+                    <div class="row gap-0">
+                        <div class="col-md-12">
+                            <h6 class="h6 fw-bolder text-center mt-2">在該版的發文數量</h6>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <div class=" d-flex w-100px h-100px text-center justify-content-center align-items-center">
+                                <p class="h1 fw-bold" id="MemberPostAtBoardNum">10</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 row gap-0">
+                            <div class="col-md-6">
+                                <h6 class="h6 fw-bolder text-center mt-2">該版貼文的Vote數</h6>
+                                <svg id="MemberThisBoardDonuts" width="150" height="150"></svg>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="h6 fw-bolder text-center mt-2">全站貼文的Vote數</h6>
+                                <svg id="MemberAllBoardDonuts" width="150" height="150"></svg>
+
+                            </div>
+
+                        </div>
+                </div>
+            </div>
+            <div class="modal-footer align-items-center">
+                <button type="button" class="btn btn-secondary" id="closeBtn" data-bs-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.js" integrity="sha512-NmSTfudjn1FCaFMQ+f4xveBmwRJn5ep8Wu+YOeq+CeExhFtKvwhfKVXFX3tGxoGWxu8Fl83qm9nE8/Hkc1dWZg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.5/af-2.6.0/b-2.4.0/b-colvis-2.4.0/b-html5-2.4.0/b-print-2.4.0/date-1.5.0/fc-4.3.0/fh-3.4.0/r-2.5.0/sb-1.5.0/sp-2.2.0/sl-1.7.0/datatables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/zh-tw.min.js"></script>
+    <script src="~/Scripts/Boards/Applications.js"></script>
+
+
+}
