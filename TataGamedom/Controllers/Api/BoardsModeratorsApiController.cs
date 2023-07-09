@@ -35,7 +35,7 @@ namespace TataGamedom.Controllers.Api
                 LastOnlineTime = m.Member.LastOnlineTime??DateTime.MinValue,
                 StartDate = m.StartDate,
                 EndDate = m.EndDate,
-                Status = m.EndDate < DateTime.Now ? "退職" : "在職"
+                Status = m.EndDate < DateTime.Now ? "退任" : "在任"
             });
 
 		}

@@ -20,6 +20,15 @@ namespace TataGamedom.Controllers.Api
 	{
 		private AppDbContext db = new AppDbContext();
 
+		// GET: api/BoardsModeratorsApplicationsApi/NApprovalNum
+		[System.Web.Http.HttpGet]
+		[System.Web.Http.Route("api/BoardsModeratorsApplicationsApi/NApprovalNum")]
+		public int GetCountNullApprovalResult()
+		{
+			int count = db.BoardsModeratorsApplications.Count(m => m.ApprovalResult == null);
+			return count;
+		}
+
 		// GET: api/BoardsModeratorsApplicationsApi
 		public IEnumerable<BoardsModeratorsApplicationListVm> GetBoardsModeratorsApplications()
 		{
