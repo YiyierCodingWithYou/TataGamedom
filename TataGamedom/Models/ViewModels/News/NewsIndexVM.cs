@@ -34,6 +34,8 @@ namespace TataGamedom.Models.ViewModels.News
 		public int BackendMemberId { get; set; }
 		[Display(Name = "新聞類別")]
 		public int? NewsCategoryId { get; set; }
+		[Display(Name = "新聞類別")]
+		public string NewsCategoryName { get; set; }
 
 		[Display(Name = "遊戲類別")]
 		public int GamesId { get; set; }

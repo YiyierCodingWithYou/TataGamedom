@@ -552,11 +552,13 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\bootstrap0707.css" />
+    <Content Include="Content\coolform.css" />
     <Content Include="Content\login.css" />
     <Content Include="Content\layoutStyle1.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\newsshow.css" />
     <Content Include="Content\errorpages.css" />
+    <Content Include="Content\formview.css" />
     <Content Include="favicon.ico" />
     <Content Include="Files\Images\arniya.jpg" />
     <Content Include="Files\Images\controller.png" />
@@ -622,6 +624,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\coolform.js" />
     <Content Include="Scripts\login.js" />
     <Content Include="Scripts\layoutScript1.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
@@ -896,6 +899,8 @@
     <Content Include="Views\Boards\Moderators.cshtml" />
     <Content Include="Views\Boards\Applications.cshtml" />
     <Content Include="Views\Games\Upload.cshtml" />
+    <Content Include="Views\BackendMembersList\Create - 複製.cshtml" />
+    <Content Include="Views\BackendMembersList\Create - 複製 %282%29.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
