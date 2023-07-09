@@ -16,7 +16,7 @@ namespace TataGamedom.Models.EFModels
 
         public DateTime StartDate { get; set; }
 
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         public virtual Board Board { get; set; }
 

@@ -72,6 +72,8 @@ namespace TataGamedom.Models.EFModels
 
         public bool ActiveFlag { get; set; }
 
+        public DateTime? LastOnlineTime { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BoardsModerator> BoardsModerators { get; set; }
 

@@ -152,7 +152,8 @@ namespace TataGamedom.Controllers
 					{
 						new OrderEmailHelper().SendEmail(vm.TrackingNum, member.Name, member.Email);
 					}
-				}
+                    return RedirectToAction("Index");
+                }
                 return RedirectToAction("Index");
             }
             else
@@ -193,7 +194,6 @@ namespace TataGamedom.Controllers
 			ViewBag.ShipmentStatuses = shipmentStatusSelectList;
 			ViewBag.ShipmemtMethods = shipmemtMethodSelectList;
 		}
-
 
 		public ActionResult Delete(string index)
 		{

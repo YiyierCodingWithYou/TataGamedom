@@ -42,6 +42,7 @@ VALUES
 			{
 				string sql = @"SELECT
 OI.[Index] AS OrderItemIndex, OI.ProductPrice, O.[Index], O.CreatedAt, O.CompletedAt,
+O.TrackingNum,
 (SELECT SUM(OI.ProductPrice) FROM OrderItems AS OI WHERE OI.OrderId = O.Id) AS Total, 
 IIT.GameKey, OSC.[Name] AS OrderStatusCodeName, PSC.[Name] AS PaymentStatusCodeName, SSC.[Name] AS ShipmentStatusCodeName,G.ChiName AS GameName,
 G.GameCoverImg, C.[Description] AS CouponDescription, O.Id
@@ -120,10 +121,19 @@ WHERE O.[Index] = @Index
 			using (var connection = new SqlConnection(Connstr)) 
 			{
 				string sql = @"UPDATE Orders SET 
-MemberId = @MemberId , OrderStatusId = @OrderStatusId, ShipmentStatusId = @ShipmentStatusId , CreatedAt = @CreatedAt, CompletedAt = @CompletedAt,
-ShipmemtMethodId = @ShipmemtMethodId, RecipientName = @RecipientName, ToAddress = @ToAddress, SentAt= @SentAt, DeliveredAt = @DeliveredAt, 
+MemberId = @MemberId , 
+OrderStatusId = @OrderStatusId, 
+ShipmentStatusId = @ShipmentStatusId ,
+PaymentStatusId = @PaymentStatusId,
+CreatedAt = @CreatedAt, 
+CompletedAt = @CompletedAt,
+ShipmemtMethodId = @ShipmemtMethodId, 
+RecipientName = @RecipientName, 
+ToAddress = @ToAddress, 
+SentAt= @SentAt, 
+DeliveredAt = @DeliveredAt, 
 TrackingNum = @TrackingNum
-WHERE Id = @Id";
+WHERE [Index] = @Index";
 				connection.ExecuteScalar(sql,dto);
 			}
         }
