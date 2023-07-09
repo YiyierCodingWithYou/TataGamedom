@@ -564,6 +564,10 @@
     <Content Include="lib\datatables\js\dataTables.uikit.min.js" />
     <Content Include="lib\datatables\js\jquery.dataTables.js" />
     <Content Include="lib\datatables\js\jquery.dataTables.min.js" />
+    <Content Include="Scripts\Boards\Applications.js" />
+    <Content Include="Scripts\Boards\Buckets.js" />
+    <Content Include="Scripts\Boards\Moderators.js" />
+    <Content Include="Scripts\Boards\Reports.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />

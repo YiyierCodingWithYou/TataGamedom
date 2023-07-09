@@ -40,17 +40,17 @@ namespace TataGamedom.Controllers.Api
             ELSE ''
         END AS ActionType,
         CASE
-            WHEN bl.ModeratorMemberId IS NOT NULL THEN mm.Account
-            WHEN bl.BackendMmemberId IS NOT NULL THEN bm.Account
-            ELSE 0
+			WHEN bl.ModeratorMemberId IS NOT NULL THEN COALESCE(mm.Account, '')
+			WHEN bl.BackendMmemberId IS NOT NULL THEN COALESCE(bm.Account, '')
+			ELSE ''
         END AS ActionAccount,
         b.Name,
         bl.BucketReason,
         bl.StartTime,
         bl.EndTime,
         CASE
-            WHEN bl.IsNoctified = 1 THEN Ｎ'已通知'
-            ELSE Ｎ'未通知'
+            WHEN bl.IsNoctified = 1 THEN N'已通知'
+            ELSE N'未通知'
         END AS IsNoticedText,
 		CASE
 			WHEN bl.EndTime >= GETDATE() THEN N'水桶中'
@@ -59,8 +59,8 @@ namespace TataGamedom.Controllers.Api
     FROM
         BucketLogs bl
         JOIN Members m ON m.Id = bl.BucketMemberId
-		JOIN Members mm on mm.Id = bl.ModeratorMemberId
-		JOIN BackendMembers bm on bm.Id = bl.BackendMmemberId
+		LEFT JOIN Members mm on mm.Id = bl.ModeratorMemberId
+		LEFT JOIN BackendMembers bm on bm.Id = bl.BackendMmemberId
         LEFT JOIN Boards b ON b.Id = bl.BoardId
 
 	Order by StartTime desc
@@ -69,21 +69,56 @@ namespace TataGamedom.Controllers.Api
 				return result;
 			}
 		}
+
+
+		// GET: api/BucketLogsApi/CheckBucketStatus
+		[HttpGet]
+		[Route("api/BucketLogsApi/CheckBucketStatus")]
+		public bool CheckBucketStatus(string boardName, string memberAccount)
+		{
+			int bucketMemberId = simpleHelper.memberIdByAccount(memberAccount);
+			int boardId = simpleHelper.boardIdByName(boardName);
+
+			bool hasActiveBucketLogs = db.BucketLogs.Any(bl =>
+				bl.BucketMemberId == bucketMemberId &&
+				bl.BoardId == boardId &&
+				bl.EndTime > DateTime.Now
+			);
+
+			return hasActiveBucketLogs;
+		}
+		//GET: /api/CheckBucketStatus?boardName=BoardNameValue&memberAccount=MemberAccountValue
+
+
+
 		// POST: api/BucketLogsApi
 		[ResponseType(typeof(ApiResult))]
 		public ApiResult PostBucketLog(BucketLogsAddVm vm)
 		{
 			var backendMemberAccount = User.Identity.Name;
-			int backendMemberId = simpleHelper.FindBackendmemberIdByAccount(backendMemberAccount);
+			//int backendMemberId = simpleHelper.FindBackendmemberIdByAccount(backendMemberAccount);
+			int backendMemberId = 1;
+			int bucketMemberId = simpleHelper.memberIdByAccount(vm.BucketMemberAccount);
+			int boardId = simpleHelper.boardIdByName(vm.BoardName);
+
+			bool hasActiveBucketLogs = db.BucketLogs.Any(bl =>
+			bl.BucketMemberId == bucketMemberId &&
+			bl.EndTime > DateTime.Now
+			);
+
+			if (hasActiveBucketLogs)
+			{
+				return ApiResult.Fail("早就被水桶啦");
+			}
 
 			// 根據 BucketLogsAddVm 建立新的 BucketLogs 物件
 			BucketLog bucketLog = new BucketLog
 			{
 				Id = vm.Id,
-				BucketMemberId = simpleHelper.memberIdByAccount(vm.BucketMemberAccount),
+				BucketMemberId = bucketMemberId,
 				ModeratorMemberId = null, // 尚未設定
 				BackendMmemberId = backendMemberId,
-				BoardId = simpleHelper.boardIdByName(vm.BoardName),
+				BoardId = boardId,
 				BucketReason = vm.BucketReason,
 				StartTime = DateTime.Now,
 				EndTime = DateTime.Now.AddDays(vm.Days).Date.AddDays(1).AddSeconds(-1), //隔幾日後的 23:59 分
@@ -109,7 +144,8 @@ namespace TataGamedom.Controllers.Api
 
 			BucketLog entity = db.BucketLogs.Find(id);
 
-			if (entity == null ) {
+			if (entity == null)
+			{
 
 				return ApiResult.Fail("刪除失敗");
 			}
