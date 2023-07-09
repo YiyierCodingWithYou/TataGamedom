@@ -23,12 +23,10 @@ namespace TataGamedom.Models.ViewModels.BoardsModerators
 		[Required]
 		[StringLength(500)]
 		public string ApplyReason { get; set; }
-		
+		public string ApprovalStatus { get; set; }
 		public bool? ApprovalResult { get; set; }
 		
 		public string ApprovalResultText { get; set; }
-		
-		public int? BackendMemberId { get; set; }
 		
 		public string BackendMemberAccount { get; set; }
 		
