@@ -1,12 +1,15 @@
 Working On
-	[]退貨 => Create + Order改變狀態 => edit + 重新加入庫存 
+	[] 退貨 => Create + Order改變狀態 => edit + 重新加入庫存 
 	[v] 退貨U : Detail Edit 一筆OrderItem只能被退貨一次，下拉清單不顯示已被退貨過的選項
 
 To Do
 
+	
 	[] 進貨推薦清單
 
+	[]排序在換頁時保留
 	[]分頁重構 Pagination , RouteValueDictionary , 0040
+	[]CodeName都改成Enum
 	[]使能選擇輸入欄位要篩什麼
 	[]使能選擇
 		訂單狀態 &  訂單編號 & 顯示幾筆

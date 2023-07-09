@@ -1,8 +1,10 @@
 ﻿using Dapper;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.UI.WebControls;
 using TataGamedom.Models.Dtos.Orders;
@@ -10,6 +12,7 @@ using TataGamedom.Models.EFModels;
 using TataGamedom.Models.Interfaces;
 using TataGamedom.Models.Services;
 using static TataGamedom.Models.Services.OrderService;
+using Order = TataGamedom.Models.EFModels.Order;
 
 namespace TataGamedom.Models.Infra.DapperRepositories
 {
@@ -115,6 +118,16 @@ WHERE O.[Index] = @Index
 				return order.ToDto();
 			}
         }
+        public OrderDto GetById(int? id)
+        {
+            using (var connection = new SqlConnection(Connstr))
+            {
+                string sql = "SELECT * FROM Orders WHERE [Id] = @Id";
+                var order = connection.QuerySingleOrDefault<Order>(sql, new { Id = id });
+                return order.ToDto();
+            }
+        }
+
 
         public void Update(OrderDto dto)
         {
@@ -146,5 +159,6 @@ WHERE [Index] = @Index";
 			dbContext.Orders.Remove(order);
 			dbContext.SaveChanges();
 		}
-	}
+
+    }
 }
