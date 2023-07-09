@@ -519,6 +519,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Files\Images\arniya.jpg" />
     <Content Include="Files\Images\controller.png" />
+    <Content Include="Files\Images\kill.jpg" />
     <Content Include="Files\Images\otter.png" />
     <Content Include="Files\Mails\77_gmail.com 20230628_174620.txt" />
     <Content Include="Global.asax" />
