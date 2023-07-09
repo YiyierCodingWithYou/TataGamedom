@@ -1,19 +1,16 @@
 Working On
-    []改Index跟detail的View
+	[]退貨 => Create + Order改變狀態 => edit + 重新加入庫存 
+	[v] 退貨U : Detail Edit 一筆OrderItem只能被退貨一次，下拉清單不顯示已被退貨過的選項
 
 To Do
 
 	[] 進貨推薦清單
-
-	[]退貨單
 
 	[]分頁重構 Pagination , RouteValueDictionary , 0040
 	[]使能選擇輸入欄位要篩什麼
 	[]使能選擇
 		訂單狀態 &  訂單編號 & 顯示幾筆
 		訂單狀態 OR 訂單編號(輸入欄位) & 顯示幾筆
-
-	[] 更改假資料 OrderItem要少於對應的庫存item
 
 	Orders Create
 	[] 貨態追蹤代碼對應寄送方式e.g. 7-11 11碼 
@@ -25,14 +22,13 @@ To Do
 
 	OrderItemReturn
 	[] C : 一筆OrderItem只能被退貨一次，下拉清單不顯示已被退貨過的選項 ; 檢查編號是否產生
-	[] R : Index 退款/退貨/重新入庫 改成文字 ; Detail 售價改#,# 退貨原訂單代碼獨立出來 
-	[] U : Detail Edit 一筆OrderItem只能被退貨一次，下拉清單不顯示已被退貨過的選項
+	[] R : Index 退款/退貨/重新入庫 改成文字 ; Detail 售價改#,# 
 	[] D
 
 	Order
 
 	InventoryItem
-	[] 開始寫多筆同時新增
+	[v] 開始寫多筆同時新增
 
 	調整
 	Orders
@@ -47,11 +43,6 @@ To Do
 
 
 	Inventory
-	[] C : View 要改
-	[] R : [v]Index View要改
-	   
-		   [v]detail 遊戲名稱獨立出來
-		   [] 新增篩選分頁, 已售出未售出
 	[] D : 讓沒被關聯的可以刪，在UI介面就擋掉
 
 

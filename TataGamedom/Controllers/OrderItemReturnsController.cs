@@ -101,7 +101,7 @@ namespace TataGamedom.Controllers
 		private void PrepareCreateDataSource(int? orderItemId)
 		{
 			var orderItemIdSelectList = new List<SelectListItem>();
-			foreach (var item in db.OrderItems)
+			foreach (var item in db.OrderItems.Where(item => !db.OrderItemReturns.Any(itemReturn => itemReturn.OrderItemId == item.Id)))
 			{
 				orderItemIdSelectList.Add(new SelectListItem { Value = item.Id.ToString(), Text = item.Index });
 			}

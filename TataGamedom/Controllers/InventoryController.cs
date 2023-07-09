@@ -23,7 +23,6 @@ using System.Web.Script.Serialization;
 
 namespace TataGamedom.Controllers
 {
-
     public class InventoryController : Controller
     {
         private AppDbContext db = new AppDbContext();
