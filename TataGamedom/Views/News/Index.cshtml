@@ -18,13 +18,16 @@
 }
 
 <h2>新聞總覽</h2>
-<div class="mb-3" style="text-align: right;">
-	@Html.ActionLink("新增新聞", "Create", null, new { @class = "btn btn-primary" })
-</div>
+
+
 
 
 <table class="table" id="myTable">
+	
+	@Html.ActionLink("新增新聞", "Create", null, new { @class = "btn btn-danger btn-lg" })
+
 	<thead>
+
 		<tr>
 			<th>
 				@Html.DisplayNameFor(model => model.Title)

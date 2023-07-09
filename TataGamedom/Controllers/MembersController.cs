@@ -15,6 +15,7 @@ using TataGamedom.Models.ViewModels;
 using TataGamedom.Models.ViewModels.Members;
 using Dapper;
 using TataGamedom.Models.ViewModels.News;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace TataGamedom.Controllers
 {
@@ -67,7 +68,6 @@ namespace TataGamedom.Controllers
 				return View(details);
 			}
 		}
-
 
 
 		[HttpPost, ActionName("Delete")]

@@ -1,0 +1,409 @@
+﻿@font-face {
+	font-family: OpenSans-Regular;
+	src: url(https://netology-code.github.io/html-2-diploma/sources/fonts/OpenSans-Regular.woff);
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: OpenSans-Bold;
+	src: url(https://netology-code.github.io/html-2-diploma/sources/fonts/OpenSans-Bold.woff);
+	font-weight: 700;
+	font-style: bold;
+}
+
+
+	.header::after {
+		content: "";
+		position: absolute;
+		background-color: #000000;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		opacity: 0.6;
+	}
+
+.container {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: flex-start;
+	width: 1170px;
+	height: 449px;
+	padding-left: 0px 15px 15px 15px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.header-logo {
+	width: 179px;
+	margin-top: 28px;
+}
+
+.menu-list {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	width: 523px;
+	margin-top: 40px;
+	list-style-type: none;
+	padding-inline-start: 0;
+}
+
+.menu-link {
+	text-decoration: none;
+	text-transform: uppercase;
+	font-family: OpenSans-Regular, Arial, sans-serif;
+	font-size: 13px;
+	color: #ffffff;
+}
+
+.menu-list-item:nth-child(n+2) {
+	margin-left: 36px;
+}
+
+.title {
+	width: 800px;
+	margin: 99px auto 0 auto;
+	text-align: center;
+	text-transform: uppercase;
+	font-family: OpenSans-Bold, Arial, sans-serif;
+	font-size: 45px;
+	font-weight: 700;
+	line-height: 75px;
+	color: #ffffff;
+}
+
+.content {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: flex-start;
+	width: 1200px;
+	box-sizing: border-box;
+	padding-left: 15px;
+	padding-right: 15px;
+	margin-top: 63px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.news-item:nth-child(n+2) {
+	margin-top: 60px;
+}
+
+.news-item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-between;
+	width: 778px;
+	height: 294px;
+}
+
+.news-image {
+	width: 381px;
+	height: 294px;
+}
+
+.news-brif {
+	width: 367px;
+	height: 294px;
+}
+
+.news-tags {
+	margin-bottom: 14px;
+}
+
+.news-tag {
+	text-transform: uppercase;
+	text-decoration: none;
+	font-family: OpenSans-Bold, Arial, sans-serif;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 13px;
+	color: #b59f5b;
+}
+
+	.news-tag:nth-child(n+2) {
+		margin-left: 15px;
+	}
+
+.news-title {
+	text-transform: uppercase;
+	font-family: OpenSans-Bold, Arial, sans-serif;
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 24px;
+	color: #0f0d0e;
+	text-decoration: none;
+}
+
+.news-details {
+	margin-top: 29px;
+}
+
+.date {
+	font-family: OpenSans-Regular, Arial, sans-serif;
+	font-size: 12px;
+	font-weight: 400;
+	color: #888888;
+}
+
+.news-author {
+	font-family: OpenSans-Bold, Arial, sans-serif;
+	font-size: 12px;
+	font-weight: 700;
+	color: #000000;
+	margin-left: 16px;
+}
+
+.few-words {
+	font-family: OpenSans-Regular, Arial, sans-serif;
+	font-size: 15px;
+	font-weight: 400;
+	color: #000000;
+	margin-top: 45px;
+}
+
+.additional-panels {
+	width: 272px;
+}
+
+.panel-title {
+	font-family: OpenSans-Bold, Arial, sans-serif;
+	text-transform: uppercase;
+	font-size: 14px;
+	font-weight: 700;
+	color: #000000;
+	margin-top: 45px;
+	text-align: center;
+	margin: 0;
+}
+
+	.panel-title::after {
+		display: block;
+		content: "";
+		width: 66px;
+		height: 3px;
+		background-color: #e1d9bd;
+		margin: 10px auto 24px auto;
+	}
+
+.recent-post-item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-between;
+	width: 272px;
+	height: 70px;
+}
+
+	.recent-post-item:nth-child(n+2) {
+		margin-top: 22px;
+	}
+
+.recent-post-image {
+	width: 70px;
+	height: 70px;
+}
+
+.recent-post-details {
+	width: 184px;
+	height: 70px;
+}
+
+.recent-post-date {
+	display: block;
+	font-family: OpenSans-Regular, Arial, sans-serif;
+	font-size: 12px;
+	font-weight: 400;
+	color: #888888;
+}
+
+.recent-post-title {
+	font-family: OpenSans-Bold, Arial, sans-serif;
+	text-transform: uppercase;
+	text-decoration: none;
+	font-size: 14px;
+	font-weight: 700;
+	color: #000000;
+	line-height: 18px;
+}
+
+.search-group {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-between;
+	width: 271px;
+	height: 48px;
+	margin-top: 56px;
+}
+
+.search-field {
+	box-sizing: border-box;
+	width: 223px;
+	height: 48px;
+	padding: 18px;
+	background-color: #f4f7f6;
+	border: none;
+	font-family: OpenSans-Regular, Arial, sans-serif;
+	font-size: 13px;
+	font-weight: 400;
+	color: #707171;
+}
+
+.button-search {
+	width: 48px;
+	height: 48px;
+	background-color: #b59f5b;
+	background-image: url("https://netology-code.github.io/html-2-diploma/sources/images/search.svg");
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 18px;
+	border: none;
+}
+
+	.button-search:hover {
+		cursor: pointer;
+		background-color: #c8b26f;
+	}
+
+.visually-hidden {
+	width: 1px;
+	height: 1px;
+	clip: rect(1px, 1px, 1px, 1px);
+	position: absolute;
+}
+
+.newsletter-group {
+	margin-top: 62px;
+}
+
+.email-field {
+	box-sizing: border-box;
+	width: 271px;
+	height: 48px;
+	padding: 18px;
+	background-color: #f4f7f6;
+	border: none;
+	font-family: OpenSans-Regular, Arial, sans-serif;
+	font-size: 13px;
+	font-weight: 400;
+	color: #707171;
+}
+
+.button-subscribe {
+	width: 271px;
+	height: 48px;
+	background-color: #b59f5b;
+	border: none;
+	margin-top: 17px;
+	font-family: OpenSans-Bold, Arial, sans-serif;
+	text-transform: uppercase;
+	font-size: 14px;
+	font-weight: 700;
+	color: #ffffff;
+}
+
+	.button-subscribe:hover {
+		cursor: pointer;
+		background-color: #c8b26f;
+	}
+
+.tags-group {
+	margin-top: 56px;
+}
+
+.subscribe-group {
+	display: inline-block;
+}
+
+.tag-item {
+	height: 9px;
+	padding: 4px 14px;
+	border: 3px solid #eeeeee;
+	font-family: OpenSans-Bold, Arial, sans-serif;
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: 700;
+	color: #000000;
+	text-decoration: none;
+	line-height: 36px;
+}
+
+	.tag-item:hover {
+		border: 3px solid #e1d9bd;
+	}
+
+.categories-group {
+	margin-top: 48px;
+}
+
+.category-item {
+	padding: 14px 2px;
+	border-bottom: 1px solid #eeeeee;
+}
+
+.category-name {
+	font-family: OpenSans-Bold, Arial, sans-serif;
+	font-size: 14px;
+	font-weight: 700;
+	color: #000000;
+	text-decoration: none;
+}
+
+.category-number {
+	font-family: OpenSans-Bold, Arial, sans-serif;
+	font-size: 12px;
+	font-weight: 700;
+	color: #b59f5b;
+	margin-left: 5px;
+	vertical-align: top;
+	line-height: 15px;
+}
+
+.footer-socials {
+	position: relative;
+	width: 1200px;
+	height: 83px;
+	background-color: #f4f7f6;
+	margin-top: 70px;
+}
+
+.socials {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-between;
+	list-style-type: none;
+	padding-inline-start: 0;
+	width: 210px;
+	height: 21px;
+	margin: 31px auto;
+}
+
+.social-item {
+	width: 25px;
+}
+
+.social-icon {
+	height: 21px;
+}
+
+.copyright {
+	width: 1200px;
+	height: 19px;
+	margin-top: 72px;
+	margin-bottom: 34px;
+	text-align: center;
+	font-family: OpenSans-Bold, Arial, sans-serif;
+	font-size: 12px;
+	font-weight: 700;
+	color: #999999;
+	text-decoration: none;
+}

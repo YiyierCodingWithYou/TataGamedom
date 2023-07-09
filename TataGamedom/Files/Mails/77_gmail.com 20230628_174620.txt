@@ -1,4 +1,4 @@
-﻿from:g01.webapp@gmail.com
+﻿rom:g01.webapp@gmail.com
 to:77@gmail.com
 subject:[新會員確認信]
 

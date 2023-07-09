@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Principal;
 using System.Web;
@@ -13,6 +14,8 @@ using TataGamedom.Models.Interfaces;
 using TataGamedom.Models.Services;
 using TataGamedom.Models.ViewModels;
 using TataGamedom.Models.ViewModels.Members;
+using Dapper;
+
 
 namespace TataGamedom.Controllers
 {
@@ -23,6 +26,7 @@ namespace TataGamedom.Controllers
 	}
 	public class BackendMembersController : Controller
     {
+		private string _connstr = System.Configuration.ConfigurationManager.ConnectionStrings["AppDbContext"].ToString();
 		private AppDbContext db = new AppDbContext();
 
 		// GET: BackendMembers
@@ -54,8 +58,8 @@ namespace TataGamedom.Controllers
 			var processResult = ProcessLogin(vm.Account, rememberMe);
 			Response.Cookies.Add(processResult.cookie);
 
-			// 在登录成功后的逻辑中获取BackendMembersRoleId，并存储在Session中
-			int backendMembersRoleId = GetBackendMembersRoleIdByUsername(vm.Account); // 根据用户名查询BackendMembersRoleId的逻辑，你需要根据实际情况实现该方法
+			// 在登錄成功後的邏輯中獲取BackendMembersRoleId，並存儲在Session中
+			int backendMembersRoleId = GetBackendMembersRoleIdByUsername(vm.Account); // 根據用戶名查詢BackendMembersRoleId的邏輯，你需要根據實際情況實現該方法
 			HttpContext.Session["BackendMembersRoleId"] = backendMembersRoleId;
 
 			return Redirect(processResult.returnUrl);
@@ -78,6 +82,7 @@ namespace TataGamedom.Controllers
 			return View(model);
 		}
 
+
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
@@ -88,12 +93,56 @@ namespace TataGamedom.Controllers
 			if (ModelState.IsValid == false) return View();
 
 			Result updateResult = UpdateProfile(vm);
-			if (updateResult.IsSuccess) return RedirectToAction("Index");
+			if (updateResult.IsSuccess)
+			{
+				
+				string updatedRoleName;
+				using (var con = new SqlConnection(_connstr))
+				{
+					string sql = "SELECT Name FROM BackendMembers WHERE Account = @Account";
+					updatedRoleName = con.ExecuteScalar<string>(sql, new { Account = currentUserAccount });
+				}
+
+			
+				FormsAuthenticationTicket authTicket = ((FormsIdentity)User.Identity).Ticket;
+				string userData = updatedRoleName;
+				FormsAuthenticationTicket newAuthTicket = new FormsAuthenticationTicket(
+					authTicket.Version,
+					authTicket.Name,
+					authTicket.IssueDate,
+					authTicket.Expiration,
+					authTicket.IsPersistent,
+					userData
+				);
+		
+				string encryptedTicket = FormsAuthentication.Encrypt(newAuthTicket);
+
+				HttpCookie newAuthCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+				Response.Cookies.Add(newAuthCookie);
+
+				return RedirectToAction("Index");
+			}
 
 			ModelState.AddModelError(string.Empty, updateResult.ErrorMessage);
 			return View(vm);
 		}
-		
+
+		//[Authorize]
+		//[HttpPost]
+		//[ValidateAntiForgeryToken]
+		//public ActionResult EditProfile(EditProfileVM vm)
+		//{
+		//	var currentUserAccount = User.Identity.Name;
+
+		//	if (ModelState.IsValid == false) return View();
+
+		//	Result updateResult = UpdateProfile(vm);
+		//	if (updateResult.IsSuccess) return RedirectToAction("Index");
+
+		//	ModelState.AddModelError(string.Empty, updateResult.ErrorMessage);
+		//	return View(vm);
+		//}
+
 		[Authorize]
 		public ActionResult EditPassword()
 		{
@@ -119,6 +168,20 @@ namespace TataGamedom.Controllers
 		public ActionResult NotAuthorize()
 		{
 			return View();
+		}
+
+		public ActionResult Back()
+		{
+		
+			string returnUrl = Request.UrlReferrer?.ToString();
+
+			if (string.IsNullOrEmpty(returnUrl))
+			{
+		
+				return RedirectToAction("Index", "Home");
+			}
+
+			return Redirect(returnUrl);
 		}
 
 
