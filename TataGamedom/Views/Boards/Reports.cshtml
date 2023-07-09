@@ -40,41 +40,92 @@
     </thead>
 </table>
 
-<div class="modal modal-xl" id="myModal" tabindex="-2">
+<div class="modal modal-lg" id="myModal" tabindex="-2">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Title</h5>
+                <h5 class="modal-title"><span class="badge text-bg-primary me-3" id="Type">Type</span><span id="Id">Id</span></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body row">
-                <div class="from col-md-6 ">
-                    <figure>
-
-                    </figure>
+                <div class="from col-md-6">
                     <div class="d-grid gap-2 btn-area">
-                        <p id="reportedAccount">我是檢舉人ㄌ</p>
+
                         <div class="bg-tertiary shadow-sm p-4 rounded-1">
-                            <p id="reportedcontain">好不爽啊我檢舉</p>
+                            <p id="Reason">檢舉啊啊啊啊啊啊啊</p>
+                            <p class="text-end fs-6 text-secondary">
+                                —
+                                <span id="Account">我是檢舉人ㄌ</span>
+                                <span id="Datetime">2021-07-21</span>
+                            </p>
                         </div>
-                        <button id="prConfirmBtn" class="btn btn-outline-warning" type="button">
-                            完成
+                        <div class="d-flex justify-content-center align-items-center mt-3">
+                            <label class="me-3">確認結果</label>
+                            <textarea id="ReviewComment" class="form-control w-100 p-0 m0"></textarea>
+                        </div>
+                        <button id="PostReportConfirmBtn" class="btn btn-outline-warning" type="button">
+                            完成確認
                         </button>
-                        <button id="crConfirmBtn" class="btn btn-outline-primary" type="button">完成</button>
+                        <button id="CommentReportConfirmBtn" class="btn btn-outline-primary" type="button">完成確認</button>
+                        <p class="text-secondary text-center">
+                            確認人員
+                            <span class="badge text-bg-light" id="ReviewerBackendMemberAccount">
+                                尚未確認
+                            </span>
+                            確認時間
+                            <span class="badge text-bg-light" id="ReviewDatetime">
+                                尚未確認
+                            </span>
+                        </p>
+
                     </div>
                 </div>
                 <div class="reported col-md-6">
-                    <blockquote class="blockquote" id="ReportedContent">
-                        <p>A well-known quote, contained in a blockquote element.</p>
-                    </blockquote>
-                    <figcaption class="blockquote-footer" id="ReportedContent">
-                        某某人
-                        <cite title="Source Title" id="ReportedAccount">Source Title</cite><br />
-                        <cite title="Source Title" id="ReportedAccount">Source Title</cite>
-                    </figcaption>
-                    <figcaption class="blockquote-footer" id="ReportedContent">
-                        Someone famous in
-                    </figcaption>
+
+                    <h6 class="h6 fw-bolder text-center text-decoration-underline mt-2">Reported</h6>
+                    <div class="d-flex flex-column justify-content-center h-75">
+
+                        <figure>
+                            <blockquote class="blockquote fs-6">
+                                <p id="ReportedContent">
+                                    ㄎ
+                                </p>
+                            </blockquote>
+                            <figcaption class="blockquote-footer text-center" id="ReportedAccount">
+                                被檢舉的某某人
+                                <cite title="Source Title" id="BoardName">某某版</cite>
+                            </figcaption>
+
+                        </figure>
+                        <div class="row mt-4">
+                            <div class="col-md-6 d-flex  flex-column align-items-center justify-content-center d-none" id="RepotedPostActionArea">
+                                <p class="fw-bolder .text-primary-emphasis">
+                                    被檢舉貼文狀態
+                                    <span class="badge text-bg-info d-block" id="RepotedPostStatus-1">顯示中</span>
+                                    <span class="badge text-bg-secondary d-block d-none" id="RepotedPostStatus-0">已隱藏</span>
+                                </p>
+                                <button class="btn btn-outline-danger d-block mt-4" id="DelePostBtn">隱藏貼文</button>
+                            </div>
+                            <div id="RepotedCommentActionArea" class="col-md-6  d-flex  flex-column align-items-center justify-content-center">
+                                <p class="fw-bolder .text-primary-emphasis d-block">
+                                    被檢舉留言狀態
+                                    <span class="badge text-bg-info d-block" id="RepotedCommStatus-1">顯示中</span>
+                                    <span class="badge text-bg-secondary d-block d-none" id="RepotedCommStatus-0">已隱藏</span>
+                                </p>
+                                <button class="btn btn-outline-danger d-block mt-2" id="DeleCommentBtn">隱藏留言</button>
+                            </div>
+                            <div class="col-md-6  d-flex  flex-column align-items-center justify-content-center">
+
+                                <p class="fw-bolder .text-primary-emphasis">
+                                    被檢舉人狀態
+                                    <span class="badge text-bg-info d-block" id="RepotedAccount-1">活動中</span>
+                                    <span class="badge text-bg-secondary d-block d-none" id="RepotedAccount-0">已水桶</span>
+                                </p>
+                                <button class="btn btn-outline-danger d-block mt-2" id="AddBucketBtn">加入水桶</button>
+                            </div>
+                        </div>
+                    
+                    </div>
                 </div>
             </div>
             <div class="modal-footer align-items-center">
@@ -90,85 +141,5 @@
     <script src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.5/af-2.6.0/b-2.4.0/b-colvis-2.4.0/b-html5-2.4.0/b-print-2.4.0/date-1.5.0/fc-4.3.0/fh-3.4.0/r-2.5.0/sb-1.5.0/sp-2.2.0/sl-1.7.0/datatables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-
-
-    <script>
-        const baseAddress = 'https://localhost:44398';
-
-        $(document).ready(function () {
-            $('#ReportTable').DataTable
-                ({
-                    responsive: true,
-                    dom: "<'row'<'col-5 'Q><'col-7 d-flex justify-content-end align-items-center'<'mb-0 pb-0' B>>>flrtilp",
-                    buttons: ['copy', 'csv', 'excel'],
-                    language: {
-                        url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/zh-HANT.json',
-                    },
-                    ajax: {
-                        type: 'GET',
-                        url: `${baseAddress}/api/ReportsApi`,
-                        dataSrc: function (data) { return data; }
-                    },
-                    columns: [
-                        { "data": "Index", "className": "text-center vertical-align-middle" },
-                        { "data": "Type", "className": "text-center vertical-align-middle" },
-                        {
-                            "data": "Datetime",
-                            "className": "text-center vertical-align-middle",
-                            "render": function (data, type, row) {
-                                let date = new Date(data);
-                                let formattedDateTime = date.toLocaleDateString('ja-JP');
-                                return formattedDateTime;
-                            }
-                        },
-                        { "data": "Account", "className": "text-center vertical-align-middle" },
-                        { "data": "Reason", "className": "text-center vertical-align-middle" },
-                        { "data": "ReportedId", "className": "text-center vertical-align-middle" },
-                        { "data": "ReportedContent", "className": "text-center vertical-align-middle" },
-                        { "data": "ReportedAccount", "className": "text-center vertical-align-middle" },
-                        { "data": "IsCommitText", "className": "text-center vertical-align-middle" },
-                        { "data": "ReviewComment", "className": "text-center vertical-align-middle" },
-                        { "data": "ReviewDatetime", "className": "text-center vertical-align-middle" },
-                        { "data": "ReviewerBackendMemberAccount", "className": "text-center vertical-align-middle" }
-                    ],
-                    columnDefs: [
-                        {
-                            target: 3,
-                            visible: false,
-                        },
-                        {
-                            target: 5,
-                            visible: false,
-                        },
-                        {
-                            target: 7,
-                            visible: false,
-                        },
-                        {
-                            target: 9,
-                            visible: false,
-                        },
-                        {
-                            target: 10,
-                            visible: false,
-                        },
-                        {
-                            target: 11,
-                            visible: false,
-                        },
-                    ],
-                    "rowCallback": function (row, data) {
-                        if (data.IsCommitText.includes('完成')) {
-                            $("td", row).addClass("text-gray"); // Change text color to gray for rows with ActiveFlag = false
-                        }
-
-                        $(row).on("dblclick", function () {
-                            $('#myModal').modal('show');
-
-                        });
-                    }
-                })
-        })
-    </script>
-
+    <script src="~/Scripts/Boards/Reports.js"></script>
 }
