@@ -22,7 +22,8 @@ namespace TataGamedom.Models.ViewModels.Coupons
 		[Display(Name = "商品列表")]
 		public List<Product> AvailableProducts { get; set; }
 
-		public EditCouponProductsVM()
+        public DateTime EndTime { get; set; }
+        public EditCouponProductsVM()
 		{
 			SelectedProductIds = new List<int>();
 			AvailableProducts = new List<Product>();

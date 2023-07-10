@@ -23,7 +23,7 @@ namespace TataGamedom.Models.Infra.DapperRepositories
 		{
 			using (var conn = new SqlConnection(_connStr))
 			{
-				string sql = @"SELECT P.Id,P.[Index] AS [Index],G.ChiName AS GameName ,GPC.Name AS GamePlatformName,P.IsVirtual AS IsVirtual,P.Price AS Price,CONVERT(DATE,P.SaleDate)AS SaleDate,PSC.Name AS ProductStatus,BM.Name AS CreatedBackendMemberName,P.CreatedTime AS CreatedTime
+				string sql = @"SELECT P.Id,P.[Index] AS [Index],CONCAT(G.ChiName, ' ｜ ', ISNULL(G.EngName, '')) AS GameName ,GPC.Name AS GamePlatformName,P.IsVirtual AS IsVirtual,P.Price AS Price,CONVERT(DATE,P.SaleDate)AS SaleDate,PSC.Name AS ProductStatus,BM.Name AS CreatedBackendMemberName,P.CreatedTime AS CreatedTime
 FROM Products AS P
 JOIN Games AS G ON P.GameId=G.Id
 JOIN GamePlatformsCodes AS GPC ON GPC.Id = P.GamePlatformId

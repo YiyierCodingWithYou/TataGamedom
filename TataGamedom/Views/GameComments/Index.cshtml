@@ -20,38 +20,35 @@
 }
 
 <h2>遊戲評論管理列表</h2>
-
-<p>
-</p>
-<div class="text-center">
+<div>
     <table class="table" id="myTable">
         <thead>
             <tr>
-                <th>
+                <th class="text-center vertical-align-middle w-25">
                     @Html.DisplayNameFor(model => model.GameName)
                 </th>
-                <th>
+                <th class="text-center vertical-align-middle">
                     @Html.DisplayNameFor(model => model.MemberName)
                 </th>
-                <th>
+                <th class="text-center vertical-align-middle">
                     @Html.DisplayNameFor(model => model.ContentText)
                 </th>
-                <th>
+                <th class="text-center vertical-align-middle">
                     @Html.DisplayNameFor(model => model.Score)
                 </th>
-                <th>
+                <th class="text-center vertical-align-middle">
                     @Html.DisplayNameFor(model => model.CreatedTime)
                 </th>
-                <th>
+                <th class="text-center vertical-align-middle">
                     @Html.DisplayNameFor(model => model.ActiveFlag)
                 </th>
-                <th>
+                <th class="text-center vertical-align-middle">
                     @Html.DisplayNameFor(model => model.DeleteBackendMemberName)
                 </th>
-                <th>
+                <th class="text-center vertical-align-middle">
                     @Html.DisplayNameFor(model => model.DeleteDatetime)
                 </th>
-                <th>
+                <th class="text-center vertical-align-middle">
                     詳細
                 </th>
             </tr>
@@ -61,37 +58,37 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>
+                    <td class="vertical-align-middle w-25">
                         @Html.DisplayFor(modelItem => item.GameName)
                     </td>
-                    <td>
+                    <td class="text-center vertical-align-middle">
                         @Html.DisplayFor(modelItem => item.MemberName)
                     </td>
-                    <td>
+                    <td class="vertical-align-middle">
                         @Html.DisplayFor(modelItem => item.ContentText)
                     </td>
-                    <td>
+                    <td class="text-center vertical-align-middle">
                         @Html.DisplayFor(modelItem => item.Score)
                     </td>
-                    <td>
+                    <td class="text-center vertical-align-middle">
                         <span>@item.CreatedTime.ToShortDateString()</span>
                         <br />
                         <span>@item.CreatedTime.ToLongTimeString()</span>
                     </td>
-                    <td>
+                    <td class="text-center vertical-align-middle">
                         @if (item.ActiveFlag == false)
                         {
-                            <text>已隱藏</text>
+                            <div class="visually-hidden"><text>隱藏</text></div><i class="fa-solid fa-eye-slash fa-lg"></i>
                         }
                         else if (item.ActiveFlag == true)
                         {
-                            <text>公開</text>
+                            <div class="visually-hidden"><text>公開</text></div><i class="fa-solid fa-eye fa-lg"></i>
                         }
                     </td>
-                    <td>
+                    <td class="text-center vertical-align-middle">
                         @Html.DisplayFor(modelItem => item.DeleteBackendMemberName)
                     </td>
-                    <td>
+                    <td class="text-center vertical-align-middle">
                         @if (item.DeleteDatetime != null)
                         {
                             <span>@item.DeleteDatetime.Value.ToShortDateString()</span>
@@ -99,7 +96,7 @@
                             <span>@item.DeleteDatetime.Value.ToLongTimeString()</span>
                         }
                     </td>
-                    <td>
+                    <td class="text-center vertical-align-middle">
                         <a href="@Url.Action("Detail", new { id = item.Id })" class="icon-link">
                             <i class="fa-solid fa-circle-info"></i>
                         </a>
