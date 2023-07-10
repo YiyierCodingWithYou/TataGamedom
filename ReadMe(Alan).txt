@@ -1,7 +1,7 @@
 Working On
-	[v]Index View 調整
-
-	[v]detail View 調整
+	[]輸出Excel ，匯入Excel
+	[]修放照片的樣式
+	[]建常備品資料表& Data
 	
 	
 To Do
