@@ -3,9 +3,14 @@
 @{
 	ViewBag.Title = "Edit";
 }
+<style>
+	.cursor-pointer {
+		cursor: pointer;
+	}
+</style>
 
 <h2>編輯新聞</h2>
-<div class="container">
+<div class="container position-relative">
 
 	@using (Html.BeginForm("Edit", "News", FormMethod.Post, new { enctype = "multipart/form-data" }))
 	{
@@ -89,45 +94,36 @@
 				</div>
 			</div>
 
-			<div class="mt-3">
+			<div class="mt-3" style="position: relative;">
 				<div class="col-md-offset-2 col-md-10">
-					<input type="submit" value="儲存新聞" class="btn btn-primary" />
-					@Html.ActionLink("取消編輯", "Index", null, new { @class = "btn btn-danger" })
-					@*@Html.ActionLink("取消編輯", "Index", "News", new { area = "" }, new { @class = "btn btn-danger" })
-
-						@if (Model.ActiveFlag == true)
-						{
-							@Html.ActionLink("刪除新聞", "Delete", new { id = Model.Id }, new { @class = "btn btn-danger" })
-						}
-						else if (Model.ActiveFlag == false)
-						{
-							@Html.ActionLink("公開新聞", "Reduction", new { id = Model.Id }, new { @class = "btn btn-danger" })
-						}*@
+					<input type="submit" value="儲存" class="btn btn-primary" />
+					@Html.ActionLink("取消", "Index", null, new { @class = "btn btn-danger" })
 				</div>
 			</div>
 		</div>
 	}
-	<div class="mb-5">
-		<div class="mb-3" style="display: flex; justify-content: flex-end;">
-			@if (Model.ActiveFlag)
+
+	<div style="display: flex; justify-content: flex-end; position: absolute; bottom: 11rem; right: 0; width: 200px; height: 200px;">
+		@if (Model.ActiveFlag == true)
+		{
+			using (Html.BeginForm("Delete", "News", new { id = Model.Id }, FormMethod.Post, new { id = "stopForm" }))
 			{
-				using (Html.BeginForm("Delete", "News", new { id = Model.Id }, FormMethod.Post))
-				{
-					@Html.AntiForgeryToken()
-					<span>&nbsp;</span>
-					<input type="submit" value="刪除新聞" class="btn btn-danger" />
-				}
+				@Html.AntiForgeryToken()
+				<div id="btnStop" class="cursor-pointer">
+					<img src="~/Files/NewsImages/delete.png" />
+				</div>
 			}
-			else
+		}
+		else
+		{
+			using (Html.BeginForm("Reduction", "News", new { id = Model.Id }, FormMethod.Post, new { id = "restoreForm" }))
 			{
-				using (Html.BeginForm("Reduction", "News", new { id = Model.Id }, FormMethod.Post))
-				{
-					@Html.AntiForgeryToken()
-					<span>&nbsp;</span>
-					<input type="submit" value="復原" class="btn btn-success" />
-				}
+				@Html.AntiForgeryToken()
+				<div id="btnRestore" class="cursor-pointer">
+					<img src="~/Files/NewsImages/re.png" />
+				</div>
 			}
-		</div>
+		}
 	</div>
 </div>
 @section Scripts {
@@ -148,40 +144,6 @@
 				{ value: 'Email', title: 'Email' },
 			]
 		});
-		//tinymce.init({
-		//	selector: 'textarea',
-		//	plugins: 'image',
-		//	toolbar: 'blocks fontfamily fontsize | bold italic underline strikethrough | align lineheight | checklist numlist bullist indent outdent |',
-		//	tinycomments_mode: 'embedded',
-		//	tinycomments_author: 'Author name',
-		//	images_upload_url: "/Files/NewsImages",
-		//	language: "zh_TW",
-		//	mergetags_list: [
-		//		{ value: 'First.Name', title: 'First Name' },
-		//		{ value: 'Email', title: 'Email' },
-		//	],
-		// images_upload_handler: function (blobInfo, success, failure) {
-		//	var xhr, formData;
-
-		//	xhr = new XMLHttpRequest();
-		//	xhr.withCredentials = false;
-		//	xhr.open('POST', '/uploadImage'); // 上傳圖片的後端路由
-
-		//	xhr.onload = function () {
-		//		var response = JSON.parse(xhr.responseText);
-		//		if (xhr.status !== 200 || !response || response.error) {
-		//			failure('圖片上傳失敗');
-		//		} else {
-		//			success(response.url, { text: response.url }); // 返回圖片在 CDN 上的 URL，並在編輯器中顯示該 URL
-		//		}
-		//	};
-
-		//	formData = new FormData();
-		//	formData.append('file', blobInfo.blob(), blobInfo.filename());
-
-		//	xhr.send(formData);
-		//}
-
 
 		$(document).ready(function () {
 			showHideGamesDiv(); // 在網頁載入時觸發函式
@@ -195,6 +157,28 @@
 				$('#gamesDiv').hide();
 			}
 		}
+	</script>
+	<script>
+        document.getElementById("btnStop").addEventListener("click", function (e) {
+            e.preventDefault();
+            var confirmed = confirm("您是否要刪除新聞？");
+            if (confirmed) {
+				alert("已將新聞刪除！");
+                window.location.href = "@Url.Action("BackendMembersList")";
+                document.getElementById("stopForm").submit();
+            }
+		});
+	</script>
+	<script>
+        document.getElementById("btnRestore").addEventListener("click", function (e) {
+            e.preventDefault();
+			var confirmed = confirm("您是否要復原新聞？");
+            if (confirmed) {
+                alert("復原成功！");
+                window.location.href = "@Url.Action("BackendMembersList")";
+                document.getElementById("restoreForm").submit();
+            }
+        });
 	</script>
 }
 
