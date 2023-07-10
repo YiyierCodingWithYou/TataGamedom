@@ -1,5 +1,7 @@
 Working On
 	[v]Index View 調整
+
+	[v]detail View 調整
 	
 	
 To Do

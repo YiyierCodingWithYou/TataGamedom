@@ -37,6 +37,7 @@ namespace TataGamedom.Controllers
             Result result = _service.Create(vm.ToDto());
             if (result.IsSuccess) 
             {
+                TempData["success"] = "新增成功";
                 return RedirectToAction("Index");
             }
             else 
@@ -66,6 +67,7 @@ namespace TataGamedom.Controllers
             Result result = _service.Update(vm.ToDto());
             if (result.IsSuccess)
             {
+                TempData["success"] = "編輯成功";
                 return RedirectToAction("Index");
             }
             else
@@ -90,7 +92,8 @@ namespace TataGamedom.Controllers
         {
 			Result result = _service.CallAutoOrder() > 0 ? Result.Success() : Result.Fail("0筆資料更新");
 
-			return RedirectToAction("Index");
+            TempData["success"] = "更新成功";
+            return RedirectToAction("Index");
 		}
 
 		private void PrepareCreateDataSource(int?stockInStatusId, int? supplierId) 

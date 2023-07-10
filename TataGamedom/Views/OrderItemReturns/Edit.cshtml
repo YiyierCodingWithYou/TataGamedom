@@ -15,77 +15,80 @@
 
 <h2>編輯退貨單</h2>
 
+<div class="d-flex justify-content-center">
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-<div class="row">
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.Id)
-
-    <div class="mb-3">
-        @Html.HiddenFor(model => model.OrderItemId)
-        @Html.LabelFor(model => model.OrderItemId, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.TextBoxFor(model => model.OrderItemId, new { @class = "form-control", @id = "", @disabled = "" })
-    </div>
-
-    <div class="mb-3">
-        @Html.LabelFor(model => model.Reason, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.EditorFor(model => model.Reason, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.Reason, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="mb-3">
-        @Html.LabelFor(model => model.IssuedAt, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.EditorFor(model => model.IssuedAt, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.IssuedAt, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="mb-3">
-        @Html.LabelFor(model => model.CompletedAt, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.EditorFor(model => model.CompletedAt, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.CompletedAt, "", new { @class = "text-danger" })
-    </div>
-
-
-
-    <div class="mb-3 form-group">
-        @Html.LabelFor(model => model.IsRefunded, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.DropDownList("IsRefunded", null, htmlAttributes: new { @class = "form-select" })
-        @Html.ValidationMessageFor(model => model.IsRefunded, "", new { @class = "text-danger" })
-
-    </div>
-
-    <div class="mb-3 form-group">
-        @Html.LabelFor(model => model.IsReturned, htmlAttributes: new { @class = "form-label col-md-2" })
-        @Html.DropDownList("IsReturned", null, htmlAttributes: new { @class = "form-select" })
-        @Html.ValidationMessageFor(model => model.IsReturned, "", new { @class = "text-danger" })
-    </div>
-
-    @if (Model.IsResellable != true)
+    @using (Html.BeginForm())
     {
-        <div class="mb-3 form-group">
-            @Html.LabelFor(model => model.IsResellable, htmlAttributes: new { @class = "form-label col-md-2" })
-            @Html.DropDownList("IsResellable", null, htmlAttributes: new { @class = "form-select" })
-            @Html.ValidationMessageFor(model => model.IsResellable, "", new { @class = "text-danger" })
-        </div>
+        @Html.AntiForgeryToken()
 
+        <div class="text-center">
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Id)
+
+            <div class="mb-3">
+                @Html.HiddenFor(model => model.OrderItemId)
+                @Html.LabelFor(model => model.OrderItemId, htmlAttributes: new { @class = "form-label col-md-12" })
+                @Html.TextBoxFor(model => model.OrderItemId, new { @class = "form-control", @id = "", @disabled = "" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(model => model.Reason, htmlAttributes: new { @class = "form-label col-md-12" })
+                @Html.EditorFor(model => model.Reason, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Reason, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(model => model.IssuedAt, htmlAttributes: new { @class = "form-label col-md-12" })
+                @Html.EditorFor(model => model.IssuedAt, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.IssuedAt, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(model => model.CompletedAt, htmlAttributes: new { @class = "form-label col-md-12" })
+                @Html.EditorFor(model => model.CompletedAt, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CompletedAt, "", new { @class = "text-danger" })
+            </div>
+
+
+
+            <div class="mb-3 form-group">
+                @Html.LabelFor(model => model.IsRefunded, htmlAttributes: new { @class = "form-label col-md-12" })
+                @Html.DropDownList("IsRefunded", null, htmlAttributes: new { @class = "form-select" })
+                @Html.ValidationMessageFor(model => model.IsRefunded, "", new { @class = "text-danger" })
+
+            </div>
+
+            <div class="mb-3 form-group">
+                @Html.LabelFor(model => model.IsReturned, htmlAttributes: new { @class = "form-label col-md-12" })
+                @Html.DropDownList("IsReturned", null, htmlAttributes: new { @class = "form-select" })
+                @Html.ValidationMessageFor(model => model.IsReturned, "", new { @class = "text-danger" })
+            </div>
+
+            @if (Model.IsResellable != true)
+            {
+                <div class="mb-3 form-group">
+                    @Html.LabelFor(model => model.IsResellable, htmlAttributes: new { @class = "form-label col-md-12" })
+                    @Html.DropDownList("IsResellable", null, htmlAttributes: new { @class = "form-select" })
+                    @Html.ValidationMessageFor(model => model.IsResellable, "", new { @class = "text-danger" })
+                </div>
+
+            }
+
+            <div class="mb-3">
+                <div class="col-md-offset-2 col-md-12">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
     }
-
-    <div class="mb-3">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Save" class="btn btn-primary" />
-        </div>
+</div>
+<div class="row">
+    <div class="col-md-12 d-flex justify-content-center mt-5">
+        <a href="@Url.Action("Index")" class="btn btn-outline-secondary" style="font-size:16px"><i class="bi bi-house-door"></i>回首頁</a>
     </div>
 </div>
-}
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }

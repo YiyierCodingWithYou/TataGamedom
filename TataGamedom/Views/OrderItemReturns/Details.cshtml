@@ -1,4 +1,46 @@
-﻿@model IEnumerable<TataGamedom.Models.ViewModels.OrderItemReturns.OrderItemReturnDetailVM>
+﻿<link href="~/Content/bootstrap theme.css" rel="stylesheet" />
+<link href="~/Content/layoutStyle1.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<style>
+    .fs16 {
+        font-size: 16px;
+    }
+
+    .fs14 {
+        font-size: 14px;
+    }
+
+    th {
+        font-size: 16px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+    }
+
+    .page-link {
+        color: antiquewhite;
+        background-color: tan;
+    }
+
+    .pagination .active .page-link {
+        background-color: peru;
+        border-color: goldenrod
+    }
+
+    .table {
+        justify-content: center;
+        align-items: center;
+        text-align: justify-all;
+        vertical-align: middle;
+    }
+</style>
+@model IEnumerable<TataGamedom.Models.ViewModels.OrderItemReturns.OrderItemReturnDetailVM>
 
 @{
     ViewBag.Title = "退貨單明細";
@@ -6,84 +48,97 @@
 
 <h2>退貨單明細</h2>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Index)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OrderIndex)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OrderItemIndex)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OrderItemProductPrice)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.InventoryItemIndex)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Reason)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IssuedAt)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CompletedAt)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsRefunded)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsReturned)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsResellable)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Index)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OrderIndex)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OrderItemIndex)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OrderItemProductPrice)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.InventoryItemIndex)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Reason)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IssuedAt)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CompletedAt)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsRefundedText)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsReturnedText)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsResellableText)
-        </td>
-        <td>
-            @Html.ActionLink("編輯", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("刪除", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
-
+<table class="table table-striped table-hover table-warning mt-5 mb-5">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Index)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderIndex)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderItemIndex)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderItemProductPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InventoryItemIndex)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reason)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IssuedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompletedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsRefunded)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsReturned)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsResellable)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Index)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderIndex)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderItemIndex)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderItemProductPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InventoryItemIndex)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Reason)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IssuedAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompletedAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsRefundedText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsReturnedText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsResellableText)
+                </td>
+                <td>
+                    <div class="w-75 btn-group" role="group">
+                        <a href="@Url.Action("Edit", "OrderItemReturns", new { id = item.Id })" class="btn btn-outline-secondary btn-sm mx-1 fs14">
+                            <i class="bi bi-pencil-square"></i>編輯
+                        </a>
+                        <a href="@Url.Action("Delete", "OrderItemReturns", new { id = item.Id })" class="btn btn-outline-danger btn-sm mx-1 fs14">
+                            <i class="bi bi-trash3"></i>刪除
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
+
+<div class="col-md-12 d-flex justify-content-center">
+    <a href="@Url.Action("Index")" class="btn btn-outline-secondary" style="font-size:16px"><i class="bi bi-house-door"></i>回首頁</a>
+</div>

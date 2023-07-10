@@ -64,7 +64,8 @@ namespace TataGamedom.Controllers
 			Result result = _service.Create(vm.ToDto());
 			if (result.IsSuccess)
 			{
-				return RedirectToAction("Details", new { productId = vm.ProductId });
+                TempData["success"] = "新增成功";
+                return RedirectToAction("Details", new { productId = vm.ProductId });
 			}
 			else
 			{
@@ -94,7 +95,8 @@ namespace TataGamedom.Controllers
 			Result result = _service.Update(vm.ToEditDto());
 			if (result.IsSuccess)
 			{
-				return RedirectToAction("Details", new { productId = vm.ProductId });
+                TempData["success"] = "編輯成功";
+                return RedirectToAction("Details", new { productId = vm.ProductId });
 			}
 			else
 			{
