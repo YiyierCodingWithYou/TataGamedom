@@ -1,9 +1,15 @@
-﻿@model TataGamedom.Models.ViewModels.OrderItemReturns.OrderItemReturnVM
+﻿<link href="~/Content/bootstrap theme.css" rel="stylesheet" />
+<link href="~/Content/layoutStyle1.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<style>
+    .btn {
+        font-size: 16px;
+    }
+</style>
+@model TataGamedom.Models.ViewModels.OrderItemReturns.OrderItemReturnVM
 
 @{
     ViewBag.Title = "編輯退貨單";
-    var orderItemId = ViewBag.OrderItemId as IEnumerable<SelectListItem>;
-    orderItemId = orderItemId.Prepend(new SelectListItem { Value = "", Text = "請選擇..." });
 
 }
 
@@ -13,66 +19,67 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-    <div class="row">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
 
-        <div class="mb-3">
-            @Html.LabelFor(model => model.OrderItemId, htmlAttributes: new { @class = "control-label col-md-2" })
-                @Html.DropDownListFor(model => model.OrderItemId, orderItemId, new { @class = "form-select" })
-                @Html.ValidationMessageFor(model => model.OrderItemId, "", new { @class = "text-danger" })
+<div class="row">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="mb-3">
+        @Html.HiddenFor(model => model.OrderItemId)
+        @Html.LabelFor(model => model.OrderItemId, htmlAttributes: new { @class = "form-label col-md-2" })
+        @Html.TextBoxFor(model => model.OrderItemId, new { @class = "form-control", @id = "", @disabled = "" })
+    </div>
+
+    <div class="mb-3">
+        @Html.LabelFor(model => model.Reason, htmlAttributes: new { @class = "form-label col-md-2" })
+        @Html.EditorFor(model => model.Reason, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Reason, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="mb-3">
+        @Html.LabelFor(model => model.IssuedAt, htmlAttributes: new { @class = "form-label col-md-2" })
+        @Html.EditorFor(model => model.IssuedAt, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.IssuedAt, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="mb-3">
+        @Html.LabelFor(model => model.CompletedAt, htmlAttributes: new { @class = "form-label col-md-2" })
+        @Html.EditorFor(model => model.CompletedAt, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.CompletedAt, "", new { @class = "text-danger" })
+    </div>
+
+
+
+    <div class="mb-3 form-group">
+        @Html.LabelFor(model => model.IsRefunded, htmlAttributes: new { @class = "form-label col-md-2" })
+        @Html.DropDownList("IsRefunded", null, htmlAttributes: new { @class = "form-select" })
+        @Html.ValidationMessageFor(model => model.IsRefunded, "", new { @class = "text-danger" })
+
+    </div>
+
+    <div class="mb-3 form-group">
+        @Html.LabelFor(model => model.IsReturned, htmlAttributes: new { @class = "form-label col-md-2" })
+        @Html.DropDownList("IsReturned", null, htmlAttributes: new { @class = "form-select" })
+        @Html.ValidationMessageFor(model => model.IsReturned, "", new { @class = "text-danger" })
+    </div>
+
+    @if (Model.IsResellable != true)
+    {
+        <div class="mb-3 form-group">
+            @Html.LabelFor(model => model.IsResellable, htmlAttributes: new { @class = "form-label col-md-2" })
+            @Html.DropDownList("IsResellable", null, htmlAttributes: new { @class = "form-select" })
+            @Html.ValidationMessageFor(model => model.IsResellable, "", new { @class = "text-danger" })
         </div>
 
-        <div class="mb-3">
-            @Html.LabelFor(model => model.Reason, htmlAttributes: new { @class = "control-label col-md-2" })
-                @Html.EditorFor(model => model.Reason, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Reason, "", new { @class = "text-danger" })
-        </div>
+    }
 
-        <div class="mb-3">
-            @Html.LabelFor(model => model.IssuedAt, htmlAttributes: new { @class = "control-label col-md-2" })
-                @Html.EditorFor(model => model.IssuedAt, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.IssuedAt, "", new { @class = "text-danger" })
-        </div>
-
-        <div class="mb-3">
-            @Html.LabelFor(model => model.CompletedAt, htmlAttributes: new { @class = "control-label col-md-2" })
-                @Html.EditorFor(model => model.CompletedAt, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CompletedAt, "", new { @class = "text-danger" })
-        </div>
-
-        <div class="mb-3">
-            @Html.LabelFor(model => model.IsRefunded, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsRefunded)
-                    @Html.ValidationMessageFor(model => model.IsRefunded, "", new { @class = "text-danger" })
-                </div>
-        </div>
-
-        <div class="mb-3">
-            @Html.LabelFor(model => model.IsReturned, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsReturned)
-                    @Html.ValidationMessageFor(model => model.IsReturned, "", new { @class = "text-danger" })
-                </div>
-        </div>
-
-        <div class="mb-3">
-            @Html.LabelFor(model => model.IsResellable, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsResellable)
-                    @Html.ValidationMessageFor(model => model.IsResellable, "", new { @class = "text-danger" })
-                </div>
-        </div>
-
-        <div class="mb-3">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+    <div class="mb-3">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-primary" />
         </div>
     </div>
+</div>
 }
 
 <div>

@@ -60,16 +60,14 @@ namespace TataGamedom.Models.ViewModels.InventoryItems
         [Display(Name = "有無序號")]
         public bool ProductIsVirtual { get; set; }
 
-        //public IEnumerable<InventoryItemVM> InventoryItems { get; set; }
+        public string ProductIsVirtualTText => ProductIsVirtual == true ? "<i class=\"bi bi-check2-circle\"></i>" : string.Empty;
 
-        [Display(Name = "庫存量")]
+		[Display(Name = "庫存量")]
         public int Count { get; set; } = 0;  
-        /*=> InventoryItems.Where(item => item.ProductId == ProductId).Count();*/
 
         [Display(Name = "總成本")]
         [DisplayFormat(DataFormatString ="{0:#,#}")]
         public decimal Total { get; set; } = 0; 
-        /*=> InventoryItems.Where(item => item.ProductId == ProductId).Sum(item => item.Cost);*/
 
     }
 }

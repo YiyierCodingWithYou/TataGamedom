@@ -32,6 +32,7 @@ namespace TataGamedom.Models.ViewModels.Orders
 		public string CreateAtText { get => CreatedAt.ToString("yyyy/MM/dd"); }
 
 		[Display(Name = "總額")]
+		[DisplayFormat(DataFormatString = "{0:#,#}")]
 		public int Total { get; set; }
 	}
 }

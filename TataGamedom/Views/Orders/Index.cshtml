@@ -1,6 +1,7 @@
 ﻿<link href="~/Content/bootstrap theme.css" rel="stylesheet" />
 <link href="~/Content/layoutStyle1.css" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+
 <style>
     .fs16 {
         font-size: 16px;
@@ -21,7 +22,7 @@
         bottom: 20px;
         left: 0;
         right: 0;
-        width:100%;
+        width: 100%;
     }
 
 
@@ -44,6 +45,8 @@
 </style>
 
 @model IEnumerable<TataGamedom.Models.ViewModels.Orders.OrderIndexVM>
+@Html.Partial("_Notification")
+
 
 @{
     ViewBag.Title = "訂單列表";
@@ -159,29 +162,29 @@
             }
         </tbody>
     </table>
-        <ul class="pagination">
-            @if (pageInfo.PageNum >= 1)
-            {
-                <li>
-                    <a class="page-link" href="@(pageInfo.GetUrl(pageInfo.PageItemPrevNumber))" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-            }
-            @for (int i = 0; i < pageInfo.PageBarItemCount; i++)
-            {
-                <li class="@(pageInfo.PageBarStartNumber + i == pageInfo.PageNum ? "active" : "")">
-                    <a class="page-link" href="@(pageInfo.GetUrl(pageInfo.PageBarStartNumber + i)+ "&" + sortInfo.GetQueryString())">@(pageInfo.PageBarStartNumber + i)</a>
-                </li>
-            }
+    <ul class="pagination">
+        @if (pageInfo.PageNum >= 1)
+        {
+            <li>
+                <a class="page-link" href="@(pageInfo.GetUrl(pageInfo.PageItemPrevNumber))" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        }
+        @for (int i = 0; i < pageInfo.PageBarItemCount; i++)
+        {
+            <li class="@(pageInfo.PageBarStartNumber + i == pageInfo.PageNum ? "active" : "")">
+                <a class="page-link" href="@(pageInfo.GetUrl(pageInfo.PageBarStartNumber + i)+ "&" + sortInfo.GetQueryString())">@(pageInfo.PageBarStartNumber + i)</a>
+            </li>
+        }
 
-            @if (pageInfo.PageNum < pageInfo.Pages)
-            {
-                <li>
-                    <a class="page-link" href="@pageInfo.GetUrl(pageInfo.PageItemNextNumber)" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            }
-        </ul>
+        @if (pageInfo.PageNum < pageInfo.Pages)
+        {
+            <li>
+                <a class="page-link" href="@pageInfo.GetUrl(pageInfo.PageItemNextNumber)" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        }
+    </ul>
 </div>

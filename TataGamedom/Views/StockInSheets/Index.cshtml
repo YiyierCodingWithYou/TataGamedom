@@ -1,14 +1,86 @@
-﻿@model IEnumerable<TataGamedom.Models.ViewModels.StockInSheets.StockInSheetIndexVM>
+﻿<link href="~/Content/bootstrap theme.css" rel="stylesheet" />
+<link href="~/Content/layoutStyle1.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+
+<style>
+    .fs20 {
+        font-size: 20px;
+    }
+
+    .fs16 {
+        font-size: 16px;
+    }
+
+    .fs14 {
+        font-size: 14px;
+    }
+
+    th {
+        font-size: 16px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        width: 100%;
+    }
+
+
+    .page-link {
+        color: antiquewhite;
+        background-color: tan;
+    }
+
+    .pagination .active .page-link {
+        background-color: peru;
+        border-color: goldenrod
+    }
+
+    .table {
+        justify-content: center;
+        align-items: center;
+        text-align: justify-all;
+        vertical-align: middle;
+    }
+</style>
+
+
+@model IEnumerable<TataGamedom.Models.ViewModels.StockInSheets.StockInSheetIndexVM>
+@Html.Partial("_Notification")
 
 @{
     ViewBag.Title = "進貨單清單";
 }
 
 <h2>進貨單清單</h2>
+<div class="row pt-2 pb-3">
+    <div class="col-1 align-self-md-center">
+        <a href="@Url.Action("Create", "StockInSheets")" class="btn btn-outline-warning fs16">
+            <i class="bi bi-plus-circle"></i>新增
+        </a>
+    </div>
+    <div class="col-2 align-self-md-center">
+        @using (Html.BeginForm("CallAutoOrder", "StockInSheets", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-danger fs16">
+                <i class="bi bi-arrow-repeat"></i>更新常備進貨單
+            </button>
+        }
+    </div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+    <div class="col-1 align-self-md-start">
+        <a href="@Url.Action("Index", "StandardProducts")" class="btn btn-link fs20">
+            <i class="bi bi-gear-wide-connected"></i>
+        </a>
+    </div>
+
+</div>
+
 <table class="table">
     <tr>
         <th>
@@ -30,32 +102,38 @@
             @Html.DisplayNameFor(model => model.SupplierName)
         </th>
         <th></th>
+        <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Index)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OrderRequestDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ArrivedAt)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Quantity)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StockInStatusCodeName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SupplierName)
-        </td>
-        <td>
-            @Html.ActionLink("編輯", "Edit", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Index)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderRequestDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ArrivedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StockInStatusCodeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SupplierName)
+            </td>
+            <td>
+                <div class="w-75 btn-group" role="group">
+                    <a href="@Url.Action("Edit", "StockInSheets", new { id = item.Id })" class="btn btn-outline-secondary btn-sm mx-1 fs14">
+                        <i class="bi bi-pencil-square"></i>編輯
+                    </a>
+                </div>
+            </td>
+        </tr>
+    }
 
 </table>

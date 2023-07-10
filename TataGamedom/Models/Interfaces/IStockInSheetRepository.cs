@@ -18,6 +18,8 @@ namespace TataGamedom.Models.Interfaces
 		void Update(StockInSheetDto dto);
 		
 		int GetMaxIdInDb();
-
+		int CallAutoOrder(IEnumerable<StockInSheetDto> stockInSheetsByAutoOrder);
+		int GetAutoOrderSupplierId(int? productId);
+		List<int> GetProductIdNeedAutoOrder();
 	}
 }
