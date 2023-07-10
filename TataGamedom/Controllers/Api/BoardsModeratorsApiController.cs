@@ -32,7 +32,7 @@ namespace TataGamedom.Controllers.Api
 				Id = m.Id,
 				BoardName = m.Board.Name,
 				MemberAccount = m.Member.Account,
-				LastOnlineTime = m.Member.LastOnlineTime ?? DateTime.MinValue,
+				//LastOnlineTime = m.Member.LastOnlineTime ?? DateTime.MinValue,
 				StartDate = m.StartDate,
 				EndDate = m.EndDate,
 				Status = m.EndDate < DateTime.Now ? "退任" : "在任"
