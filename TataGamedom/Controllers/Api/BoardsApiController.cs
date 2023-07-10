@@ -315,8 +315,8 @@ namespace TataGamedom.Controllers
 				GameId = null,
 				BoardAbout = dto.BoardAbout,
 				BoardHeaderCoverImg = dto.BoardHeaderCoverImg,
-				CreatedBackendMemberId = dto.CreatedBackendMemberId,
-				CreatedTime = dto.CreatedTime
+				//CreatedBackendMemberId = dto.CreatedBackendMemberId,
+				//CreatedTime = dto.CreatedTime
 			};
 
 			db.Boards.Add(entity);

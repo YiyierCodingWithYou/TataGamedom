@@ -322,7 +322,6 @@
     <Compile Include="Models\Dtos\StockInSheets\StockInSheetIndexDto.cs" />
     <Compile Include="Models\Dtos\Boards\BoardCreateDto.cs" />
     <Compile Include="Models\Dtos\Boards\BoardEditDto.cs" />
-    <Compile Include="Models\EFModels\AggregatedCounter.cs" />
     <Compile Include="Models\EFModels\Announcement.cs" />
     <Compile Include="Models\EFModels\AppDbContext.cs" />
     <Compile Include="Models\EFModels\ApprovalStatusCode.cs" />
@@ -335,7 +334,6 @@
     <Compile Include="Models\EFModels\BoardsModeratorsApplication.cs" />
     <Compile Include="Models\EFModels\BucketLog.cs" />
     <Compile Include="Models\EFModels\Cart.cs" />
-    <Compile Include="Models\EFModels\Counter.cs" />
     <Compile Include="Models\EFModels\Coupon.cs" />
     <Compile Include="Models\EFModels\CouponsProduct.cs" />
     <Compile Include="Models\EFModels\DiscountTypeCode.cs" />
@@ -345,15 +343,10 @@
     <Compile Include="Models\EFModels\GameClassificationsCode.cs" />
     <Compile Include="Models\EFModels\GameComment.cs" />
     <Compile Include="Models\EFModels\GamePlatformsCode.cs" />
-    <Compile Include="Models\EFModels\Hash.cs" />
     <Compile Include="Models\EFModels\InventoryItem.cs" />
     <Compile Include="Models\EFModels\Issue.cs" />
     <Compile Include="Models\EFModels\IssueStatusCode.cs" />
     <Compile Include="Models\EFModels\IssueTypesCode.cs" />
-    <Compile Include="Models\EFModels\Job.cs" />
-    <Compile Include="Models\EFModels\JobParameter.cs" />
-    <Compile Include="Models\EFModels\JobQueue.cs" />
-    <Compile Include="Models\EFModels\List.cs" />
     <Compile Include="Models\EFModels\Member.cs" />
     <Compile Include="Models\EFModels\MemberProductView.cs" />
     <Compile Include="Models\EFModels\MembersBoard.cs" />
@@ -381,12 +374,9 @@
     <Compile Include="Models\EFModels\ProductImage.cs" />
     <Compile Include="Models\EFModels\ProductStatusCode.cs" />
     <Compile Include="Models\EFModels\Reply.cs" />
-    <Compile Include="Models\EFModels\Schema.cs" />
-    <Compile Include="Models\EFModels\Server.cs" />
-    <Compile Include="Models\EFModels\Set.cs" />
     <Compile Include="Models\EFModels\ShipmemtMethod.cs" />
     <Compile Include="Models\EFModels\ShipmentStatusesCode.cs" />
-    <Compile Include="Models\EFModels\State.cs" />
+    <Compile Include="Models\EFModels\StandardProduct.cs" />
     <Compile Include="Models\EFModels\StockInSheet.cs" />
     <Compile Include="Models\EFModels\StockInStatusCode.cs" />
     <Compile Include="Models\EFModels\Supplier.cs" />

@@ -6,15 +6,14 @@ namespace TataGamedom.Models.EFModels
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("HangFire.AggregatedCounter")]
-    public partial class AggregatedCounter
+    public partial class StandardProduct
     {
-        [Key]
-        [StringLength(100)]
-        public string Key { get; set; }
+        public int Id { get; set; }
 
-        public long Value { get; set; }
+        public int? ProductId { get; set; }
 
-        public DateTime? ExpireAt { get; set; }
+        public bool? AutoOrder { get; set; }
+
+        public virtual Product Product { get; set; }
     }
 }
