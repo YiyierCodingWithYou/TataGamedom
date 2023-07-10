@@ -23,6 +23,7 @@
 			<div class="head">
 				<h2>創建管理員</h2>
 			</div>
+
 			<div class="title222">
 				管理員名稱
 			</div>
@@ -84,8 +85,9 @@
 			</div>
 			<div>
 				@Html.DropDownListFor(model => model.BackendMembersRoleId, ViewBag.BackendMembersRoleId as SelectList, "", htmlAttributes: new { })<br />
-				@Html.ValidationMessageFor(model => model.Account, "", new { @class = "text-danger" })
+				@Html.ValidationMessageFor(model => model.BackendMembersRoleId, "", new { @class = "text-danger" })
 			</div>
+
 			<button id="submit" type="submit">創建</button>
 			@Html.ActionLink("取消", "Index", "BackendMembersList", new { area = "" }, new { @class = "btn btn-danger copy " })
 		</div>

@@ -53,20 +53,22 @@
 				<button id="submit" type="submit">更新</button>
 
 				@Html.ActionLink("取消", "Index", "BackendMembers", new { area = "" }, new { @class = "btn btn-danger copy " })
-				</div>
 			</div>
-</form>
+		</div>
+	</form>
 }
 
 
 
 @section Scripts {
 	@Scripts.Render("~/bundles/jqueryval")
-<script>
-	var cancelButton = document.getElementById("cancelButton");
-	// 添加點擊事件監聽器
-	cancelButton.addEventListener("click", function (event) {
-		event.preventDefault(); // 阻止表單提交行為，避免刷新頁面
-    // 在這裡執行取消按鈕的相應功能，例如返回上一頁
-</script>
+	<script>
+		var cancelButton = document.getElementById("cancelButton");
+		// 添加點擊事件監聽器
+		cancelButton.addEventListener("click", function (event) {
+			event.preventDefault(); // 阻止表單提交行為，避免刷新頁面
+				// 在這裡執行取消按鈕的相應功能，例如返回上一頁
+	</script>
+
+
 }

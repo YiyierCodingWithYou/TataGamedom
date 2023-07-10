@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using TataGamedom.Filters;
 using TataGamedom.Models.EFModels;
 using TataGamedom.Models.ViewModels.News;
 
@@ -14,7 +15,7 @@ namespace TataGamedom.Controllers
     public class NewsCategoryController : Controller
     {
         private AppDbContext db = new AppDbContext();
-		[Authorize]
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		// GET: NewsCategory
 		public ActionResult Index()
 		{
@@ -26,7 +27,7 @@ namespace TataGamedom.Controllers
 
 			return View(newsCategories);
 		}
-		[Authorize]
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		// GET: NewsCategory/Details/5
 		public ActionResult Details(int? id)
         {
@@ -41,7 +42,7 @@ namespace TataGamedom.Controllers
             }
             return View(newsCategoryCode);
         }
-		[Authorize]
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		// GET: NewsCategory/Create
 		public ActionResult Create()
         {
@@ -51,7 +52,7 @@ namespace TataGamedom.Controllers
 		// POST: NewsCategory/Create
 		// 若要免於大量指派 (overposting) 攻擊，請啟用您要繫結的特定屬性，
 		// 如需詳細資料，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
-		[Authorize]
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		[HttpPost]
         [ValidateAntiForgeryToken]
 		public ActionResult Create([Bind(Include = "Name")] NewsCategoryVM newsCategoryVM)
@@ -78,7 +79,7 @@ namespace TataGamedom.Controllers
 		}
 
 		// GET: NewsCategory/Edit/5
-		[Authorize]
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		public ActionResult Edit(int? id)
 		{
 			if (id == null)
@@ -103,7 +104,7 @@ namespace TataGamedom.Controllers
 		// POST: NewsCategory/Edit/5
 		// 若要免於大量指派 (overposting) 攻擊，請啟用您要繫結的特定屬性，
 		// 如需詳細資料，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
-		[Authorize]
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		[HttpPost]
         [ValidateAntiForgeryToken]
 		public ActionResult Edit([Bind(Include = "Id,Name")] NewsCategoryVM newsCategoryVM)
@@ -133,7 +134,7 @@ namespace TataGamedom.Controllers
 		}
 
 		// GET: NewsCategory/Delete/5
-		[Authorize]
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		public ActionResult Delete(int? id)
 		{
 			if (id == null)
@@ -156,9 +157,9 @@ namespace TataGamedom.Controllers
 
 			return View(newsCategory);
 		}
-
+	
 		// POST: NewsCategory/Delete/5
-		[Authorize]
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		[HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
 		public ActionResult DeleteConfirmed(int id)

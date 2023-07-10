@@ -2,10 +2,18 @@
 moment.locale("zh-tw");
 
 function donuts(likeCount, dislikeCount, selectorId) {
+
   var dataset = [
     { label: "讚", count: likeCount },
     { label: "倒讚", count: dislikeCount },
   ];
+
+    if (likeCount + dislikeCount == 0) {
+        dataset = [
+            { label: "資料", count: 1},
+            { label: "無", count: 1},
+        ];
+    };
 
   var width = 150;
   var height = 150;
@@ -23,7 +31,7 @@ function donuts(likeCount, dislikeCount, selectorId) {
         return d.label;
       })
     )
-    .range(["#98abc5", "#ff8c00"]); // 設定顏色
+    .range(["#ff8c00", "#98abc5"]); // 設定顏色
 
   var pie = d3.pie().value(function (d) {
     return d.count;
@@ -61,6 +69,35 @@ function donuts(likeCount, dislikeCount, selectorId) {
     .attr("dy", "0.35em")
     .text(function (d) {
       return d.data.label;
+    });
+}
+
+function setDonutsAndNums(memberAccount, boardName){
+  let ma = memberAccount, bn = boardName;
+  $.ajax({
+    type: "Get",
+    url: `${baseAddress}/api/BoardsApi/MemberBoardDate?ma=${ma}&bn=${bn}`,
+    })
+    .done((data) => {
+      console.log(data);
+      console.log(data.MemberThisBoardLikes);
+      $('#MemberThisBoardLikes').text(data[0].MemberThisBoardLikes);
+      $('#MemberThisBoardUnlikes').text(data[0].MemberThisBoardUnlikes);
+      $('#MemberThisBoardPostsCount').text(data[0].MemberThisBoardPostsCount);
+      $('#MemberAllBoardLikes').text(data[0].MemberAllBoardLikes);
+      $('#MemberAllBoardUnlikes').text(data[0].MemberAllBoardUnlikes);
+      $('#MemberAllBoardPostsCount').text(data[0].MemberAllBoardPostsCount);
+      donuts(data[0].MemberThisBoardLikes, data[0].MemberThisBoardUnlikes, "#MemberThisBoardDonuts");
+      donuts(data[0].MemberAllBoardLikes, data[0].MemberAllBoardUnlikes, "#MemberAllBoardDonuts");
+
+    })
+    .fail((err) => {
+      console.log("no...");
+      Swal.fire({
+        icon: "error",
+        title: "失敗",
+        text: err.statusText,
+      });
     });
 }
 
@@ -120,8 +157,6 @@ function PutApplication(IsAdd, endpoint) {
 //   $('#MemberPostAtAllNum').text(5);
 // }
 
-donuts(10, 20, "#MemberThisBoardDonuts");
-donuts(10, 20, "#MemberAllBoardDonuts");
 
 $(document).ready(function () {
   let appTable = $("#ApplicationTable").DataTable({
@@ -221,7 +256,10 @@ $(document).ready(function () {
         $("#ApprovalStatusDate").text(approvalStatusDate);
         $("#MemberPostAtBoardNum").text(1);
         $("#MemberPostAtAllNum").text(5);
-        
+
+        setDonutsAndNums(memberAccount,boardName);
+       
+
         $("#OkBtn").attr("disabled", true);
         $("#NoBtn").attr("disabled", true);
         

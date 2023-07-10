@@ -19,7 +19,7 @@
 }
 
 
-<h2>Index</h2>
+<h2>Reports</h2>
 
 <table class="table table-striped table-hover w-100" id="ReportTable">
     <thead>
@@ -35,7 +35,7 @@
             <td>確認</td>
             <td>處理說明</td>
             <td>完成日</td>
-            <td>Staff</td>
+            <td>討論版名</td>
         </tr>
     </thead>
 </table>
@@ -56,6 +56,7 @@
                             <p class="text-end fs-6 text-secondary">
                                 —
                                 <span id="Account">我是檢舉人ㄌ</span>
+                                <br/>
                                 <span id="Datetime">2021-07-21</span>
                             </p>
                         </div>
@@ -63,10 +64,10 @@
                             <label class="me-3">確認結果</label>
                             <textarea id="ReviewComment" class="form-control w-100 p-0 m0"></textarea>
                         </div>
-                        <button id="PostReportConfirmBtn" class="btn btn-outline-warning" type="button">
+                        <button id="ConfirmBtn" class="btn btn-outline-warning" type="button">
                             完成確認
                         </button>
-                        <button id="CommentReportConfirmBtn" class="btn btn-outline-primary" type="button">完成確認</button>
+                      
                         <p class="text-secondary text-center">
                             確認人員
                             <span class="badge text-bg-light" id="ReviewerBackendMemberAccount">
@@ -88,31 +89,26 @@
                         <figure>
                             <blockquote class="blockquote fs-6">
                                 <p id="ReportedContent">
-                                    ㄎ
+                                    我被檢舉了
                                 </p>
+                                
                             </blockquote>
                             <figcaption class="blockquote-footer text-center" id="ReportedAccount">
                                 被檢舉的某某人
-                                <cite title="Source Title" id="BoardName">某某版</cite>
+                            </figcaption>
+                            <figcaption class="blockquote-footer text-center" id="BoardName">
+                                某個板塊啦
                             </figcaption>
 
                         </figure>
                         <div class="row mt-4">
-                            <div class="col-md-6 d-flex  flex-column align-items-center justify-content-center d-none" id="RepotedPostActionArea">
-                                <p class="fw-bolder .text-primary-emphasis">
-                                    被檢舉貼文狀態
-                                    <span class="badge text-bg-info d-block" id="RepotedPostStatus-1">顯示中</span>
-                                    <span class="badge text-bg-secondary d-block d-none" id="RepotedPostStatus-0">已隱藏</span>
-                                </p>
-                                <button class="btn btn-outline-danger d-block mt-4" id="DelePostBtn">隱藏貼文</button>
-                            </div>
                             <div id="RepotedCommentActionArea" class="col-md-6  d-flex  flex-column align-items-center justify-content-center">
                                 <p class="fw-bolder .text-primary-emphasis d-block">
-                                    被檢舉留言狀態
+                                    被檢舉內容狀態
                                     <span class="badge text-bg-info d-block" id="RepotedCommStatus-1">顯示中</span>
                                     <span class="badge text-bg-secondary d-block d-none" id="RepotedCommStatus-0">已隱藏</span>
                                 </p>
-                                <button class="btn btn-outline-danger d-block mt-2" id="DeleCommentBtn">隱藏留言</button>
+                                <button class="btn btn-outline-danger d-block mt-2" id="DeleContentBtn" >隱藏內容</button>
                             </div>
                             <div class="col-md-6  d-flex  flex-column align-items-center justify-content-center">
 
