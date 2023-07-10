@@ -340,6 +340,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Dtos\Boards\MemberBoardDataDto.cs" />
     <Compile Include="Models\Dtos\InventoryItems\InventoryItemDto.cs" />
     <Compile Include="Models\Dtos\Members\EditProfileDto.cs" />
     <Compile Include="Models\Dtos\Games\GameCreateDto.cs" />
@@ -358,6 +359,7 @@
     <Compile Include="Models\Dtos\StockInSheets\StockInSheetIndexDto.cs" />
     <Compile Include="Models\Dtos\Boards\BoardCreateDto.cs" />
     <Compile Include="Models\Dtos\Boards\BoardEditDto.cs" />
+    <Compile Include="Models\EFModels\AggregatedCounter.cs" />
     <Compile Include="Models\EFModels\Announcement.cs" />
     <Compile Include="Models\EFModels\AppDbContext.cs" />
     <Compile Include="Models\EFModels\ApprovalStatusCode.cs" />
@@ -370,6 +372,7 @@
     <Compile Include="Models\EFModels\BoardsModeratorsApplication.cs" />
     <Compile Include="Models\EFModels\BucketLog.cs" />
     <Compile Include="Models\EFModels\Cart.cs" />
+    <Compile Include="Models\EFModels\Counter.cs" />
     <Compile Include="Models\EFModels\Coupon.cs" />
     <Compile Include="Models\EFModels\CouponsProduct.cs" />
     <Compile Include="Models\EFModels\DiscountTypeCode.cs" />
@@ -379,10 +382,15 @@
     <Compile Include="Models\EFModels\GameClassificationsCode.cs" />
     <Compile Include="Models\EFModels\GameComment.cs" />
     <Compile Include="Models\EFModels\GamePlatformsCode.cs" />
+    <Compile Include="Models\EFModels\Hash.cs" />
     <Compile Include="Models\EFModels\InventoryItem.cs" />
     <Compile Include="Models\EFModels\Issue.cs" />
     <Compile Include="Models\EFModels\IssueStatusCode.cs" />
     <Compile Include="Models\EFModels\IssueTypesCode.cs" />
+    <Compile Include="Models\EFModels\Job.cs" />
+    <Compile Include="Models\EFModels\JobParameter.cs" />
+    <Compile Include="Models\EFModels\JobQueue.cs" />
+    <Compile Include="Models\EFModels\List.cs" />
     <Compile Include="Models\EFModels\Member.cs" />
     <Compile Include="Models\EFModels\MemberProductView.cs" />
     <Compile Include="Models\EFModels\MembersBoard.cs" />
@@ -410,9 +418,12 @@
     <Compile Include="Models\EFModels\ProductImage.cs" />
     <Compile Include="Models\EFModels\ProductStatusCode.cs" />
     <Compile Include="Models\EFModels\Reply.cs" />
+    <Compile Include="Models\EFModels\Schema.cs" />
+    <Compile Include="Models\EFModels\Server.cs" />
+    <Compile Include="Models\EFModels\Set.cs" />
     <Compile Include="Models\EFModels\ShipmemtMethod.cs" />
     <Compile Include="Models\EFModels\ShipmentStatusesCode.cs" />
-    <Compile Include="Models\EFModels\StandardProduct.cs" />
+    <Compile Include="Models\EFModels\State.cs" />
     <Compile Include="Models\EFModels\StockInSheet.cs" />
     <Compile Include="Models\EFModels\StockInStatusCode.cs" />
     <Compile Include="Models\EFModels\Supplier.cs" />
@@ -549,6 +560,7 @@
     <Content Include="Content\login.css" />
     <Content Include="Content\layoutStyle1.css" />
     <Content Include="Content\PagedList.css" />
+    <Content Include="Content\todolist.css" />
     <Content Include="Content\HOME.css" />
     <Content Include="Content\YiyierStyle.css" />
     <Content Include="Content\newsshow.css" />
@@ -618,6 +630,7 @@
     <Content Include="lib\datatables\js\jquery.dataTables.min.js" />
     <Content Include="Scripts\Boards\Applications.js" />
     <Content Include="Scripts\Boards\Buckets.js" />
+    <Content Include="Scripts\Boards\Posts.js" />
     <Content Include="Scripts\Boards\Moderators.js" />
     <Content Include="Scripts\Boards\Reports.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -800,6 +813,7 @@
     <Content Include="Scripts\tinymce\themes\silver\theme.min.js" />
     <Content Include="Scripts\tinymce\tinymce.js" />
     <Content Include="Scripts\tinymce\tinymce.min.js" />
+    <Content Include="Scripts\todolist.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

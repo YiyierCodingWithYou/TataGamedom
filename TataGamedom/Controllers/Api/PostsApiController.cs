@@ -10,10 +10,12 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using TataGamedom.Models.Dtos.Reports;
 using TataGamedom.Models.EFModels;
 using TataGamedom.Models.Infra;
 using TataGamedom.Models.ViewModels.Games;
 using TataGamedom.Models.ViewModels.PostsComments;
+using TataGamedom.Models.ViewModels.Reports;
 
 namespace TataGamedom.Controllers
 {
@@ -207,6 +209,38 @@ namespace TataGamedom.Controllers
 				IEnumerable<PostsCommentsListVm> result = connection.Query<PostsCommentsListVm>(query, new { Id = id });
 				return result;
 			}
+		}
+
+		// Get: api/ReportsApi/IsHide/{id}/Comment
+		[System.Web.Http.HttpGet]
+		[System.Web.Http.Route("api/ReportsApi/IsHide/{id}/Comment")]
+		[ResponseType(typeof(bool))]
+		public bool IsHideComment(int id)
+		{
+			if (db.PostComments.Find(id) == null)
+			{
+				return false;
+			}
+
+			bool hasHidden = db.PostComments.Any(pc => pc.Id == id && pc.ActiveFlag==false);
+
+			return hasHidden;
+		}
+
+		// Get: api/ReportsApi/IsHide/{id}/Post
+		[System.Web.Http.HttpGet]
+		[System.Web.Http.Route("api/ReportsApi/IsHide/{id}/Post")]
+		[ResponseType(typeof(bool))]
+		public bool IsHideReport(int id)
+		{
+			if (db.Posts.Find(id) == null)
+			{
+				return false;
+			}
+
+			bool hasHidden = db.Posts.Any(pc => pc.Id == id && pc.ActiveFlag == false);
+
+			return hasHidden;
 		}
 
 

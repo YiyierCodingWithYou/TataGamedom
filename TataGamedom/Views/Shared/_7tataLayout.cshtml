@@ -14,6 +14,7 @@
     @Scripts.Render("~/bundles/modernizr")
     @RenderSection("Styles", required: false)
     @Styles.Render("~/Content/layoutStyle1.css")
+    <link href="~/Content/todolist.css" rel="stylesheet" />
     @using System.Web.Security
     @using TataGamedom.Filters
 </head>
@@ -25,7 +26,7 @@
         <h1 id="title">獺獺玩國TaTaGameDoM</h1>
     </div>
 
-    <div class="tataImg">
+    <div class="tataImg" id="tataImg">
     </div>
 
     <nav id="user-nav">
@@ -161,24 +162,38 @@
                 </ul>
             </li>
             <li id="service">
-                <a href="#">
+                <a href="/HOME/ABOUT">
                     <i class="fa fa-circle-info"></i>
-                    <span>獺獺客服</span>
+                    <span>關於我們</span>
                 </a>
-                <ul>
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <li>@Html.ActionLink("FAQ管理", "Index", "FAQ", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li><a href="#">公告管理</a></li>
-                        <li><a href="#">客服管理</a></li>
-                    }
-                </ul>
             </li>
-        </ul>
+            </ul>
         <a id="toggle">
             <i class="fa fa-chevron-circle-right"></i>
         </a>
     </nav>
+
+    <div class="todoList hidetodo">
+        <div class="cover-img">
+            <div class="cover-inner">
+                <h3 id="dayName">Sunday</h3>
+            </div>
+        </div>
+
+        <div class="content">
+            <form class="add">
+                <input type="text" name="add" placeholder="Add item..." />
+                <div class="input-buttons">
+                    <a href="#0" class="add-todo">
+                        <i class="fas fa-plus add plus-icon"></i>
+                    </a>
+                </div>
+            </form>
+            <ul class="todos align">
+   
+            </ul>
+        </div>
+    </div>
 
     <div class="container-fluid container-tata position-relative">
         @RenderBody()
@@ -187,6 +202,7 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     <script src="~/Scripts/layoutScript1.js"></script>
+    <script src="~/Scripts/todolist.js"></script>
 
 </body>
 
