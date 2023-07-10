@@ -22,13 +22,13 @@ namespace TataGamedom.Models.EFModels
         [StringLength(500)]
         public string ApplyReason { get; set; }
 
-        public int? ApprovalStatusId { get; set; }
-
         public bool? ApprovalResult { get; set; }
 
         public int? BackendMemberId { get; set; }
 
         public DateTime? ApprovalStatusDate { get; set; }
+
+        public int? ApprovalStatusId { get; set; }
 
         public virtual ApprovalStatusCode ApprovalStatusCode { get; set; }
 

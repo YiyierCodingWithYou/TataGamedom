@@ -65,6 +65,7 @@ namespace TataGamedom.Models.EFModels
 		public virtual DbSet<Reply> Replies { get; set; }
 		public virtual DbSet<ShipmemtMethod> ShipmemtMethods { get; set; }
 		public virtual DbSet<ShipmentStatusesCode> ShipmentStatusesCodes { get; set; }
+		public virtual DbSet<StandardProduct> StandardProducts { get; set; }
 		public virtual DbSet<StockInSheet> StockInSheets { get; set; }
 		public virtual DbSet<StockInStatusCode> StockInStatusCodes { get; set; }
 		public virtual DbSet<Supplier> Suppliers { get; set; }
@@ -396,6 +397,11 @@ namespace TataGamedom.Models.EFModels
 				.HasForeignKey(e => e.DeleteMemberId);
 
 			modelBuilder.Entity<Member>()
+				.HasMany(e => e.PostCommentReports)
+				.WithRequired(e => e.Member)
+				.WillCascadeOnDelete(false);
+
+			modelBuilder.Entity<Member>()
 				.HasMany(e => e.PostComments1)
 				.WithRequired(e => e.Member1)
 				.HasForeignKey(e => e.MemberId)
@@ -403,11 +409,6 @@ namespace TataGamedom.Models.EFModels
 
 			modelBuilder.Entity<Member>()
 				.HasMany(e => e.PostCommentUpDownVotes)
-				.WithRequired(e => e.Member)
-				.WillCascadeOnDelete(false);
-
-			modelBuilder.Entity<Member>()
-				.HasMany(e => e.PostCommentReports)
 				.WithRequired(e => e.Member)
 				.WillCascadeOnDelete(false);
 
@@ -550,6 +551,11 @@ namespace TataGamedom.Models.EFModels
 
 			modelBuilder.Entity<Product>()
 				.HasMany(e => e.ProductImages)
+				.WithRequired(e => e.Product)
+				.WillCascadeOnDelete(false);
+
+			modelBuilder.Entity<Product>()
+				.HasMany(e => e.StandardProducts)
 				.WithRequired(e => e.Product)
 				.WillCascadeOnDelete(false);
 

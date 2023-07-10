@@ -422,6 +422,7 @@
     <Compile Include="Models\EFModels\Set.cs" />
     <Compile Include="Models\EFModels\ShipmemtMethod.cs" />
     <Compile Include="Models\EFModels\ShipmentStatusesCode.cs" />
+    <Compile Include="Models\EFModels\StandardProduct.cs" />
     <Compile Include="Models\EFModels\State.cs" />
     <Compile Include="Models\EFModels\StockInSheet.cs" />
     <Compile Include="Models\EFModels\StockInStatusCode.cs" />

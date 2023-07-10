@@ -10,7 +10,7 @@ namespace TataGamedom.Models.EFModels
     {
         public int Id { get; set; }
 
-        public int? ProductId { get; set; }
+        public int ProductId { get; set; }
 
         public bool? AutoOrder { get; set; }
 
