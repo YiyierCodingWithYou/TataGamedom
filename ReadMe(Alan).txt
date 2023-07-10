@@ -1,5 +1,5 @@
 Working On
-	[]  修改GET TODO checkBox改下拉(未完成)  改完測試重新加入庫存 
+	[v]  修改GET TODO checkBox改下拉(未完成)  改完測試重新加入庫存 
 	[]  退貨 => Create + Order改變狀態 => edit + 重新加入庫存 
 	[v] 退貨U : Detail Edit 一筆OrderItem只能被退貨一次，下拉清單不顯示已被退貨過的選項
 

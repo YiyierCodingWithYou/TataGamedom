@@ -15,7 +15,8 @@ namespace TataGamedom.Models.ViewModels.Orders
         public string OrderItemIndex { get; set; }
 
         [Display(Name = "商品單價")]
-        public decimal? ProductPrice { get; set; }
+		[DisplayFormat(DataFormatString = "{0:#,#}")]
+		public decimal? ProductPrice { get; set; }
 
         [Display(Name = "訂單編號")]
         public string Index { get; set; }
@@ -29,7 +30,8 @@ namespace TataGamedom.Models.ViewModels.Orders
         public DateTime? CompletedAt { get; set; }
 
         [Display(Name = "總額")]
-        public decimal? Total { get; set; }
+		[DisplayFormat(DataFormatString = "{0:#,#}")]
+		public decimal? Total { get; set; }
 
         [Display(Name = "貨態追蹤代碼")]
         public string TrackingNum { get; set; }

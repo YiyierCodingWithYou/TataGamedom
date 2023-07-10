@@ -36,9 +36,8 @@ namespace TataGamedom.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Create(OrderItemReturnVM vm)
         {
-			if (!ModelState.IsValid) return View(vm);
-
 			PrepareCreateDataSource(vm.OrderItemId);
+			if (!ModelState.IsValid) return View(vm);
 
 			Result result = _service.Create(vm.ToDto());
 			if (result.IsSuccess)
@@ -65,9 +64,9 @@ namespace TataGamedom.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Edit(OrderItemReturnVM vm)
         {
-			if (!ModelState.IsValid) return View(vm);
-
 			PrepareCreateDataSource(vm.OrderItemId);
+			if (!ModelState.IsValid) return View(vm);
+	
 
 			Result result = _service.Update(vm.ToDto());
 			if (result.IsSuccess)
@@ -109,23 +108,23 @@ namespace TataGamedom.Controllers
 			
 			ViewBag.IsRefunded = new SelectList(new List<SelectListItem>
 												{
-                                                    new SelectListItem { Value = "", Text =  "" },
-													new SelectListItem { Value = "0", Text = "未退款" },
-													new SelectListItem { Value = "1", Text = "已退款" } 
+                                                    new SelectListItem { Value = null, Text =  ""},
+													new SelectListItem { Value = "false", Text = "未退款" },
+													new SelectListItem { Value = "true", Text = "已退款" } 
 												},"Value","Text");
             
 			ViewBag.IsReturned = new SelectList(new List<SelectListItem>
                                                 {
-                                                    new SelectListItem { Value = "", Text =  "" },
-                                                    new SelectListItem { Value = "0", Text = "未退貨" },
-                                                    new SelectListItem { Value = "1", Text = "已退貨" }
+                                                    new SelectListItem { Value = null, Text =  "" },
+                                                    new SelectListItem { Value = "false", Text = "未退貨" },
+                                                    new SelectListItem { Value = "true", Text = "已退貨" }
                                                 }, "Value", "Text");
             
 			ViewBag.IsResellable = new SelectList(new List<SelectListItem>
                                                 { 
-												  new SelectListItem { Value = "", Text = "" }, 
-												  new SelectListItem { Value = "0", Text = "不加入庫存" }, 
-												  new SelectListItem { Value = "1", Text = "重新加入庫存" } 
+												  new SelectListItem { Value = null, Text = "" }, 
+												  new SelectListItem { Value = "false", Text = "不加入庫存" }, 
+												  new SelectListItem { Value = "true", Text = "重新加入庫存" } 
 											    }, "Value", "Text");
 
 
