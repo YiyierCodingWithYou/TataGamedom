@@ -27,7 +27,7 @@ namespace TataGamedom.Controllers.Api
 				connection.Open();
 
 				string query = @"
-                    SELECT TOP (2)
+                    SELECT
                     N'貼文檢舉' as [Type],
                     pr.Id as ReportId,
                     concat('PR',pr.Id ) as [Index],
@@ -57,7 +57,7 @@ namespace TataGamedom.Controllers.Api
 
                     union all
 
-                    SELECT TOP (2)
+                    SELECT
                     N'留言檢舉' as [Type],
                     cr.Id as ReportId,
                     concat('CR',cr.Id ) as [Index],
@@ -103,12 +103,12 @@ namespace TataGamedom.Controllers.Api
 		public ApiResult PutPostReport(int id, ReportsConfirmVm vm)
 		{
 			var backendMemberAccount = User.Identity.Name;
-			//int backendMemberId = simpleHelper.FindBackendmemberIdByAccount(backendMemberAccount);
-			int backendMemberId = 1;
-			if (!ModelState.IsValid)
-			{
-				return ApiResult.Fail("驗證失敗");
-			}
+			int backendMemberId = simpleHelper.FindBackendmemberIdByAccount(backendMemberAccount);
+			//int backendMemberId = 1;
+			//if (!ModelState.IsValid)
+			//{
+			//	return ApiResult.Fail("驗證失敗");
+			//}
 			if (id != vm.Id)
 			{
 				return ApiResult.Fail("不對喔");
@@ -148,12 +148,12 @@ namespace TataGamedom.Controllers.Api
 		public ApiResult PutCommentReport(int id, ReportsConfirmVm vm)
 		{
 			var backendMemberAccount = User.Identity.Name;
-			//int backendMemberId = simpleHelper.FindBackendmemberIdByAccount(backendMemberAccount);
-			int backendMemberId = 1;
-			if (!ModelState.IsValid)
-			{
-				return ApiResult.Fail("驗證失敗");
-			}
+			int backendMemberId = simpleHelper.FindBackendmemberIdByAccount(backendMemberAccount);
+			//int backendMemberId = 1;
+			//if (!ModelState.IsValid)
+			//{
+			//	return ApiResult.Fail("驗證失敗");
+			//}
 			if (id != vm.Id)
 			{
 				return ApiResult.Fail("不對喔");

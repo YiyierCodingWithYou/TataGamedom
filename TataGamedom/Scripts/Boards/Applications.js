@@ -4,8 +4,8 @@ moment.locale("zh-tw");
 function donuts(likeCount, dislikeCount, selectorId) {
 
   var dataset = [
-    { label: "讚", count: likeCount },
-    { label: "倒讚", count: dislikeCount },
+    { label: "↑", count: likeCount },
+    { label: "↓", count: dislikeCount },
   ];
 
     if (likeCount + dislikeCount == 0) {
@@ -31,7 +31,7 @@ function donuts(likeCount, dislikeCount, selectorId) {
         return d.label;
       })
     )
-    .range(["#ff8c00", "#98abc5"]); // 設定顏色
+      .range(["#097969", "#FF5733"]); // 設定顏色
 
   var pie = d3.pie().value(function (d) {
     return d.count;

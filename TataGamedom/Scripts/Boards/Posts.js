@@ -151,12 +151,12 @@ $(document).ready(function () {
 
     if (data.Type === "Post") {
       postId = Id;
-      $("#textContent").text("I'm a post");
+      $("#textContent").text("[Post]"+data.Content);
     }
 
     if (data.Type === "Comment") {
       postId = respondPost;
-      $("#textContent").text("I'm a Comment");
+      $("#textContent").text("[Comment]"+data.Content);
     }
 
     let memberAccount = data.MemberAccount;
@@ -292,12 +292,12 @@ $(document).ready(function () {
 
         if (data.Type === "Post") {
           postId = Id;
-          $("#textContent").text("I'm a post");
+          $("#textContent").text("[Post]"+data.Content);
         }
 
         if (data.Type === "Comment") {
           postId = respondPost;
-          $("#textContent").text("I'm a Comment");
+          $("#textContent").text("[Comment]"+data.Content);
         }
 
         let memberAccount = data.MemberAccount;
@@ -475,12 +475,12 @@ $(document).ready(function () {
 
         if (data.Type === "Post") {
           postId = Id;
-          $("#textContent").text("I'm a post");
+          $("#textContent").text("[Post]"+data.Content);
         }
 
         if (data.Type === "Comment") {
           postId = respondPost;
-          $("#textContent").text("I'm a Comment");
+          $("#textContent").text("[Comment]"+data.Content);
         }
 
         $("#memberAccount").text(data.MemberAccount);
