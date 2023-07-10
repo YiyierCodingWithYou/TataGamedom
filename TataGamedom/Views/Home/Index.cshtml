@@ -1,33 +1,69 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+	ViewBag.Title = "Home Page";
+	Layout = "~/Views/Shared/_8TataLayout.cshtml";
+
+}
+@section Styles{
+	<link href="~/Content/HOME2.css" rel="stylesheet" />
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
+<!DOCTYPE html>
+<html lang="en">
 
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
-    </div>
-</main>
+<h>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		  integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+		  crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="style.css">
+	<title>Day1- Expanding Card</title>
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="panel active"
+				 style="background-image: url('https://localhost:44398/Files/NewsImages/82749573.jpg'); ">
+				<h3 style="color: black;">氣氛長AKA來電汪</h3>
+			</div>
+			<div class="panel"
+				 style="background-image: url('https://localhost:44398/Files/NewsImages/HN74VjF.png'); ">
+				<h3 style="color: black;">敢惹我就賞你一巴長AKA112</h3>
+			</div>
+			<div class="panel"
+				 style="background-image: url('https://localhost:44398/Files/NewsImages/b27859dfa6e12a2e9_700.jpg'); ">
+				<h3 style="color: black;">技術長AKA地下助教</h3>
+			</div>
+			<div class="panel"
+				 style="background-image: url('https://localhost:44398/Files/NewsImages/POCHA.jpg'); ">
+				<h3 style="color: black;">組長波加曼AKANN</h3>
+			</div>
+		</div>
+
+
+	</body>
+
+</html>
+@section Scripts {
+	@Scripts.Render("~/Scripts/home2.js")
+	<script>
+
+		const panels = document.querySelectorAll('.panel')
+
+		panels.forEach((panel) => {
+			panel.addEventListener('click', () => {
+				removeActiveClasses();
+				panel.classList.add('active');
+
+			})
+
+		})
+
+		const removeActiveClasses = function () {
+			panels.forEach(panel => {
+				panel.classList.remove('active');
+			})
+		}
+	</script>
+}

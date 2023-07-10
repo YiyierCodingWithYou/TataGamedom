@@ -6,9 +6,9 @@
 
 <h2>會員詳細資訊</h2>
 
-<div class="container">
+<div class="container d-flex justify-content-center align-items-center" >
 	<hr />
-	<dl class="dl-horizontal">
+	<dl class="dl-horizontal mt-5">
 		<dt>
 			@Html.DisplayNameFor(model => model.Name)
 		</dt>
@@ -64,36 +64,28 @@
 		<dd>
 			@Html.DisplayFor(model => model.RegistrationDate)
 		</dd>
-		<div>
-			@Html.ActionLink("返回", "MembersList", null, new { @class = "btn btn-primary btn-lg" })
+		<div class="d-flex">
+			@Html.ActionLink("返回", "MembersList", null, new { @class = "btn btn-primary " })
+			@if (Model.ActiveFlag == true)
+			{
+				using (Html.BeginForm("Delete", "Members", new { id = Model.Id }, FormMethod.Post, new { id = "stopForm" }))
+				{
+					@Html.AntiForgeryToken()
+					<span>&nbsp;</span>
+					<button id="btnStop" class="btn btn-danger ">停權</button>
+				}
+			}
+			@if (Model.ActiveFlag == false)
+			{
+				using (Html.BeginForm("Reduction", "Members", new { id = Model.Id }, FormMethod.Post, new { id = "restoreForm" }))
+				{
+					@Html.AntiForgeryToken()
+					<span>&nbsp;</span>
+					<button id="btnRestore" class="btn btn-success">復原</button>
+				}
+			}
 		</div>
 	</dl>
-</div>
-
-<div class="mb-5">
-	<div class="mb-3" style="display: flex; justify-content: flex-end;">
-
-		@if (Model.ActiveFlag == true)
-		{
-			using (Html.BeginForm("Delete", "Members", new { id = Model.Id }, FormMethod.Post, new { id = "stopForm" }))
-			{
-				@Html.AntiForgeryToken()
-				<span>&nbsp;</span>
-				<button id="btnStop" class="btn btn-danger btn-lg">停權</button>
-				//<input type="submit" value="停權" class="btn btn-danger btn-lg" />
-			}
-		}
-		@if (Model.ActiveFlag == false)
-		{
-			using (Html.BeginForm("Reduction", "Members", new { id = Model.Id }, FormMethod.Post, new { id = "restoreForm" }))
-			{
-				@Html.AntiForgeryToken()
-				<span>&nbsp;</span>
-				<button id="btnRestore" class="btn btn-success btn-lg">復原</button>
-				//<input type="submit" value="復原" class="btn btn-success btn-lg" />
-			}
-		}
-	</div>
 </div>
 @section Scripts {
 
