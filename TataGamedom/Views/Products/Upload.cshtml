@@ -1,23 +1,35 @@
 ﻿@{
     ViewBag.Title = "Upload";
 }
+@section Styles{
+    <link href="~/Content/layoutStyle1.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap theme.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/Content/YiyierStyle.css">
+}
 
-<h2>匯入商品</h2>
-<h3>@ViewBag.Message</h3>
+<div class="container">
+    <h1 class="main_heading">匯入商品</h1>
+    <hr />
+    <h3>@ViewBag.Message</h3>
 
-<form method="post" action="Upload" enctype="multipart/form-data">
-    @Html.AntiForgeryToken()
+    <form method="post" action="Upload" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
 
-    <div>
-        <input name="file" type="file" accept=".xlsx,.xls" />
-    </div>
+        <div class="mb-3">
+            <input name="file" type="file" accept=".xlsx,.xls" />
+        </div>
 
-    <br />
+        <br />
 
-    <div>
-        <button type="submit" class="btn btn-primary">匯入</button>
-    </div>
-</form>
+        <div class="mb-3">
+            <div style="text-align: right;">
+                @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-primary btnColor" })
+                <input type="submit" value="匯入" class="btn btn-primary btnColor" />
+            </div>
+        </div>
+    </form>
+</div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

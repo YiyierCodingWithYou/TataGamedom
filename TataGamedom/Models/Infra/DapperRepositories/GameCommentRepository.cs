@@ -21,7 +21,7 @@ namespace TataGamedom.Models.Infra.DapperRepositories
 		{
 			using (var conn = new SqlConnection(_connStr))
 			{
-				string sql = @"SELECT GC.Id, G.ChiName AS GameName, M.Name AS MemberName, GC.Content, GC.Score, GC.CreatedTime, GC.ActiveFlag, BM.Name AS DeleteBackendMemberName, GC.DeleteDatetime
+				string sql = @"SELECT GC.Id, CONCAT(G.ChiName, ' ｜ ', ISNULL(G.EngName, '')) AS GameName, M.Name AS MemberName, GC.Content, GC.Score, GC.CreatedTime, GC.ActiveFlag, BM.Name AS DeleteBackendMemberName, GC.DeleteDatetime
 FROM GameComments AS GC
 JOIN Games AS G ON G.Id = GC.GameId
 JOIN Members AS M ON M.Id = GC.MemberId
