@@ -19,9 +19,6 @@
 
 <h2>新聞總覽</h2>
 
-
-
-
 <table class="table" id="myTable">
 	
 	@Html.ActionLink("新增新聞", "Create", null, new { @class = "btn btn-danger btn-lg" })
@@ -72,10 +69,10 @@
 					@Html.DisplayFor(modelItem => item.Title)
 				</td>
 				<td>
-					@*@Html.DisplayFor(modelItem => item.ScheduleDate)*@
-					<span>@item.ScheduleDate.ToShortDateString()</span>
+					@Html.DisplayFor(modelItem => item.ScheduleDate)
+					@*<span>@item.ScheduleDate.ToShortDateString()</span>
 					<br />
-					<span>@item.ScheduleDate.ToShortTimeString()</span>
+					<span>@item.ScheduleDate.ToShortTimeString()</span>*@
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.BackendMemberName)
