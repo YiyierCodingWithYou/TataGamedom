@@ -197,14 +197,14 @@ $(document).ready(function () {
       }
     
       let Id = $("#Id").text();
-      let ReviewComment = $("#ReviewComment").text();
+      let ReviewComment = $("#ReviewComment").val();
     
       $.ajax({
         type: "PUT",
         url: `${baseAddress}/api/ReportsApi/${Id}/${reportType}`,
         data: JSON.stringify({
           Id: `${Id}`,
-          ReviewComment: `${ReviewComment}`,
+            ReviewComment: `${ReviewComment}`,
         }),
         contentType: "application/json",
       })

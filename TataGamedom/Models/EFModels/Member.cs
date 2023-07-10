@@ -27,9 +27,9 @@ namespace TataGamedom.Models.EFModels
             NewsViews = new HashSet<NewsView>();
             Orders = new HashSet<Order>();
             PostComments = new HashSet<PostComment>();
+            PostCommentReports = new HashSet<PostCommentReport>();
             PostComments1 = new HashSet<PostComment>();
             PostCommentUpDownVotes = new HashSet<PostCommentUpDownVote>();
-            PostCommentReports = new HashSet<PostCommentReport>();
             PostReports = new HashSet<PostReport>();
             Posts = new HashSet<Post>();
             Posts1 = new HashSet<Post>();
@@ -123,13 +123,13 @@ namespace TataGamedom.Models.EFModels
         public virtual ICollection<PostComment> PostComments { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PostCommentReport> PostCommentReports { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PostComment> PostComments1 { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PostCommentUpDownVote> PostCommentUpDownVotes { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PostCommentReport> PostCommentReports { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PostReport> PostReports { get; set; }

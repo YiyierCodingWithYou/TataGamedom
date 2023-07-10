@@ -12,10 +12,12 @@
     @Scripts.Render("~/bundles/modernizr")
     @RenderSection("Styles", required: false)
     @Styles.Render("~/Content/layoutStyle1.css")
+    <link href="~/Content/todolist.css" rel="stylesheet" />
+
     @*<script src="https://code.jquery.com/jquery-3.7.0.slim.js"
-            integrity="sha256-7GO+jepT9gJe9LB4XFf8snVOjX3iYNb0FHYr5LI1N5c="
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.tiny.cloud/1/6rb3trl2hzooj95cl84vg4l75mca64j5ttuvcm0fu1gumuih/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>*@
+                integrity="sha256-7GO+jepT9gJe9LB4XFf8snVOjX3iYNb0FHYr5LI1N5c="
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.tiny.cloud/1/6rb3trl2hzooj95cl84vg4l75mca64j5ttuvcm0fu1gumuih/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>*@
     @using System.Web.Security
     @using TataGamedom.Filters
 </head>
@@ -23,6 +25,9 @@
 
     <div class="title">
         <h1 id="title">獺獺玩國TataGamedom</h1>
+    </div>
+
+    <div class="tataImg" id="tataImg">
     </div>
 
     <nav id="user-nav">
@@ -167,7 +172,26 @@
             <i class="fa fa-chevron-circle-right"></i>
         </a>
     </nav>
+    <div class="todoList hidetodo">
+        <div class="cover-img">
+            <div class="cover-inner">
+                <h3 id="dayName">Sunday</h3>
+            </div>
+        </div>
 
+        <div class="content">
+            <form class="add">
+                <input type="text" name="add" placeholder="Add item..." />
+                <div class="input-buttons">
+                    <a href="#0" class="add-todo">
+                        <i class="fas fa-plus add plus-icon"></i>
+                    </a>
+                </div>
+            </form>
+            <ul class="todos align">
+            </ul>
+        </div>
+    </div>
 
     @RenderBody()
 
@@ -177,6 +201,8 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     <script src="~/Scripts/layoutScript1.js"></script>
+    <script src="~/Scripts/todolist.js"></script>
+
 
 </body>
 
