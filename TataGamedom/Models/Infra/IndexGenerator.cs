@@ -25,7 +25,6 @@ namespace TataGamedom.Models.Infra
         /// <returns></returns>
         public string GetOrderIndex(OrderDto dto) => string.Concat(dto.CreatedAt.ToString("yyyyMMdd"), dto.ShipmemtMethodId, dto.MemberId, _Id + 1);
 
-
 		/// <summary>
 		/// "Display(Name='SKU') , 命名規則: ProductIndex + StockInSheetIndex + Id"
 		/// </summary>
@@ -43,6 +42,7 @@ namespace TataGamedom.Models.Infra
 		/// "命名規則: IssuedAt + 對應到的訂單Index + Id"
 		/// </summary>
 		public string GetOrderItemReturnIndex(OrderItemReturnDto dto, string orderIndex)
+
 			=> string.Concat(dto.IssuedAt.ToString("yyyyMMdd"), orderIndex, _Id + 1);
 		
 	}

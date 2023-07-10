@@ -103,6 +103,9 @@ M.[Name], O.OrderStatusId, O.ShipmentStatusId, O.PaymentStatusId,O.Id
 		}
 
 		public void Delete(string index) => _repo.Delete(index);
+
+		public OrderDto GetById(int? id) => _repo.GetById(id);
+       
     }
 
 	/// <summary>

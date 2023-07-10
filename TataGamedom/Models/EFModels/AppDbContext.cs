@@ -68,17 +68,7 @@ namespace TataGamedom.Models.EFModels
 		public virtual DbSet<StockInSheet> StockInSheets { get; set; }
 		public virtual DbSet<StockInStatusCode> StockInStatusCodes { get; set; }
 		public virtual DbSet<Supplier> Suppliers { get; set; }
-		public virtual DbSet<AggregatedCounter> AggregatedCounters { get; set; }
-		public virtual DbSet<Counter> Counters { get; set; }
-		public virtual DbSet<Hash> Hashes { get; set; }
-		public virtual DbSet<Job> Jobs { get; set; }
-		public virtual DbSet<JobParameter> JobParameters { get; set; }
-		public virtual DbSet<JobQueue> JobQueues { get; set; }
-		public virtual DbSet<List> Lists { get; set; }
-		public virtual DbSet<Schema> Schemata { get; set; }
-		public virtual DbSet<Server> Servers { get; set; }
-		public virtual DbSet<Set> Sets { get; set; }
-		public virtual DbSet<State> States { get; set; }
+		public virtual DbSet<StandardProduct> StandardProducts { get; set; }
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
@@ -103,12 +93,6 @@ namespace TataGamedom.Models.EFModels
 			modelBuilder.Entity<BackendMember>()
 				.Property(e => e.Phone)
 				.IsUnicode(false);
-
-			modelBuilder.Entity<BackendMember>()
-				.HasMany(e => e.Boards)
-				.WithRequired(e => e.BackendMember)
-				.HasForeignKey(e => e.CreatedBackendMemberId)
-				.WillCascadeOnDelete(false);
 
 			modelBuilder.Entity<BackendMember>()
 				.HasMany(e => e.BucketLogs)

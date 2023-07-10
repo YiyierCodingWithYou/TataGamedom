@@ -71,13 +71,13 @@
             @Html.DisplayFor(modelItem => item.CompletedAt)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.IsRefunded)
+            @Html.DisplayFor(modelItem => item.IsRefundedText)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.IsReturned)
+            @Html.DisplayFor(modelItem => item.IsReturnedText)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.IsResellable)
+            @Html.DisplayFor(modelItem => item.IsResellableText)
         </td>
         <td>
             @Html.ActionLink("編輯", "Edit", new { id=item.Id }) |

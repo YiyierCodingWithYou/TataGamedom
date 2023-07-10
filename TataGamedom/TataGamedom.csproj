@@ -331,6 +331,7 @@
     <Compile Include="Controllers\PostsCommentsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\StandardProductsController.cs" />
     <Compile Include="Controllers\StockInSheetsController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
     <Compile Include="Files\Mails\Class1.cs" />
@@ -357,7 +358,6 @@
     <Compile Include="Models\Dtos\StockInSheets\StockInSheetIndexDto.cs" />
     <Compile Include="Models\Dtos\Boards\BoardCreateDto.cs" />
     <Compile Include="Models\Dtos\Boards\BoardEditDto.cs" />
-    <Compile Include="Models\EFModels\AggregatedCounter.cs" />
     <Compile Include="Models\EFModels\Announcement.cs" />
     <Compile Include="Models\EFModels\AppDbContext.cs" />
     <Compile Include="Models\EFModels\ApprovalStatusCode.cs" />
@@ -370,7 +370,6 @@
     <Compile Include="Models\EFModels\BoardsModeratorsApplication.cs" />
     <Compile Include="Models\EFModels\BucketLog.cs" />
     <Compile Include="Models\EFModels\Cart.cs" />
-    <Compile Include="Models\EFModels\Counter.cs" />
     <Compile Include="Models\EFModels\Coupon.cs" />
     <Compile Include="Models\EFModels\CouponsProduct.cs" />
     <Compile Include="Models\EFModels\DiscountTypeCode.cs" />
@@ -380,15 +379,10 @@
     <Compile Include="Models\EFModels\GameClassificationsCode.cs" />
     <Compile Include="Models\EFModels\GameComment.cs" />
     <Compile Include="Models\EFModels\GamePlatformsCode.cs" />
-    <Compile Include="Models\EFModels\Hash.cs" />
     <Compile Include="Models\EFModels\InventoryItem.cs" />
     <Compile Include="Models\EFModels\Issue.cs" />
     <Compile Include="Models\EFModels\IssueStatusCode.cs" />
     <Compile Include="Models\EFModels\IssueTypesCode.cs" />
-    <Compile Include="Models\EFModels\Job.cs" />
-    <Compile Include="Models\EFModels\JobParameter.cs" />
-    <Compile Include="Models\EFModels\JobQueue.cs" />
-    <Compile Include="Models\EFModels\List.cs" />
     <Compile Include="Models\EFModels\Member.cs" />
     <Compile Include="Models\EFModels\MemberProductView.cs" />
     <Compile Include="Models\EFModels\MembersBoard.cs" />
@@ -416,12 +410,9 @@
     <Compile Include="Models\EFModels\ProductImage.cs" />
     <Compile Include="Models\EFModels\ProductStatusCode.cs" />
     <Compile Include="Models\EFModels\Reply.cs" />
-    <Compile Include="Models\EFModels\Schema.cs" />
-    <Compile Include="Models\EFModels\Server.cs" />
-    <Compile Include="Models\EFModels\Set.cs" />
     <Compile Include="Models\EFModels\ShipmemtMethod.cs" />
     <Compile Include="Models\EFModels\ShipmentStatusesCode.cs" />
-    <Compile Include="Models\EFModels\State.cs" />
+    <Compile Include="Models\EFModels\StandardProduct.cs" />
     <Compile Include="Models\EFModels\StockInSheet.cs" />
     <Compile Include="Models\EFModels\StockInStatusCode.cs" />
     <Compile Include="Models\EFModels\Supplier.cs" />
@@ -909,6 +900,12 @@
     <Content Include="Views\Products\Upload.cshtml" />
     <Content Include="Views\BackendMembersList\Create - 複製.cshtml" />
     <Content Include="Views\BackendMembersList\Create - 複製 %282%29.cshtml" />
+    <Content Include="Views\Shared\_Notification.cshtml" />
+    <Content Include="Views\StandardProducts\Create.cshtml" />
+    <Content Include="Views\StandardProducts\Delete.cshtml" />
+    <Content Include="Views\StandardProducts\Details.cshtml" />
+    <Content Include="Views\StandardProducts\Edit.cshtml" />
+    <Content Include="Views\StandardProducts\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
