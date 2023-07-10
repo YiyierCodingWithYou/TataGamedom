@@ -74,7 +74,17 @@ namespace TataGamedom.Controllers
                 return View(vm);
             }
         }
-        private void PrepareCreateDataSource(int?stockInStatusId, int? supplierId) 
+
+        [HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult CallAutoOrder() 
+        {
+			Result result = _service.CallAutoOrder() > 0 ? Result.Success() : Result.Fail("0筆資料更新");
+
+			return View();
+        }
+
+		private void PrepareCreateDataSource(int?stockInStatusId, int? supplierId) 
         {
             var sisSelectList = new List<SelectListItem>();
             foreach (var sis in db.StockInStatusCodes) 

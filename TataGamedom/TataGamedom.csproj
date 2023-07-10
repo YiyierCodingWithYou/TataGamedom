@@ -295,6 +295,7 @@
     <Compile Include="Controllers\PostsCommentsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\StandardProductsController.cs" />
     <Compile Include="Controllers\StockInSheetsController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
     <Compile Include="Files\Mails\Class1.cs" />
@@ -833,6 +834,11 @@
     <Content Include="Scripts\tinymce\langs\README.md" />
     <Content Include="Views\Shared\View.cshtml" />
     <Content Include="Views\Shared\_Notification.cshtml" />
+    <Content Include="Views\StandardProducts\Create.cshtml" />
+    <Content Include="Views\StandardProducts\Delete.cshtml" />
+    <Content Include="Views\StandardProducts\Details.cshtml" />
+    <Content Include="Views\StandardProducts\Edit.cshtml" />
+    <Content Include="Views\StandardProducts\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

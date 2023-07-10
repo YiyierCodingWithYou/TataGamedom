@@ -25,7 +25,6 @@ namespace TataGamedom.Models.Infra
         /// <returns></returns>
         public string GetOrderIndex(OrderDto dto) => string.Concat(dto.CreatedAt.ToString("yyyyMMdd"), dto.ShipmemtMethodId, dto.MemberId, _Id + 1);
 
-
 		/// <summary>
 		/// "Display(Name='SKU') , 命名規則: ProductIndex + StockInSheetIndex + Id"
 		/// </summary>
@@ -38,6 +37,8 @@ namespace TataGamedom.Models.Infra
 		/// </summary>
 		/// <returns></returns>
 		public string GetStockInSheetIndex(StockInSheetDto dto) => string.Concat(dto.OrderRequestDate.ToString("yyyyMMdd"), dto.SupplierId, _Id + 1);
+		public string GetStockInSheetIndexForAutoOrder(StockInSheetDto dto) => string.Concat(dto.OrderRequestDate.ToString("yyyyMMdd"), dto.SupplierId, _Id + 1);
+
 
 		/// <summary>
 		/// "命名規則: IssuedAt + 對應到的訂單Index + Id"

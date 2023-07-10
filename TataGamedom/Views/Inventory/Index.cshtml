@@ -42,6 +42,11 @@
         text-align: justify-all;
         vertical-align: middle;
     }
+
+    .imgW50P0 {
+        padding : 0;
+        width:50%;
+    }
 </style>
 
 @model IEnumerable<TataGamedom.Models.ViewModels.InventoryItems.InventoryVM>
@@ -89,7 +94,9 @@
             {
                 <tr>
                     <td>
-                        <img src="~/Files/Uploads/@item.GameCoverImage" style="width: 100%" />
+                        <div style="padding: 0px">
+                            <img src="~/Files/Uploads/@item.GameCoverImage" class="imgW50P0" />
+                        </div>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ProductIndex)
