@@ -9,6 +9,7 @@ using TataGamedom.Models.EFModels;
 using TataGamedom.Models.ViewModels.News;
 using Dapper;
 using TataGamedom.Models.ViewModels.Members;
+using TataGamedom.Filters;
 
 namespace TataGamedom.Controllers
 {
@@ -18,7 +19,7 @@ namespace TataGamedom.Controllers
 		private AppDbContext db = new AppDbContext();
 
 		// GET: NewsComments
-		[Authorize]
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		public ActionResult Index(int? newsId)
 		{
 			using (var con = new SqlConnection(_connstr))
@@ -42,7 +43,7 @@ JOIN News AS N ON N.Id = NC.NewsId
 				}
 			}
 		}
-
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		public ActionResult Details(int? id)
 		{
 			using (var con = new SqlConnection(_connstr))
@@ -60,7 +61,7 @@ WHERE NC.Id = @Id";
 		}
 
 
-
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
 		public ActionResult Delete(int id)
@@ -81,7 +82,7 @@ WHERE NC.Id = @Id";
 		}
 
 
-
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		[HttpPost, ActionName("Reduction")]
 		[ValidateAntiForgeryToken]
 		public ActionResult Reduction(int id)

@@ -27,7 +27,7 @@ namespace TataGamedom.Controllers
         private string _connstr = System.Configuration.ConfigurationManager.ConnectionStrings["AppDbContext"].ToString();
 		// GET: BackendMembersList
 
-		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
 		public ActionResult Index()
         {
             using (var con = new SqlConnection(_connstr))
@@ -45,7 +45,7 @@ LEFT JOIN BackendMembersRolesCodes AS bmr ON bmr.Id = bm.BackendMembersRoleId";
         }
 
 		// GET: BackendMembersList/Details/5
-		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
 		public ActionResult Details(int? id)
         {
             if (id == null)
@@ -61,7 +61,7 @@ LEFT JOIN BackendMembersRolesCodes AS bmr ON bmr.Id = bm.BackendMembersRoleId";
         }
 
 		// GET: BackendMembersList/Edit/5
-		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
 		public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -102,7 +102,7 @@ LEFT JOIN BackendMembersRolesCodes AS bmr ON bmr.Id = bm.BackendMembersRoleId";
         // POST: BackendMembersList/Edit/5
         // 若要免於大量指派 (overposting) 攻擊，請啟用您要繫結的特定屬性，
         // 如需詳細資料，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
-       // [AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
+        [AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(BackendMembersEditVM list)
@@ -126,7 +126,7 @@ LEFT JOIN BackendMembersRolesCodes AS bmr ON bmr.Id = bm.BackendMembersRoleId";
 
 
 		// GET: BackendMembersList/Create
-		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
 		public ActionResult Create()
 		{
 			ViewBag.BackendMembersRoleId = new SelectList(db.BackendMembersRolesCodes, "Id", "Name");
@@ -184,6 +184,7 @@ LEFT JOIN BackendMembersRolesCodes AS bmr ON bmr.Id = bm.BackendMembersRoleId";
 
 
 
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
 		public ActionResult Delete(int id)
@@ -205,7 +206,7 @@ WHERE Id = @Id";
 		}
 
 
-
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Memberstata)]
 		[HttpPost, ActionName("Reduction")]
 		[ValidateAntiForgeryToken]
 		public ActionResult Reduction(int id)
