@@ -31,14 +31,14 @@
             <td>遊戲名稱</td>
             <td>關於</td>
             <td>追蹤數</td>
-            <td>最新更新</td>
+            <td>最新貼文/評論時間</td>
         </tr>
     </thead>
 </table>
 
 
 <div class="modal" id="myModal" tabindex="-2">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">看板詳情</h5>
@@ -68,7 +68,7 @@
 </div>
 
 <div class="modal" id="changeImgMd" tabindex="2">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">修改封面</h5>
@@ -90,7 +90,7 @@
     </div>
 </div>
 
-<div class="modal" id="AddModal" tabindex="-1">
+<div class="modal " id="AddModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -127,10 +127,13 @@
     <script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.1/datatables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/zh-tw.min.js"></script>
 
     <script>
 
         const baseAddress = 'https://localhost:44398';
+        moment.locale("zh-tw");
         let boardId;
         let updatedImageURL;
         let editedName;
@@ -335,7 +338,12 @@
                         { "data": "GameName", "width": "20%", "className": "vertical-align-middle" },
                         { "data": "BoardAbout", "width": "30%", "className": "vertical-align-middle" },
                         { "data": "FollowersCount", "width": "10%", "className": "text-center vertical-align-middle" },
-                        { "data": "LastPostedAt", "width": "20%", "className": "vertical-align-middle" },
+                        {
+                            "data": "LastPostedAt", "width": "20%", "className": "text-center vertical-align-middle", render: function (data, type, row) {
+                                let formattedDateTime = moment(data).fromNow();
+                                return formattedDateTime;
+                            }
+                        },
                     ],
                     "bSort": true,
                     "rowCallback": function (row, data) {

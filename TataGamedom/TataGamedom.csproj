@@ -331,7 +331,6 @@
     <Compile Include="Controllers\PostsCommentsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
-    <Compile Include="Controllers\StandardProductsController.cs" />
     <Compile Include="Controllers\StockInSheetsController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
     <Compile Include="Files\Mails\Class1.cs" />

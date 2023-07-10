@@ -115,10 +115,11 @@ CROSS JOIN
 				BoardAbout = board.BoardAbout,
 				FollowersCount = db.MembersBoards.Count(mb => mb.BoardId == board.Id),
 				LastPostedAt = db.Posts.Where(p => p.BoardId == board.Id)
-					  .OrderByDescending(p => p.Datetime)
-					  .Select(p => p.Datetime)
-					  .DefaultIfEmpty(DateTime.MinValue)
-					  .FirstOrDefault()
+									.Select(p => p.Datetime)
+									.Concat(db.PostComments.Where(c => c.Post.BoardId == board.Id && c.ActiveFlag == true)
+										.Select(c => c.Datetime))
+									.DefaultIfEmpty(DateTime.MinValue)
+									.Max()
 			});
 		}
 
@@ -311,6 +312,13 @@ CROSS JOIN
 				BoardHeaderCoverImg = null
 			};
 
+
+
+			if (BoardNameExists(vm.Name))
+			{
+				return ApiResult.Fail("已經有同名看板");
+			}
+
 			string fileName = string.Empty;
 
 			if (provider.FileData.Count > 0)
@@ -333,13 +341,13 @@ CROSS JOIN
 			var fileExtension = Path.GetExtension(fileName).ToLower();
 			if (!validImageExtensions.Contains(fileExtension))
 			{
-				return ApiResult.Fail("新增失敗");
+				return ApiResult.Fail("檔案有問題");
 			}
 
 
 			if (vm == null || !ModelState.IsValid)
 			{
-				return ApiResult.Fail("新增失敗");
+				return ApiResult.Fail("有欄位沒有填");
 			}
 
 			var backendMemberAccount = User.Identity.Name;
@@ -350,14 +358,14 @@ CROSS JOIN
 				Name = vm.Name,
 				BoardAbout = vm.BoardAbout,
 				BoardHeaderCoverImg = vm.BoardHeaderCoverImg,
-				CreatedBackendMemberId = backendMemberId,
-				//CreatedBackendMemberId = 1,
+				//CreatedBackendMemberId = backendMemberId,
+				CreatedBackendMemberId = 1,
 				CreatedTime = DateTime.Now
 			};
 
 			if (dto.CreatedBackendMemberId == 0 || BoardNameExists(dto.Name))
 			{
-				return ApiResult.Fail("新增失敗");
+				return ApiResult.Fail("最後一步出錯ㄌ");
 			}
 
 			var filePath = Path.Combine(HttpContext.Current.Server.MapPath(uploadFolder), dto.BoardHeaderCoverImg);
@@ -378,8 +386,8 @@ CROSS JOIN
 				GameId = null,
 				BoardAbout = dto.BoardAbout,
 				BoardHeaderCoverImg = dto.BoardHeaderCoverImg,
-				//CreatedBackendMemberId = dto.CreatedBackendMemberId,
-				//CreatedTime = dto.CreatedTime
+				CreatedBackendMemberId = dto.CreatedBackendMemberId,
+				CreatedTime = dto.CreatedTime
 			};
 
 			db.Boards.Add(entity);
