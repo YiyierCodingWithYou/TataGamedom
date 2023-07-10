@@ -90,7 +90,7 @@ WHERE Id = @id";
 					string sql = @"INSERT INTO StockInSheets
 ([Index], [StockInStatusId], [SupplierId], [Quantity], [OrderRequestDate])
 VALUES 
-(@Index, @StockInStatusId , @SupplierId, @Quantity, @OrderRequestDate";
+(@Index, @StockInStatusId , @SupplierId, @Quantity, @OrderRequestDate)";
 
 					var executeResult = connection.Execute(sql, stockInSheetsByAutoOrder, trans);
 					trans.Commit();
@@ -99,38 +99,33 @@ VALUES
 			}
 		}
 
+		/// <summary>
+		/// Supplier為0的狀態待處理
+		/// </summary>
+		/// <param name="productId"></param>
+		/// <returns></returns>
 		public int GetAutoOrderSupplierId(int? productId)
 		{
 			using (var connection = new SqlConnection(Connstr)) 
 			{
-				string sql = @"SELECT S.Id
+				string sql = @"SELECT TOP 1 S.Id
 FROM InventoryItems AS II
 JOIN StockInSheets AS SIS ON II.StockInSheetId = SIS.Id
 JOIN Suppliers AS S ON SIS.SupplierId = S.Id
-
 WHERE SIS.OrderRequestDate >= DATEADD(YEAR, -1, GETDATE())
-
 AND II.ProductId = @productId
-
 GROUP BY S.Id
-HAVING SUM(Quantity) = (SELECT MAX(Total)FROM (SELECT SUM(Quantity) AS Total
-FROM InventoryItems AS II
-JOIN StockInSheets AS SIS ON II.StockInSheetId = SIS.Id
-JOIN Suppliers AS S ON SIS.SupplierId = S.Id
-WHERE SIS.OrderRequestDate >= DATEADD(YEAR, -1, GETDATE())
-AND II.ProductId = 1
-GROUP BY S.[Name], S.Id) AS Subquery)
+ORDER BY SUM(Quantity) DESC
 ";
 
-				return connection.QueryFirstOrDefault(sql, new {ProductId = productId });
+				return connection.QueryFirstOrDefault<int>(sql, new {ProductId = productId });
 			}
 		}
 
 		public List<int> GetProductIdNeedAutoOrder()
 		{
-			var productIdNeedAutoOrder = new List<int>();
 
-			using (var connection = new SqlConnection()) 
+			using (var connection = new SqlConnection(Connstr)) 
 			{
 				string sql = @"
 SELECT
@@ -147,10 +142,8 @@ AND SP.[AutoOrder] = 1
 
 GROUP BY
 P.Id, SP.[AutoOrder]";
-				foreach (int id in connection.Query(sql)) 
-				{
-					productIdNeedAutoOrder.Add(id);
-				};
+				List<int> productIdNeedAutoOrder = connection.Query<int>(sql).ToList();
+
 				return productIdNeedAutoOrder;
 			}
 		}

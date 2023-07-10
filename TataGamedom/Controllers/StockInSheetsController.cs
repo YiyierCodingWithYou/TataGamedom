@@ -75,14 +75,23 @@ namespace TataGamedom.Controllers
             }
         }
 
-        [HttpPost]
+
+
+	
+		public ActionResult CallAutoOrder()
+		{
+			return RedirectToAction("Index");
+		}
+
+		[HttpPost]
+        [ActionName("CallAutoOrder")]
 		[ValidateAntiForgeryToken]
-		public ActionResult CallAutoOrder() 
+		public ActionResult ProsessAutoOrder() 
         {
 			Result result = _service.CallAutoOrder() > 0 ? Result.Success() : Result.Fail("0筆資料更新");
 
-			return View();
-        }
+			return RedirectToAction("Index");
+		}
 
 		private void PrepareCreateDataSource(int?stockInStatusId, int? supplierId) 
         {

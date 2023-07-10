@@ -3,6 +3,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 
 <style>
+    .fs20 {
+        font-size: 20px;
+    }
+
     .fs16 {
         font-size: 16px;
     }
@@ -59,11 +63,22 @@
             <i class="bi bi-plus-circle"></i>新增
         </a>
     </div>
-    <div class="col-3 align-self-md-center">
-        <a href="@Url.Action("CallAutoOrder", "StockInSheets")" class="btn btn-danger fs16">
-            <i class="bi bi-arrow-repeat"></i>更新常備進貨單
+    <div class="col-2 align-self-md-center">
+        @using (Html.BeginForm("CallAutoOrder", "StockInSheets", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-danger fs16">
+                <i class="bi bi-arrow-repeat"></i>更新常備進貨單
+            </button>
+        }
+    </div>
+
+    <div class="col-1 align-self-md-start">
+        <a href="@Url.Action("Index", "StandardProducts")" class="btn btn-link fs20">
+            <i class="bi bi-gear-wide-connected"></i>
         </a>
     </div>
+
 </div>
 
 <table class="table">
@@ -110,9 +125,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SupplierName)
-            </td>
-            <td>
-                @Html.ActionLink("編輯", "Edit", new { id = item.Id })
             </td>
             <td>
                 <div class="w-75 btn-group" role="group">

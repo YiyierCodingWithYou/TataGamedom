@@ -77,9 +77,10 @@ namespace TataGamedom.Models.Services
 		/// <returns></returns>
 		private List<int> GetProductIdNeedAutoOrder() => _repo.GetProductIdNeedAutoOrder();
 
-		private int GetQuantitySet(int? productId)
+		private int GetQuantitySet(int productId)
 		{
-			throw new NotImplementedException();
+			var db = new AppDbContext();
+			return (int)db.StandardProducts.FirstOrDefault(standardProduct => standardProduct.ProductId == productId).Quantity;
 		}
 
 		/// <summary>
