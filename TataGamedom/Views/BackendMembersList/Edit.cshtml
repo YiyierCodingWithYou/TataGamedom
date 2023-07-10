@@ -46,7 +46,7 @@
 			</div>
 			<div>
 				@Html.DropDownListFor(model => model.BackendMembersRoleId, ViewBag.BackendMembersRoleId as SelectList, "", htmlAttributes: new { })<br />
-				@Html.ValidationMessageFor(model => model.Account, "", new { @class = "text-danger" })
+				@Html.ValidationMessageFor(model => model.BackendMembersRoleId, "", new { @class = "text-danger" })
 			</div>
 
 			<div class="mt-3">
@@ -62,8 +62,8 @@
 		using (Html.BeginForm("Delete", "BackendMembersList", new { id = Model.Id }, FormMethod.Post, new { @id = "stopForm" }))
 		{
 			@Html.AntiForgeryToken()
-			<div id="btnStop" class="cursor-pointer">
-				<img src="~/Files/NewsImages/stop.png" />
+			<div  >
+				<img id="btnStop" class="cursor-pointer" src="~/Files/NewsImages/stop.png" />
 			</div>
 		}
 	}
@@ -73,8 +73,8 @@
 		{
 			@Html.AntiForgeryToken()
 			<span>&nbsp;</span>
-			<div id="btnRestore" class="cursor-pointer">
-				<img src="~/Files/NewsImages/re.png" />
+			<div >
+				<img id="btnRestore" class="cursor-pointer" src="~/Files/NewsImages/re.png" />
 			</div>
 		}
 	}
