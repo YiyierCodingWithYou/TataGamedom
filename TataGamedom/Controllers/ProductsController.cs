@@ -300,7 +300,7 @@ namespace TataGamedom.Controllers
 										//空值
 										case NPOI.SS.UserModel.CellType.Blank:
 
-											dataRow[j] = null;
+											dataRow[j] = "";
 											break;
 
 										// 預設
@@ -336,37 +336,31 @@ namespace TataGamedom.Controllers
 				}
 
 				//dataTable跑回圈，insert資料至DB
-				try
-				{
-					foreach (DataRow dataRow in dataTable.Rows)
-					{
-						Product product = new Product()
-						{
-							Index = dataRow["Index"].ToString(),
-							GameId = int.Parse(dataRow["GameId"].ToString()),
-							IsVirtual = bool.Parse(dataRow["IsVirtual"].ToString()),
-							Price = int.Parse(dataRow["Price"].ToString()),
-							GamePlatformId = int.Parse(dataRow["GamePlatformId"].ToString()),
-							SystemRequire = dataRow["SystemRequire"].ToString(),
-							ProductStatusId = int.Parse(dataRow["ProductStatusId"].ToString()),
-							SaleDate = DateTime.Parse(dataRow["SaleDate"].ToString())
-						};
 
-						try
-						{
-							var currentUserAccount = User.Identity.Name;
-							NPOIHelper products = new NPOIHelper();
-							products.InsertProducts(product, currentUserAccount);
-						}
-						catch (Exception ex)
-						{
-							ViewBag.Message = "匯入失敗";
-						}
-					}
-				}
-				catch (Exception ex)
+				foreach (DataRow dataRow in dataTable.Rows)
 				{
-					ViewBag.Message = "匯入失敗";
+					Product product = new Product()
+					{
+						Index = dataRow["Index"].ToString(),
+						GameId = int.Parse(dataRow["GameId"].ToString()),
+						IsVirtual = bool.Parse(dataRow["IsVirtual"].ToString()),
+						Price = int.Parse(dataRow["Price"].ToString()),
+						GamePlatformId = int.Parse(dataRow["GamePlatformId"].ToString()),
+						SystemRequire = dataRow["SystemRequire"].ToString(),
+						ProductStatusId = int.Parse(dataRow["ProductStatusId"].ToString()),
+						SaleDate = DateTime.Parse(dataRow["SaleDate"].ToString())
+					};
+
+					try
+					{
+						var currentUserAccount = User.Identity.Name;
+						NPOIHelper products = new NPOIHelper();
+						products.InsertProducts(product, currentUserAccount);
+					}
+					catch (Exception ex)
+					{
+						ViewBag.Message = "匯入失敗";
+					}
 				}
 			}
 			return View();
