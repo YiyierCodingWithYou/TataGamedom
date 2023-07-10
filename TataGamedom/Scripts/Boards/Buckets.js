@@ -5,7 +5,7 @@ let appNum;
 let MemberAccountList = ["hi", "liho"];
 let BoardNameList = ["hi", "liho"];
 
-function DeleteMod(id) {
+function DeleteBucket(id) {
   $.ajax({
     type: "Delete",
     url: `${baseAddress}/api/BucketLogsApi/${id}`,
@@ -84,8 +84,8 @@ $(document).ready(function () {
               cancelButtonText: "取消",
             }).then((result) => {
               if (result.isConfirmed) {
-                modId = selectedRows[0].Id;
-                DeleteMod(modId);
+                bkId = selectedRows[0].Id;
+                DeleteBucket(bkId);
               }
             });
           }

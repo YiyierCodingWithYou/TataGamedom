@@ -42,6 +42,8 @@ namespace TataGamedom.Models.EFModels
 
         public int? DeleteBackendMemberId { get; set; }
 
+        public DateTime? EditDatetime { get; set; }
+
         public virtual BackendMember BackendMember { get; set; }
 
         public virtual BackendMember BackendMember1 { get; set; }
