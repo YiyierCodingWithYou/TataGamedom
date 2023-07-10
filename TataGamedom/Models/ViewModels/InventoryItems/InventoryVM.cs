@@ -60,7 +60,9 @@ namespace TataGamedom.Models.ViewModels.InventoryItems
         [Display(Name = "有無序號")]
         public bool ProductIsVirtual { get; set; }
 
-        [Display(Name = "庫存量")]
+        public string ProductIsVirtualTText => ProductIsVirtual == true ? "<i class=\"bi bi-check2-circle\"></i>" : string.Empty;
+
+		[Display(Name = "庫存量")]
         public int Count { get; set; } = 0;  
 
         [Display(Name = "總成本")]

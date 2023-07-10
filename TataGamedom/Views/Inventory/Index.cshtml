@@ -97,8 +97,8 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.GameName)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ProductIsVirtual)
+                    <td style="font-size: x-large">
+                        @Html.Raw(item.ProductIsVirtualTText)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Count)
