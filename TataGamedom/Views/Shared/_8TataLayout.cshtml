@@ -71,6 +71,7 @@
                     }
                     @if (User.Identity.IsAuthenticated)
                     {
+                        <li>@Html.ActionLink("註冊會員頁", "Register", "Members", new { area = "" }, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("會員管理", "MembersList", "Members", new { area = "" }, new { @class = "nav-link" })</li>
 
                         <li>@Html.ActionLink("管理員管理", "index", "BackendMembersList", new { area = "" }, new { @class = "nav-link" }) </li>

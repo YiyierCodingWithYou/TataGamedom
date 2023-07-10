@@ -69,21 +69,21 @@
                     <i class="fa fa-user"></i>
                     <span>獺獺使用者</span>
                 </a>
-                <ul>
-                    @if (!User.Identity.IsAuthenticated)
-                    {
-                        @*<li>@Html.ActionLink("會員登入", "Login", "Members", new { area = "" }, new { @class = "nav-link" })</li>*@
-                        <li>@Html.ActionLink("管理員登入", "Login", "BackendMembers", new { area = "" }, new { @class = "nav-link" })</li>
-                    }
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <li>@Html.ActionLink("會員管理", "MembersList", "Members", new { area = "" }, new { @class = "nav-link" })</li>
+				<ul>
+					@if (!User.Identity.IsAuthenticated)
+					{
 
-                        <li>@Html.ActionLink("管理員管理", "index", "BackendMembersList", new { area = "" }, new { @class = "nav-link" }) </li>
-
-                        //<li><a href="#">電子報管理</a></li>
-                    }
-                </ul>
+						@*<li>@Html.ActionLink("會員登入", "Login", "Members", new { area = "" }, new { @class = "nav-link" })</li>*@
+						<li>@Html.ActionLink("管理員登入", "Login", "BackendMembers", new { area = "" }, new { @class = "nav-link" })</li>
+					}
+					@if (User.Identity.IsAuthenticated)
+					{
+						<li>@Html.ActionLink("註冊會員頁", "Register", "Members", new { area = "" }, new { @class = "nav-link" })</li>
+						<li>@Html.ActionLink("會員管理", "MembersList", "Members", new { area = "" }, new { @class = "nav-link" })</li>
+						<li>@Html.ActionLink("管理員管理", "index", "BackendMembersList", new { area = "" }, new { @class = "nav-link" }) </li>
+						//<li><a href="#">電子報管理</a></li>
+					}
+				</ul>
             </li>
 
             <li id="boards">
