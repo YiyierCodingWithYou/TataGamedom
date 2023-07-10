@@ -37,14 +37,14 @@ namespace TataGamedom.Controllers
 
         public ActionResult Details(int? productId, InventoryCriteria criteria )
         {
-            if (productId == null) return View("");
-            criteria = criteria ?? new InventoryCriteria();
+			criteria = criteria ?? new InventoryCriteria();
 			ViewBag.SalesStatusSelectList = GetSalesStatusSelectList(criteria.SalesStatus);
 			ViewBag.ProductId = productId;
-            ViewBag.Criteria = criteria;
+			ViewBag.Criteria = criteria;
 
+			IEnumerable<InventoryItemVM> inventorieInfo = _service.GetItemInfo(productId, criteria);
+			if (productId == null) return View("");
 
-            IEnumerable<InventoryItemVM> inventorieInfo = _service.GetItemInfo(productId, criteria);
 			return View(inventorieInfo);
         }
 

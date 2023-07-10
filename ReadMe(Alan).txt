@@ -1,7 +1,6 @@
 Working On
-	[v]改庫存有無序號的Icon
-	[]常備庫存 => 自動新增進貨單
-
+	[]常備庫存 => 自動新增進貨單 => InventoryItemServices Create()
+	
 To Do
 	[] 進貨推薦清單
 
@@ -24,7 +23,7 @@ To Do
 	OrderItemReturn
 	[v] C : 一筆OrderItem只能被退貨一次，下拉清單不顯示已被退貨過的選項 ; 檢查編號是否產生
 	[v] R : [v]Index 退款/退貨/重新入庫 改成文字 ; 
-		   [v]Detail 售價改#,# 
+		    [v]Detail 售價改#,# 
 	[] D
 
 	Order
@@ -144,3 +143,4 @@ View => 訂單主檔的部分跟訂單明細的部分拆開，商品圖套用 ; 回首頁
 
 07/10
 	[v] 重新加入庫存 不可逆 => Client端已完成，Server端及不可逆的提示未完成
+	[v]改庫存有無序號的Icon
