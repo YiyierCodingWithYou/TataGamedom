@@ -12,7 +12,7 @@
 	</style>
 }
 	<h2>新增新聞</h2>
-	<div class="container ">
+	<div class="container">
 		@using (Html.BeginForm("Create", "News", FormMethod.Post, new { enctype = "multipart/form-data" }))
 		{
 			@Html.AntiForgeryToken()

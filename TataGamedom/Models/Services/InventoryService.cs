@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using TataGamedom.Controllers;
 using TataGamedom.Models.Dtos.InventoryItems;
 using TataGamedom.Models.Infra;
 using TataGamedom.Models.Infra.DapperRepositories;
@@ -20,7 +21,7 @@ namespace TataGamedom.Models.Services
         }
         public IEnumerable<InventoryVM> GetAll() => _repo.Search();
 
-        public IEnumerable<InventoryItemVM> GetItemInfo(int? productId) => _repo.Info(productId);
+        public IEnumerable<InventoryItemVM> GetItemInfo(int? productId , InventoryCriteria criteria) => _repo.Info(productId ,criteria);
 
         public Result Create(InventoryItemCreateDto dto) 
         {
@@ -42,5 +43,8 @@ namespace TataGamedom.Models.Services
         public InventoryItemDto GetByIndex(string index) => _repo.GetByIndex(index);
 		
         public int BulkCreate() => _repo.bulkCreate();
-	}
+
+        public InventoryItemDto GetById(int? id) => _repo.GetById(id);
+       
+    }
 }

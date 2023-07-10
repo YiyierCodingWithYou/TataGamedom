@@ -27,5 +27,6 @@ namespace TataGamedom.Models.Interfaces
 		void Update(OrderDto dto);
         
 		void Delete(string index);
+        OrderDto GetById(int? id);
     }
 }

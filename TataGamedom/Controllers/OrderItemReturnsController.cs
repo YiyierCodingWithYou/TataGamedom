@@ -27,7 +27,7 @@ namespace TataGamedom.Controllers
 
         public ActionResult Create()
         {
-            PrepareCreateDataSource(null);
+            PrepareCreateDataSource();
 
 			return View();
         }
@@ -36,9 +36,8 @@ namespace TataGamedom.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Create(OrderItemReturnVM vm)
         {
+			PrepareCreateDataSource();
 			if (!ModelState.IsValid) return View(vm);
-
-			PrepareCreateDataSource(vm.OrderItemId);
 
 			Result result = _service.Create(vm.ToDto());
 			if (result.IsSuccess)
@@ -54,21 +53,20 @@ namespace TataGamedom.Controllers
 
         public ActionResult Edit(int? id)
         {
-            PrepareCreateDataSource(null);
-
             if(id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             var orderItemReturn = _service.GetById(id).ToVM();
-			return View(orderItemReturn);
+            PrepareEditDataSource(orderItemReturn.Id);
+            return View(orderItemReturn);
         }
 
         [HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Edit(OrderItemReturnVM vm)
         {
+			PrepareEditDataSource(vm.Id);
 			if (!ModelState.IsValid) return View(vm);
-
-			PrepareCreateDataSource(vm.OrderItemId);
+	
 
 			Result result = _service.Update(vm.ToDto());
 			if (result.IsSuccess)
@@ -98,16 +96,89 @@ namespace TataGamedom.Controllers
      
         }
 
-		private void PrepareCreateDataSource(int? orderItemId)
+		private void PrepareCreateDataSource()
 		{
 			var orderItemIdSelectList = new List<SelectListItem>();
-			foreach (var item in db.OrderItems)
+			foreach (var item in db.OrderItems.Where(item => !db.OrderItemReturns.Any(itemReturn => itemReturn.OrderItemId == item.Id)))
 			{
 				orderItemIdSelectList.Add(new SelectListItem { Value = item.Id.ToString(), Text = item.Index });
 			}
 
 			ViewBag.OrderItemId = orderItemIdSelectList;
+			
+			ViewBag.IsRefunded = new SelectList(new List<SelectListItem>
+												{
+                                                    new SelectListItem { Value = null, Text = ""},
+													new SelectListItem { Value = "false", Text = "未退款" },
+													new SelectListItem { Value = "true", Text = "已退款" } 
+												},
+												"Value",
+												"Text"
+												);
+
+			ViewBag.IsReturned = new SelectList(new List<SelectListItem>
+												{
+													new SelectListItem { Value = null, Text =  "" },
+													new SelectListItem { Value = "false", Text = "未退貨" },
+													new SelectListItem { Value = "true", Text = "已退貨" }
+												},
+												"Value",
+												"Text"
+												);
+			ViewBag.IsResellable = new SelectList(new List<SelectListItem>
+												{
+												  new SelectListItem { Value = null, Text = "" },
+												  new SelectListItem { Value = "false", Text = "不加入庫存" },
+												  new SelectListItem { Value = "true", Text = "重新加入庫存" }
+												},
+												"Value",
+												"Text"
+												);
+        }
+
+		private void PrepareEditDataSource(int? id)
+		{
+			var orderItemIdSelectList = new List<SelectListItem>();
+			foreach (var item in db.OrderItems.Where(item => !db.OrderItemReturns.Any(itemReturn => itemReturn.OrderItemId == item.Id)))
+			{
+				orderItemIdSelectList.Add(new SelectListItem { Value = item.Id.ToString(), Text = item.Index });
+			}
+
+			ViewBag.OrderItemId = orderItemIdSelectList;
+
+			ViewBag.IsRefunded = new SelectList(new List<SelectListItem>
+												{
+													new SelectListItem { Value = null, Text = ""},
+													new SelectListItem { Value = "false", Text = "未退款" },
+													new SelectListItem { Value = "true", Text = "已退款" }
+												},
+												"Value",
+												"Text",
+												selectedValue: db.OrderItemReturns.FirstOrDefault(item => item.Id == id).IsRefunded
+												);
+
+			ViewBag.IsReturned = new SelectList(new List<SelectListItem>
+												{
+													new SelectListItem { Value = null, Text =  "" },
+													new SelectListItem { Value = "false", Text = "未退貨" },
+													new SelectListItem { Value = "true", Text = "已退貨" }
+												},
+												"Value",
+												"Text",
+												selectedValue: id == null ? default : db.OrderItemReturns.FirstOrDefault(item => item.Id == id).IsReturned
+												);
+			ViewBag.IsResellable = new SelectList(new List<SelectListItem>
+												{
+												  new SelectListItem { Value = null, Text = "" },
+												  new SelectListItem { Value = "false", Text = "不加入庫存" },
+												  new SelectListItem { Value = "true", Text = "重新加入庫存" }
+												},
+												"Value",
+												"Text",
+												selectedValue: id == null ? default : db.OrderItemReturns.FirstOrDefault(item => item.Id == id).IsResellable
+												);
 		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing) db.Dispose();

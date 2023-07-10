@@ -23,7 +23,6 @@ using System.Web.Script.Serialization;
 
 namespace TataGamedom.Controllers
 {
-
     public class InventoryController : Controller
     {
         private AppDbContext db = new AppDbContext();
@@ -32,34 +31,25 @@ namespace TataGamedom.Controllers
 
         public ActionResult Index()
         {
-            var inventory = _service.GetAll();
+            IEnumerable<InventoryVM> inventory = _service.GetAll();
             return View(inventory);
         }
 
-        public ActionResult Details(int? productId)
+        public ActionResult Details(int? productId, InventoryCriteria criteria )
         {
-            if (productId == null) return View("");
+			criteria = criteria ?? new InventoryCriteria();
+			ViewBag.SalesStatusSelectList = GetSalesStatusSelectList(criteria.SalesStatus);
+			ViewBag.ProductId = productId;
+			ViewBag.Criteria = criteria;
 
-            //if (productId == null)
-            //{
-            //    TempData["ShowCreateConfirmation"] = true;
-            //    return RedirectToAction("Create");
-            //}
+			IEnumerable<InventoryItemVM> inventorieInfo = _service.GetItemInfo(productId, criteria);
+			if (productId == null) return View("");
 
-			//
-
-            var orderInfo = _service.GetItemInfo(productId);
-			return View(orderInfo);
+			return View(inventorieInfo);
         }
 
 		public ActionResult Create()
 		{
-            //if (TempData["ShowCreateConfirmation"] != null)
-            //{
-            //    ViewBag.ShowConfirmation = true;
-            //}
-
-
             PrepareCreateInventoryDataSource(null, null);
 			return View();
 		}
@@ -90,7 +80,7 @@ namespace TataGamedom.Controllers
 			PrepareCreateInventoryDataSource(null, null);
 
 			if (index == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-			var order = _service.GetByIndex(index).ToVM();
+            InventoryItemVM order = _service.GetByIndex(index).ToVM();
 			return View(order);
 		}
 
@@ -116,22 +106,42 @@ namespace TataGamedom.Controllers
 
 		private void PrepareCreateInventoryDataSource(int? productId, string StockInSheetIndex)
 		{
-			var productIndexSelectList = new List<SelectListItem>();
-			foreach (var p in db.Products) 
+            List<SelectListItem> productIndexSelectList = new List<SelectListItem>();
+			foreach (Product p in db.Products) 
 			{
 				productIndexSelectList.Add(new SelectListItem { Value = p.Id.ToString(), Text = p.Index }); 
 			}
 
 			ViewBag.productIndex = productIndexSelectList;
 
-			var StockInSheetIndexSelectList = new List<SelectListItem>();
-			foreach (var sis in db.StockInSheets) 
+            List<SelectListItem> StockInSheetIndexSelectList = new List<SelectListItem>();
+			foreach (StockInSheet sis in db.StockInSheets) 
 			{
 				StockInSheetIndexSelectList.Add(new SelectListItem { Value = sis.Id.ToString(), Text = sis.Index }); 
 			}
 			ViewBag.StockInSheetIndex = StockInSheetIndexSelectList;
 		}
 
+        private IEnumerable<SelectListItem> GetSalesStatusSelectList(int? salesStatus)
+        {
+            Dictionary<int, string> salesStatusName = new Dictionary<int, string> {
+                {1,"所有紀錄" },
+                {2,"僅顯示當前庫存" },
+                {3,"僅顯示過往庫存" },
+            };
 
-	}
+            foreach (var key in salesStatusName.Keys)
+            {
+                yield return new SelectListItem { Value = key.ToString(), Text = salesStatusName[key] };
+            }
+
+        }
+    }
+	public class InventoryCriteria
+    {
+		public int? SalesStatus { get; set; } = 0;
+
+        public string Index { get; set; }
+    }
+    
 }

@@ -74,6 +74,7 @@ namespace TataGamedom.Controllers
 			Result result = _service.Create(vm.ToDto());
 			if (result.IsSuccess)
 			{
+				TempData["success"] = "新增成功";
 				return RedirectToAction("Index");	
 			}
 			else 
@@ -137,13 +138,12 @@ namespace TataGamedom.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(OrderEditVM vm)
         {
-            if (!ModelState.IsValid) return View(vm);
 			PrepareEditOrderDataSource(vm.OrderStatusId, vm.PaymentStatusId, vm.ShipmemtMethodId, vm.ShipmentStatusId);
+			if (!ModelState.IsValid) return View(vm);
 
             Result result = _service.Update(vm.ToDto());
             if (result.IsSuccess)
             {
-				//發貨(ShipmentStatusId = 2)時寄信
 				if (vm.ShipmentStatusId == 2 ) 
 				{
 					var member = db.Members.SingleOrDefault(m => m.Id == vm.MemberId);
@@ -152,8 +152,8 @@ namespace TataGamedom.Controllers
 					{
 						new OrderEmailHelper().SendEmail(vm.TrackingNum, member.Name, member.Email);
 					}
-                    return RedirectToAction("Index");
                 }
+                TempData["success"] = "編輯成功";
                 return RedirectToAction("Index");
             }
             else
@@ -214,7 +214,8 @@ namespace TataGamedom.Controllers
 				return View("DeleteFail");
 			}
 			_service.Delete(index);
-			return RedirectToAction("Info", new { Index = index });
+            TempData["success"] = "刪除成功";
+            return RedirectToAction("Info", new { Index = index });
 
 		}
 

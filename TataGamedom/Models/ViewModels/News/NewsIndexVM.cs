@@ -43,7 +43,7 @@ namespace TataGamedom.Models.ViewModels.News
 		[StringLength(100)]
 		public string CoverImg { get; set; }
 		[Display(Name = "上線時間")]
-		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]
+		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd HH:mm}")]
 		public DateTime ScheduleDate { get; set; }
 		[Display(Name = "狀態")]
 

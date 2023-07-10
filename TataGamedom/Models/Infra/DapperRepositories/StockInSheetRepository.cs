@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using Antlr.Runtime.Tree;
+using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -49,7 +50,7 @@ S.[Name] AS SupplierName, SIS.Id
 FROM StockInSheets AS SIS
 JOIN StockInStatusCodes AS SISC ON SIS.StockInStatusId = SISC.Id 
 JOIN Suppliers AS S ON SIS.SupplierId = S.Id
-ORDER BY SIS.OrderRequestDate DESC
+ORDER BY SISC.Id, SIS.OrderRequestDate DESC
 ";
 				var stockInSheet = connection.Query<StockInSheetIndexDto>(sql);
 				return stockInSheet;
@@ -76,6 +77,74 @@ UPDATE StockInSheets SET
 WHERE Id = @id";
 
 				connection.ExecuteScalar(sql, dto);
+			}
+		}
+
+		public int CallAutoOrder(IEnumerable<StockInSheetDto> stockInSheetsByAutoOrder)
+		{
+			using (var connection = new SqlConnection(Connstr))
+			{
+				connection.Open();
+				using (var trans = connection.BeginTransaction())
+				{
+					string sql = @"INSERT INTO StockInSheets
+([Index], [StockInStatusId], [SupplierId], [Quantity], [OrderRequestDate])
+VALUES 
+(@Index, @StockInStatusId , @SupplierId, @Quantity, @OrderRequestDate)";
+
+					var executeResult = connection.Execute(sql, stockInSheetsByAutoOrder, trans);
+					trans.Commit();
+					return executeResult;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Supplier為0的狀態待處理
+		/// </summary>
+		/// <param name="productId"></param>
+		/// <returns></returns>
+		public int GetAutoOrderSupplierId(int? productId)
+		{
+			using (var connection = new SqlConnection(Connstr)) 
+			{
+				string sql = @"SELECT TOP 1 S.Id
+FROM InventoryItems AS II
+JOIN StockInSheets AS SIS ON II.StockInSheetId = SIS.Id
+JOIN Suppliers AS S ON SIS.SupplierId = S.Id
+WHERE SIS.OrderRequestDate >= DATEADD(YEAR, -1, GETDATE())
+AND II.ProductId = @productId
+GROUP BY S.Id
+ORDER BY SUM(Quantity) DESC
+";
+
+				return connection.QueryFirstOrDefault<int>(sql, new {ProductId = productId });
+			}
+		}
+
+		public List<int> GetProductIdNeedAutoOrder()
+		{
+
+			using (var connection = new SqlConnection(Connstr)) 
+			{
+				string sql = @"
+SELECT
+P.Id AS ProductId FROM InventoryItems AS IIT
+RIGHT JOIN Products AS P ON IIT.ProductId = P.Id
+FULL JOIN StandardProducts AS SP ON SP.ProductId = P.Id
+RIGHT JOIN Games AS G ON P.GameId = G.Id
+
+WHERE 
+(SELECT COUNT(*) FROM OrderItems AS OI RIGHT JOIN InventoryItems AS II 
+ON OI.InventoryItemId = II.Id WHERE II.ProductId = P.Id AND OI.ProductId IS NULL)= 0
+
+AND SP.[AutoOrder] = 1
+
+GROUP BY
+P.Id, SP.[AutoOrder]";
+				List<int> productIdNeedAutoOrder = connection.Query<int>(sql).ToList();
+
+				return productIdNeedAutoOrder;
 			}
 		}
 	}

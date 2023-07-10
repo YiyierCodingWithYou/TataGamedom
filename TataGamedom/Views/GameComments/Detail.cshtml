@@ -3,74 +3,65 @@
 @{
     ViewBag.Title = "Detail";
 }
+@section Styles{
+    <link href="~/Content/layoutStyle1.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap theme.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/Content/YiyierStyle.css">
+}
+<div class="container">
+    <h1 class="main_heading">遊戲評論</h1>
 
-<h2>Detail</h2>
+    <div>
+        <hr />
+        <div class="mb-3">
+            @Html.LabelFor(model => model.GameName, htmlAttributes: new { @class = "form-label col-md-2" })
 
-<div>
-    <h4>GameCommentDetailVM</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.GameName)
-        </dt>
+            @Html.EditorFor(model => model.GameName, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+            @Html.HiddenFor(model => model.GameName)
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(model => model.MemberName, htmlAttributes: new { @class = "form-label col-md-2" })
 
-        <dd>
-            @Html.DisplayFor(model => model.GameName)
-        </dd>
+            @Html.EditorFor(model => model.MemberName, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+            @Html.HiddenFor(model => model.MemberName)
+        </div><div class="mb-3">
+            @Html.LabelFor(model => model.Content, htmlAttributes: new { @class = "form-label col-md-2" })
 
-        <dt>
-            @Html.DisplayNameFor(model => model.MemberName)
-        </dt>
+            @Html.EditorFor(model => model.Content, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+            @Html.HiddenFor(model => model.Content)
+        </div><div class="mb-3">
+            @Html.LabelFor(model => model.Score, htmlAttributes: new { @class = "form-label col-md-2" })
 
-        <dd>
-            @Html.DisplayFor(model => model.MemberName)
-        </dd>
+            @Html.EditorFor(model => model.Score, new { htmlAttributes = new { @class = "form-control target", @disabled = "disabled" } })
+            @Html.HiddenFor(model => model.Score)
+        </div><div class="mb-5">
+            @Html.LabelFor(model => model.CreatedTime, htmlAttributes: new { @class = "form-label col-md-2" })
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Content)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Score)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Score)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CreatedTime)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreatedTime)
-        </dd>
-
-    </dl>
+            @Html.EditorFor(model => model.CreatedTime, new { htmlAttributes = new { @class = "form-control target", @disabled = "disabled" } })
+            @Html.HiddenFor(model => model.CreatedTime)
+        </div>
 </div>
 
-<div class="mb-5">
-    <div class="mb-3" style="display: flex; justify-content: flex-end;">
-        @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-primary" })
-        @if (Model.ActiveFlag)
-        {
-            using (Html.BeginForm("Delete", "GameComments", new { id = Model.Id }, FormMethod.Post))
+    <div>
+        <div class="mb-3" style="display: flex; justify-content: flex-end;">
+            @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-primary btnColor" })
+            @if (Model.ActiveFlag)
             {
-                <span>&nbsp;</span>
-                <input type="submit" value="刪除" class="btn btn-danger" />
+                using (Html.BeginForm("Delete", "GameComments", new { id = Model.Id }, FormMethod.Post))
+                {
+                    <span>&nbsp;</span>
+                    <input type="submit" value="刪除" class="btn btn-danger btnDelete" />
+                }
             }
-        }
-        else
-        {
-            using (Html.BeginForm("Restore", "GameComments", new { id = Model.Id }, FormMethod.Post))
+            else
             {
-                <span>&nbsp;</span>
-                <input type="submit" value="復原" class="btn btn-success" />
+                using (Html.BeginForm("Restore", "GameComments", new { id = Model.Id }, FormMethod.Post))
+                {
+                    <span>&nbsp;</span>
+                    <input type="submit" value="復原" class="btn btn-success btnColor" />
+                }
             }
-        }
+        </div>
     </div>
 </div>

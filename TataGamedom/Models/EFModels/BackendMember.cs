@@ -11,7 +11,6 @@ namespace TataGamedom.Models.EFModels
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public BackendMember()
         {
-            Boards = new HashSet<Board>();
             BoardsModeratorsApplications = new HashSet<BoardsModeratorsApplication>();
             BucketLogs = new HashSet<BucketLog>();
             Coupons = new HashSet<Coupon>();
@@ -63,9 +62,6 @@ namespace TataGamedom.Models.EFModels
         public bool ActiveFlag { get; set; }
 
         public virtual BackendMembersRolesCode BackendMembersRolesCode { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Board> Boards { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BoardsModeratorsApplication> BoardsModeratorsApplications { get; set; }

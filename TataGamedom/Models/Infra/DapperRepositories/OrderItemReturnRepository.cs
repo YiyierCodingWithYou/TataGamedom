@@ -93,7 +93,7 @@ WHERE O.[Index] = @orderIndex";
 			{
 				string sql = @"
 UPDATE OrderItemReturns SET
-[OrderItemId] = @OrderItemId, [Reason] = @Reason, [IssuedAt]= @IssuedAt, [CompletedAt]= @CompletedAt, [IsRefunded] = @IsRefunded,
+[Reason] = @Reason, [IssuedAt]= @IssuedAt, [CompletedAt]= @CompletedAt, [IsRefunded] = @IsRefunded,
 [IsReturned] = @IsReturned, [IsResellable] = @IsResellable
 WHERE Id = @Id";
 
