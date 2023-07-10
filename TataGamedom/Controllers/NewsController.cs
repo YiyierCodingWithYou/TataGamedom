@@ -21,7 +21,7 @@ namespace TataGamedom.Controllers
 
 
 		// GET: News
-		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		public ActionResult Index()
 		{
 			using (var con = new SqlConnection(_connstr))
@@ -136,11 +136,16 @@ namespace TataGamedom.Controllers
 				var backendMember = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
 				var savedFileName = SaveFile(file1);
 
-				if (savedFileName == string.Empty )
+				if (savedFileName == string.Empty)
 				{
-					ModelState.AddModelError("CoverImg", "請選擇檔案");
+					//ModelState.AddModelError("CoverImg", "請選擇檔案");
+					vm.CoverImg = "newsbg.jpg";
 				}
-				vm.CoverImg = savedFileName;
+				else
+				{
+					vm.CoverImg = savedFileName;
+				}
+				
 				if (backendMember != null)
 				{
 					vm.BackendMemberId = backendMember.Id;
@@ -165,53 +170,6 @@ namespace TataGamedom.Controllers
 
 			return View(vm);
 		}
-
-
-
-		//public ActionResult Create(NewsCreateVM newsCreateVM)
-		//{
-		//	if (ModelState.IsValid)
-		//	{
-		//		DateTime now = DateTime.Now;
-
-		//		if (newsCreateVM.ScheduleDate <= now)
-		//		{
-		//			newsCreateVM.ActiveFlag = true;
-		//		}
-		//		else
-		//		{
-		//			newsCreateVM.ActiveFlag = false;
-		//		}
-
-		//		// 取得管理者的BackendMember ID
-		//		var currentUserAccount = User.Identity.Name;
-		//		var backendMember = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
-
-		//		if (backendMember != null)
-		//		{
-		//			newsCreateVM.BackendMemberId = backendMember.Id;
-
-		//			using (var con = new SqlConnection(_connstr))
-		//			{
-		//				string sql = @"INSERT INTO News (Title, Content, BackendMemberId, NewsCategoryId, GamesId, CoverImg, ScheduleDate, ActiveFlag)
-		//                             VALUES (@Title, @Content, @BackendMemberId, @NewsCategoryId, @GamesId, @CoverImg, @ScheduleDate, @ActiveFlag);
-		//                             SELECT CAST(SCOPE_IDENTITY() AS INT)";
-
-		//				var id = con.Query<int>(sql, newsCreateVM).Single();
-		//				newsCreateVM.Id = id;
-		//			}
-
-		//			return RedirectToAction("Index");
-		//		}
-		//	}
-
-		//	ViewBag.BackendMemberId = new SelectList(db.BackendMembers, "Id", "Name");
-		//	ViewBag.GamesId = new SelectList(db.GameClassificationsCodes, "Id", "Name");
-		//	ViewBag.NewsCategoryId = new SelectList(db.NewsCategoryCodes, "Id", "Name");
-
-		//	return View(newsCreateVM);
-		//}
-
 
 		// GET: News/Edit
 		//[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]

@@ -13,5 +13,10 @@ namespace TataGamedom.Controllers.FrontApi
         {
             return View();
         }
-    }
+
+		public ActionResult N500()
+		{
+			return View();
+		}
+	}
 }
