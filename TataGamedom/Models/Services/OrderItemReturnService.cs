@@ -32,6 +32,7 @@ namespace TataGamedom.Models.Services
         /// <returns></returns>
         public Result Create(OrderItemReturnDto dto)
         {
+            //Index編碼
             int maxId = _repo.GetMaxIdInDb();
             var indexGenerator = new IndexGenerator(maxId);
 
@@ -39,8 +40,16 @@ namespace TataGamedom.Models.Services
             dto.Index = indexGenerator.GetOrderItemReturnIndex(dto, orderIndex);
             _repo.Create(dto);
 
-            OrderItem orderItem = GetOrderItem(dto);
+			//重新入庫
+			if (dto.IsResellable == true)
+			{
+				BackToInventory(dto);
+			}
+
+			//改變訂單狀態
+			OrderItem orderItem = GetOrderItem(dto);
             ChangeOrderStatus(orderItem);
+            
             return Result.Success();
         }
         private OrderItem GetOrderItem(OrderItemReturnDto dto)
@@ -73,21 +82,26 @@ namespace TataGamedom.Models.Services
 		{
 			_repo.Update(dto);
 
-            if (dto.IsResellable == true)
+			if (dto.IsResellable == true)
             {
-                IInventoryRepository repo = new InventoryRepository();
-                InventoryService service = new InventoryService(repo);
-
-                InventoryItemCreateDto itemBackToInventory = GetItemInfo(dto);
-                service.Create(itemBackToInventory);
+                BackToInventory(dto);
             }
+			
 
-            //Todo 如果已重新加入庫存，不能執行
-
-            return Result.Success();
+			return Result.Success();
 		}
 
-        private InventoryItemCreateDto GetItemInfo(OrderItemReturnDto dto)
+        private void BackToInventory(OrderItemReturnDto dto) 
+        {
+			IInventoryRepository repo = new InventoryRepository();
+			InventoryService service = new InventoryService(repo);
+
+			InventoryItemCreateDto itemBackToInventory = GetItemInfo(dto);
+			service.Create(itemBackToInventory);
+		}
+
+
+		private InventoryItemCreateDto GetItemInfo(OrderItemReturnDto dto)
         {
             IInventoryRepository repo = new InventoryRepository();
             InventoryService service = new InventoryService(repo);

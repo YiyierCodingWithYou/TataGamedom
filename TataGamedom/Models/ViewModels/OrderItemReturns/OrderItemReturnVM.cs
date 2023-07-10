@@ -41,7 +41,7 @@ namespace TataGamedom.Models.ViewModels.OrderItemReturns
 		[Required(ErrorMessage = "{0} 必填")]
 		public bool IsReturned { get; set; }
 
-		[Display(Name = "重新入庫")]
+		[Display(Name = "是否重新入庫?")]
 		[Required(ErrorMessage = "{0} 必填")]
 		public bool IsResellable { get; set; }
 	}
