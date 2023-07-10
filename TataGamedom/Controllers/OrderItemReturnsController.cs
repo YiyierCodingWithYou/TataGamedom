@@ -112,8 +112,7 @@ namespace TataGamedom.Controllers
                                                     new SelectListItem { Value = "", Text =  "" },
 													new SelectListItem { Value = "0", Text = "未退款" },
 													new SelectListItem { Value = "1", Text = "已退款" } 
-												},"Value","Text",db.OrderItemReturns
-												);
+												},"Value","Text");
             
 			ViewBag.IsReturned = new SelectList(new List<SelectListItem>
                                                 {
