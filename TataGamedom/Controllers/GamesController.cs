@@ -169,7 +169,7 @@ namespace TataGamedom.Controllers
 					CreateGameClassification(vm);
 					return RedirectToAction("Index");
 				}
-				ModelState.AddModelError(string.Empty, editResult.ErrorMessage);		
+				ModelState.AddModelError(string.Empty, editResult.ErrorMessage);
 				vm.GameClassification = GetGameClassifications();
 				return View(vm);
 			}
@@ -338,10 +338,19 @@ namespace TataGamedom.Controllers
 					cellCount = headerRow.LastCellNum;
 
 					//迴圈執行第一列的第一個欄位到最後一個欄位，將抓到的值塞進DataTable做完欄位名稱
-					for (int i = headerRow.FirstCellNum; i < cellCount; i++)
+					try
 					{
-						dataTable.Columns.Add(new DataColumn(headerRow.GetCell(i).StringCellValue));
+						for (int i = headerRow.FirstCellNum; i < cellCount; i++)
+						{
+							dataTable.Columns.Add(new DataColumn(headerRow.GetCell(i).StringCellValue));
+						}
 					}
+					catch (Exception ex)
+					{
+						ViewBag.Message = "匯入失敗";
+						Console.Write(ex.Message);
+					}
+
 
 					//int j; //計算每一列讀到第幾個欄位
 					int column = 1; //計算每一列讀到第幾個欄位
@@ -445,40 +454,46 @@ namespace TataGamedom.Controllers
 					stream.Dispose();
 					stream.Close();
 				}
-
 				//dataTable跑回圈，insert資料至DB
-				foreach (DataRow dataRow in dataTable.Rows)
+				try
 				{
-					Game game = new Game()
+					foreach (DataRow dataRow in dataTable.Rows)
 					{
-						ChiName = dataRow["ChiName"].ToString(),
-						EngName = dataRow["EngName"].ToString(),
-						Description = dataRow["Description"].ToString(),
-						IsRestrict = bool.Parse(dataRow["IsRestrict"].ToString()),
-						GameCoverImg = dataRow["GameCoverImg"].ToString(),
-					};
+						Game game = new Game()
+						{
+							ChiName = dataRow["ChiName"].ToString(),
+							EngName = dataRow["EngName"].ToString(),
+							Description = dataRow["Description"].ToString(),
+							IsRestrict = bool.Parse(dataRow["IsRestrict"].ToString()),
+							GameCoverImg = dataRow["GameCoverImg"].ToString(),
+						};
 
-					Board board = new Board()
-					{
-						Name = dataRow["ChiName"].ToString(),
-						GameId = int.Parse(dataRow["GameId"].ToString()),
-						BoardAbout = dataRow["Description"].ToString(),
-						BoardHeaderCoverImg = dataRow["GameCoverImg"].ToString()
-					};
+						Board board = new Board()
+						{
+							Name = dataRow["ChiName"].ToString(),
+							GameId = int.Parse(dataRow["GameId"].ToString()),
+							BoardAbout = dataRow["Description"].ToString(),
+							BoardHeaderCoverImg = dataRow["GameCoverImg"].ToString()
+						};
 
-					try
-					{
-						var currentUserAccount = User.Identity.Name;
-						NPOIHelper games = new NPOIHelper();
-						games.InsertGames(game, currentUserAccount);
+						try
+						{
+							var currentUserAccount = User.Identity.Name;
+							NPOIHelper games = new NPOIHelper();
+							games.InsertGames(game, currentUserAccount);
 
-						NPOIHelper boards = new NPOIHelper();
-						boards.InsertBoards(board, currentUserAccount);
+							NPOIHelper boards = new NPOIHelper();
+							boards.InsertBoards(board, currentUserAccount);
+						}
+						catch (Exception ex)
+						{
+							ViewBag.Message = "匯入失敗";
+						}
 					}
-					catch (Exception ex)
-					{
-						ViewBag.Message = "匯入失敗";
-					}
+				}
+				catch (Exception ex)
+				{
+					ViewBag.Message = "匯入失敗";
 				}
 			}
 			return View();

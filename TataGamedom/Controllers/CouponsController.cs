@@ -166,6 +166,7 @@ namespace TataGamedom.Controllers
 				Id = coupon.Id,
 				CouponName = coupon.Name,
 				Description = coupon.Description,
+				EndTime = coupon.EndTime,
 				SelectedProductIds = couponProducts,
 				AvailableProducts = availableProducts
 			};
@@ -227,6 +228,8 @@ namespace TataGamedom.Controllers
 
 			return RedirectToAction("Index");
 		}
+		
+		
 		[Authorize]
 		public ActionResult CouponsProductsIndex()
 		{
@@ -237,26 +240,38 @@ namespace TataGamedom.Controllers
     G.ChiName AS Name,
     GPC.Name AS Platform,
     C.Name AS CouponName,
-	C.Threshold,
+    C.Threshold,
     C.Description,
     P.Price,
     CASE
-        WHEN C.DiscountTypeId = 1 AND P.Price>C.Threshold THEN P.Price * (C.Discount/100)
-        WHEN C.DiscountTypeId = 2 AND P.Price>C.Threshold THEN P.Price - C.Discount
+        WHEN C.DiscountTypeId = 1 AND P.Price > C.Threshold THEN P.Price * (C.Discount / 100)
+        WHEN C.DiscountTypeId = 2 AND P.Price > C.Threshold THEN P.Price - C.Discount
         ELSE P.Price
     END AS SpecialPrice,
-	CASE
-        WHEN C.DiscountTypeId = 1 THEN P.Price * (C.Discount/100)
-        WHEN C.DiscountTypeId = 2 THEN P.Price - C.Discount
-        ELSE P.Price
+    CASE
+        WHEN (
+            CASE
+                WHEN C.DiscountTypeId = 1 THEN P.Price * (C.Discount / 100)
+                WHEN C.DiscountTypeId = 2 THEN P.Price - C.Discount
+                ELSE P.Price
+            END
+        ) < 0 THEN 0
+        ELSE (
+            CASE
+                WHEN C.DiscountTypeId = 1 THEN P.Price * (C.Discount / 100)
+                WHEN C.DiscountTypeId = 2 THEN P.Price - C.Discount
+                ELSE P.Price
+            END
+        )
     END AS IfReach
 FROM
-CouponsProducts AS CP
+    CouponsProducts AS CP
     JOIN Coupons AS C ON C.Id = CP.CouponId
     JOIN Products AS P ON P.Id = CP.ProductId
     JOIN Games AS G ON G.Id = P.GameId
     JOIN GamePlatformsCodes AS GPC ON GPC.Id = P.GamePlatformId
-	WHERE C.ActiveFlag=1";
+WHERE
+    C.ActiveFlag = 1";
 
 				var list = conn.Query<CouponsProductsIndexVM>(sql).ToList();
 				return View(list);

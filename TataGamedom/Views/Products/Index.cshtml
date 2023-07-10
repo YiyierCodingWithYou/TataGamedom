@@ -10,6 +10,8 @@
         <link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet" />*@
     <link href="https://cdn.datatables.net/v/bs5/dt-1.13.5/af-2.6.0/b-2.4.0/b-html5-2.4.0/date-1.5.0/sb-1.5.0/sl-1.7.0/datatables.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.2.0/css/fixedHeader.dataTables.min.css">
+
     <style>
         thead {
             background-color: goldenrod;
@@ -21,105 +23,121 @@
         }
     </style>
 }
+<div>
+    <h2>商品管理列表</h2>
 
-<h2>商品管理列表</h2>
-
-<div class="mb-3" style="text-align: right;">
-    <div class="d-inline">
-        @Html.ActionLink("匯入商品", "Upload", null, new { @class = "btn btn-primary" })
+    <div class="mb-3" style="text-align: right;">
+        <div class="d-inline">
+            @Html.ActionLink("匯入商品", "Upload", null, new { @class = "btn btn-primary btnColor" })
+        </div>
     </div>
-</div>
-<div class="text-center">
-    <table class="table" id="myTable">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Index)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.GameName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.GamePlatformName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsVirtual)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Price)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.SaleDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ProductStatus)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CreatedBackendMemberName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CreatedTime)
-                </th>
-                <th>
-                    編輯
-                </th>
-                <th>
-                    商品圖片
-                </th>
-                <th>刪除</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+    <div>
+        <table class="table" id="myTable">
+            <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Index)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.GameName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.GamePlatformName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsVirtual)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Price)
-                    </td>
-                    <td>
-                        @item.SaleDate.ToString("yyyy-MM-dd")
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ProductStatus)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CreatedBackendMemberName)
-                    </td>
-                    <td>
-                        <span>@item.CreatedTime.ToShortDateString()</span>
-                        <br />
-                        <span>@item.CreatedTime.ToShortTimeString()</span>
-                    </td>
-                    <td>
-                        <a href="@Url.Action("EditProduct", new { id = item.Id })" class="icon-link">
-                            <i class="fas fa-pencil-alt"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="@Url.Action("EditProducImg", new { id = item.Id })" class="icon-link">
-                            <i class="fa-regular fa-image"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="#" class="icon-link" onclick="confirmDelete('@item.Id')">
-                            <i class="fa-solid fa-trash-can"></i>
-                    </td>
+                    <th class="text-center vertical-align-middle">
+                        @Html.DisplayNameFor(model => model.Index)
+                    </th>
+                    <th class="text-center vertical-align-middle w-25">
+                        @Html.DisplayNameFor(model => model.GameName)
+                    </th>
+                    <th class="text-center vertical-align-middle">
+                        @Html.DisplayNameFor(model => model.GamePlatformName)
+                    </th>
+                    <th class="text-center vertical-align-middle">
+                        @Html.DisplayNameFor(model => model.IsVirtual)
+                    </th>
+                    <th class="text-center vertical-align-middle">
+                        @Html.DisplayNameFor(model => model.Price)
+                    </th>
+                    <th class="text-center vertical-align-middle">
+                        @Html.DisplayNameFor(model => model.SaleDate)
+                    </th>
+                    <th class="text-center vertical-align-middle">
+                        @Html.DisplayNameFor(model => model.ProductStatus)
+                    </th>
+                    <th class="text-center vertical-align-middle">
+                        @Html.DisplayNameFor(model => model.CreatedBackendMemberName)
+                    </th>
+                    <th class="text-center vertical-align-middle">
+                        @Html.DisplayNameFor(model => model.CreatedTime)
+                    </th>
+                    <th class="text-center vertical-align-middle">
+                        編輯
+                    </th>
+                    <th class="text-center vertical-align-middle">
+                        商品圖片
+                    </th>
+                    <th class="text-center vertical-align-middle">
+                        刪除
+                    </th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center vertical-align-middle">
+                            @Html.DisplayFor(modelItem => item.Index)
+                        </td>
+                        <td class="vertical-align-middle w-25">
+                            @Html.DisplayFor(modelItem => item.GameName)
+                        </td>
+                        <td class="text-center vertical-align-middle">
+                            @Html.DisplayFor(modelItem => item.GamePlatformName)
+                        </td>
+                        <td class="text-center vertical-align-middle">
+                            @if (item.IsVirtual)
+                            {
+                                <div class="visually-hidden">
+                                    <text>有</text>
+                                </div><i class="fa-regular fa-square-check fa-xl"></i>
+                            }
+                            else
+                            {
+                                <div class="visually-hidden">
+                                    <text>無</text>
+                                </div>
+                                <i class="fa-regular fa-square fa-xl"></i>
+                            }
+                        </td>
+                        <td class="text-center vertical-align-middle">
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td class="text-center vertical-align-middle">
+                            @item.SaleDate.ToString("yyyy-MM-dd")
+                        </td>
+                        <td class="text-center vertical-align-middle">
+                            @Html.DisplayFor(modelItem => item.ProductStatus)
+                        </td>
+                        <td class="text-center vertical-align-middle">
+                            @Html.DisplayFor(modelItem => item.CreatedBackendMemberName)
+                        </td>
+                        <td class="text-center vertical-align-middle">
+                            <span>@item.CreatedTime.ToShortDateString()</span>
+                            <br />
+                            <span>@item.CreatedTime.ToShortTimeString()</span>
+                        </td>
+                        <td class="text-center vertical-align-middle">
+                            <a href="@Url.Action("EditProduct", new { id = item.Id })" class="icon-link">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                        </td>
+                        <td class="text-center vertical-align-middle">
+                            <a href="@Url.Action("EditProducImg", new { id = item.Id })" class="icon-link">
+                                <i class="fa-regular fa-image"></i>
+                            </a>
+                        </td>
+                        <td class="text-center vertical-align-middle">
+                            <a href="#" class="icon-link" onclick="confirmDelete('@item.Id')">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 @section Scripts{
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>

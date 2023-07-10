@@ -28,7 +28,7 @@ namespace TataGamedom.Models.ViewModels.Coupons
 		[StringLength(30)]
 		public string Description { get; set; }
 		[Display(Name = "最後修改時間")]
-		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+		//[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
 		public DateTime? ModifiedTime { get; set; }
 		[Display(Name = "最後修改者")]
 		public string ModifiedBackendMemberName { get; set; }

@@ -336,30 +336,37 @@ namespace TataGamedom.Controllers
 				}
 
 				//dataTable跑回圈，insert資料至DB
-				foreach (DataRow dataRow in dataTable.Rows)
+				try
 				{
-					Product product = new Product()
+					foreach (DataRow dataRow in dataTable.Rows)
 					{
-						Index = dataRow["Index"].ToString(),
-						GameId = int.Parse(dataRow["GameId"].ToString()),
-						IsVirtual = bool.Parse(dataRow["IsVirtual"].ToString()),
-						Price = int.Parse(dataRow["Price"].ToString()),
-						GamePlatformId = int.Parse(dataRow["GamePlatformId"].ToString()),
-						SystemRequire = dataRow["SystemRequire"].ToString(),
-						ProductStatusId = int.Parse(dataRow["ProductStatusId"].ToString()),
-						SaleDate = DateTime.Parse(dataRow["SaleDate"].ToString())
-					};					
+						Product product = new Product()
+						{
+							Index = dataRow["Index"].ToString(),
+							GameId = int.Parse(dataRow["GameId"].ToString()),
+							IsVirtual = bool.Parse(dataRow["IsVirtual"].ToString()),
+							Price = int.Parse(dataRow["Price"].ToString()),
+							GamePlatformId = int.Parse(dataRow["GamePlatformId"].ToString()),
+							SystemRequire = dataRow["SystemRequire"].ToString(),
+							ProductStatusId = int.Parse(dataRow["ProductStatusId"].ToString()),
+							SaleDate = DateTime.Parse(dataRow["SaleDate"].ToString())
+						};
 
-					try
-					{
-						var currentUserAccount = User.Identity.Name;
-						NPOIHelper products = new NPOIHelper();
-						products.InsertProducts(product, currentUserAccount);
+						try
+						{
+							var currentUserAccount = User.Identity.Name;
+							NPOIHelper products = new NPOIHelper();
+							products.InsertProducts(product, currentUserAccount);
+						}
+						catch (Exception ex)
+						{
+							ViewBag.Message = "匯入失敗";
+						}
 					}
-					catch (Exception ex)
-					{
-						ViewBag.Message = "匯入失敗";
-					}
+				}
+				catch (Exception ex)
+				{
+					ViewBag.Message = "匯入失敗";
 				}
 			}
 			return View();
