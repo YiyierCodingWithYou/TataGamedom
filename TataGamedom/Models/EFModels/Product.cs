@@ -17,6 +17,7 @@ namespace TataGamedom.Models.EFModels
             MemberProductViews = new HashSet<MemberProductView>();
             OrderItems = new HashSet<OrderItem>();
             ProductImages = new HashSet<ProductImage>();
+            StandardProducts = new HashSet<StandardProduct>();
         }
 
         public int Id { get; set; }
@@ -76,5 +77,8 @@ namespace TataGamedom.Models.EFModels
         public virtual ICollection<ProductImage> ProductImages { get; set; }
 
         public virtual ProductStatusCode ProductStatusCode { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<StandardProduct> StandardProducts { get; set; }
     }
 }

@@ -38,11 +38,11 @@ namespace TataGamedom.Models.EFModels
 
         public bool ActiveFlag { get; set; }
 
+        public DateTime? EditDatetime { get; set; }
+
         public DateTime? DeleteDatetime { get; set; }
 
         public int? DeleteBackendMemberId { get; set; }
-
-        public DateTime? EditDatetime { get; set; }
 
         public virtual BackendMember BackendMember { get; set; }
 
