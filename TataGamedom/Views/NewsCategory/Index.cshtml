@@ -87,6 +87,15 @@
     </text>
 	}
 
+	@if (TempData.ContainsKey("ErrorMessage"))
+{
+    <text>
+        $(document).ready(function() {
+            alert("@TempData["ErrorMessage"].ToString()");
+            location.reload();
+        });
+    </text>
+}
 
 	</script>
 }

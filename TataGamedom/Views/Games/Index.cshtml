@@ -5,11 +5,9 @@
 }
 
 @section Styles{
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
-    <link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/v/bs5/dt-1.13.5/af-2.6.0/b-2.4.0/b-html5-2.4.0/date-1.5.0/sb-1.5.0/sl-1.7.0/datatables.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.2.0/css/fixedHeader.dataTables.min.css">
     <style>
         thead {
             background-color: goldenrod;
@@ -21,113 +19,197 @@
         }
     </style>
 }
-
-<h2>遊戲管理列表</h2>
-<div class="mb-3" style="text-align: right;">
-    @Html.ActionLink("新增遊戲", "Create", null, new { @class = "btn btn-light" })
-</div>
-
 <div>
-    <table class="table" id="myTable">
-        <thead>
-            <tr>
-                <th class="text-center vertical-align-middle">
-                    @Html.DisplayNameFor(model => model.Id)
-                </th>
-                <th class="text-center vertical-align-middle">
-                    @Html.DisplayNameFor(model => model.ChiName)
-                </th>
-                <th class="text-center vertical-align-middle">
-                    @Html.DisplayNameFor(model => model.Classification)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsRestrict)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CreatedBackendMemberName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CreatedTime)
-                </th>
-                <th>編輯</th>
-                <th>編輯封面</th>
-                <th>評論管理</th>
-                <th>新增商品</th>
-                <th>刪除</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td class="text-center vertical-align-middle">
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td class="text-center vertical-align-middle">
-                    @Html.DisplayFor(modelItem => item.ChiName)
-                </td>
-                <td class="text-center vertical-align-middle">
-                    @Html.DisplayFor(modelItem => item.Classification)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsRestrict)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedBackendMemberName)
-                </td>
-                <td>
-                    @item.CreatedTime.ToString("yyyy-MM-dd")
-                </td>
-                <td>
-                    <a href="@Url.Action("Edit", new { id = item.Id })" class="icon-link">
-                        <i class="fas fa-pencil-alt"></i>
-                    </a>
-                </td>
-                <td>
-                    <a href="@Url.Action("EditGameCover", new { id = item.Id })" class="icon-link">
-                        <i class="fa-regular fa-image"></i>
-                    </a>
-                </td>
-                <td>
-                    <a href="@Url.Action("Index","GameComments", new { gameCommentId = item.Id })" class="icon-link">
-                        <i class="fa-regular fa-comments"></i>
-                    </a>
-                </td>
-                <td>
-                    <a href="@Url.Action("AddProduct", new { id = item.Id })" class="icon-link">
-                        <i class="fa-solid fa-circle-plus"></i>
-                    </a>
-                </td>
-                <td>
-                    <a href="@Url.Action("Delete", new { id = item.Id })" class="icon-link">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </a>
-                </td>
-            </tr>
-        }
+    <h2>遊戲管理列表</h2>
+
+    <div class="mb-3" style="text-align: right;">
+        <div class="me-3 d-inline">
+            @Html.ActionLink("新增遊戲", "Create", null, new { @class = "btn btn-primary btnColor" })
+        </div>
+        <div class="d-inline">
+            @Html.ActionLink("匯入遊戲", "Upload", null, new { @class = "btn btn-primary btnColor" })
+        </div>
+    </div>
+
+    <div>
+        <table class="table" id="myTable">
+            <thead>
+                <tr>
+                    <th class="text-center vertical-align-middle">
+                        @Html.DisplayNameFor(model => model.GameCoverImg)
+                    </th>
+                    <th class="text-center vertical-align-middle visually-hidden">
+                        @Html.DisplayNameFor(model => model.Id)
+                    </th>
+                    <th class="text-center vertical-align-middle w-25">
+                        @Html.DisplayNameFor(model => model.ChiName)
+                    </th>
+                    <th class="text-center vertical-align-middle">
+                        @Html.DisplayNameFor(model => model.IsRestrict)
+                    </th>
+                    <th class="text-center vertical-align-middle">
+                        @Html.DisplayNameFor(model => model.CreatedBackendMemberName)
+                    </th>
+                    <th class="text-center vertical-align-middle" style="width:100px">
+                        @Html.DisplayNameFor(model => model.CreatedTime)
+                    </th>
+                    <th class="text-center vertical-align-middle visually-hidden">
+                        @Html.DisplayNameFor(model => model.ModifiedBackendMemberName)
+                    </th>
+                    <th class="text-center vertical-align-middle visually-hidden">
+                        @Html.DisplayNameFor(model => model.ModifiedTime)
+                    </th>
+                    <th class="text-center vertical-align-middle">編輯</th>
+                    <th class="text-center vertical-align-middle">編輯封面</th>
+                    <th class="text-center vertical-align-middle">評論管理</th>
+                    <th class="text-center vertical-align-middle">新增商品</th>
+                    <th class="text-center vertical-align-middle">刪除</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center vertical-align-middle">
+                            <img src="~/Files/Uploads/@item.GameCoverImg" style="width: 100px" />
+                        </td>
+                        <td class="text-center vertical-align-middle visually-hidden">
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td class="vertical-align-middle w-25">
+                            @Html.DisplayFor(modelItem => item.ChiName)
+                        </td>
+
+                        <td class="text-center vertical-align-middle">
+                            @if (item.IsRestrict)
+                            {
+                                <div class="visually-hidden">
+                                    <text>有</text>
+                                </div><i class="fa-regular fa-square-check fa-xl"></i>
+                            }
+                            else
+                            {
+                                <div class="visually-hidden">
+                                    <text>無</text>
+                                </div>
+                                <i class="fa-regular fa-square fa-xl"></i>
+                            }
+                        </td>
+                        <td class="text-center vertical-align-middle">
+                            @Html.DisplayFor(modelItem => item.CreatedBackendMemberName)
+                        </td>
+                        <td class="text-center vertical-align-middle" style="width:100px">
+                            @Html.DisplayFor(modelItem => item.CreatedTime)
+                        </td>
+                        <td class="text-center vertical-align-middle visually-hidden">
+                            @Html.DisplayFor(modelItem => item.ModifiedBackendMemberName)
+                        </td>
+                        <td class="text-center vertical-align-middle visually-hidden">
+                            @item.ModifiedTime.ToString()
+                        </td>
+                        <td class="text-center vertical-align-middle">
+                            <a href="@Url.Action("Edit", new { id = item.Id })" class="icon-link">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                        </td>
+                        <td class="text-center vertical-align-middle">
+                            <a href="@Url.Action("EditGameCover", new { id = item.Id })" class="icon-link">
+                                <i class="fa-regular fa-image"></i>
+                            </a>
+                        </td>
+                        <td class="text-center vertical-align-middle">
+                            <a href="@Url.Action("Index","GameComments", new { gameCommentId = item.Id })" class="icon-link">
+                                <i class="fa-regular fa-comments"></i>
+                            </a>
+                        </td>
+                        <td class="text-center vertical-align-middle">
+                            <a href="@Url.Action("AddProduct", new { id = item.Id })" class="icon-link">
+                                <i class="fa-solid fa-circle-plus"></i>
+                            </a>
+                        </td>
+                        <td class="text-center vertical-align-middle">
+                            <a href="#" class="icon-link" onclick="confirmDelete('@item.Id')">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
             </tbody>
 
-    </table>
+        </table>
+    </div>
 </div>
-
 @section Scripts{
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.1/datatables.min.js"></script>
+    @*<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.1/datatables.min.js"></script>*@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
-
+    <script src="https://cdn.datatables.net/v/bs5/dt-1.13.5/af-2.6.0/b-2.4.0/b-html5-2.4.0/date-1.5.0/sb-1.5.0/sl-1.7.0/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.2.0/js/dataTables.fixedHeader.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#myTable').DataTable({
+                dom: 'Qlrtip',
+                fixedHeader: true,
+                select: false,
                 responsive: true,
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/zh-HANT.json',
                 }
             });
         });
+        function confirmDelete(id) {
+            console.log(id);
+            Swal.fire({
+                title: '確定要刪除嗎？',
+                text: '刪除後將無法恢復。',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '確定',
+                cancelButtonText: '取消'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteGame(id);
+                }
+            });
+        }
+
+        function deleteGame(id) {
+            $.ajax({
+                url: `/api/GamesApi/${id}`,
+                type: 'DELETE',
+                success: function (result) {
+                    if (result.IsSuccess) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '刪除成功',
+                            text: result.Message,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: '確定'
+                        }).then(() => {
+                            // 重新導向至 Index 頁面
+                            window.location.href = "/Games/Index";
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '刪除失敗',
+                            text: result.Message,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: '確定'
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
     </script>
 }

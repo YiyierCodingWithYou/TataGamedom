@@ -63,7 +63,7 @@ WHERE NC.Id = @Id";
 
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
-		public ActionResult DeleteConfirmed(int id)
+		public ActionResult Delete(int id)
 		{
 			var currentUserAccount = User.Identity.Name;
 			var backendMember = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
@@ -84,7 +84,7 @@ WHERE NC.Id = @Id";
 
 		[HttpPost, ActionName("Reduction")]
 		[ValidateAntiForgeryToken]
-		public ActionResult ReductionConfirmed(int id)
+		public ActionResult Reduction(int id)
 		{
 			var currentUserAccount = User.Identity.Name;
 			var backendMember = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);

@@ -18,15 +18,18 @@
 }
 
 <h2>新聞總覽</h2>
-<div class="mb-3" style="text-align: right;">
-	@Html.ActionLink("新增新聞", "Create", null, new { @class = "btn btn-primary" })
-</div>
+
+
 
 
 <table class="table" id="myTable">
+	
+	@Html.ActionLink("新增新聞", "Create", null, new { @class = "btn btn-danger btn-lg" })
+
 	<thead>
+
 		<tr>
-			<th>
+			<th width="300px">
 				@Html.DisplayNameFor(model => model.Title)
 			</th>
 			<th>
@@ -35,8 +38,11 @@
 			<th>
 				@Html.DisplayNameFor(model => model.BackendMemberName)
 			</th>
-			<th>
+			@*<th>
 				@Html.DisplayNameFor(model => model.GameClassificationName)
+			</th>*@
+			<th>
+				@Html.DisplayNameFor(model => model.NewsCategoryName)
 			</th>
 			<th>
 				@Html.DisplayNameFor(model => model.ViewCount)
@@ -62,7 +68,7 @@
 		@foreach (var item in Model)
 		{
 			<tr>
-				<td>
+				<td  width="300px">
 					@Html.DisplayFor(modelItem => item.Title)
 				</td>
 				<td>
@@ -73,9 +79,12 @@
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.BackendMemberName)
-				</td>
+				</td>				@*<td>
+			@Html.DisplayFor(modelItem => item.GameClassificationName)
+		</td>*@
+
 				<td>
-					@Html.DisplayFor(modelItem => item.GameClassificationName)
+					@Html.DisplayFor(modelItem => item.NewsCategoryName)
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.ViewCount)

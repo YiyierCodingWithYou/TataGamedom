@@ -1,100 +1,98 @@
 ﻿@model TataGamedom.Models.ViewModels.Games.GameEditVM
-
 @{
     ViewBag.Title = "Edit";
 }
+@section Styles {
+    <link href="~/Content/layoutStyle1.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap theme.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/Content/YiyierStyle.css">
+}
+<div class="container">
+    <h1 class="main_heading">編輯遊戲資訊</h1>
 
-<h2>編輯遊戲資訊</h2>
-
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        <h4></h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
-
-
-        <div class="mb-3">
-            @Html.LabelFor(model => model.ChiName, htmlAttributes: new { @class = "form-label col-md-2" })
-            <div class="col-md-10">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Id)
+            <div class="mb-3">
+                @Html.LabelFor(model => model.ChiName, htmlAttributes: new { @class = "form-label col-md-2" })
                 @Html.EditorFor(model => model.ChiName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.ChiName, "", new { @class = "text-danger" })
             </div>
-        </div>
 
-        <div class="mb-3">
-            @Html.LabelFor(model => model.EngName, htmlAttributes: new { @class = "form-label col-md-2" })
-            <div class="col-md-10">
+            <div class="mb-3">
+                @Html.LabelFor(model => model.EngName, htmlAttributes: new { @class = "form-label col-md-2" })
                 @Html.EditorFor(model => model.EngName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.EngName, "", new { @class = "text-danger" })
             </div>
-        </div>
-
-        <div class="mb-3">
-            @Html.LabelFor(model => model.SelectedGameClassification, htmlAttributes: new { @class = "form-label" })
-            <br />
-            @{
-                var selectedClassifications = Model.SelectedGameClassification ?? new List<int>();
-            }
-            @foreach (var classification in Model.GameClassification.Skip(1))
-            {
-                <label class="checkbox-inline form-check-label">
-                    @{
-                        var selected = selectedClassifications.Contains(classification.Id);
+            <div class="mb-3">
+                @Html.LabelFor(model => model.SelectedGameClassification, htmlAttributes: new { @class = "form-label col-md-2" })
+                <br />
+                @{
+                    var selectedClassifications = Model.SelectedGameClassification ?? new List<int>();
+                }
+                <div class="form-control chooseBlock">
+                    @foreach (var classification in Model.GameClassification.Skip(1))
+                    {
+                        <label class="checkbox-inline form-check-label">
+                            @{
+                                var selected = selectedClassifications.Contains(classification.Id);
+                            }
+                            <input type="checkbox" name="SelectedGameClassification" value="@classification.Id" @(selected ? "checked" : "") /> @classification.Name
+                        </label>
                     }
-                    <input type="checkbox" name="SelectedGameClassification" value="@classification.Id" @(selected ? "checked" : "") /> @classification.Name
-                </label>
-            }
-            @Html.ValidationMessageFor(model => model.SelectedGameClassification, "", new { @class = "text-danger" })
-        </div>
-        <div class="mb-3">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "form-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
+                @Html.ValidationMessageFor(model => model.SelectedGameClassification, "", new { @class = "text-danger" })
             </div>
-        </div>
+            <div class="mb-3">
+                <div class="row">
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "form-label col-md-12" })
+                    <div class="col-12">
+                        @Html.TextAreaFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
+            </div>
 
-        <div class="mb-3">
-            @Html.LabelFor(model => model.IsRestrict, htmlAttributes: new { @class = "form-label col-md-2" })
-            <div class="col-md-10">
+            <div class="mb-3">
+                @Html.LabelFor(model => model.IsRestrict, htmlAttributes: new { @class = "form-label col-md-2" })
                 <div class="checkbox">
                     @Html.EditorFor(model => model.IsRestrict)
                     @Html.ValidationMessageFor(model => model.IsRestrict, "", new { @class = "text-danger" })
                 </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ModifiedTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DisplayFor(model => model.ModifiedTime, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="mb-3">
+                @Html.LabelFor(model => model.ModifiedTime, htmlAttributes: new { @class = "form-label col-2" })
+                <div>
+                    @Html.DisplayFor(model => model.ModifiedTime, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                </div>
                 @Html.HiddenFor(model => model.ModifiedTime)
             </div>
-        </div>
 
-        <div class="mb-3">
-            @Html.LabelFor(model => model.ModifiedBackendMemberName, htmlAttributes: new { @class = "form-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DisplayFor(model => model.ModifiedBackendMemberName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            <div class="mb-3">
+                @Html.LabelFor(model => model.ModifiedBackendMemberName, htmlAttributes: new { @class = "form-label col-2" })
+                <div>
+                    @Html.DisplayFor(model => model.ModifiedBackendMemberName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                </div>
                 @Html.ValidationMessageFor(model => model.ModifiedBackendMemberName, "", new { @class = "text-danger" })
             </div>
-        </div>
 
 
-        <div class="mb-3">
-            <div style="text-align: right;">
-                @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-primary" })
-                <input type="submit" value="更新" class="btn btn-primary" />
+            <div class="mb-3">
+                <div style="text-align: right;">
+                    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-primary btnColor" })
+                    <input type="submit" value="更新" class="btn btn-primary btnColor" />
+                </div>
             </div>
         </div>
-    </div>
-}
 
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
     }
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

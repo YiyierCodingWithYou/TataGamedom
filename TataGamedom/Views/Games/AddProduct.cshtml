@@ -1,131 +1,122 @@
 ﻿@model TataGamedom.Models.ViewModels.Games.GameAddProductVM
-
 @{
     ViewBag.Title = "AddProduct";
 }
+@section Styles{
+    <link href="~/Content/layoutStyle1.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap theme.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/Content/YiyierStyle.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css" rel="stylesheet">
+}
+<div class="container">
+    <h1 class="main_heading">新增商品</h1>
 
-<h2>新增商品</h2>
+    @using (Html.BeginForm("AddProduct", "Games", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
 
+        <div class="row">
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="mb-3">
+                @Html.LabelFor(model => model.GameId, htmlAttributes: new { @class = "control-label col-md-2 visually-hidden" })
+                @Html.EditorFor(model => model.GameId, new { htmlAttributes = new { @class = "form-control visually-hidden", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.GameId, "", new { @class = "text-danger visually-hidden" })
+            </div>
 
-@using (Html.BeginForm("AddProduct", "Games", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
+            <div class="mb-3">
+                @Html.LabelFor(model => model.GameChiName, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.EditorFor(model => model.GameChiName, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                @Html.ValidationMessageFor(model => model.GameChiName, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.GameChiName)
+            </div>
 
-<div class="form-horizontal">
-    <h4></h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(model => model.GameId, htmlAttributes: new { @class = "control-label col-md-2 visually-hidden" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.GameId, new { htmlAttributes = new { @class = "form-control visually-hidden", @readonly = "readonly" } })
-            @Html.ValidationMessageFor(model => model.GameId, "", new { @class = "text-danger visually-hidden" })
-        </div>
-    </div>
+            <div class="mb-3">
+                @Html.LabelFor(model => model.GameEngName, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.EditorFor(model => model.GameEngName, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                @Html.ValidationMessageFor(model => model.GameEngName, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.GameEngName)
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.GameChiName, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.GameChiName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-            @Html.ValidationMessageFor(model => model.GameChiName, "", new { @class = "text-danger" })
-        </div>
-    </div>
+            </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.GameEngName, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.GameEngName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-            @Html.ValidationMessageFor(model => model.GameEngName, "", new { @class = "text-danger" })
-        </div>
-    </div>
+            <div class="mb-3">
+                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Description)
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.Platform, htmlAttributes: new { @class = "control-label col-md-2" })
-        @Html.DropDownList("Platform", null, "", htmlAttributes: new { @class = "form-select", id = "platform-select" })
-        @Html.ValidationMessageFor(model => model.Platform, "", new { @class = "text-danger" })
-    </div>
-    @*<div class="form-group">
-            @Html.LabelFor(model => model.Platform, htmlAttributes: new { @class = "control-label col-md-2" })
-            @Html.DropDownList("Platform", null, "", htmlAttributes: new { @class = "form-select" })
-            @Html.ValidationMessageFor(model => model.Platform, "", new { @class = "text-danger" })
-        </div>*@
+            </div>
+            <div class="mb-3">
+                @Html.LabelFor(model => model.Platform, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.DropDownList("Platform", null, "", htmlAttributes: new { @class = "form-select target", id = "platform-select" })
+                @Html.ValidationMessageFor(model => model.Platform, "", new { @class = "text-danger" })
+            </div>
+            <div class="mb-3">
+                @Html.LabelFor(model => model.IsVirtual, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.IsVirtual)
+                    @Html.ValidationMessageFor(model => model.IsVirtual, "", new { @class = "text-danger" })
+                </div>
+            </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.IsVirtual, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <div class="checkbox">
-                @Html.EditorFor(model => model.IsVirtual)
-                @Html.ValidationMessageFor(model => model.IsVirtual, "", new { @class = "text-danger" })
+            <div class="mb-3">
+                @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control target" } })
+                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(model => model.SystemRequire, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.EditorFor(model => model.SystemRequire, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SystemRequire, "", new { @class = "text-danger" })
+            </div>
+            <div class="mb-3">
+                @Html.LabelFor(model => model.ProductImg, htmlAttributes: new { @class = "form-label col-md-2" })
+                <input type="file" name="files" class="form-control" multiple onchange="limitFiles(this, 6)" />
+                @Html.ValidationMessageFor(model => model.ProductImg, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(model => model.SaleDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.EditorFor(model => model.SaleDate, new { htmlAttributes = new { @class = "form-control target", type = "date" } })
+                @Html.ValidationMessageFor(model => model.SaleDate, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @value = "待上架" } })
+                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+            </div>
+            <div class="mb-3">
+                <div style="text-align: right;">
+                    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-primary btnColor" })
+                    @if ((int)(ViewBag.PlatformOptionsCount ?? 0) > 0)
+                    {
+                        <input type="submit" value="新增" class="btn btn-primary btnColor" />
+                    }
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.SystemRequire, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.SystemRequire, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.SystemRequire, "", new { @class = "text-danger" })
-        </div>
-    </div>
-    <div class="mb-5">
-        @Html.LabelFor(model => model.ProductImg, htmlAttributes: new { @class = "form-label col-md-2" })
-        <input type="file" name="files" class="form-control" multiple onchange="limitFiles(this, 6)" />
-        @Html.ValidationMessageFor(model => model.ProductImg, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.SaleDate, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.SaleDate, new { htmlAttributes = new { @class = "form-control", type = "date" } })
-            @Html.ValidationMessageFor(model => model.SaleDate, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @value = "待上架" } })
-            @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
-        </div>
-    </div>
-    
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            @if ((int)(ViewBag.PlatformOptionsCount ?? 0) > 0)
-            {
-                <input type="submit" value="Create" class="btn btn-primary" />
-            }
-        </div>
-    </div>
-</div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
+    }
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+
     <script>
         function limitFiles(input, maxFiles) {
             if (input.files.length > maxFiles) {
-                alert(`最多只能選擇 ${maxFiles} 個檔案。`);
-                input.value = '';
+                Swal.fire({
+                    title: '警告',
+                    text: `最多只能選擇 ${maxFiles} 個檔案。`,
+                    icon: 'warning',
+                    confirmButtonText: 'OK',
+                }).then((result) => {
+                    // 清空文件輸入框的值
+                    input.value = '';
+                });
             }
         }
     </script>

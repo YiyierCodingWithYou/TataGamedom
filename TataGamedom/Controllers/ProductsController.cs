@@ -1,5 +1,9 @@
-﻿using System;
+﻿using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
@@ -102,6 +106,7 @@ namespace TataGamedom.Controllers
 			//viewModel.ModifiedTimeBackendMemberId = memberInDb != null ? memberInDb.Id : 0;
 			return View(viewModel);
 		}
+
 		[HttpPost]
 		public ActionResult EditProducImg(ProductEditImgVM viewModel, HttpPostedFileBase[] file)
 		{
@@ -161,7 +166,6 @@ namespace TataGamedom.Controllers
 							}
 						}
 					}
-
 					// 保存更改到数据库
 					db.SaveChanges();
 				}
@@ -186,89 +190,187 @@ namespace TataGamedom.Controllers
 
 			return Json(new { success = false });
 		}
-		//	[HttpPost]
-		//	public ActionResult EditProducImg(ProductEditImgVM viewModel, HttpPostedFileBase[] file)
-		//	{
-		//		if (ModelState.IsValid)
-		//		{
-		//			// 获取当前用户信息
-		//			var currentUserAccount = User.Identity.Name;
-		//			var memberInDb = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
+		[Authorize]
+		public ActionResult Upload()
+		{
+			return View();
+		}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Upload(HttpPostedFileBase file)
+		{
+			ViewBag.Message = "匯入成功";
+			if (file != null)
+			{
+				Stream stream = file.InputStream; //使用Stream(流)對檔案進行操作
+				DataTable dataTable = new DataTable();
+				IWorkbook wb;
+				ISheet sheet;
+				IRow headerRow;
+				int cellCount; //紀錄共有幾欄
 
-		//			// 根据商品ID从数据库中获取商品记录
-		//			var product = db.Products.FirstOrDefault(p => p.Id == viewModel.ProductId);
+				try
+				{
+					//依excel版本，NPOI載入檔案
+					if (file.FileName.ToUpper().EndsWith("XLSX"))
+						wb = new XSSFWorkbook(stream); // excel版本(.xlsx)
+					else
+						wb = new HSSFWorkbook(stream); // excel版本(.xls)
 
-		//			if (product != null)
-		//			{
-		//				// 更新最后修改时间和修改者信息
-		//				product.ModifiedTime = DateTime.Now;
-		//				product.ModifiedBackendMemberId = memberInDb != null ? memberInDb.Id : 0;
+					//取第一個頁籤   
+					sheet = wb.GetSheetAt(0);
 
-		//				// 更新图片列表
-		//				for (int i = 0; i < viewModel.Id.Count; i++)
-		//				{
-		//					if (i < viewModel.Image.Count)  // 验证索引是否在有效范围内
-		//					{
-		//						var imageId = viewModel.Id[i];
-		//						var image = viewModel.Image[i];
-		//						var productImage = db.ProductImages.FirstOrDefault(pi => pi.Id == imageId);
+					//取第一個頁籤的第一列
+					headerRow = sheet.GetRow(0);
 
-		//						if (productImage != null)
-		//						{
-		//							productImage.Image = image;
-		//						}
-		//					}
-		//				}
+					//計算出第一列共有多少欄位
+					cellCount = headerRow.LastCellNum;
 
-		//				// 保存更改到数据库
-		//				db.SaveChanges();
+					//迴圈執行第一列的第一個欄位到最後一個欄位，將抓到的值塞進DataTable做完欄位名稱
+					for (int i = headerRow.FirstCellNum; i < cellCount; i++)
+					{
+						dataTable.Columns.Add(new DataColumn(headerRow.GetCell(i).StringCellValue));
+					}
 
-		//				// 处理上传的新图片
-		//				if (file != null && file.Length > 0)
-		//				{
-		//					foreach (var uploadedFile in file)
-		//					{
-		//						if (uploadedFile != null && uploadedFile.ContentLength > 0)
-		//						{
-		//							// 将上传的图片保存到服务器文件系统或数据库
-		//							var fileName = Path.GetFileName(uploadedFile.FileName);
-		//							var filePath = Path.Combine(Server.MapPath("~/Files/Uploads"), fileName);
-		//							uploadedFile.SaveAs(filePath);
+					//int j; //計算每一列讀到第幾個欄位
+					int column = 1; //計算每一列讀到第幾個欄位
 
-		//							// 创建新的ProductImage记录并保存到数据库
-		//							var newProductImage = new ProductImage
-		//							{
-		//								ProductId = viewModel.ProductId,
-		//								Image = fileName,
-		//								// 设置其他属性值
-		//							};
-		//							db.ProductImages.Add(newProductImage);
-		//						}
-		//					}
+					// 略過第零列(標題列)，一直處理至最後一列
+					for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++)
+					{
+						//取目前的列(row)
+						IRow row = sheet.GetRow(i);
 
-		//					// 保存新图片的更改到数据库
-		//					db.SaveChanges();
-		//				}
-		//			}
+						//若該列的第一個欄位無資料，break跳出
+						if (string.IsNullOrEmpty(row.Cells[0].ToString().Trim()))
+						{
+							break;
+						}
 
-		//			return View(viewModel);
-		//		}
+						//宣告DataRow
+						DataRow dataRow = dataTable.NewRow();
+						//宣告ICell
+						ICell cell;
 
-		//		return View(viewModel);
-		//	}
-		//	[HttpPost]
-		//	public ActionResult DeleteImage(int id)
-		//	{
-		//		var productImage = db.ProductImages.FirstOrDefault(pi => pi.Id == id);
+						try
+						{
+							//依先前取得，依每一列的欄位數，逐一設定欄位內容
+							for (int j = row.FirstCellNum; j < cellCount; j++)
+							{
+								//計算每一列讀到第幾個欄位(秀在錯誤訊息上)
+								column = j + 1;
 
-		//		if (productImage != null)
-		//		{
-		//			db.ProductImages.Remove(productImage);
-		//			db.SaveChanges();
-		//			return Json(new { success = true });
-		//		}
+								//設定cell為目前第j欄位
+								cell = row.GetCell(j);
 
-		//		return Json(new { success = false });
-		//	}
+								if (cell != null) //若cell有值
+								{
+									//用cell.CellType判斷資料的型別
+									//再依照欄位屬性，用StringCellValue、DateCellValue、NumericCellValue、DateCellValue取值
+									switch (cell.CellType)
+									{
+										//字串型態欄位
+										case NPOI.SS.UserModel.CellType.String:
+											//設定dataRow第j欄位的值，cell以字串型態取值
+											dataRow[j] = cell.StringCellValue;
+											break;
+
+										//數字型態欄位
+										case NPOI.SS.UserModel.CellType.Numeric:
+
+											if (HSSFDateUtil.IsCellDateFormatted(cell)) //日期格式
+											{
+												//設定dataRow第j欄位的值，cell以日期格式取值
+												dataRow[j] = DateTime.FromOADate(cell.NumericCellValue).ToString("yyyy/MM/dd HH:mm");
+											}
+											else //非日期格式
+											{
+												//設定dataRow第j欄位的值，cell以數字型態取值
+												dataRow[j] = cell.NumericCellValue;
+											}
+											break;
+
+										//布林值
+										case NPOI.SS.UserModel.CellType.Boolean:
+
+											//設定dataRow第j欄位的值，cell以布林型態取值
+											dataRow[j] = cell.BooleanCellValue;
+											break;
+
+										//空值
+										case NPOI.SS.UserModel.CellType.Blank:
+
+											dataRow[j] = null;
+											break;
+
+										// 預設
+										default:
+
+											dataRow[j] = cell.StringCellValue;
+											break;
+									}
+								}
+							}
+							//DataTable加入dataRow
+							dataTable.Rows.Add(dataRow);
+						}
+						catch (Exception ex)
+						{
+							//錯誤訊息
+							throw new Exception("第 " + i + "列第" + column + "欄，資料格式有誤:\r\r" + ex.ToString());
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					ViewBag.Message = "匯入失敗";
+					Console.Write(ex.Message);
+				}
+				finally
+				{
+					//釋放資源
+					sheet = null;
+					wb = null;
+					stream.Dispose();
+					stream.Close();
+				}
+
+				//dataTable跑回圈，insert資料至DB
+				try
+				{
+					foreach (DataRow dataRow in dataTable.Rows)
+					{
+						Product product = new Product()
+						{
+							Index = dataRow["Index"].ToString(),
+							GameId = int.Parse(dataRow["GameId"].ToString()),
+							IsVirtual = bool.Parse(dataRow["IsVirtual"].ToString()),
+							Price = int.Parse(dataRow["Price"].ToString()),
+							GamePlatformId = int.Parse(dataRow["GamePlatformId"].ToString()),
+							SystemRequire = dataRow["SystemRequire"].ToString(),
+							ProductStatusId = int.Parse(dataRow["ProductStatusId"].ToString()),
+							SaleDate = DateTime.Parse(dataRow["SaleDate"].ToString())
+						};
+
+						try
+						{
+							var currentUserAccount = User.Identity.Name;
+							NPOIHelper products = new NPOIHelper();
+							products.InsertProducts(product, currentUserAccount);
+						}
+						catch (Exception ex)
+						{
+							ViewBag.Message = "匯入失敗";
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					ViewBag.Message = "匯入失敗";
+				}
+			}
+			return View();
+		}
+
 	}
 }

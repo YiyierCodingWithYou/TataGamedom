@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
+using System.Data.OleDb;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Web;
@@ -11,6 +14,12 @@ using TataGamedom.Models.Infra.DapperRepositories;
 using TataGamedom.Models.Interfaces;
 using TataGamedom.Models.Services;
 using TataGamedom.Models.ViewModels.Games;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using System.Data.Entity;
+using System.Data;
+using System.IO;
 
 namespace TataGamedom.Controllers
 {
@@ -51,83 +60,34 @@ namespace TataGamedom.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Create(GameCreateVM vm, HttpPostedFileBase file1)
+		public ActionResult Create(GameCreateVM vm, HttpPostedFileBase GameCoverImg)
 		{
 			var currentUserAccount = User.Identity.Name;
 			var memberInDb = db.BackendMembers.FirstOrDefault(m => m.Account == currentUserAccount);
-			var savedFileName = SaveFile(file1);
-			if (savedFileName == string.Empty && vm.SelectedGameClassification.Count == 0)
-			{
-				ModelState.AddModelError("GameCoverImg", "請選擇檔案");
-				ModelState.AddModelError("SelectedGameClassification", "請選擇遊戲分類！");
-				List<GameClassificationsCode> gameClassifications0 = GetGameClassifications();
-				GameCreateVM model0 = new GameCreateVM
-				{
-					GameClassification = gameClassifications0,
-				};
-				return View(model0);
-			}
-			if (savedFileName == string.Empty)
-			{
-				ModelState.AddModelError("GameCoverImg", "請選擇檔案");
-				List<GameClassificationsCode> gameClassifications0 = GetGameClassifications();
-				GameCreateVM model0 = new GameCreateVM
-				{
-					GameClassification = gameClassifications0,
-				};
-				return View(model0);
-			}
+			var savedFileName = SaveFile(GameCoverImg);
+
 			vm.GameCoverImg = savedFileName;
 			vm.CreatedBackendMemberId = memberInDb.Id;
-			if (vm.SelectedGameClassification.Count == 0)
-			{
-				ModelState.AddModelError("SelectedGameClassification", "請選擇遊戲分類！");
-				List<GameClassificationsCode> gameClassifications1 = GetGameClassifications();
-				GameCreateVM model1 = new GameCreateVM
-				{
-					GameClassification = gameClassifications1,
-					SelectedGameClassification = vm.SelectedGameClassification
-				};
-				return View(model1);
-			}
-			List<int> selectedGameClassifications = vm.SelectedGameClassification;
-			if (ModelState.IsValid)
-			{
-				if (vm.SelectedGameClassification.Count > 2)
-				{
-					ModelState.AddModelError("SelectedGameClassification", "最多只能選擇兩個遊戲分類！");
-					List<GameClassificationsCode> gameClassifications2 = GetGameClassifications();
-					GameCreateVM model2 = new GameCreateVM
-					{
-						GameClassification = gameClassifications2
-					};
-					return View(model2);
+			ViewBag.GameClassification = GetGameClassifications();
 
-				}
-				Result createResult = CreateGame(vm);
-				if (createResult.IsSuccess)
-				{
-					//新增遊戲類別
-					CreateGameClassification(vm);
-					//新增遊戲討論版
-					CreateGameBoard(vm);
-
-					return RedirectToAction("Index");
-				}
-				ModelState.AddModelError(string.Empty, createResult.ErrorMessage);
-				List<GameClassificationsCode> gameClassifications3 = GetGameClassifications();
-				GameCreateVM model3 = new GameCreateVM
-				{
-					GameClassification = gameClassifications3
-				};
-				return View(model3);
-			}
-			var gameClassifications = GetGameClassifications();
-			GameCreateVM model = new GameCreateVM
+			if (ModelState.IsValid == false)
 			{
-				GameClassification = gameClassifications
-			};
-			return View(model);
+				vm.GameClassification = GetGameClassifications();
+				return View(vm);
+			}
+			Result createResult = CreateGame(vm);
+			if (createResult.IsSuccess)
+			{
+				//新增遊戲類別
+				CreateGameClassification(vm);
+				//新增遊戲討論版
+				CreateGameBoard(vm);
+
+				return RedirectToAction("Index");
+			}
+			ModelState.AddModelError(string.Empty, createResult.ErrorMessage);
+			vm.GameClassification = GetGameClassifications();
+			return View(vm);
 		}
 
 		private void CreateGameBoard(GameCreateVM vm)
@@ -198,38 +158,23 @@ namespace TataGamedom.Controllers
 				if (selectedGameClassifications.Count > 2)
 				{
 					ModelState.AddModelError("SelectedGameClassification", "最多只能選擇兩個遊戲分類！");
-					List<GameClassificationsCode> gameClassifications = GetGameClassifications();
-					GameEditVM model = new GameEditVM
-					{
-						GameClassification = gameClassifications
-					};
-					return View(model);
+					vm.GameClassification = GetGameClassifications();
+					return View(vm);
 				}
 				vm.ModifiedBackendMemberId = memberInDb.Id;
 				Result editResult = UpdateGames(vm);
 				if (editResult.IsSuccess)
 				{
-					//更新遊戲類別
 					UpdateGameClassification(vm);
 					CreateGameClassification(vm);
-
 					return RedirectToAction("Index");
 				}
 				ModelState.AddModelError(string.Empty, editResult.ErrorMessage);
-				List<GameClassificationsCode> gameClassifications2 = GetGameClassifications();
-				GameEditVM model2 = new GameEditVM
-				{
-					GameClassification = gameClassifications2
-				};
-				return View(model2);
-
+				vm.GameClassification = GetGameClassifications();
+				return View(vm);
 			}
-			List<GameClassificationsCode> gameClassifications3 = GetGameClassifications();
-			GameEditVM model3 = new GameEditVM
-			{
-				GameClassification = gameClassifications3
-			};
-			return View(model3);
+			vm.GameClassification = GetGameClassifications();
+			return View(vm);
 		}
 		private void CreateGameClassification(GameEditVM vm)
 		{
@@ -355,6 +300,203 @@ namespace TataGamedom.Controllers
 			IGameRepository repo = new GameDapperRepository();
 			GameService service = new GameService(repo);
 			return service.CreateProduct(vm);
+		}
+		[Authorize]
+		public ActionResult Upload()
+		{
+			return View();
+		}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Upload(HttpPostedFileBase file)
+		{
+			ViewBag.Message = "匯入成功";
+			if (file != null)
+			{
+				Stream stream = file.InputStream; //使用Stream(流)對檔案進行操作
+				DataTable dataTable = new DataTable();
+				IWorkbook wb;
+				ISheet sheet;
+				IRow headerRow;
+				int cellCount; //紀錄共有幾欄
+
+				try
+				{
+					//依excel版本，NPOI載入檔案
+					if (file.FileName.ToUpper().EndsWith("XLSX"))
+						wb = new XSSFWorkbook(stream); // excel版本(.xlsx)
+					else
+						wb = new HSSFWorkbook(stream); // excel版本(.xls)
+
+					//取第一個頁籤   
+					sheet = wb.GetSheetAt(0);
+
+					//取第一個頁籤的第一列
+					headerRow = sheet.GetRow(0);
+
+					//計算出第一列共有多少欄位
+					cellCount = headerRow.LastCellNum;
+
+					//迴圈執行第一列的第一個欄位到最後一個欄位，將抓到的值塞進DataTable做完欄位名稱
+					try
+					{
+						for (int i = headerRow.FirstCellNum; i < cellCount; i++)
+						{
+							dataTable.Columns.Add(new DataColumn(headerRow.GetCell(i).StringCellValue));
+						}
+					}
+					catch (Exception ex)
+					{
+						ViewBag.Message = "匯入失敗";
+						Console.Write(ex.Message);
+					}
+
+
+					//int j; //計算每一列讀到第幾個欄位
+					int column = 1; //計算每一列讀到第幾個欄位
+
+					// 略過第零列(標題列)，一直處理至最後一列
+					for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++)
+					{
+						//取目前的列(row)
+						IRow row = sheet.GetRow(i);
+
+						//若該列的第一個欄位無資料，break跳出
+						if (string.IsNullOrEmpty(row.Cells[0].ToString().Trim()))
+						{
+							break;
+						}
+
+						//宣告DataRow
+						DataRow dataRow = dataTable.NewRow();
+						//宣告ICell
+						ICell cell;
+
+						try
+						{
+							//依先前取得，依每一列的欄位數，逐一設定欄位內容
+							for (int j = row.FirstCellNum; j < cellCount; j++)
+							{
+								//計算每一列讀到第幾個欄位(秀在錯誤訊息上)
+								column = j + 1;
+
+								//設定cell為目前第j欄位
+								cell = row.GetCell(j);
+
+								if (cell != null) //若cell有值
+								{
+									//用cell.CellType判斷資料的型別
+									//再依照欄位屬性，用StringCellValue、DateCellValue、NumericCellValue、DateCellValue取值
+									switch (cell.CellType)
+									{
+										//字串型態欄位
+										case NPOI.SS.UserModel.CellType.String:
+											//設定dataRow第j欄位的值，cell以字串型態取值
+											dataRow[j] = cell.StringCellValue;
+											break;
+
+										//數字型態欄位
+										case NPOI.SS.UserModel.CellType.Numeric:
+
+											if (HSSFDateUtil.IsCellDateFormatted(cell)) //日期格式
+											{
+												//設定dataRow第j欄位的值，cell以日期格式取值
+												dataRow[j] = DateTime.FromOADate(cell.NumericCellValue).ToString("yyyy/MM/dd HH:mm");
+											}
+											else //非日期格式
+											{
+												//設定dataRow第j欄位的值，cell以數字型態取值
+												dataRow[j] = cell.NumericCellValue;
+											}
+											break;
+
+										//布林值
+										case NPOI.SS.UserModel.CellType.Boolean:
+
+											//設定dataRow第j欄位的值，cell以布林型態取值
+											dataRow[j] = cell.BooleanCellValue;
+											break;
+
+										//空值
+										case NPOI.SS.UserModel.CellType.Blank:
+
+											dataRow[j] = null;
+											break;
+
+										// 預設
+										default:
+
+											dataRow[j] = cell.StringCellValue;
+											break;
+									}
+								}
+							}
+							//DataTable加入dataRow
+							dataTable.Rows.Add(dataRow);
+						}
+						catch (Exception ex)
+						{
+							//錯誤訊息
+							throw new Exception("第 " + i + "列第" + column + "欄，資料格式有誤:\r\r" + ex.ToString());
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					ViewBag.Message = "匯入失敗";
+					Console.Write(ex.Message);
+				}
+				finally
+				{
+					//釋放資源
+					sheet = null;
+					wb = null;
+					stream.Dispose();
+					stream.Close();
+				}
+				//dataTable跑回圈，insert資料至DB
+				try
+				{
+					foreach (DataRow dataRow in dataTable.Rows)
+					{
+						Game game = new Game()
+						{
+							ChiName = dataRow["ChiName"].ToString(),
+							EngName = dataRow["EngName"].ToString(),
+							Description = dataRow["Description"].ToString(),
+							IsRestrict = bool.Parse(dataRow["IsRestrict"].ToString()),
+							GameCoverImg = dataRow["GameCoverImg"].ToString(),
+						};
+
+						Board board = new Board()
+						{
+							Name = dataRow["ChiName"].ToString(),
+							GameId = int.Parse(dataRow["GameId"].ToString()),
+							BoardAbout = dataRow["Description"].ToString(),
+							BoardHeaderCoverImg = dataRow["GameCoverImg"].ToString()
+						};
+
+						try
+						{
+							var currentUserAccount = User.Identity.Name;
+							NPOIHelper games = new NPOIHelper();
+							games.InsertGames(game, currentUserAccount);
+
+							NPOIHelper boards = new NPOIHelper();
+							boards.InsertBoards(board, currentUserAccount);
+						}
+						catch (Exception ex)
+						{
+							ViewBag.Message = "匯入失敗";
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					ViewBag.Message = "匯入失敗";
+				}
+			}
+			return View();
 		}
 	}
 }

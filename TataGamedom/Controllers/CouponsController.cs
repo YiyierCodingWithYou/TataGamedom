@@ -11,13 +11,17 @@ using TataGamedom.Models.Infra.DapperRepositories;
 using TataGamedom.Models.Interfaces;
 using TataGamedom.Models.Services;
 using TataGamedom.Models.ViewModels.Coupons;
+using Dapper;
+using System.Data.SqlClient;
+using DocumentFormat.OpenXml.Office2016.Drawing;
 
 namespace TataGamedom.Controllers
 {
-[Route("Coupons/{couponId}")]
+	[Route("Coupons/{couponId}")]
 	public class CouponsController : Controller
 	{
 		private AppDbContext db = new AppDbContext();
+		private string _connStr = System.Configuration.ConfigurationManager.ConnectionStrings["AppDbContext"].ToString();
 		[Authorize]
 		// GET: Coupons
 		public ActionResult Index()
@@ -162,6 +166,7 @@ namespace TataGamedom.Controllers
 				Id = coupon.Id,
 				CouponName = coupon.Name,
 				Description = coupon.Description,
+				EndTime = coupon.EndTime,
 				SelectedProductIds = couponProducts,
 				AvailableProducts = availableProducts
 			};
@@ -223,46 +228,54 @@ namespace TataGamedom.Controllers
 
 			return RedirectToAction("Index");
 		}
+		
+		
+		[Authorize]
+		public ActionResult CouponsProductsIndex()
+		{
+			using (var conn = new SqlConnection(_connStr))
+			{
+				string sql = @"SELECT
+    P.[Index],
+    G.ChiName AS Name,
+    GPC.Name AS Platform,
+    C.Name AS CouponName,
+    C.Threshold,
+    C.Description,
+    P.Price,
+    CASE
+        WHEN C.DiscountTypeId = 1 AND P.Price > C.Threshold THEN P.Price * (C.Discount / 100)
+        WHEN C.DiscountTypeId = 2 AND P.Price > C.Threshold THEN P.Price - C.Discount
+        ELSE P.Price
+    END AS SpecialPrice,
+    CASE
+        WHEN (
+            CASE
+                WHEN C.DiscountTypeId = 1 THEN P.Price * (C.Discount / 100)
+                WHEN C.DiscountTypeId = 2 THEN P.Price - C.Discount
+                ELSE P.Price
+            END
+        ) < 0 THEN 0
+        ELSE (
+            CASE
+                WHEN C.DiscountTypeId = 1 THEN P.Price * (C.Discount / 100)
+                WHEN C.DiscountTypeId = 2 THEN P.Price - C.Discount
+                ELSE P.Price
+            END
+        )
+    END AS IfReach
+FROM
+    CouponsProducts AS CP
+    JOIN Coupons AS C ON C.Id = CP.CouponId
+    JOIN Products AS P ON P.Id = CP.ProductId
+    JOIN Games AS G ON G.Id = P.GameId
+    JOIN GamePlatformsCodes AS GPC ON GPC.Id = P.GamePlatformId
+WHERE
+    C.ActiveFlag = 1";
 
-		//[HttpDelete]
-		//[ResponseType(typeof(ApiResult))]
-
-		//public ApiResult Delete(int couponId)
-		//{
-		//	Coupon coupon;
-		//	try {
-			
-		//	coupon = db.Coupons.FirstOrDefault(c => c.Id == couponId);
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//	return ApiResult.Fail(ex.Message);
-		//	}
-
-		//	if (coupon == null)
-		//	{
-		//		return ApiResult.Fail("該優惠券不存在！");
-		//	}
-		//	//活動已結束
-		//	if (coupon.EndTime < DateTime.Now)
-		//	{
-		//		return ApiResult.Fail("無法刪除已結束的優惠券");
-		//	}
-		//	//活動未開始
-		//	if ((coupon.StartTime > DateTime.Now)|| (coupon.StartTime <= DateTime.Now && coupon.EndTime > DateTime.Now))
-		//	{
-		//		var hasRelatedData = db.CouponsProducts.Any(cp => cp.CouponId == couponId); 
-		//		if (hasRelatedData) //有適用商品
-		//		{
-		//			return ApiResult.Fail("無法刪除有適用商品之優惠券");
-		//		}
-		//		//無適用商品
-		//		db.Coupons.Remove(coupon);
-		//		db.SaveChanges();
-		//		return ApiResult.Success("優惠券已成功刪除。");
-		//	}
-
-		//	return ApiResult.Fail("刪除失敗");
-		//}
+				var list = conn.Query<CouponsProductsIndexVM>(sql).ToList();
+				return View(list);
+			}
+		}
 	}
 }

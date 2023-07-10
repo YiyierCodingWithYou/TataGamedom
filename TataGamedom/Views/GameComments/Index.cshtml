@@ -5,9 +5,7 @@
 }
 @section Styles{
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
-    <link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/v/bs5/dt-1.13.5/af-2.6.0/b-2.4.0/b-html5-2.4.0/date-1.5.0/sb-1.5.0/sl-1.7.0/datatables.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css" rel="stylesheet">
     <style>
         thead {
@@ -22,38 +20,35 @@
 }
 
 <h2>遊戲評論管理列表</h2>
-
-<p>
-</p>
-<div class="text-center">
+<div>
     <table class="table" id="myTable">
         <thead>
             <tr>
-                <th>
+                <th class="text-center vertical-align-middle w-25">
                     @Html.DisplayNameFor(model => model.GameName)
                 </th>
-                <th>
+                <th class="text-center vertical-align-middle">
                     @Html.DisplayNameFor(model => model.MemberName)
                 </th>
-                <th>
+                <th class="text-center vertical-align-middle">
                     @Html.DisplayNameFor(model => model.ContentText)
                 </th>
-                <th>
+                <th class="text-center vertical-align-middle">
                     @Html.DisplayNameFor(model => model.Score)
                 </th>
-                <th>
+                <th class="text-center vertical-align-middle">
                     @Html.DisplayNameFor(model => model.CreatedTime)
                 </th>
-                <th>
+                <th class="text-center vertical-align-middle">
                     @Html.DisplayNameFor(model => model.ActiveFlag)
                 </th>
-                <th>
+                <th class="text-center vertical-align-middle">
                     @Html.DisplayNameFor(model => model.DeleteBackendMemberName)
                 </th>
-                <th>
+                <th class="text-center vertical-align-middle">
                     @Html.DisplayNameFor(model => model.DeleteDatetime)
                 </th>
-                <th>
+                <th class="text-center vertical-align-middle">
                     詳細
                 </th>
             </tr>
@@ -63,37 +58,37 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>
+                    <td class="vertical-align-middle w-25">
                         @Html.DisplayFor(modelItem => item.GameName)
                     </td>
-                    <td>
+                    <td class="text-center vertical-align-middle">
                         @Html.DisplayFor(modelItem => item.MemberName)
                     </td>
-                    <td>
+                    <td class="vertical-align-middle">
                         @Html.DisplayFor(modelItem => item.ContentText)
                     </td>
-                    <td>
+                    <td class="text-center vertical-align-middle">
                         @Html.DisplayFor(modelItem => item.Score)
                     </td>
-                    <td>
+                    <td class="text-center vertical-align-middle">
                         <span>@item.CreatedTime.ToShortDateString()</span>
                         <br />
                         <span>@item.CreatedTime.ToLongTimeString()</span>
                     </td>
-                    <td>
+                    <td class="text-center vertical-align-middle">
                         @if (item.ActiveFlag == false)
                         {
-                            <text>已隱藏</text>
+                            <div class="visually-hidden"><text>隱藏</text></div><i class="fa-solid fa-eye-slash fa-lg"></i>
                         }
                         else if (item.ActiveFlag == true)
                         {
-                            <text>公開</text>
+                            <div class="visually-hidden"><text>公開</text></div><i class="fa-solid fa-eye fa-lg"></i>
                         }
                     </td>
-                    <td>
+                    <td class="text-center vertical-align-middle">
                         @Html.DisplayFor(modelItem => item.DeleteBackendMemberName)
                     </td>
-                    <td>
+                    <td class="text-center vertical-align-middle">
                         @if (item.DeleteDatetime != null)
                         {
                             <span>@item.DeleteDatetime.Value.ToShortDateString()</span>
@@ -101,7 +96,7 @@
                             <span>@item.DeleteDatetime.Value.ToLongTimeString()</span>
                         }
                     </td>
-                    <td>
+                    <td class="text-center vertical-align-middle">
                         <a href="@Url.Action("Detail", new { id = item.Id })" class="icon-link">
                             <i class="fa-solid fa-circle-info"></i>
                         </a>
@@ -114,16 +109,20 @@
 @section Scripts{
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.1/datatables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+    @*<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.1/datatables.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>*@
+    <script src="https://cdn.datatables.net/v/bs5/dt-1.13.5/af-2.6.0/b-2.4.0/b-html5-2.4.0/date-1.5.0/sb-1.5.0/sl-1.7.0/datatables.min.js"></script>
+
 
     <script>
         $(document).ready(function () {
             $('#myTable').DataTable({
+                dom: 'Qfrtip',
+                select: false,
                 responsive: true,
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/zh-HANT.json',

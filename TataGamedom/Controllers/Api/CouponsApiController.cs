@@ -118,12 +118,12 @@ namespace TataGamedom.Controllers.Api
 			{
 				db.Coupons.Remove(coupon);
 				db.SaveChanges();
-				return ApiResult.Success("優惠券已成功刪除。");
 			}
 			catch (Exception ex)
 			{
-				return ApiResult.Fail("無法刪除該優惠券，因為它正在被使用或與其他相關資料有關聯，請聯繫工程師 :) ");
+				return ApiResult.Fail("無法刪除該優惠券，因為它與其他資料有關聯，請聯繫工程師 :) ");
 			}
+			return ApiResult.Success("優惠券已成功刪除。");
 		}
 
 		protected override void Dispose(bool disposing)

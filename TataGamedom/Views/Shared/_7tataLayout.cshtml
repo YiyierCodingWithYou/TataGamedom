@@ -14,9 +14,6 @@
     @Scripts.Render("~/bundles/modernizr")
     @RenderSection("Styles", required: false)
     @Styles.Render("~/Content/layoutStyle1.css")
-    <script src="https://code.jquery.com/jquery-3.7.0.slim.js"
-            integrity="sha256-7GO+jepT9gJe9LB4XFf8snVOjX3iYNb0FHYr5LI1N5c="
-            crossorigin="anonymous"></script>
     @using System.Web.Security
     @using TataGamedom.Filters
 </head>
@@ -28,6 +25,9 @@
         <h1 id="title">獺獺玩國TaTaGameDoM</h1>
     </div>
 
+    <div class="tataImg">
+    </div>
+
     <nav id="user-nav">
         <div class="time">
             現在時間：<span id="timeSpan"></span>
@@ -37,15 +37,15 @@
             {
                 <div class="user">
                     <ul>
-								<li>
-									@*<a href="/BackendMembers/Index">@Html.Raw(User.Identity.Name)</a>*@
-									<a href="/BackendMembers/Index">@(((FormsIdentity)User.Identity).Ticket.UserData)</a>
-									<ul>
-										<li><a href="/BackendMembers/EditProfile/">維護個人資料</a></li>
-										<li><a href="/BackendMembers/EditPassword/">修改密碼</a></li>
-										<li><a href="/BackendMembers/Logout/">登出</a></li>
-									</ul>
-								</li>
+                        <li>
+                            @*<a href="/BackendMembers/Index">@Html.Raw(User.Identity.Name)</a>*@
+                            <a href="/BackendMembers/Index">@(((FormsIdentity)User.Identity).Ticket.UserData)</a>
+                            <ul>
+                                <li><a href="/BackendMembers/EditProfile/">維護個人資料</a></li>
+                                <li><a href="/BackendMembers/EditPassword/">修改密碼</a></li>
+                                <li><a href="/BackendMembers/Logout/">登出</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             }
@@ -93,11 +93,11 @@
                 <ul>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink("討論區管理", "Index", "Boards", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("貼文／留言管理", "Index", "PostsComments", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li><a href="#">版主審核</a></li>
-                        <li><a href="#">檢舉審核</a></li>
-                        <li><a href="#">水桶名單管理</a></li>
+                        <li>@Html.ActionLink("討論區管理", "Boards", "Boards", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("貼文／留言管理", "PostsComments", "Boards", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("版主審核", "Moderators", "Boards", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("檢舉審核", "Reports", "Boards", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("水桶名單管理", "Buckets", "Boards", new { area = "" }, new { @class = "nav-link" })</li>
                     }
                 </ul>
             </li>
@@ -180,7 +180,7 @@
         </a>
     </nav>
 
-    <div class="container-fluid container-tata">
+    <div class="container-fluid container-tata position-relative">
         @RenderBody()
     </div>
     @Scripts.Render("~/bundles/jquery")

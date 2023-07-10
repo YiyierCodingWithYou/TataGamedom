@@ -28,6 +28,26 @@ h2{
     display:block;
 }
 
+.tataImg {
+    position: fixed;
+    right: 3rem;
+    bottom:-0.8rem;
+    height: 90px;
+    width: 80px;
+    z-index: 5 !important;
+    cursor:pointer;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    bottom: -0.8rem;
+    right: 3rem;
+    width: 90px;
+    height: 80px;
+    background-image: url("/Files/Images/tata.PNG");
+    background-size: cover;
+}
 
 .title {
     position: fixed;

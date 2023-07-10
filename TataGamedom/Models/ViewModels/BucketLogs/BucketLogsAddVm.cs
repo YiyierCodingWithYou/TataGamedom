@@ -8,8 +8,9 @@ namespace TataGamedom.Models.ViewModels.BucketLogs
 {
 	public class BucketLogsAddVm
 	{
-		[Required]
+
 		public int Id { get; set; }
+
 		[Required] 
 		public string BucketMemberAccount { get; set; }
 		[Required] 

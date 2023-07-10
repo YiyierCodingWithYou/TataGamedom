@@ -40,6 +40,9 @@ namespace TataGamedom.Models.ViewModels.News
 		[Display(Name = "前台圖片")]
 		[StringLength(100)]
 		public string CoverImg { get; set; }
+
+		//public HttpPostedFileBase ImageFile { get; set; }
+
 		[Required]
 		[Display(Name = "上線時間")]
 		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]

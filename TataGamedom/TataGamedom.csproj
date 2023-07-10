@@ -46,6 +46,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.9.0.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>..\packages\Portable.BouncyCastle.1.9.0\lib\net40\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
     <Reference Include="ClosedXML, Version=0.102.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
       <HintPath>..\packages\ClosedXML.0.102.0\lib\netstandard2.0\ClosedXML.dll</HintPath>
     </Reference>
@@ -61,6 +64,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Enums.NET, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7ea1c1650d506225, processorArchitecture=MSIL">
+      <HintPath>..\packages\Enums.NET.4.0.0\lib\net45\Enums.NET.dll</HintPath>
+    </Reference>
     <Reference Include="Hangfire.Core, Version=1.8.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hangfire.Core.1.8.3\lib\net46\Hangfire.Core.dll</HintPath>
     </Reference>
@@ -70,15 +76,36 @@
     <Reference Include="ExcelNumberFormat, Version=1.1.0.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelNumberFormat.1.1.0\lib\net20\ExcelNumberFormat.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.3.3.11, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.3.3\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="Irony, Version=1.0.11.0, Culture=neutral, PublicKeyToken=ca48ace7223ead47, processorArchitecture=MSIL">
       <HintPath>..\packages\Irony.NetCore.1.0.11\lib\net461\Irony.dll</HintPath>
     </Reference>
+    <Reference Include="MathNet.Numerics, Version=4.15.0.0, Culture=neutral, PublicKeyToken=cd8b63ad3d691a37, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.Signed.4.15.0\lib\net461\MathNet.Numerics.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.2.2.0\lib\net462\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI, Version=2.6.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.6.0\lib\net472\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.6.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.6.0\lib\net472\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.6.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.6.0\lib\net472\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.6.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.6.0\lib\net472\NPOI.OpenXmlFormats.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -91,6 +118,9 @@
     </Reference>
     <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
       <HintPath>..\packages\SixLabors.Fonts.1.0.0-beta19\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
+    </Reference>
+    <Reference Include="SixLabors.ImageSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
+      <HintPath>..\packages\SixLabors.ImageSharp.2.1.3\lib\net472\SixLabors.ImageSharp.dll</HintPath>
     </Reference>
     <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
       <HintPath>..\packages\Swashbuckle.Core.5.6.0\lib\net40\Swashbuckle.Core.dll</HintPath>
@@ -145,8 +175,8 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.7.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -169,6 +199,9 @@
       <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Text.Encoding.CodePages, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encoding.CodePages.5.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
     </Reference>
     <Reference Include="System.Text.RegularExpressions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.RegularExpressions.4.3.1\lib\net463\System.Text.RegularExpressions.dll</HintPath>
@@ -271,7 +304,9 @@
     <Compile Include="Controllers\Api\BucketLogsApiController.cs" />
     <Compile Include="Controllers\Api\CommentsApiController.cs" />
     <Compile Include="Controllers\Api\CouponsApiController.cs" />
+    <Compile Include="Controllers\Api\GamesApiController.cs" />
     <Compile Include="Controllers\Api\MembersApiController.cs" />
+    <Compile Include="Controllers\Api\ProductsApiController.cs" />
     <Compile Include="Controllers\Api\ReportsApiController.cs" />
     <Compile Include="Controllers\BackendMembersController.cs" />
     <Compile Include="Controllers\BackendMembersListController.cs" />
@@ -279,6 +314,7 @@
     <Compile Include="Controllers\FAQController.cs" />
     <Compile Include="Controllers\BoardsController.cs" />
     <Compile Include="Controllers\CouponsController.cs" />
+    <Compile Include="Controllers\FrontApi\ErrorController.cs" />
     <Compile Include="Controllers\FrontApi\FrontPostCommentReportsApiController.cs" />
     <Compile Include="Controllers\FrontApi\FrontPostReportsApiController.cs" />
     <Compile Include="Controllers\GameCommentsController.cs" />
@@ -309,7 +345,6 @@
     <Compile Include="Models\Dtos\Games\GameCreateDto.cs" />
     <Compile Include="Models\Dtos\Games\GameEditCoverImgDto.cs" />
     <Compile Include="Models\Dtos\Games\GameEditDto.cs" />
-    <Compile Include="Models\Dtos\Games\GameIndexDto.cs" />
     <Compile Include="Models\Dtos\Members\LoginDto.cs" />
     <Compile Include="Models\Dtos\Members\RegisterDto.cs" />
     <Compile Include="Models\Dtos\OrderItemReturns\OrderItemReturnDetailDto.cs" />
@@ -382,6 +417,7 @@
     <Compile Include="Models\EFModels\StockInStatusCode.cs" />
     <Compile Include="Models\EFModels\Supplier.cs" />
     <Compile Include="Models\Infra\ApiResult.cs" />
+    <Compile Include="Models\Infra\NPOIHelper.cs" />
     <Compile Include="Models\Infra\DapperRepositories\OrderItemReturnRepository.cs" />
     <Compile Include="Models\Infra\ImportExcelHelper.cs" />
     <Compile Include="Models\Infra\OrderEmailHelper.cs" />
@@ -389,6 +425,10 @@
     <Compile Include="Models\Infra\Startup.cs" />
     <Compile Include="Models\Interfaces\IOrderItemReturnRepository.cs" />
     <Compile Include="Models\Services\OrderItemReturnService.cs" />
+    <Compile Include="Models\ViewModels\BoardsModerators\BoardsModeratorAddVm.cs" />
+    <Compile Include="Models\ViewModels\BoardsModerators\BoardsModeratorListVm.cs" />
+    <Compile Include="Models\ViewModels\BoardsModerators\BoardsModeratorsApplicationListVm.cs" />
+    <Compile Include="Models\ViewModels\BoardsModerators\BoardsModeratorsApplicationSubmitVm.cs" />
     <Compile Include="Models\ViewModels\Boards\BoardCreateEditorVM.cs" />
     <Compile Include="Models\ViewModels\Boards\BoardListVM.cs" />
     <Compile Include="Models\Dtos\Members\EditProfileDto.cs" />
@@ -438,13 +478,16 @@
     <Compile Include="Models\ViewModels\Coupons\CouponCreateVM.cs" />
     <Compile Include="Models\ViewModels\Coupons\CouponEditVM.cs" />
     <Compile Include="Models\ViewModels\Coupons\CouponIndexVM.cs" />
+    <Compile Include="Models\ViewModels\Coupons\CouponsProductsIndexVM.cs" />
     <Compile Include="Models\ViewModels\Coupons\EditCouponProductsVM.cs" />
     <Compile Include="Models\ViewModels\CustomerServices\FAQIndexVM.cs" />
     <Compile Include="Models\ViewModels\CustomerServices\FAQsCreateVM.cs" />
     <Compile Include="Models\ViewModels\GameComments\GameCommentDetailVM.cs" />
     <Compile Include="Models\ViewModels\GameComments\GameCommentIndexVM.cs" />
+    <Compile Include="Models\ViewModels\Games\ImportGamesVM.cs" />
     <Compile Include="Models\ViewModels\InventoryItems\InventoryVM.cs" />
     <Compile Include="Models\ViewModels\Games\GameAddProductVM.cs" />
+    <Compile Include="Models\ViewModels\Members\BackendMembersEditVM.cs" />
     <Compile Include="Models\ViewModels\Members\BackendMembersListVM.cs" />
     <Compile Include="Models\ViewModels\Members\EditPasswordVM.cs" />
     <Compile Include="Models\ViewModels\Members\EditProfileVM.cs" />
@@ -500,13 +543,21 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\bootstrap0707.css" />
+    <Content Include="Content\coolform.css" />
     <Content Include="Content\login.css" />
     <Content Include="Content\layoutStyle1.css" />
     <Content Include="Content\PagedList.css" />
+    <Content Include="Content\YiyierStyle.css" />
+    <Content Include="Content\newsshow.css" />
+    <Content Include="Content\errorpages.css" />
+    <Content Include="Content\formview.css" />
     <Content Include="favicon.ico" />
     <Content Include="Files\Images\arniya.jpg" />
     <Content Include="Files\Images\controller.png" />
+    <Content Include="Files\Images\kill.jpg" />
     <Content Include="Files\Images\otter.png" />
+    <Content Include="Files\Images\tata.PNG" />
+    <Content Include="Files\Images\tata1.PNG" />
     <Content Include="Files\Mails\77_gmail.com 20230628_174620.txt" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -551,6 +602,10 @@
     <Content Include="lib\datatables\js\dataTables.uikit.min.js" />
     <Content Include="lib\datatables\js\jquery.dataTables.js" />
     <Content Include="lib\datatables\js\jquery.dataTables.min.js" />
+    <Content Include="Scripts\Boards\Applications.js" />
+    <Content Include="Scripts\Boards\Buckets.js" />
+    <Content Include="Scripts\Boards\Moderators.js" />
+    <Content Include="Scripts\Boards\Reports.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -568,6 +623,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\coolform.js" />
     <Content Include="Scripts\login.js" />
     <Content Include="Scripts\layoutScript1.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
@@ -737,7 +793,6 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
@@ -792,7 +847,6 @@
     <Content Include="Views\Inventory\Index.cshtml" />
     <Content Include="Views\Inventory\Details.cshtml" />
     <Content Include="Views\GameComments\Detail.cshtml" />
-    <Content Include="Views\GameComments\Error.cshtml" />
     <Content Include="Views\Games\AddProduct.cshtml" />
     <Content Include="Views\BackendMembers\NotAuthorize.cshtml" />
     <Content Include="Views\Products\EditProduct.cshtml" />
@@ -822,7 +876,6 @@
     <Content Include="Views\BackendMembers\LoginTEST.cshtml" />
     <Content Include="Views\PostsComments\Index.cshtml" />
     <Content Include="Views\Reports\Index.cshtml" />
-    <Content Include="Views\Members\_MembersList.cshtml" />
     <Content Include="Views\Coupons\EditCouponProducts.cshtml" />
     <Content Include="Views\Orders\DeleteFail.cshtml" />
     <Content Include="Views\Suppliers\Create.cshtml" />
@@ -833,6 +886,20 @@
     <Content Include="Views\Suppliers\ImportExcel.cshtml" />
     <Content Include="Scripts\tinymce\langs\README.md" />
     <Content Include="Views\Shared\View.cshtml" />
+    <Content Include="Views\News\Show - 複製.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Error\NotFound1.cshtml" />
+    <Content Include="Views\Boards\Boards.cshtml" />
+    <Content Include="Views\Boards\PostsComments.cshtml" />
+    <Content Include="Views\Boards\Reports.cshtml" />
+    <Content Include="Views\Boards\Buckets.cshtml" />
+    <Content Include="Views\Boards\Moderators.cshtml" />
+    <Content Include="Views\Boards\Applications.cshtml" />
+    <Content Include="Views\Games\Upload.cshtml" />
+    <Content Include="Views\Coupons\CouponsProductsIndex.cshtml" />
+    <Content Include="Views\Products\Upload.cshtml" />
+    <Content Include="Views\BackendMembersList\Create - 複製.cshtml" />
+    <Content Include="Views\BackendMembersList\Create - 複製 %282%29.cshtml" />
     <Content Include="Views\Shared\_Notification.cshtml" />
     <Content Include="Views\StandardProducts\Create.cshtml" />
     <Content Include="Views\StandardProducts\Delete.cshtml" />
@@ -843,6 +910,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
+    <Folder Include="Files\NewsImages\" />
     <Folder Include="Models\Dtos\PostsComments\" />
   </ItemGroup>
   <ItemGroup>
