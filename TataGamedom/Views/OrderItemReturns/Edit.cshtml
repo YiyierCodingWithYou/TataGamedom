@@ -26,8 +26,9 @@
         @Html.HiddenFor(model => model.Id)
 
         <div class="mb-3">
+            @Html.HiddenFor(model => model.OrderItemId)
             @Html.LabelFor(model => model.OrderItemId, htmlAttributes: new { @class = "form-label col-md-2" })
-            @Html.TextBoxFor(model => model.OrderItemId, new { @class = "form-control", @id = "disabledInput", @disabled = "" })
+            @Html.TextBoxFor(model => model.OrderItemId, new { @class = "form-control", @id = "", @disabled = "" })
         </div>
 
         <div class="mb-3">

@@ -138,8 +138,8 @@ namespace TataGamedom.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(OrderEditVM vm)
         {
-            if (!ModelState.IsValid) return View(vm);
 			PrepareEditOrderDataSource(vm.OrderStatusId, vm.PaymentStatusId, vm.ShipmemtMethodId, vm.ShipmentStatusId);
+			if (!ModelState.IsValid) return View(vm);
 
             Result result = _service.Update(vm.ToDto());
             if (result.IsSuccess)
@@ -152,7 +152,6 @@ namespace TataGamedom.Controllers
 					{
 						new OrderEmailHelper().SendEmail(vm.TrackingNum, member.Name, member.Email);
 					}
-                    //return RedirectToAction("Index");
                 }
                 TempData["success"] = "編輯成功";
                 return RedirectToAction("Index");
