@@ -107,8 +107,8 @@
             }
 
             function disableFormFields() {
-                var form = document.querySelector('form');
-                var inputs = form.querySelectorAll('input[type="checkbox"]');
+                var form = document.querySelector('body > div.container-fluid.container-tata.position-relative > div > form');
+                var inputs = form.querySelectorAll('input[type="checkbox"]'); // 修改选择器
 
                 inputs.forEach(function (input) {
                     input.disabled = true;
@@ -116,34 +116,33 @@
             }
 
             function enableFormFields() {
-                var form = document.querySelector('form');
-                var inputs = form.querySelectorAll('input[type="checkbox"]');
+                var form = document.querySelector('body > div.container-fluid.container-tata.position-relative > div > form');
+                var inputs = form.querySelectorAll('input[type="checkbox"]'); // 修改选择器
 
                 inputs.forEach(function (input) {
                     input.disabled = false;
                 });
             }
 
-            // 隱藏保存按鈕
+            // 隐藏保存按钮
             function hideSaveButton() {
                 var saveButton = document.querySelector('input[type="submit"]');
                 saveButton.classList.add('d-none');
             }
 
-            // 顯示保存按鈕
+            // 显示保存按钮
             function showSaveButton() {
                 var saveButton = document.querySelector('input[type="submit"]');
                 saveButton.classList.remove('d-none');
             }
 
-            //// 初始化時檢查一次
-            //checkEndTime();
+            // 初始化时检查一次
+            checkEndTime();
 
-
-            //// 監聽結束時間輸入框的值變化事件
-            //endTimeInput.addEventListener('change', function () {
-            //    checkTimeInputs();
-            //});
+            // 监听结束时间输入框的值变化事件
+            document.getElementById('endTimeInput').addEventListener('change', function () {
+                checkEndTime();
+            });
 
         });
     </script>
