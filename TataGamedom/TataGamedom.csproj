@@ -326,6 +326,7 @@
     <Compile Include="Controllers\NewsCommentsController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\OrderItemReturnsController.cs" />
+    <Compile Include="Controllers\OrderItemsController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\Api\PostsApiController.cs" />
     <Compile Include="Controllers\PostsCommentsController.cs" />
@@ -906,6 +907,11 @@
     <Content Include="Views\StandardProducts\Details.cshtml" />
     <Content Include="Views\StandardProducts\Edit.cshtml" />
     <Content Include="Views\StandardProducts\Index.cshtml" />
+    <Content Include="Views\OrderItems\Create.cshtml" />
+    <Content Include="Views\OrderItems\Delete.cshtml" />
+    <Content Include="Views\OrderItems\Details.cshtml" />
+    <Content Include="Views\OrderItems\Edit.cshtml" />
+    <Content Include="Views\OrderItems\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -103,7 +103,7 @@
         <div class="col-md-6">
             <div class="mt-4 mb-2 d-flex justify-content-end align-items-center">
                 @Html.LabelFor(model => model.ShipmemtMethodId, htmlAttributes: new { @class = "form-label col-md-2" })
-                @Html.DropDownListFor(x => x.ShipmemtMethodId, shipmentStatuses, new { @class = "form-select" })
+                @Html.DropDownListFor(x => x.ShipmemtMethodId, shipmemtMethods, new { @class = "form-select" })
             </div>
             <div class="d-flex justify-content-end">
                 @Html.ValidationMessageFor(model => model.ShipmemtMethodId, "", new { @class = "text-danger" })
