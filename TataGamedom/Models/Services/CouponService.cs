@@ -24,7 +24,7 @@ namespace TataGamedom.Models.Services
 
         public Result Create(CouponCreateVM vm)
         {
-			var selectedStartDate = vm.StartTime.Date;
+			var selectedStartDate = vm.StartTime;//.Date();
 			var selectedEndDate = vm.EndTime.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
 			bool status =false;
             if(DateTime.Now>= selectedStartDate && DateTime.Now<= selectedEndDate)
