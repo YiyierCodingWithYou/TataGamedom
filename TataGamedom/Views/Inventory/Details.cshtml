@@ -51,10 +51,10 @@
     var criteria = ViewBag.Criteria as TataGamedom.Controllers.InventoryCriteria;
     string salesStatusName = criteria.SalesStatus.HasValue ? criteria.SalesStatus.Value.ToString() : "";
     var productId = ViewBag.ProductId;
-    string gameName = @Model == null ? string.Empty : @Model.FirstOrDefault().GameName;
+    //string gameName = @Model.FirstOrDefault().GameName == null ? string.Empty : @Model.FirstOrDefault().GameName;
 }
 <h2>
-    庫存明細: @gameName
+    庫存明細@*: @gameName*@
 </h2>
 
 <div class="row pt-2 pb-3">
