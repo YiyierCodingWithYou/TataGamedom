@@ -134,7 +134,7 @@
                             </h6>
                             <div class="d-flex justify-content-center align-items-center">
                                 <div class=" d-flex w-100px h-100px text-center justify-content-center align-items-center">
-                                    <p class="h1 fw-bold" id="MemberPostAtBoardNum">10</p>
+                                    <p class="h1 fw-bold" id="MemberThisBoardPostsCount">10</p>
                                 </div>
                             </div>
                         </div>
@@ -145,24 +145,35 @@
                             </h6>
                             <div class="d-flex justify-content-center align-items-center">
                                 <div class=" d-flex w-100px h-100px text-center justify-content-center align-items-center">
-                                    <p class="h1 fw-bold" id="MemberPostAtAllNum">10</p>
+                                    <p class="h1 fw-bold" id="MemberAllBoardPostsCount">10</p>
                                 </div>
                             </div>
                         </div>
 
 
                         <div class="col-md-6">
-                            <h6 class="h6 fw-bolder text-center mt-2">該版貼文的Vote數</h6>
+                            <h6 class="h6 fw-bolder text-center mt-2">該版貼文的Voted數</h6>
                             <svg id="MemberThisBoardDonuts" width="150" height="150"></svg>
+                            <div class="p-0 m-0">
+                                <p class="text-center">
+                                <spna>推</spna> <span class="badge bg-success" id="MemberThisBoardLikes">5</span>
+                                <spna>噓</spna> <span class="badge bg-danger" id="MemberThisBoardUnlikes">500</span>
+                                </p>
+                            </div>
+
                         </div>
                         <div class="col-md-6">
-                            <h6 class="h6 fw-bolder text-center mt-2">全站貼文的Vote數</h6>
+                            <h6 class="h6 fw-bolder text-center mt-2">全站貼文的Voted數</h6>
                             <svg id="MemberAllBoardDonuts" width="150" height="150"></svg>
+                            <div class="p-0 m-0">
+                                <p class="text-center">
+                                    <spna>推</spna> <span class="badge bg-success" id="MemberAllBoardLikes">5</span>
+                                    <spna>噓</spna> <span class="badge bg-danger" id="MemberAllBoardUnlikes">500</span>
+                                </p>
+                            </div>
+
 
                         </div>
-
-
-                    </div>
                 </div>
                 <div class="modal-footer align-items-center">
                     <button type="button" class="btn btn-secondary" id="closeBtn" data-bs-dismiss="modal">關閉</button>

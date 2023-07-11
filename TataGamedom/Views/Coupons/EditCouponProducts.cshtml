@@ -35,7 +35,7 @@
             </div>
             <div class="mb-3">
                 @Html.LabelFor(model => model.EndTime, htmlAttributes: new { @class = "form-label col-md-2 visually-hidden" })
-                @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @id = "endTime", @class = "form-control visually-hidden", @disabled = "disabled" } })
+                @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @id = "endTimeInput", @class = "form-control visually-hidden", @disabled = "disabled" } })
                 @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
                 @Html.HiddenFor(model => model.EndTime)
             </div>
@@ -92,7 +92,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/zh-tw.min.js"></script>
     <script>
         var currentDate = moment();
-        var endTime = moment(document.getElementById('endTime').value, 'YYYY/M/D A h:mm:ss');
+        var endTime = moment(document.getElementById('endTimeInput').value, 'YYYY/M/D A h:mm:ss');
         $(document).ready(function () {
             checkEndTime();
 
@@ -135,6 +135,16 @@
                 var saveButton = document.querySelector('input[type="submit"]');
                 saveButton.classList.remove('d-none');
             }
+
+            //// 初始化時檢查一次
+            //checkEndTime();
+
+
+            //// 監聽結束時間輸入框的值變化事件
+            //endTimeInput.addEventListener('change', function () {
+            //    checkTimeInputs();
+            //});
+
         });
     </script>
 }

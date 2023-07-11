@@ -50,22 +50,8 @@
 		<dd>
 			@Html.DisplayFor(model => model.ActiveFlagText)
 		</dd>
-
-		@*@if (Model.ActiveFlag == true)
-			{
-				@Html.ActionLink("刪除", "Delete", new { id = Model.Id }, new { @class = "btn btn-danger" })
-			}
-			else if (Model.ActiveFlag == false)
-			{
-				@Html.ActionLink("還原", "Reduction", new { id = Model.Id }, new { @class = "btn btn-danger" })
-			}*@
 	</dl>
-
-
-	<div class="mb-5">
-		<div class="mb-3" style="display: flex; justify-content: flex-end;">
-
-			@if (Model.ActiveFlag == true)
+		@if (Model.ActiveFlag == true)
 			{
 				using (Html.BeginForm("Delete", "NewsComments", new { id = Model.Id }, FormMethod.Post, new { id = "stopForm" }))
 				{
@@ -85,7 +71,6 @@
 					//<input type="submit" value="復原" class="btn btn-success btn-lg" />
 				}
 			}
-		</div>
 
 	</div>
 

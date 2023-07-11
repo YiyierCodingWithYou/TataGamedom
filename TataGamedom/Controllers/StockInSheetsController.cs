@@ -79,24 +79,24 @@ namespace TataGamedom.Controllers
 
 
 
-	
-		public ActionResult CallAutoOrder()
-		{
-			return RedirectToAction("Index");
-		}
 
-		[HttpPost]
-        [ActionName("CallAutoOrder")]
-		[ValidateAntiForgeryToken]
-		public ActionResult ProsessAutoOrder() 
+        public ActionResult CallAutoOrder()
         {
-			Result result = _service.CallAutoOrder() > 0 ? Result.Success() : Result.Fail("0筆資料更新");
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [ActionName("CallAutoOrder")]
+        [ValidateAntiForgeryToken]
+        public ActionResult ProsessAutoOrder()
+        {
+            Result result = _service.CallAutoOrder() > 0 ? Result.Success() : Result.Fail("0筆資料更新");
 
             TempData["success"] = "更新成功";
             return RedirectToAction("Index");
 		}
 
-		private void PrepareCreateDataSource(int?stockInStatusId, int? supplierId) 
+        private void PrepareCreateDataSource(int?stockInStatusId, int? supplierId) 
         {
             var sisSelectList = new List<SelectListItem>();
             foreach (var sis in db.StockInStatusCodes) 
