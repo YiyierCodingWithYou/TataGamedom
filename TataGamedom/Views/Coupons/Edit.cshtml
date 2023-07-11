@@ -99,6 +99,8 @@
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/zh-tw.min.js"></script>
 
     <script>
         // 获取开始时间输入框元素
@@ -111,18 +113,18 @@
         var saveButton = document.querySelector('input[type="submit"]');
 
         // 获取当前日期
-        var currentDate = new Date().toISOString().split('T')[0];
+        var currentDate = moment();
 
         // 设置开始时间输入框的最小值为当前日期
-        startTimeInput.min = currentDate;
+        startTimeInput.min = currentDate.format('YYYY-MM-DD');
 
         // 设置结束时间输入框的最小值为当前日期
-        endTimeInput.min = currentDate;
+        endTimeInput.min = currentDate.format('YYYY-MM-DD');
 
         // 检查开始时间和结束时间的值
         function checkTimeInputs() {
-            var selectedStartDate = startTimeInput.value;
-            var selectedEndDate = endTimeInput.value;
+            var selectedStartDate = moment(startTimeInput.value);
+            var selectedEndDate = moment(endTimeInput.value);
 
             if (selectedEndDate < currentDate) {
                 disableFormFields();
@@ -136,9 +138,9 @@
             }
         }
 
-        // 禁用表單中的所有欄位
+        // 禁用表单中的所有字段
         function disableFormFields() {
-            var form = document.querySelector('form');
+            var form = document.querySelector('body > div.container-fluid.container-tata.position-relative > div > form');
             var inputs = form.querySelectorAll('input, select, textarea');
 
             inputs.forEach(function (input) {
@@ -146,12 +148,12 @@
             });
         }
 
-        // 禁用开始时间欄位
+        // 禁用开始时间字段
         function disableStartTimeField() {
             startTimeInput.disabled = true;
         }
 
-        // 啟用表單中的所有欄位
+        // 启用表单中的所有字段
         function enableFormFields() {
             var form = document.querySelector('form');
             var inputs = form.querySelectorAll('input, select, textarea');
@@ -161,25 +163,25 @@
             });
         }
 
-        // 隱藏保存按鈕
+        // 隐藏保存按钮
         function hideSaveButton() {
             saveButton.classList.add('d-none');
         }
 
-        // 顯示保存按鈕
+        // 显示保存按钮
         function showSaveButton() {
             saveButton.classList.remove('d-none');
         }
 
-        // 初始化時檢查一次
+        // 初始化时检查一次
         checkTimeInputs();
 
-        // 監聽開始時間輸入框的值變化事件
+        // 监听开始时间输入框的值变化事件
         startTimeInput.addEventListener('change', function () {
             checkTimeInputs();
         });
 
-        // 監聽結束時間輸入框的值變化事件
+        // 监听结束时间输入框的值变化事件
         endTimeInput.addEventListener('change', function () {
             checkTimeInputs();
         });
