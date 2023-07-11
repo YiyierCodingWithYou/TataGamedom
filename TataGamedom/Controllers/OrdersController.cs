@@ -151,7 +151,8 @@ namespace TataGamedom.Controllers
 					if (dialogResult == DialogResult.Yes) 
 					{
 						new OrderEmailHelper().SendEmail(vm.TrackingNum, member.Name, member.Email);
-					}
+                        TempData["success"] = "寄信成功";
+                    }
                 }
                 TempData["success"] = "編輯成功";
                 return RedirectToAction("Index");

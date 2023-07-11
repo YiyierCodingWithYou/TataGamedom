@@ -1,5 +1,8 @@
 Working On
-	[]常備庫存 => 自動新增進貨單 => InventoryItemServices Create()
+	[]輸出Excel ，匯入Excel
+	[]修放照片的樣式
+	[]建常備品資料表& Data
+	
 	
 To Do
 	[] 進貨推薦清單
@@ -144,3 +147,4 @@ View => 訂單主檔的部分跟訂單明細的部分拆開，商品圖套用 ; 回首頁
 07/10
 	[v] 重新加入庫存 不可逆 => Client端已完成，Server端及不可逆的提示未完成
 	[v]改庫存有無序號的Icon
+	[v]常備庫存 => 自動新增進貨單 => InventoryItemServices Create()

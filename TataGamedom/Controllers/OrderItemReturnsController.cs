@@ -42,7 +42,8 @@ namespace TataGamedom.Controllers
 			Result result = _service.Create(vm.ToDto());
 			if (result.IsSuccess)
 			{
-				return RedirectToAction("Index");
+                TempData["success"] = "新增成功";
+                return RedirectToAction("Index");
 			}
 			else
 			{
@@ -71,7 +72,8 @@ namespace TataGamedom.Controllers
 			Result result = _service.Update(vm.ToDto());
 			if (result.IsSuccess)
 			{
-				return RedirectToAction("Index");
+                TempData["success"] = "編輯成功";
+                return RedirectToAction("Index");
 			}
 			else
 			{

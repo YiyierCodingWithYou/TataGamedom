@@ -55,6 +55,7 @@ namespace TataGamedom.Controllers
             {
                 db.Suppliers.Add(supplier);
                 db.SaveChanges();
+                TempData["success"] = "新增成功";
                 return RedirectToAction("Index");
             }
 
@@ -83,6 +84,7 @@ namespace TataGamedom.Controllers
             {
                 db.Entry(supplier).State = EntityState.Modified;
                 db.SaveChanges();
+                TempData["success"] = "編輯成功";
                 return RedirectToAction("Index");
             }
             return View(supplier);
@@ -109,6 +111,7 @@ namespace TataGamedom.Controllers
             Supplier supplier = db.Suppliers.Find(id);
             db.Suppliers.Remove(supplier);
             db.SaveChanges();
+            TempData["success"] = "刪除成功";
             return RedirectToAction("Index");
         }
 
