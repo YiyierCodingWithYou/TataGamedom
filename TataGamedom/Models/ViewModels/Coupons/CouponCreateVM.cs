@@ -32,9 +32,12 @@ namespace TataGamedom.Models.ViewModels.Coupons
 		public int CreatedBackendMemberId { get; set; }
 		[Display(Name = "門檻")]
 		[Required]
+
 		public int Threshold { get; set; }
 		[Display(Name = "開始時間")]
 		[Required]
+		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}")]
+
 		public DateTime StartTime { get; set; }
 		[Display(Name = "結束時間")]
 		[Required]
