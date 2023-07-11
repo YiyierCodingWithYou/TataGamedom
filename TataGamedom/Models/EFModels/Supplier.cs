@@ -16,17 +16,14 @@ namespace TataGamedom.Models.EFModels
 
         public int Id { get; set; }
 
-        [Display(Name="廠商")]
         [Required]
         [StringLength(50)]
         public string Name { get; set; }
 
         [StringLength(15)]
-        [Display(Name = "電話")]
         public string Phone { get; set; }
 
         [StringLength(30)]
-        [Display(Name = "信箱")]
         public string Email { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
