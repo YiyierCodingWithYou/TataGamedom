@@ -106,7 +106,7 @@ namespace TataGamedom.Controllers.Api
 			//活動未開始 or 活動進行中
 			if ((coupon.StartTime > DateTime.Now) || (coupon.StartTime <= DateTime.Now && coupon.EndTime > DateTime.Now))
 			{
-				var hasRelatedData = db.CouponsProducts.Any(cp => cp.Id == id);
+				var hasRelatedData = db.CouponsProducts.Any(cp => cp.CouponId == id);
 				if (hasRelatedData) //有適用商品
 				{
 					return ApiResult.Fail("無法刪除有適用商品之優惠券");
