@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TataGamedom.Models.EFModels.StandardProduct>
+﻿@model IEnumerable<TataGamedom.Models.EFModels.OrderItem>
 
 @{
     ViewBag.Title = "Index";
@@ -12,13 +12,19 @@
 <table class="table">
     <tr>
         <th>
+            @Html.DisplayNameFor(model => model.InventoryItem.Index)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Order.Index)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Product.Index)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.AutoOrder)
+            @Html.DisplayNameFor(model => model.Index)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Quantity)
+            @Html.DisplayNameFor(model => model.ProductPrice)
         </th>
         <th></th>
     </tr>
@@ -26,13 +32,19 @@
 @foreach (var item in Model) {
     <tr>
         <td>
+            @Html.DisplayFor(modelItem => item.InventoryItem.Index)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Order.Index)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.Product.Index)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.AutoOrder)
+            @Html.DisplayFor(modelItem => item.Index)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Quantity)
+            @Html.DisplayFor(modelItem => item.ProductPrice)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
