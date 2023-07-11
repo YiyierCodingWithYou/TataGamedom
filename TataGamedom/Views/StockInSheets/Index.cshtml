@@ -65,7 +65,7 @@
             <i class="bi bi-plus-circle"></i>新增
         </a>
     </div>
-    <div class="col-sm-2 align-self-md-center" style="margin-right: -120px">
+    <div class="col-sm-2 align-self-md-center" style="margin-right: -100px">
         @using (Html.BeginForm("CallAutoOrder", "StockInSheets", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
@@ -75,7 +75,7 @@
         }
     </div>
 
-    <div class="col-1 align-self-md-center" style="margin-Right: 200px">
+    <div class="col-1 align-self-md-center" style="">
         <a href="@Url.Action("Index", "StandardProducts")" class="btn btn-outline-secondary fs20 btn-sm">
             <i class="bi bi-gear-fill"></i>
         </a>
