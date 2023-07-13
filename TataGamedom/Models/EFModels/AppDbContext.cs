@@ -69,63 +69,6 @@ namespace TataGamedom.Models.EFModels
         public virtual DbSet<StockInSheet> StockInSheets { get; set; }
         public virtual DbSet<StockInStatusCode> StockInStatusCodes { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
-		public virtual DbSet<Announcement> Announcements { get; set; }
-		public virtual DbSet<ApprovalStatusCode> ApprovalStatusCodes { get; set; }
-		public virtual DbSet<BackendMember> BackendMembers { get; set; }
-		public virtual DbSet<BackendMembersPermissionsCode> BackendMembersPermissionsCodes { get; set; }
-		public virtual DbSet<BackendMembersRolePermission> BackendMembersRolePermissions { get; set; }
-		public virtual DbSet<BackendMembersRolesCode> BackendMembersRolesCodes { get; set; }
-		public virtual DbSet<Board> Boards { get; set; }
-		public virtual DbSet<BoardsModerator> BoardsModerators { get; set; }
-		public virtual DbSet<BoardsModeratorsApplication> BoardsModeratorsApplications { get; set; }
-		public virtual DbSet<BucketLog> BucketLogs { get; set; }
-		public virtual DbSet<Cart> Carts { get; set; }
-		public virtual DbSet<Coupon> Coupons { get; set; }
-		public virtual DbSet<CouponsProduct> CouponsProducts { get; set; }
-		public virtual DbSet<DiscountTypeCode> DiscountTypeCodes { get; set; }
-		public virtual DbSet<FAQ> FAQs { get; set; }
-		public virtual DbSet<GameClassificationGame> GameClassificationGames { get; set; }
-		public virtual DbSet<GameClassificationsCode> GameClassificationsCodes { get; set; }
-		public virtual DbSet<GameComment> GameComments { get; set; }
-		public virtual DbSet<GamePlatformsCode> GamePlatformsCodes { get; set; }
-		public virtual DbSet<Game> Games { get; set; }
-		public virtual DbSet<InventoryItem> InventoryItems { get; set; }
-		public virtual DbSet<Issue> Issues { get; set; }
-		public virtual DbSet<IssueStatusCode> IssueStatusCodes { get; set; }
-		public virtual DbSet<IssueTypesCode> IssueTypesCodes { get; set; }
-		public virtual DbSet<MemberProductView> MemberProductViews { get; set; }
-		public virtual DbSet<Member> Members { get; set; }
-		public virtual DbSet<MembersBoard> MembersBoards { get; set; }
-		public virtual DbSet<News> News { get; set; }
-		public virtual DbSet<NewsCategoryCode> NewsCategoryCodes { get; set; }
-		public virtual DbSet<NewsComment> NewsComments { get; set; }
-		public virtual DbSet<NewsletterLog> NewsletterLogs { get; set; }
-		public virtual DbSet<Newsletter> Newsletters { get; set; }
-		public virtual DbSet<NewsLike> NewsLikes { get; set; }
-		public virtual DbSet<NewsView> NewsViews { get; set; }
-		public virtual DbSet<OrderItemReturn> OrderItemReturns { get; set; }
-		public virtual DbSet<OrderItem> OrderItems { get; set; }
-		public virtual DbSet<OrderItemsCoupon> OrderItemsCoupons { get; set; }
-		public virtual DbSet<Order> Orders { get; set; }
-		public virtual DbSet<OrderStatusCode> OrderStatusCodes { get; set; }
-		public virtual DbSet<PaymentStatusCode> PaymentStatusCodes { get; set; }
-		public virtual DbSet<PostCommentReport> PostCommentReports { get; set; }
-		public virtual DbSet<PostComment> PostComments { get; set; }
-		public virtual DbSet<PostCommentUpDownVote> PostCommentUpDownVotes { get; set; }
-		public virtual DbSet<PostEditLog> PostEditLogs { get; set; }
-		public virtual DbSet<PostReport> PostReports { get; set; }
-		public virtual DbSet<Post> Posts { get; set; }
-		public virtual DbSet<PostUpDownVote> PostUpDownVotes { get; set; }
-		public virtual DbSet<ProductImage> ProductImages { get; set; }
-		public virtual DbSet<Product> Products { get; set; }
-		public virtual DbSet<ProductStatusCode> ProductStatusCodes { get; set; }
-		public virtual DbSet<Reply> Replies { get; set; }
-		public virtual DbSet<ShipmemtMethod> ShipmemtMethods { get; set; }
-		public virtual DbSet<ShipmentStatusesCode> ShipmentStatusesCodes { get; set; }
-		public virtual DbSet<StandardProduct> StandardProducts { get; set; }
-		public virtual DbSet<StockInSheet> StockInSheets { get; set; }
-		public virtual DbSet<StockInStatusCode> StockInStatusCodes { get; set; }
-		public virtual DbSet<Supplier> Suppliers { get; set; }
 		public virtual DbSet<AggregatedCounter> AggregatedCounters { get; set; }
 		public virtual DbSet<Counter> Counters { get; set; }
 		public virtual DbSet<Hash> Hashes { get; set; }
