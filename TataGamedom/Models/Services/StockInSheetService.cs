@@ -51,7 +51,7 @@ namespace TataGamedom.Models.Services
 
 			List<int> productIdNeedAutoOrder = GetProductIdNeedAutoOrder();
 
-			foreach(int productId in productIdNeedAutoOrder)
+			foreach (int productId in productIdNeedAutoOrder)
 			{
 				stockInSheetsByAutoOrder.Add(new StockInSheetDto
 				{
@@ -62,13 +62,13 @@ namespace TataGamedom.Models.Services
 				});
 			}
 
-			foreach (var stockInSheet in stockInSheetsByAutoOrder) 
+			foreach (var stockInSheet in stockInSheetsByAutoOrder)
 			{
 				stockInSheet.Index = GetIndex(stockInSheet);
 			}
 
 			int AffectedRow = _repo.CallAutoOrder(stockInSheetsByAutoOrder);
-            return AffectedRow;
+			return AffectedRow;
 		}
 
 		/// <summary>

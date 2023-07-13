@@ -16,6 +16,7 @@ using TataGamedom.Models.ViewModels.Members;
 using Dapper;
 using TataGamedom.Models.ViewModels.News;
 using DocumentFormat.OpenXml.Wordprocessing;
+using TataGamedom.Filters;
 
 namespace TataGamedom.Controllers
 {
@@ -26,7 +27,7 @@ namespace TataGamedom.Controllers
 
 
 
-		[Authorize]
+		[AuthorizeFilter(UserRole.Tataboss, UserRole.Newstata)]
 		public ActionResult MembersList(int? id)
 		{
 			using (var con = new SqlConnection(_connstr))

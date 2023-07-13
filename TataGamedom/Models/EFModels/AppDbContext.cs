@@ -69,13 +69,81 @@ namespace TataGamedom.Models.EFModels
         public virtual DbSet<StockInSheet> StockInSheets { get; set; }
         public virtual DbSet<StockInStatusCode> StockInStatusCodes { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
+		public virtual DbSet<Announcement> Announcements { get; set; }
+		public virtual DbSet<ApprovalStatusCode> ApprovalStatusCodes { get; set; }
+		public virtual DbSet<BackendMember> BackendMembers { get; set; }
+		public virtual DbSet<BackendMembersPermissionsCode> BackendMembersPermissionsCodes { get; set; }
+		public virtual DbSet<BackendMembersRolePermission> BackendMembersRolePermissions { get; set; }
+		public virtual DbSet<BackendMembersRolesCode> BackendMembersRolesCodes { get; set; }
+		public virtual DbSet<Board> Boards { get; set; }
+		public virtual DbSet<BoardsModerator> BoardsModerators { get; set; }
+		public virtual DbSet<BoardsModeratorsApplication> BoardsModeratorsApplications { get; set; }
+		public virtual DbSet<BucketLog> BucketLogs { get; set; }
+		public virtual DbSet<Cart> Carts { get; set; }
+		public virtual DbSet<Coupon> Coupons { get; set; }
+		public virtual DbSet<CouponsProduct> CouponsProducts { get; set; }
+		public virtual DbSet<DiscountTypeCode> DiscountTypeCodes { get; set; }
+		public virtual DbSet<FAQ> FAQs { get; set; }
+		public virtual DbSet<GameClassificationGame> GameClassificationGames { get; set; }
+		public virtual DbSet<GameClassificationsCode> GameClassificationsCodes { get; set; }
+		public virtual DbSet<GameComment> GameComments { get; set; }
+		public virtual DbSet<GamePlatformsCode> GamePlatformsCodes { get; set; }
+		public virtual DbSet<Game> Games { get; set; }
+		public virtual DbSet<InventoryItem> InventoryItems { get; set; }
+		public virtual DbSet<Issue> Issues { get; set; }
+		public virtual DbSet<IssueStatusCode> IssueStatusCodes { get; set; }
+		public virtual DbSet<IssueTypesCode> IssueTypesCodes { get; set; }
+		public virtual DbSet<MemberProductView> MemberProductViews { get; set; }
+		public virtual DbSet<Member> Members { get; set; }
+		public virtual DbSet<MembersBoard> MembersBoards { get; set; }
+		public virtual DbSet<News> News { get; set; }
+		public virtual DbSet<NewsCategoryCode> NewsCategoryCodes { get; set; }
+		public virtual DbSet<NewsComment> NewsComments { get; set; }
+		public virtual DbSet<NewsletterLog> NewsletterLogs { get; set; }
+		public virtual DbSet<Newsletter> Newsletters { get; set; }
+		public virtual DbSet<NewsLike> NewsLikes { get; set; }
+		public virtual DbSet<NewsView> NewsViews { get; set; }
+		public virtual DbSet<OrderItemReturn> OrderItemReturns { get; set; }
+		public virtual DbSet<OrderItem> OrderItems { get; set; }
+		public virtual DbSet<OrderItemsCoupon> OrderItemsCoupons { get; set; }
+		public virtual DbSet<Order> Orders { get; set; }
+		public virtual DbSet<OrderStatusCode> OrderStatusCodes { get; set; }
+		public virtual DbSet<PaymentStatusCode> PaymentStatusCodes { get; set; }
+		public virtual DbSet<PostCommentReport> PostCommentReports { get; set; }
+		public virtual DbSet<PostComment> PostComments { get; set; }
+		public virtual DbSet<PostCommentUpDownVote> PostCommentUpDownVotes { get; set; }
+		public virtual DbSet<PostEditLog> PostEditLogs { get; set; }
+		public virtual DbSet<PostReport> PostReports { get; set; }
+		public virtual DbSet<Post> Posts { get; set; }
+		public virtual DbSet<PostUpDownVote> PostUpDownVotes { get; set; }
+		public virtual DbSet<ProductImage> ProductImages { get; set; }
+		public virtual DbSet<Product> Products { get; set; }
+		public virtual DbSet<ProductStatusCode> ProductStatusCodes { get; set; }
+		public virtual DbSet<Reply> Replies { get; set; }
+		public virtual DbSet<ShipmemtMethod> ShipmemtMethods { get; set; }
+		public virtual DbSet<ShipmentStatusesCode> ShipmentStatusesCodes { get; set; }
+		public virtual DbSet<StandardProduct> StandardProducts { get; set; }
+		public virtual DbSet<StockInSheet> StockInSheets { get; set; }
+		public virtual DbSet<StockInStatusCode> StockInStatusCodes { get; set; }
+		public virtual DbSet<Supplier> Suppliers { get; set; }
+		public virtual DbSet<AggregatedCounter> AggregatedCounters { get; set; }
+		public virtual DbSet<Counter> Counters { get; set; }
+		public virtual DbSet<Hash> Hashes { get; set; }
+		public virtual DbSet<Job> Jobs { get; set; }
+		public virtual DbSet<JobParameter> JobParameters { get; set; }
+		public virtual DbSet<JobQueue> JobQueues { get; set; }
+		public virtual DbSet<List> Lists { get; set; }
+		public virtual DbSet<Schema> Schemata { get; set; }
+		public virtual DbSet<Server> Servers { get; set; }
+		public virtual DbSet<Set> Sets { get; set; }
+		public virtual DbSet<State> States { get; set; }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<ApprovalStatusCode>()
-                .HasMany(e => e.BoardsModeratorsApplications)
-                .WithOptional(e => e.ApprovalStatusCode)
-                .HasForeignKey(e => e.ApprovalStatusId);
+		protected override void OnModelCreating(DbModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<ApprovalStatusCode>()
+				.HasMany(e => e.BoardsModeratorsApplications)
+				.WithOptional(e => e.ApprovalStatusCode)
+				.HasForeignKey(e => e.ApprovalStatusId);
 
             modelBuilder.Entity<BackendMember>()
                 .Property(e => e.Account)
@@ -93,16 +161,16 @@ namespace TataGamedom.Models.EFModels
                 .Property(e => e.Phone)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<BackendMember>()
-                .HasMany(e => e.Boards)
-                .WithRequired(e => e.BackendMember)
-                .HasForeignKey(e => e.CreatedBackendMemberId)
-                .WillCascadeOnDelete(false);
+			modelBuilder.Entity<BackendMember>()
+				.HasMany(e => e.Boards)
+				.WithRequired(e => e.BackendMember)
+				.HasForeignKey(e => e.CreatedBackendMemberId)
+				.WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<BackendMember>()
-                .HasMany(e => e.BucketLogs)
-                .WithOptional(e => e.BackendMember)
-                .HasForeignKey(e => e.BackendMmemberId);
+			modelBuilder.Entity<BackendMember>()
+				.HasMany(e => e.BucketLogs)
+				.WithOptional(e => e.BackendMember)
+				.HasForeignKey(e => e.BackendMmemberId);
 
             modelBuilder.Entity<BackendMember>()
                 .HasMany(e => e.Coupons)
@@ -385,26 +453,26 @@ namespace TataGamedom.Models.EFModels
                 .WithOptional(e => e.Member)
                 .HasForeignKey(e => e.DeleteMemberId);
 
-            modelBuilder.Entity<Member>()
-                .HasMany(e => e.PostCommentReports)
-                .WithRequired(e => e.Member)
-                .WillCascadeOnDelete(false);
+			modelBuilder.Entity<Member>()
+				.HasMany(e => e.PostCommentReports)
+				.WithRequired(e => e.Member)
+				.WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Member>()
-                .HasMany(e => e.PostComments1)
-                .WithRequired(e => e.Member1)
-                .HasForeignKey(e => e.MemberId)
-                .WillCascadeOnDelete(false);
+			modelBuilder.Entity<Member>()
+				.HasMany(e => e.PostComments1)
+				.WithRequired(e => e.Member1)
+				.HasForeignKey(e => e.MemberId)
+				.WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Member>()
                 .HasMany(e => e.PostCommentUpDownVotes)
                 .WithRequired(e => e.Member)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Member>()
-                .HasMany(e => e.PostReports)
-                .WithRequired(e => e.Member)
-                .WillCascadeOnDelete(false);
+			modelBuilder.Entity<Member>()
+				.HasMany(e => e.PostReports)
+				.WithRequired(e => e.Member)
+				.WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Member>()
                 .HasMany(e => e.Posts)
@@ -543,16 +611,16 @@ namespace TataGamedom.Models.EFModels
                 .WithRequired(e => e.Product)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Product>()
-                .HasMany(e => e.StandardProducts)
-                .WithRequired(e => e.Product)
-                .WillCascadeOnDelete(false);
+			modelBuilder.Entity<Product>()
+				.HasMany(e => e.StandardProducts)
+				.WithRequired(e => e.Product)
+				.WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<ProductStatusCode>()
-                .HasMany(e => e.Products)
-                .WithRequired(e => e.ProductStatusCode)
-                .HasForeignKey(e => e.ProductStatusId)
-                .WillCascadeOnDelete(false);
+			modelBuilder.Entity<ProductStatusCode>()
+				.HasMany(e => e.Products)
+				.WithRequired(e => e.ProductStatusCode)
+				.HasForeignKey(e => e.ProductStatusId)
+				.WillCascadeOnDelete(false);
 
             modelBuilder.Entity<ShipmemtMethod>()
                 .Property(e => e.Cost)

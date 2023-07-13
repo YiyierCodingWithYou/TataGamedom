@@ -12,19 +12,22 @@
     @Scripts.Render("~/bundles/modernizr")
     @RenderSection("Styles", required: false)
     @Styles.Render("~/Content/layoutStyle1.css")
+    <link href="~/Content/todolist.css" rel="stylesheet" />
+
     @*<script src="https://code.jquery.com/jquery-3.7.0.slim.js"
-            integrity="sha256-7GO+jepT9gJe9LB4XFf8snVOjX3iYNb0FHYr5LI1N5c="
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.tiny.cloud/1/6rb3trl2hzooj95cl84vg4l75mca64j5ttuvcm0fu1gumuih/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>*@
+                integrity="sha256-7GO+jepT9gJe9LB4XFf8snVOjX3iYNb0FHYr5LI1N5c="
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.tiny.cloud/1/6rb3trl2hzooj95cl84vg4l75mca64j5ttuvcm0fu1gumuih/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>*@
     @using System.Web.Security
     @using TataGamedom.Filters
 </head>
-
-
 <body>
 
     <div class="title">
-        <h1 id="title">獺獺玩國TaTaGameDoM</h1>
+        <h1 id="title">獺獺玩國TataGamedom</h1>
+    </div>
+
+    <div class="tataImg" id="tataImg">
     </div>
 
     <nav id="user-nav">
@@ -49,7 +52,6 @@
             }
         }
     </nav>
-
     <nav id="side-nav" class="width">
         <a id="logo" href="#">
             <img src="~/Files/Images/otter.png" alt="" class="otterlogo">
@@ -74,6 +76,7 @@
                     }
                     @if (User.Identity.IsAuthenticated)
                     {
+                        <li>@Html.ActionLink("註冊會員頁", "Register", "Members", new { area = "" }, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("會員管理", "MembersList", "Members", new { area = "" }, new { @class = "nav-link" })</li>
 
                         <li>@Html.ActionLink("管理員管理", "index", "BackendMembersList", new { area = "" }, new { @class = "nav-link" }) </li>
@@ -91,11 +94,11 @@
                 <ul>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink("討論區管理", "Index", "Boards", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("貼文／留言管理", "Index", "PostsComments", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li><a href="#">版主審核</a></li>
-                        <li><a href="#">檢舉審核</a></li>
-                        <li><a href="#">水桶名單管理</a></li>
+                        <li>@Html.ActionLink("討論區管理", "Boards", "Boards", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("貼文／留言管理", "PostsComments", "Boards", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("版主審核", "Moderators", "Boards", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("檢舉審核", "Reports", "Boards", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("水桶名單管理", "Buckets", "Boards", new { area = "" }, new { @class = "nav-link" })</li>
                     }
                 </ul>
             </li>
@@ -159,33 +162,47 @@
                 </ul>
             </li>
             <li id="service">
-                <a href="#">
+                <a href="/HOME/ABOUT">
                     <i class="fa fa-circle-info"></i>
-                    <span>獺獺客服</span>
+                    <span>關於我們</span>
                 </a>
-                <ul>
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <li>@Html.ActionLink("FAQ管理", "Index", "FAQ", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li><a href="#">公告管理</a></li>
-                        <li><a href="#">客服管理</a></li>
-                    }
-                </ul>
             </li>
         </ul>
         <a id="toggle">
             <i class="fa fa-chevron-circle-right"></i>
         </a>
     </nav>
+    <div class="todoList hidetodo">
+        <div class="cover-img">
+            <div class="cover-inner">
+                <h3 id="dayName">Sunday</h3>
+            </div>
+        </div>
 
+        <div class="content">
+            <form class="add">
+                <input type="text" name="add" placeholder="Add item..." />
+                <div class="input-buttons">
+                    <a href="#0" class="add-todo">
+                        <i class="fas fa-plus add plus-icon"></i>
+                    </a>
+                </div>
+            </form>
+            <ul class="todos align">
+            </ul>
+        </div>
+    </div>
 
-        @RenderBody()
+    @RenderBody()
 
+    <script>$('#service').addClass('selected')</script>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     <script src="~/Scripts/layoutScript1.js"></script>
+    <script src="~/Scripts/todolist.js"></script>
+
 
 </body>
 

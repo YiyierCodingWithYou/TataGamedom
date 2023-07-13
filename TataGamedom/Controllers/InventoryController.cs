@@ -128,8 +128,8 @@ namespace TataGamedom.Controllers
         {
             Dictionary<int, string> salesStatusName = new Dictionary<int, string> {
                 {1,"所有紀錄" },
-                {2,"僅顯示當前庫存" },
-                {3,"僅顯示過往庫存" },
+                {2,"當前庫存" },
+                {3,"過往庫存" },
             };
 
             foreach (var key in salesStatusName.Keys)

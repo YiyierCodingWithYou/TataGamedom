@@ -35,7 +35,7 @@
             </div>
             <div class="mb-3">
                 @Html.LabelFor(model => model.EndTime, htmlAttributes: new { @class = "form-label col-md-2 visually-hidden" })
-                @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @id = "endTime", @class = "form-control visually-hidden", @disabled = "disabled" } })
+                @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @id = "endTimeInput", @class = "form-control visually-hidden", @disabled = "disabled" } })
                 @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
                 @Html.HiddenFor(model => model.EndTime)
             </div>
@@ -92,7 +92,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/zh-tw.min.js"></script>
     <script>
         var currentDate = moment();
-        var endTime = moment(document.getElementById('endTime').value, 'YYYY/M/D A h:mm:ss');
+        var endTime = moment(document.getElementById('endTimeInput').value, 'YYYY/M/D A h:mm:ss');
         $(document).ready(function () {
             checkEndTime();
 
@@ -107,8 +107,8 @@
             }
 
             function disableFormFields() {
-                var form = document.querySelector('form');
-                var inputs = form.querySelectorAll('input[type="checkbox"]');
+                var form = document.querySelector('body > div.container-fluid.container-tata.position-relative > div > form');
+                var inputs = form.querySelectorAll('input[type="checkbox"]'); // 修改选择器
 
                 inputs.forEach(function (input) {
                     input.disabled = true;
@@ -116,25 +116,34 @@
             }
 
             function enableFormFields() {
-                var form = document.querySelector('form');
-                var inputs = form.querySelectorAll('input[type="checkbox"]');
+                var form = document.querySelector('body > div.container-fluid.container-tata.position-relative > div > form');
+                var inputs = form.querySelectorAll('input[type="checkbox"]'); // 修改选择器
 
                 inputs.forEach(function (input) {
                     input.disabled = false;
                 });
             }
 
-            // 隱藏保存按鈕
+            // 隐藏保存按钮
             function hideSaveButton() {
                 var saveButton = document.querySelector('input[type="submit"]');
                 saveButton.classList.add('d-none');
             }
 
-            // 顯示保存按鈕
+            // 显示保存按钮
             function showSaveButton() {
                 var saveButton = document.querySelector('input[type="submit"]');
                 saveButton.classList.remove('d-none');
             }
+
+            // 初始化时检查一次
+            checkEndTime();
+
+            // 监听结束时间输入框的值变化事件
+            document.getElementById('endTimeInput').addEventListener('change', function () {
+                checkEndTime();
+            });
+
         });
     </script>
 }

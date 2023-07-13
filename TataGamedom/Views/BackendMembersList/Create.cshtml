@@ -2,158 +2,102 @@
 
 @{
 	ViewBag.Title = "Create";
+	//Layout = "~/Views/Shared/_8tataLayout.cshtml";
 }
 @section Styles{
-	<link href="~/Content/formview.css" rel="stylesheet" />
+	<link href="~/Content/KuanForm2.css" rel="stylesheet" />
+
+	<style>
+
+	</style>
 }
-@*<h2>創建管理員</h2>*@
 
-<div class="container">
-	@using (Html.BeginForm("Create", "BackendMembersList", FormMethod.Post, new { id = "contact" }))
-	{
-		@Html.AntiForgeryToken()
-		<form id="contact" action="" method="post">
-			@Html.ValidationSummary(true, "", new { @class = "text-danger" })
-			<h3>創建管理員</h3>
-			<h4>請開始您的表演</h4>
-			<fieldset>
-				@Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "名稱", autofocus = "autofocus" } })
-				@Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-			</fieldset>
 
-			<fieldset>
-				@Html.EditorFor(model => model.Account, new { htmlAttributes = new { @class = "form-control", placeholder = "帳號", autofocus = "autofocus" } })
-				@Html.ValidationMessageFor(model => model.Account, "", new { @class = "text-danger" })
+@using (Html.BeginForm("Create", "BackendMembersList", FormMethod.Post, new { id = "kuan" }))
+{
+	@Html.AntiForgeryToken()
+	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-			</fieldset>
-
-			<fieldset>
-				@Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "密碼", autofocus = "autofocus" } })
-				@Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-
-			</fieldset>
-
-			<fieldset>
-				@Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control", placeholder = "確認密碼", autofocus = "autofocus" })
-				@Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
-			</fieldset>
-			<fieldset>
-				@Html.EditorFor(model => model.Birthday, new { htmlAttributes = new { @class = "form-control", type = "date", placeholder = "管理員名稱", autofocus = "autofocus" } })
-				@Html.ValidationMessageFor(model => model.Birthday, "", new { @class = "text-danger" })
-			</fieldset>
-
-			<fieldset>
-
-				@Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Email", autofocus = "autofocus" } })
-				@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-			</fieldset>
-
-			<fieldset>
-				@Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control", placeholder = "手機", autofocus = "autofocus" } })
-				@Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
-			</fieldset>
-
-			<fieldset>
-				@Html.LabelFor(model => model.BackendMembersRoleId, htmlAttributes: new { @class = "control-label col-md-2" })
-				@Html.DropDownListFor(model => model.BackendMembersRoleId, ViewBag.BackendMembersRoleId as SelectList, "", htmlAttributes: new { @class = "form-select" })
-				@Html.ValidationMessageFor(model => model.BackendMembersRoleId, "", new { @class = "text-danger" })
-			</fieldset>
-
-			<div class="mt-3">
-				<div class="col-md-offset-2 col-md-10">
-
-				</div>
+	<form id="contact">
+		<div class="container1">
+			<div class="head">
+				<h2>創建管理員</h2>
 			</div>
 
-			<fieldset>
-				@*<input type="submit" value="創建" />*@
-				<button name="submit" type="submit" id="contact-submit" data-submit="...Sending">創建</button>
-			</fieldset>
-		</form>
-	}
-</div>
+			<div class="title222">
+				管理員名稱
+			</div>
+			<div>
+				@Html.EditorFor(model => model.Name, new { htmlAttributes = new { } })<br />
+				@Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+			</div>
+
+			<div class="title222">
+				帳號
+			</div>
+			<div>
+				@Html.EditorFor(model => model.Account, new { htmlAttributes = new { } })<br />
+				@Html.ValidationMessageFor(model => model.Account, "", new { @class = "text-danger" })
+			</div>
+
+			<div class="title222">
+				密碼
+			</div>
+			<div>
+				@Html.PasswordFor(model => model.Password, new { htmlAttributes = new { } })<br />
+				@Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+			</div>
+
+			<div class="title222">
+				確認密碼
+			</div>
+			<div>
+				@Html.PasswordFor(model => model.ConfirmPassword, new { htmlAttributes = new { } })<br />
+				@Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+			</div>
+
+			<div class="title222">
+				生日
+			</div>
+			<div>
+				@Html.EditorFor(model => model.Birthday, new { htmlAttributes = new {@type="date"} })<br />
+				@Html.ValidationMessageFor(model => model.Birthday, "", new { @class = "text-danger"})
+			</div>
+
+			<div class="title222">
+				Email
+			</div>
+			<div>
+				@Html.EditorFor(model => model.Email, new { htmlAttributes = new { } })<br />
+				@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+			</div>
+
+			<div class="title222">
+				手機
+			</div>
+			<div>
+				@Html.EditorFor(model => model.Phone, new { htmlAttributes = new { } })<br />
+				@Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+			</div>
+
+			<div class="title222">
+				管理員權限
+			</div>
+			<div>
+				@Html.DropDownListFor(model => model.BackendMembersRoleId, ViewBag.BackendMembersRoleId as SelectList, "", htmlAttributes: new { })<br />
+				@Html.ValidationMessageFor(model => model.BackendMembersRoleId, "", new { @class = "text-danger" })
+			</div>
+
+			<button id="submit" type="submit">創建</button>
+			@Html.ActionLink("取消", "Index", "BackendMembersList", new { area = "" }, new { @class = "btn btn-danger copy " })
+		</div>
+</form>
+
+}
+
 @section Scripts {
 	@Scripts.Render("~/bundles/jqueryval")
+	<script src="~/Scripts/KuanForm.js"></script>
+
 }
 
-@*<div class="container">
-		@using (Html.BeginForm())
-		{
-			@Html.AntiForgeryToken()
-
-			<div class="row">
-				<hr />
-				@Html.ValidationSummary(true, "", new { @class = "text-danger" })
-				<div class="mt-3">
-					@Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-
-					@Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-					@Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-
-				</div>
-
-				<div class="mt-3">
-					@Html.LabelFor(model => model.Account, htmlAttributes: new { @class = "control-label col-md-2" })
-
-					@Html.EditorFor(model => model.Account, new { htmlAttributes = new { @class = "form-control" } })
-					@Html.ValidationMessageFor(model => model.Account, "", new { @class = "text-danger" })
-
-				</div>
-
-				<div class="mt-3">
-					@Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
-
-					@Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
-					@Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-
-				</div>
-
-				<div class="mt-3">
-					@Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "control-label" })
-					@Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control" })
-					@Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
-				</div>
-
-
-				<div class="mt-3">
-					@Html.LabelFor(model => model.Birthday, htmlAttributes: new { @class = "control-label col-md-2" })
-
-					@Html.EditorFor(model => model.Birthday, new { htmlAttributes = new { @class = "form-control", type = "date" } })
-					@Html.ValidationMessageFor(model => model.Birthday, "", new { @class = "text-danger" })
-
-				</div>
-
-				<div class="mt-3">
-					@Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
-
-					@Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
-					@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-
-				</div>
-
-				<div class="mt-3">
-					@Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
-
-					@Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
-					@Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
-
-				</div>
-
-				<div class="mt-3">
-					@Html.LabelFor(model => model.BackendMembersRoleId, htmlAttributes: new { @class = "control-label col-md-2" })
-
-					@Html.DropDownListFor(model => model.BackendMembersRoleId, ViewBag.BackendMembersRoleId as SelectList, "", htmlAttributes: new { @class = "form-select" })
-					@Html.ValidationMessageFor(model => model.BackendMembersRoleId, "", new { @class = "text-danger" })
-				</div>
-
-				<div class="mt-3">
-					<div class="col-md-offset-2 col-md-10">
-						<input type="submit" value="創建" class="btn btn-primary" />
-					</div>
-				</div>
-			</div>
-		}
-	</div>
-	@section Scripts {
-		@Scripts.Render("~/bundles/jqueryval")
-	}*@

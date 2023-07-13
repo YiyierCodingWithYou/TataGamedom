@@ -1,58 +1,74 @@
 ﻿@model TataGamedom.Models.ViewModels.EditProfileVM
 
 @{
-    ViewBag.Title = "EditProfile";
+	ViewBag.Title = "EditProfile";
+}
+@section Styles{
+	<link href="~/Content/KuanForm2.css" rel="stylesheet" />
+
+	<style>
+	</style>
 }
 
-<h2>修改個人資料</h2>
 
-
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
-    
-<div class="row">
-	<hr />
+	@Html.AntiForgeryToken()
+
+
 	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-
-	<div class="mt-3">
-		@Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-
-		@Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-		@Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-
-	</div>
-
-	<div class="mt-3">
-		@Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
-
-		@Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
-		@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-
-	</div>
+	<form id="contact">
+		<div class="container1 ">
+			<div class="head">
+				<h2>維護個人資料</h2>
+			</div>
 
 
+			<div class="title222">
+				姓名
+			</div>
+			<div>
+				@Html.EditorFor(model => model.Name, new { htmlAttributes = new { } })<br />
+				@Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+			</div>
 
-	<div class="mt-3">
-		@Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
 
-		@Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
-		@Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+			<div class="title222">
+				信箱
+			</div>
+			<div>
+				@Html.EditorFor(model => model.Email, new { htmlAttributes = new { } })<br />
+				@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+			</div>
 
-	</div>
+			<div class="title222">
+				手機
+			</div>
+			<div>
+				@Html.EditorFor(model => model.Phone, new { htmlAttributes = new { } })<br />
+				@Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+			</div>
+			<div>
+				<button id="submit" type="submit">更新</button>
 
-	<div class="mt-3">
-		<div class="col-md-offset-2 col-md-10">
-			<input type="submit" value="確認變更" class="btn btn-primary" />
-			@Html.ActionLink("取消變更", "Index", "BackendMembers", new { area = "" }, new { @class = "btn btn-danger" })
+				@Html.ActionLink("取消", "Index", "BackendMembers", new { area = "" }, new { @class = "btn btn-danger copy " })
+			</div>
 		</div>
-	</div>
-</div>
+	</form>
 }
 
 
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+	@Scripts.Render("~/bundles/jqueryval")
+	<script>
+		var cancelButton = document.getElementById("cancelButton");
+		// 添加點擊事件監聽器
+		cancelButton.addEventListener("click", function (event) {
+			event.preventDefault(); // 阻止表單提交行為，避免刷新頁面
+				// 在這裡執行取消按鈕的相應功能，例如返回上一頁
+	</script>
+
+
 }

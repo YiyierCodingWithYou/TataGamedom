@@ -244,21 +244,21 @@ namespace TataGamedom.Controllers
     C.Description,
     P.Price,
     CASE
-        WHEN C.DiscountTypeId = 1 AND P.Price > C.Threshold THEN P.Price * (C.Discount / 100)
+        WHEN C.DiscountTypeId = 1 AND P.Price > C.Threshold THEN P.Price * (C.Discount / 100.0)
         WHEN C.DiscountTypeId = 2 AND P.Price > C.Threshold THEN P.Price - C.Discount
         ELSE P.Price
     END AS SpecialPrice,
     CASE
         WHEN (
             CASE
-                WHEN C.DiscountTypeId = 1 THEN P.Price * (C.Discount / 100)
+                WHEN C.DiscountTypeId = 1 THEN P.Price * (C.Discount / 100.0)
                 WHEN C.DiscountTypeId = 2 THEN P.Price - C.Discount
                 ELSE P.Price
             END
         ) < 0 THEN 0
         ELSE (
             CASE
-                WHEN C.DiscountTypeId = 1 THEN P.Price * (C.Discount / 100)
+                WHEN C.DiscountTypeId = 1 THEN P.Price * (C.Discount / 100.0)
                 WHEN C.DiscountTypeId = 2 THEN P.Price - C.Discount
                 ELSE P.Price
             END

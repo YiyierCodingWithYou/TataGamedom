@@ -37,6 +37,7 @@ namespace TataGamedom.Models.ViewModels.Members
 		[Required]
 		[Display(Name = "信箱")]
 		[StringLength(150)]
+		[EmailAddress(ErrorMessage = "Email格式有誤")]
 		public string Email { get; set; }
 		[Display(Name = "手機")]
 		[Required]
