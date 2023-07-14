@@ -21,8 +21,10 @@ namespace TataGamedom.Controllers
 		private readonly OrderItemReturnService _service = new OrderItemReturnService(_repo);
 
 		public ActionResult Index() => View(_service.Search().Select(orderItemReturn => orderItemReturn.ToVM()));
+		public ActionResult ViewAll() => View(_service.Search().Select(orderItemReturn => orderItemReturn.ToVM()));
 
-        public ActionResult Details(string orderIndex) => View(_service.GetByIndex(orderIndex).Select(orderItemReturn => orderItemReturn.ToVM()));
+
+		public ActionResult Details(string orderIndex) => View(_service.GetByIndex(orderIndex).Select(orderItemReturn => orderItemReturn.ToVM()));
 
 
         public ActionResult Create()
