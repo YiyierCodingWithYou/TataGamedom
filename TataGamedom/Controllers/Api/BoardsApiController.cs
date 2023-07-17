@@ -30,7 +30,6 @@ namespace TataGamedom.Controllers
 
 
 
-
 		[System.Web.Http.HttpGet]
 		[System.Web.Http.Route("api/BoardsApi/MemberBoardDate")]
 		public async Task<IEnumerable<MemberBoardDataDto>> GetMemberBoardDate(string ma, string bn)
