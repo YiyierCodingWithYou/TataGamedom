@@ -19,17 +19,22 @@ namespace TataGamedom.Controllers.Api
 
 
 		[HttpGet]
-		//[Route("api/SuppliersApi/Suppliers")]
-		// GET: api/SuppliersApi
-		public async Task<IHttpActionResult> GetSuppliers()
+        // GET: api/SuppliersApi
+        public async Task<IHttpActionResult> GetSuppliers([FromUri] Pagenation pagenation)
         {
-            return Ok(await db.Suppliers.Select(supplier => new SupplierDto
-			{
-				Id = supplier.Id,
-				Name = supplier.Name,
-				Email = supplier.Email,
-				Phone = supplier.Phone,
-			}).ToListAsync());
+            return Ok(await db.Suppliers.Select(
+                supplier => new SupplierDto
+                        {
+                            Id = supplier.Id,
+                            Name = supplier.Name,
+                            Email = supplier.Email,
+                            Phone = supplier.Phone,
+                        })
+                    .OrderBy(s => s.Id)
+                    .Skip((pagenation.Page - 1) * pagenation.PageSize)
+                    .Take(pagenation.PageSize)
+                    .ToListAsync()
+            );
         }
 
         // GET: api/SuppliersApi/5
@@ -124,5 +129,5 @@ namespace TataGamedom.Controllers.Api
         {
             return db.Suppliers.Count(e => e.Id == id) > 0;
         }
-    }
+    } 
 }

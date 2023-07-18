@@ -306,6 +306,7 @@
     <Compile Include="Controllers\Api\CouponsApiController.cs" />
     <Compile Include="Controllers\Api\GamesApiController.cs" />
     <Compile Include="Controllers\Api\MembersApiController.cs" />
+    <Compile Include="Controllers\Api\Pagenation.cs" />
     <Compile Include="Controllers\Api\ProductsApiController.cs" />
     <Compile Include="Controllers\Api\ReportsApiController.cs" />
     <Compile Include="Controllers\Api\SuppliersApiController.cs" />
