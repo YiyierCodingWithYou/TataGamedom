@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace TataGamedom_FrontEnd.Models.EFModels
+{
+    public partial class IssueTypesCode
+    {
+        public IssueTypesCode()
+        {
+            Faqs = new HashSet<Faq>();
+            Issues = new HashSet<Issue>();
+        }
+
+        public int Id { get; set; }
+        public string? TypeName { get; set; }
+
+        public virtual ICollection<Faq> Faqs { get; set; }
+        public virtual ICollection<Issue> Issues { get; set; }
+    }
+}
