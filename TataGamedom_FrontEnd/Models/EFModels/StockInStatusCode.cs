@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TataGamedom_FrontEnd.Models.EFModels
+namespace TataGamedom_FrontEnd.Models.EFModels;
+
+public partial class StockInStatusCode
 {
-    public partial class StockInStatusCode
-    {
-        public StockInStatusCode()
-        {
-            StockInSheets = new HashSet<StockInSheet>();
-        }
+    public int Id { get; set; }
 
-        public int Id { get; set; }
-        public string? Name { get; set; }
+    public string? Name { get; set; }
 
-        public virtual ICollection<StockInSheet> StockInSheets { get; set; }
-    }
+    public virtual ICollection<StockInSheet> StockInSheets { get; set; } = new List<StockInSheet>();
 }

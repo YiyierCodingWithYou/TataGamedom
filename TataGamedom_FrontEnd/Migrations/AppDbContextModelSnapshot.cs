@@ -17,10 +17,10 @@ namespace TataGamedom_FrontEnd.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.20")
+                .HasAnnotation("ProductVersion", "7.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.AggregatedCounter", b =>
                 {
@@ -49,7 +49,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
@@ -60,7 +60,8 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Announce__3214EC076F8C9048");
 
                     b.ToTable("Announcement", (string)null);
                 });
@@ -71,16 +72,17 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Approval__3214EC0710AED82C");
 
-                    b.ToTable("ApprovalStatusCodes");
+                    b.ToTable("ApprovalStatusCodes", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.BackendMember", b =>
@@ -89,7 +91,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Account")
                         .IsRequired()
@@ -132,11 +134,12 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<DateTime?>("RegistrationDate")
                         .HasColumnType("datetime");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__BackendM__3214EC0742E417C8");
 
                     b.HasIndex("BackendMembersRoleId");
 
-                    b.ToTable("BackendMembers");
+                    b.ToTable("BackendMembers", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.BackendMembersPermissionsCode", b =>
@@ -145,16 +148,17 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__BackendM__3214EC075E7D4653");
 
-                    b.ToTable("BackendMembersPermissionsCodes");
+                    b.ToTable("BackendMembersPermissionsCodes", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.BackendMembersRolePermission", b =>
@@ -163,7 +167,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("BackendMemberPermissionId")
                         .HasColumnType("int");
@@ -171,13 +175,14 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int>("BackendMembersRoleId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__BackendM__3214EC070FF5C968");
 
                     b.HasIndex("BackendMemberPermissionId");
 
                     b.HasIndex("BackendMembersRoleId");
 
-                    b.ToTable("BackendMembersRolePermissions");
+                    b.ToTable("BackendMembersRolePermissions", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.BackendMembersRolesCode", b =>
@@ -186,16 +191,17 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__BackendM__3214EC070C563F31");
 
-                    b.ToTable("BackendMembersRolesCodes");
+                    b.ToTable("BackendMembersRolesCodes", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Board", b =>
@@ -204,7 +210,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("BoardAbout")
                         .HasColumnType("nvarchar(max)");
@@ -227,13 +233,14 @@ namespace TataGamedom_FrontEnd.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Boards__3214EC07F6EFB42E");
 
                     b.HasIndex("CreatedBackendMemberId");
 
                     b.HasIndex("GameId");
 
-                    b.ToTable("Boards");
+                    b.ToTable("Boards", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.BoardsModerator", b =>
@@ -242,7 +249,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("BoardId")
                         .HasColumnType("int");
@@ -256,13 +263,14 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__BoardsMo__3214EC0762456D53");
 
                     b.HasIndex("BoardId");
 
                     b.HasIndex("ModeratorMemberId");
 
-                    b.ToTable("BoardsModerators");
+                    b.ToTable("BoardsModerators", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.BoardsModeratorsApplication", b =>
@@ -271,7 +279,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("AddOrRemove")
                         .HasColumnType("bit");
@@ -302,7 +310,8 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__BoardsMo__3214EC075247CC98");
 
                     b.HasIndex("ApprovalStatusId");
 
@@ -312,7 +321,7 @@ namespace TataGamedom_FrontEnd.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("BoardsModeratorsApplications");
+                    b.ToTable("BoardsModeratorsApplications", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.BucketLog", b =>
@@ -321,7 +330,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("BackendMmemberId")
                         .HasColumnType("int");
@@ -349,7 +358,8 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__BucketLo__3214EC07B517B10B");
 
                     b.HasIndex("BackendMmemberId");
 
@@ -359,7 +369,7 @@ namespace TataGamedom_FrontEnd.Migrations
 
                     b.HasIndex("ModeratorMemberId");
 
-                    b.ToTable("BucketLogs");
+                    b.ToTable("BucketLogs", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Cart", b =>
@@ -368,7 +378,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
@@ -379,13 +389,14 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Carts__3214EC074F6F2B07");
 
                     b.HasIndex("MemberId");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Counter", b =>
@@ -398,7 +409,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("ExpireAt")
                         .HasColumnType("datetime");
@@ -418,7 +429,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("ActiveFlag")
                         .HasColumnType("bit");
@@ -460,7 +471,8 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int>("Threshold")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Coupons__3214EC07709360B4");
 
                     b.HasIndex("CreatedBackendMemberId");
 
@@ -468,7 +480,7 @@ namespace TataGamedom_FrontEnd.Migrations
 
                     b.HasIndex("ModifiedBackendMemberId");
 
-                    b.ToTable("Coupons");
+                    b.ToTable("Coupons", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.CouponsProduct", b =>
@@ -477,7 +489,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CouponId")
                         .HasColumnType("int");
@@ -485,13 +497,14 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__CouponsP__3214EC07D4B7EA50");
 
                     b.HasIndex("CouponId");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("CouponsProducts");
+                    b.ToTable("CouponsProducts", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.DiscountTypeCode", b =>
@@ -500,16 +513,17 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Discount__3214EC076BDBF8A4");
 
-                    b.ToTable("DiscountTypeCodes");
+                    b.ToTable("DiscountTypeCodes", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Faq", b =>
@@ -518,7 +532,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Answer")
                         .HasColumnType("nvarchar(max)");
@@ -532,7 +546,8 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<string>("Question")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__FAQ__3214EC07C2215F22");
 
                     b.HasIndex("IssueTypeId");
 
@@ -545,7 +560,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ChiName")
                         .IsRequired()
@@ -582,13 +597,14 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<DateTime?>("ModifiedTime")
                         .HasColumnType("datetime");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Games__3214EC0723B3415E");
 
                     b.HasIndex("CreatedBackendMemberId");
 
                     b.HasIndex("ModifiedBackendMemberId");
 
-                    b.ToTable("Games");
+                    b.ToTable("Games", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.GameClassificationGame", b =>
@@ -597,7 +613,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("GameClassificationId")
                         .HasColumnType("int");
@@ -605,13 +621,14 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int>("GameId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__GameClas__3214EC07366124A6");
 
                     b.HasIndex("GameClassificationId");
 
                     b.HasIndex("GameId");
 
-                    b.ToTable("GameClassificationGames");
+                    b.ToTable("GameClassificationGames", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.GameClassificationsCode", b =>
@@ -620,16 +637,17 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__GameClas__3214EC076BDA457A");
 
-                    b.ToTable("GameClassificationsCodes");
+                    b.ToTable("GameClassificationsCodes", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.GameComment", b =>
@@ -638,7 +656,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("ActiveFlag")
                         .HasColumnType("bit");
@@ -666,7 +684,8 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<byte>("Score")
                         .HasColumnType("tinyint");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__GameComm__3214EC0781DC040F");
 
                     b.HasIndex("DeleteBackendMemberId");
 
@@ -674,7 +693,7 @@ namespace TataGamedom_FrontEnd.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("GameComments");
+                    b.ToTable("GameComments", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.GamePlatformsCode", b =>
@@ -683,7 +702,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -691,9 +710,10 @@ namespace TataGamedom_FrontEnd.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(10)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__GamePlat__3214EC0719D38634");
 
-                    b.ToTable("GamePlatformsCodes");
+                    b.ToTable("GamePlatformsCodes", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Hash", b =>
@@ -727,10 +747,10 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(8,0)");
+                        .HasColumnType("decimal(8, 0)");
 
                     b.Property<string>("GameKey")
                         .HasMaxLength(50)
@@ -747,7 +767,8 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int>("StockInSheetId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Inventor__3214EC0781DD9C1A");
 
                     b.HasIndex("ProductId");
 
@@ -756,7 +777,7 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.HasIndex(new[] { "Index" }, "UQ__Inventor__9A5B6229FC4610D4")
                         .IsUnique();
 
-                    b.ToTable("InventoryItems");
+                    b.ToTable("InventoryItems", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Issue", b =>
@@ -765,7 +786,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -787,7 +808,8 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int?>("Status")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Issues__3214EC07BE9CBF53");
 
                     b.HasIndex("IssueTypeId");
 
@@ -795,7 +817,7 @@ namespace TataGamedom_FrontEnd.Migrations
 
                     b.HasIndex("Status");
 
-                    b.ToTable("Issues");
+                    b.ToTable("Issues", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.IssueStatusCode", b =>
@@ -804,15 +826,16 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__IssueSta__3214EC07FB07D6D1");
 
-                    b.ToTable("IssueStatusCodes");
+                    b.ToTable("IssueStatusCodes", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.IssueTypesCode", b =>
@@ -821,15 +844,16 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("TypeName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__IssueTyp__3214EC0751A7A365");
 
-                    b.ToTable("IssueTypesCodes");
+                    b.ToTable("IssueTypesCodes", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Job", b =>
@@ -838,7 +862,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Arguments")
                         .IsRequired()
@@ -861,7 +885,8 @@ namespace TataGamedom_FrontEnd.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK_HangFire_Job");
 
                     b.HasIndex(new[] { "ExpireAt" }, "IX_HangFire_Job_ExpireAt")
                         .HasFilter("([ExpireAt] IS NOT NULL)");
@@ -900,7 +925,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("FetchedAt")
                         .HasColumnType("datetime");
@@ -924,7 +949,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("ExpireAt")
                         .HasColumnType("datetime");
@@ -947,7 +972,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Account")
                         .IsRequired()
@@ -1002,9 +1027,10 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("datetime");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Members__3214EC07786C974D");
 
-                    b.ToTable("Members");
+                    b.ToTable("Members", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.MemberProductView", b =>
@@ -1013,7 +1039,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
@@ -1024,13 +1050,14 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<DateTime>("ViewTime")
                         .HasColumnType("datetime");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__MemberPr__3214EC077814EA21");
 
                     b.HasIndex("MemberId");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("MemberProductViews");
+                    b.ToTable("MemberProductViews", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.MembersBoard", b =>
@@ -1039,7 +1066,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("BoardId")
                         .HasColumnType("int");
@@ -1050,13 +1077,14 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__MembersB__3214EC0710BB5BF7");
 
                     b.HasIndex("BoardId");
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("MembersBoards");
+                    b.ToTable("MembersBoards", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.News", b =>
@@ -1065,7 +1093,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("ActiveFlag")
                         .HasColumnType("bit");
@@ -1104,7 +1132,8 @@ namespace TataGamedom_FrontEnd.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__News__3214EC07D97613C4");
 
                     b.HasIndex("BackendMemberId");
 
@@ -1114,7 +1143,7 @@ namespace TataGamedom_FrontEnd.Migrations
 
                     b.HasIndex("NewsCategoryId");
 
-                    b.ToTable("News");
+                    b.ToTable("News", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.NewsCategoryCode", b =>
@@ -1123,16 +1152,17 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__NewsCate__3214EC07397B86D6");
 
-                    b.ToTable("NewsCategoryCodes");
+                    b.ToTable("NewsCategoryCodes", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.NewsComment", b =>
@@ -1141,7 +1171,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("ActiveFlag")
                         .HasColumnType("bit");
@@ -1170,7 +1200,8 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<DateTime>("Time")
                         .HasColumnType("datetime");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__NewsComm__3214EC07623FFBBE");
 
                     b.HasIndex("DeleteBackendMemberId");
 
@@ -1180,7 +1211,61 @@ namespace TataGamedom_FrontEnd.Migrations
 
                     b.HasIndex("NewsId");
 
-                    b.ToTable("NewsComments");
+                    b.ToTable("NewsComments", (string)null);
+                });
+
+            modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.NewsLike", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NewsId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("Id")
+                        .HasName("PK__NewsLike__3214EC07E892DBB6");
+
+                    b.HasIndex("MemberId");
+
+                    b.HasIndex("NewsId");
+
+                    b.ToTable("NewsLikes", (string)null);
+                });
+
+            modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.NewsView", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NewsId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ViewTime")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("Id")
+                        .HasName("PK__NewsView__3214EC0767C2DA08");
+
+                    b.HasIndex("MemberId");
+
+                    b.HasIndex("NewsId");
+
+                    b.ToTable("NewsViews", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Newsletter", b =>
@@ -1189,7 +1274,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("BackendMemberId")
                         .HasColumnType("int");
@@ -1205,11 +1290,12 @@ namespace TataGamedom_FrontEnd.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Newslett__3214EC073D3E894F");
 
                     b.HasIndex("BackendMemberId");
 
-                    b.ToTable("Newsletters");
+                    b.ToTable("Newsletters", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.NewsletterLog", b =>
@@ -1218,7 +1304,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AddresseeMemberEmail")
                         .IsRequired()
@@ -1241,65 +1327,14 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int?>("NewsletterId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Newslett__3214EC076ABB543D");
 
                     b.HasIndex("AddresseeMemberId");
 
                     b.HasIndex("NewsletterId");
 
-                    b.ToTable("NewsletterLogs");
-                });
-
-            modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.NewsLike", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NewsId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MemberId");
-
-                    b.HasIndex("NewsId");
-
-                    b.ToTable("NewsLikes");
-                });
-
-            modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.NewsView", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NewsId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ViewTime")
-                        .HasColumnType("datetime");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MemberId");
-
-                    b.HasIndex("NewsId");
-
-                    b.ToTable("NewsViews");
+                    b.ToTable("NewsletterLogs", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Order", b =>
@@ -1308,7 +1343,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("datetime");
@@ -1356,7 +1391,8 @@ namespace TataGamedom_FrontEnd.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Orders__3214EC0743A819E5");
 
                     b.HasIndex("MemberId");
 
@@ -1371,7 +1407,7 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.HasIndex(new[] { "Index" }, "UQ__Orders__9A5B62299A9DCB7B")
                         .IsUnique();
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.OrderItem", b =>
@@ -1380,7 +1416,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Index")
                         .IsRequired()
@@ -1397,9 +1433,10 @@ namespace TataGamedom_FrontEnd.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("ProductPrice")
-                        .HasColumnType("decimal(8,0)");
+                        .HasColumnType("decimal(8, 0)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__OrderIte__3214EC07A2DE618F");
 
                     b.HasIndex("OrderId");
 
@@ -1411,7 +1448,7 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.HasIndex(new[] { "Index" }, "UQ__OrderIte__9A5B62295905CB9C")
                         .IsUnique();
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.OrderItemReturn", b =>
@@ -1420,7 +1457,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("datetime");
@@ -1450,7 +1487,8 @@ namespace TataGamedom_FrontEnd.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__OrderIte__3214EC07661B879E");
 
                     b.HasIndex(new[] { "OrderItemId" }, "UQ__OrderIte__57ED0680FBF10CC1")
                         .IsUnique();
@@ -1458,7 +1496,7 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.HasIndex(new[] { "Index" }, "UQ__OrderIte__9A5B6229DB395A7A")
                         .IsUnique();
 
-                    b.ToTable("OrderItemReturns");
+                    b.ToTable("OrderItemReturns", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.OrderItemsCoupon", b =>
@@ -1467,7 +1505,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("CouponId")
                         .HasColumnType("int");
@@ -1475,13 +1513,14 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int>("OrderItemId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__OrderIte__3214EC07A8696374");
 
                     b.HasIndex("CouponId");
 
                     b.HasIndex("OrderItemId");
 
-                    b.ToTable("OrderItemsCoupons");
+                    b.ToTable("OrderItemsCoupons", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.OrderStatusCode", b =>
@@ -1490,16 +1529,17 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__OrderSta__3214EC074E846712");
 
-                    b.ToTable("OrderStatusCodes");
+                    b.ToTable("OrderStatusCodes", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.PaymentStatusCode", b =>
@@ -1508,16 +1548,17 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__PaymentS__3214EC075DEA360F");
 
-                    b.ToTable("PaymentStatusCodes");
+                    b.ToTable("PaymentStatusCodes", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Post", b =>
@@ -1526,7 +1567,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("ActiveFlag")
                         .HasColumnType("bit");
@@ -1557,7 +1598,8 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Posts__3214EC077E146464");
 
                     b.HasIndex("BoardId");
 
@@ -1567,7 +1609,7 @@ namespace TataGamedom_FrontEnd.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.PostComment", b =>
@@ -1576,7 +1618,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("ActiveFlag")
                         .HasColumnType("bit");
@@ -1607,7 +1649,8 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__PostComm__3214EC075BFE8522");
 
                     b.HasIndex("DeleteBackendMemberId");
 
@@ -1619,7 +1662,7 @@ namespace TataGamedom_FrontEnd.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("PostComments");
+                    b.ToTable("PostComments", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.PostCommentReport", b =>
@@ -1628,7 +1671,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Datetime")
                         .HasColumnType("datetime");
@@ -1657,7 +1700,8 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int?>("ReviewerBackenMemberId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__PostComm__3214EC0726002056");
 
                     b.HasIndex("MemberId");
 
@@ -1665,7 +1709,7 @@ namespace TataGamedom_FrontEnd.Migrations
 
                     b.HasIndex("ReviewerBackenMemberId");
 
-                    b.ToTable("PostCommentReports");
+                    b.ToTable("PostCommentReports", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.PostCommentUpDownVote", b =>
@@ -1674,7 +1718,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime");
@@ -1688,13 +1732,14 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<bool>("Type")
                         .HasColumnType("bit");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__PostComm__3214EC07F4AA3635");
 
                     b.HasIndex("MemberId");
 
                     b.HasIndex("PostCommentId");
 
-                    b.ToTable("PostCommentUpDownVotes");
+                    b.ToTable("PostCommentUpDownVotes", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.PostEditLog", b =>
@@ -1703,7 +1748,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ContentBeforeEdit")
                         .IsRequired()
@@ -1716,11 +1761,12 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__PostEdit__3214EC0776F1E205");
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("PostEditLogs");
+                    b.ToTable("PostEditLogs", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.PostReport", b =>
@@ -1729,7 +1775,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Datetime")
                         .HasColumnType("datetime");
@@ -1758,7 +1804,8 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int?>("ReviewerBackenMemberId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__PostRepo__3214EC07520839C0");
 
                     b.HasIndex("MemberId");
 
@@ -1766,7 +1813,7 @@ namespace TataGamedom_FrontEnd.Migrations
 
                     b.HasIndex("ReviewerBackenMemberId");
 
-                    b.ToTable("PostReports");
+                    b.ToTable("PostReports", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.PostUpDownVote", b =>
@@ -1775,7 +1822,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime");
@@ -1789,13 +1836,14 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<bool>("Type")
                         .HasColumnType("bit");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__PostUpDo__3214EC07DC31F491");
 
                     b.HasIndex("MemberId");
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("PostUpDownVotes");
+                    b.ToTable("PostUpDownVotes", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Product", b =>
@@ -1804,7 +1852,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CreatedBackendMemberId")
                         .HasColumnType("int");
@@ -1846,7 +1894,8 @@ namespace TataGamedom_FrontEnd.Migrations
                         .HasMaxLength(1500)
                         .HasColumnType("nvarchar(1500)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Products__3214EC0752E4CA1C");
 
                     b.HasIndex("CreatedBackendMemberId");
 
@@ -1861,7 +1910,7 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.HasIndex(new[] { "Index" }, "UQ__Products__9A5B6229BF6A6C19")
                         .IsUnique();
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.ProductImage", b =>
@@ -1870,7 +1919,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Image")
                         .HasMaxLength(100)
@@ -1879,11 +1928,12 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__ProductI__3214EC070B8CB976");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImages", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.ProductStatusCode", b =>
@@ -1892,16 +1942,17 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__ProductS__3214EC07A0DA3444");
 
-                    b.ToTable("ProductStatusCodes");
+                    b.ToTable("ProductStatusCodes", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Reply", b =>
@@ -1910,7 +1961,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("BackendMemberId")
                         .HasColumnType("int");
@@ -1925,13 +1976,14 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int?>("IssueId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Replies__3214EC076418D4EC");
 
                     b.HasIndex("BackendMemberId");
 
                     b.HasIndex("IssueId");
 
-                    b.ToTable("Replies");
+                    b.ToTable("Replies", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Schema", b =>
@@ -1957,7 +2009,8 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<DateTime>("LastHeartbeat")
                         .HasColumnType("datetime");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK_HangFire_Server");
 
                     b.HasIndex(new[] { "LastHeartbeat" }, "IX_HangFire_Server_LastHeartbeat");
 
@@ -1997,22 +2050,23 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(8,0)");
+                        .HasColumnType("decimal(8, 0)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Shipmemt__3214EC077A58408D");
 
                     b.HasIndex(new[] { "Name" }, "UQ__Shipmemt__737584F6F62D8AB5")
                         .IsUnique();
 
-                    b.ToTable("ShipmemtMethods");
+                    b.ToTable("ShipmemtMethods", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.ShipmentStatusesCode", b =>
@@ -2021,16 +2075,17 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Shipment__3214EC07DAF1C49F");
 
-                    b.ToTable("ShipmentStatusesCodes");
+                    b.ToTable("ShipmentStatusesCodes", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.StandardProduct", b =>
@@ -2039,7 +2094,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("AutoOrder")
                         .HasColumnType("bit");
@@ -2050,11 +2105,12 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Standard__3214EC074DA067DA");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("StandardProducts");
+                    b.ToTable("StandardProducts", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.State", b =>
@@ -2066,7 +2122,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
@@ -2097,7 +2153,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("ArrivedAt")
                         .HasColumnType("datetime");
@@ -2119,7 +2175,8 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Property<int>("SupplierId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__StockInS__3214EC07C1EF7C51");
 
                     b.HasIndex("StockInStatusId");
 
@@ -2128,7 +2185,7 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.HasIndex(new[] { "Index" }, "UQ__StockInS__9A5B6229FB91117E")
                         .IsUnique();
 
-                    b.ToTable("StockInSheets");
+                    b.ToTable("StockInSheets", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.StockInStatusCode", b =>
@@ -2137,15 +2194,16 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__StockInS__3214EC076CDB2D70");
 
-                    b.ToTable("StockInStatusCodes");
+                    b.ToTable("StockInStatusCodes", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Supplier", b =>
@@ -2154,7 +2212,7 @@ namespace TataGamedom_FrontEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .HasMaxLength(30)
@@ -2169,22 +2227,10 @@ namespace TataGamedom_FrontEnd.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Supplier__3214EC073AA4C416");
 
-                    b.ToTable("Suppliers");
-                });
-
-            modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Table1", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(10)
-                        .HasColumnType("nchar(10)")
-                        .IsFixedLength();
-
-                    b.ToTable("Table1", (string)null);
+                    b.ToTable("Suppliers", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.BackendMember", b =>
@@ -2616,34 +2662,6 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Navigation("News");
                 });
 
-            modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Newsletter", b =>
-                {
-                    b.HasOne("TataGamedom_FrontEnd.Models.EFModels.BackendMember", "BackendMember")
-                        .WithMany("Newsletters")
-                        .HasForeignKey("BackendMemberId")
-                        .HasConstraintName("FK__Newslette__Backe__46B27FE2");
-
-                    b.Navigation("BackendMember");
-                });
-
-            modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.NewsletterLog", b =>
-                {
-                    b.HasOne("TataGamedom_FrontEnd.Models.EFModels.Member", "AddresseeMember")
-                        .WithMany("NewsletterLogs")
-                        .HasForeignKey("AddresseeMemberId")
-                        .IsRequired()
-                        .HasConstraintName("FK__Newslette__Addre__44CA3770");
-
-                    b.HasOne("TataGamedom_FrontEnd.Models.EFModels.Newsletter", "Newsletter")
-                        .WithMany("NewsletterLogs")
-                        .HasForeignKey("NewsletterId")
-                        .HasConstraintName("FK__Newslette__Newsl__45BE5BA9");
-
-                    b.Navigation("AddresseeMember");
-
-                    b.Navigation("Newsletter");
-                });
-
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.NewsLike", b =>
                 {
                     b.HasOne("TataGamedom_FrontEnd.Models.EFModels.Member", "Member")
@@ -2680,6 +2698,34 @@ namespace TataGamedom_FrontEnd.Migrations
                     b.Navigation("Member");
 
                     b.Navigation("News");
+                });
+
+            modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Newsletter", b =>
+                {
+                    b.HasOne("TataGamedom_FrontEnd.Models.EFModels.BackendMember", "BackendMember")
+                        .WithMany("Newsletters")
+                        .HasForeignKey("BackendMemberId")
+                        .HasConstraintName("FK__Newslette__Backe__46B27FE2");
+
+                    b.Navigation("BackendMember");
+                });
+
+            modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.NewsletterLog", b =>
+                {
+                    b.HasOne("TataGamedom_FrontEnd.Models.EFModels.Member", "AddresseeMember")
+                        .WithMany("NewsletterLogs")
+                        .HasForeignKey("AddresseeMemberId")
+                        .IsRequired()
+                        .HasConstraintName("FK__Newslette__Addre__44CA3770");
+
+                    b.HasOne("TataGamedom_FrontEnd.Models.EFModels.Newsletter", "Newsletter")
+                        .WithMany("NewsletterLogs")
+                        .HasForeignKey("NewsletterId")
+                        .HasConstraintName("FK__Newslette__Newsl__45BE5BA9");
+
+                    b.Navigation("AddresseeMember");
+
+                    b.Navigation("Newsletter");
                 });
 
             modelBuilder.Entity("TataGamedom_FrontEnd.Models.EFModels.Order", b =>
