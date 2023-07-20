@@ -84,7 +84,6 @@ namespace TataGamedom_FrontEnd.Models.EFModels
         public virtual DbSet<StockInSheet> StockInSheets { get; set; } = null!;
         public virtual DbSet<StockInStatusCode> StockInStatusCodes { get; set; } = null!;
         public virtual DbSet<Supplier> Suppliers { get; set; } = null!;
-        public virtual DbSet<Table1> Table1s { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -1291,17 +1290,6 @@ namespace TataGamedom_FrontEnd.Models.EFModels
                 entity.Property(e => e.Name).HasMaxLength(50);
 
                 entity.Property(e => e.Phone).HasMaxLength(15);
-            });
-
-            modelBuilder.Entity<Table1>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("Table1");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
             });
 
             OnModelCreatingPartial(modelBuilder);
