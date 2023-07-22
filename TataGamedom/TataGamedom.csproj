@@ -306,8 +306,10 @@
     <Compile Include="Controllers\Api\CouponsApiController.cs" />
     <Compile Include="Controllers\Api\GamesApiController.cs" />
     <Compile Include="Controllers\Api\MembersApiController.cs" />
+    <Compile Include="Controllers\Api\Pagenation.cs" />
     <Compile Include="Controllers\Api\ProductsApiController.cs" />
     <Compile Include="Controllers\Api\ReportsApiController.cs" />
+    <Compile Include="Controllers\Api\SuppliersApiController.cs" />
     <Compile Include="Controllers\BackendMembersController.cs" />
     <Compile Include="Controllers\BackendMembersListController.cs" />
     <Compile Include="Controllers\Api\BoardsApiController.cs" />
@@ -360,6 +362,7 @@
     <Compile Include="Models\Dtos\StockInSheets\StockInSheetIndexDto.cs" />
     <Compile Include="Models\Dtos\Boards\BoardCreateDto.cs" />
     <Compile Include="Models\Dtos\Boards\BoardEditDto.cs" />
+    <Compile Include="Models\Dtos\SupplierDto.cs" />
     <Compile Include="Models\EFModels\AggregatedCounter.cs" />
     <Compile Include="Models\EFModels\Announcement.cs" />
     <Compile Include="Models\EFModels\AppDbContext.cs" />
@@ -655,6 +658,7 @@
     <Content Include="Scripts\HOME.js" />
     <Content Include="Scripts\home2.js" />
     <Content Include="Scripts\KuanForm.js" />
+    <Content Include="Scripts\LoadDataIntoTable\LoadDataIntoTable.js" />
     <Content Include="Scripts\login.js" />
     <Content Include="Scripts\layoutScript1.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
@@ -946,11 +950,13 @@
     <Content Include="Views\OrderItems\Details.cshtml" />
     <Content Include="Views\OrderItems\Edit.cshtml" />
     <Content Include="Views\OrderItems\Index.cshtml" />
+    <Content Include="Views\OrderItemReturns\ViewAll.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
     <Folder Include="Models\Dtos\PostsComments\" />
+    <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
