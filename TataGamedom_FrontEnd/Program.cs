@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using TataGamedom_FrontEnd.Models.EFModels;
 
@@ -13,7 +13,12 @@ namespace TataGamedom_FrontEnd
 			// Add services to the container.
 			builder.Services.AddDbContext<AppDbContext>(options =>
 			options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 			builder.Services.AddControllersWithViews();
+
+               builder.Services.AddEndpointsApiExplorer();
+
+
 
 			var app = builder.Build();
 
@@ -35,6 +40,8 @@ namespace TataGamedom_FrontEnd
 			app.MapControllerRoute(
 				name: "default",
 				pattern: "{controller=Home}/{action=Index}/{id?}");
+
+           
 
 			app.Run();
 		}

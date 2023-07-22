@@ -14,7 +14,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReadMe", "ReadMe", "{18DD11
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject", "TestProject\TestProject.csproj", "{A14001AD-78B4-435F-B427-C1C999563D8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TataGamedom_FrontEnd", "TataGamedom_FrontEnd\TataGamedom_FrontEnd.csproj", "{2836D676-2AFD-4D89-A09D-1D07C69103D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TataGamedom_FrontEnd", "TataGamedom_FrontEnd\TataGamedom_FrontEnd.csproj", "{2836D676-2AFD-4D89-A09D-1D07C69103D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Alan", "Alan", "{38C4D73D-9350-4E13-8757-8B23DCCA217F}"
+	ProjectSection(SolutionItems) = preProject
+		ReadMe(Alan).txt = ReadMe(Alan).txt
+		ReadMe_FrontEnd(Alan).txt = ReadMe_FrontEnd(Alan).txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +43,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{38C4D73D-9350-4E13-8757-8B23DCCA217F} = {18DD1157-1893-4FA4-8FEA-8262D99806FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CCAF75AC-7C70-4315-AEB4-D7D4E814FD77}

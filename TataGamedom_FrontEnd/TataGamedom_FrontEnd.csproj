@@ -15,9 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\APIContorllers\" />
     <Folder Include="Models\Dtos\" />
-    <Folder Include="Models\Infra\" />
     <Folder Include="Models\Interfaces\" />
     <Folder Include="Models\ViewModels\" />
     <Folder Include="Models\Services\" />
