@@ -14,4 +14,8 @@ public interface IOrderRepository
 
     Task<int> Delete(int id);
 
+
+    //0723
+    void Add(Order order);
+
 }
