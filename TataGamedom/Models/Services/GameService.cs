@@ -1,6 +1,11 @@
-﻿using System;
+﻿using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics.Eventing.Reader;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -38,25 +43,29 @@ namespace TataGamedom.Models.Services
 				});
 		}
 
-		public GameEditVM GetGameById(int id)
+		public GameEditVM GetGameEditVM(int id)
 		{
 			var game = _repo.GetGameById(id);
-			if (game != null)
+			if (game == null)
 			{
-				if (!string.IsNullOrEmpty(game.SelectedGameClassificationString))
-				{
-					game.SelectedGameClassification = game.SelectedGameClassificationString
-					?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-					.Select(int.Parse)
-					.ToList();
-				}
-				else
-				{
-					game.SelectedGameClassification = new List<int>();
-				}
+				return null;
 			}
-			else { return null; }
-			return game;
+			var classification = _repo.GetGameClassificationGames(id);
+			var classificationList = _repo.GetGameClassifications();
+			var backendMember = _repo.GetBackendMemberName(game.ModifiedBackendMemberId);
+			return new GameEditVM
+			{
+				Id = game.Id,
+				GameClassification = classificationList,
+				SelectedGameClassification = classification != null ? classification.Select(c => c.GameClassificationId).ToList() : new List<int>(),
+				ChiName = game.ChiName,
+				EngName = game.EngName,
+				Description = game.Description,
+				IsRestrict = game.IsRestrict,
+				ModifiedTime = game.ModifiedTime,
+				ModifiedBackendMemberName = backendMember != null ? backendMember.Name : null,
+				ModifiedBackendMemberId = game.ModifiedBackendMemberId
+			};
 		}
 
 		public Result UpdateGame(GameEditVM vm)
@@ -67,20 +76,18 @@ namespace TataGamedom.Models.Services
 				return Result.Fail("查無該筆遊戲");
 			}
 
-			// 检查是否存在重复的中文游戏名称
 			if (_repo.IsDuplicateChineseName(vm.Id, vm.ChiName))
 			{
 				return Result.Fail("已存在此中文名稱之遊戲");
 			}
 
-			// 检查是否存在重复的英文游戏名称
 			if (_repo.IsDuplicateEnglishName(vm.Id, vm.EngName))
 			{
 				return Result.Fail("已存在此英文名稱之遊戲");
 			}
 
 			var dto = vm.ToDto();
-			dto.ModifiedTime=DateTime.Now;
+			dto.ModifiedTime = DateTime.Now;
 			var updateResult = _repo.UpddateGame(dto);
 			if (!updateResult)
 			{
@@ -89,7 +96,6 @@ namespace TataGamedom.Models.Services
 
 			return Result.Success();
 		}
-
 
 		public Result CreateGame(GameCreateVM vm)
 		{
@@ -116,13 +122,16 @@ namespace TataGamedom.Models.Services
 			return _repo.GetGameClassifications();
 		}
 
-		public GameEditCoverImgVM GetGameById2(int id)
+		public GameEditCoverImgVM GetGameCover(int id)
 		{
-			var game = _repo.GetGameById2(id);
+			var game = _repo.GetGameById(id);
 			if (game == null) { return null; }
-			return game.ToViewModel();
+			return new GameEditCoverImgVM
+			{
+				Id = game.Id,
+				GameCoverImg = game.GameCoverImg
+			};
 		}
-
 		public Result EditGameCover(GameEditCoverImgVM vm)
 		{
 			var editCover = vm.ToDto();
@@ -134,12 +143,9 @@ namespace TataGamedom.Models.Services
 			return Result.Success();
 		}
 
-		public Result CreateBoard(string name)
+		public Result CreateBoard(GameCreateVM vm)
 		{
-			//用VM.chiname去搜尋遊戲
-			//找到的話取得該遊戲ID
-			//代入該遊戲資訊新增一筆Board
-			var result = _repo.GetGameByName2(name);
+			var result = _repo.GetGameByName(vm.ChiName, vm.EngName);
 			if (result == null)
 			{
 				return Result.Fail("討論版新增失敗");
@@ -154,10 +160,7 @@ namespace TataGamedom.Models.Services
 
 		public Result CreateClassification(GameCreateVM vm)
 		{
-			//用VM.chiname去搜尋遊戲
-			//找到的話取得該遊戲ID
-			//代入該遊戲資訊新增1/2筆資料至[GameClassificationGames]TABLE中
-			var result = _repo.GetGameByName2(vm.ChiName);
+			var result = _repo.GetGameByName(vm.ChiName, vm.EngName);
 			if (result == null)
 			{
 				return Result.Fail("遊戲類別新增失敗");
@@ -175,7 +178,6 @@ namespace TataGamedom.Models.Services
 
 		public Result UpdateClassification(GameEditVM vm)
 		{
-			//將該遊戲已存在的類別全部刪除
 			var games = _repo.GetGameClassificationGames(vm.Id);
 			if (games != null)
 			{
@@ -185,16 +187,12 @@ namespace TataGamedom.Models.Services
 					return Result.Fail("更新失敗");
 				}
 			}
-			//直接把新取得的遊戲類別值新增到TABLE中
 			return Result.Success();
 		}
 
 		public Result CreateClassification(GameEditVM vm)
 		{
-			//用VM.chiname去搜尋遊戲
-			//找到的話取得該遊戲ID
-			//代入該遊戲資訊新增1/2筆資料至[GameClassificationGames]TABLE中
-			var result = _repo.GetGameByName2(vm.ChiName);
+			var result = _repo.GetGameByName(vm.ChiName, vm.EngName);
 			if (result == null)
 			{
 				return Result.Fail("遊戲類別新增失敗");
@@ -210,9 +208,9 @@ namespace TataGamedom.Models.Services
 			return Result.Success();
 		}
 
-		public GameAddProductVM GetGameByIdForAddProduct(int id)
+		public GameAddProductVM AddProduct(int id)
 		{
-			var game = _repo.GetGameByIdForAddProduct(id);
+			var game = _repo.GetGameById(id);
 			if (game == null) { return null; }
 			return new GameAddProductVM
 			{
@@ -274,12 +272,12 @@ namespace TataGamedom.Models.Services
 		public Result CreateProductImg(GameAddProductVM vm)
 		{
 			var gameProduct = db.Products.FirstOrDefault(p => p.GameId == vm.GameId && p.GamePlatformId == vm.Platform);
-			int productId=0;
+			int productId = 0;
 			if (gameProduct != null)
 			{
 				productId = gameProduct.Id;
 			}
-			foreach(var item in vm.ProductImg)
+			foreach (var item in vm.ProductImg)
 			{
 				var productImages = new ProductImage
 				{
@@ -290,6 +288,166 @@ namespace TataGamedom.Models.Services
 				if (!createImgResult)
 				{
 					return Result.Fail("商品圖片新增失敗");
+				}
+			}
+			return Result.Success();
+		}
+
+		public Result Upload(HttpPostedFileBase file, string currentUserAccount)
+		{
+
+			if (file != null)
+			{
+				Stream stream = file.InputStream; //使用Stream(流)對檔案進行操作
+				DataTable dataTable = new DataTable();
+				IWorkbook wb;
+				ISheet sheet;
+				IRow headerRow;
+				int cellCount; //紀錄共有幾欄
+
+				try
+				{
+					if (file.FileName.ToUpper().EndsWith("XLSX"))
+						wb = new XSSFWorkbook(stream); // excel版本(.xlsx)
+					else
+						wb = new HSSFWorkbook(stream); // excel版本(.xls)
+
+					sheet = wb.GetSheetAt(0);
+
+					headerRow = sheet.GetRow(0);
+
+					cellCount = headerRow.LastCellNum;
+
+					try
+					{
+						for (int i = headerRow.FirstCellNum; i < cellCount; i++)
+						{
+							dataTable.Columns.Add(new DataColumn(headerRow.GetCell(i).StringCellValue));
+						}
+					}
+					catch (Exception ex)
+					{
+						return Result.Fail("匯入失敗：" + ex.Message);
+					}
+
+					int column = 1; //計算每一列讀到第幾個欄位
+
+					for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++)
+					{
+						IRow row = sheet.GetRow(i);
+
+						if (string.IsNullOrEmpty(row.Cells[0].ToString().Trim()))
+						{
+							break;
+						}
+
+						DataRow dataRow = dataTable.NewRow();
+						ICell cell;
+
+						try
+						{
+							for (int j = row.FirstCellNum; j < cellCount; j++)
+							{
+								column = j + 1;
+
+								cell = row.GetCell(j);
+
+								if (cell != null) //若cell有值
+								{
+									switch (cell.CellType)
+									{
+										case NPOI.SS.UserModel.CellType.String:
+											dataRow[j] = cell.StringCellValue;
+											break;
+
+										case NPOI.SS.UserModel.CellType.Numeric:
+
+											if (HSSFDateUtil.IsCellDateFormatted(cell)) //日期格式
+											{
+												dataRow[j] = DateTime.FromOADate(cell.NumericCellValue).ToString("yyyy/MM/dd HH:mm");
+											}
+											else //非日期格式
+											{
+												dataRow[j] = cell.NumericCellValue;
+											}
+											break;
+
+										case NPOI.SS.UserModel.CellType.Boolean:
+
+											dataRow[j] = cell.BooleanCellValue;
+											break;
+
+										case NPOI.SS.UserModel.CellType.Blank:
+
+											dataRow[j] = null;
+											break;
+
+										default:
+
+											dataRow[j] = cell.StringCellValue;
+											break;
+									}
+								}
+							}
+							dataTable.Rows.Add(dataRow);
+						}
+						catch (Exception ex)
+						{
+							return Result.Fail("第 " + i + "列第" + column + "欄，資料格式有誤:\r\r" + ex.ToString());
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					return Result.Fail("匯入失敗：" + ex.Message);
+				}
+				finally
+				{
+					//釋放資源
+					sheet = null;
+					wb = null;
+					stream.Dispose();
+					stream.Close();
+				}
+				//dataTable跑回圈，insert資料至DB
+				try
+				{
+					foreach (DataRow dataRow in dataTable.Rows)
+					{
+						Game game = new Game()
+						{
+							ChiName = dataRow["ChiName"].ToString(),
+							EngName = dataRow["EngName"].ToString(),
+							Description = dataRow["Description"].ToString(),
+							IsRestrict = bool.Parse(dataRow["IsRestrict"].ToString()),
+							GameCoverImg = dataRow["GameCoverImg"].ToString(),
+						};
+
+						Board board = new Board()
+						{
+							Name = dataRow["ChiName"].ToString(),
+							GameId = int.Parse(dataRow["GameId"].ToString()),
+							BoardAbout = dataRow["Description"].ToString(),
+							BoardHeaderCoverImg = dataRow["GameCoverImg"].ToString()
+						};
+
+						try
+						{
+							NPOIHelper games = new NPOIHelper();
+							games.InsertGames(game, currentUserAccount);
+
+							NPOIHelper boards = new NPOIHelper();
+							boards.InsertBoards(board, currentUserAccount);
+						}
+						catch (Exception ex)
+						{
+							return Result.Fail("匯入失敗：" + ex.Message);
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					return Result.Fail("匯入失敗：" + ex.Message);
 				}
 			}
 			return Result.Success();
