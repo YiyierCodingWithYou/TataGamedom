@@ -4,18 +4,18 @@ namespace TataGamedom_FrontEnd.Models.Interfaces;
 
 public interface IOrderRepository 
 {
-    Task<IEnumerable<Order>> GetAll();
+    Task<IEnumerable<Order>> GetOrderListAsync();
     
-    Task<Order> Get(int id);
+    Task<Order?> GetOrderByIdAsync(int id);
 
-    Task<Order> Create(Order order);
+    Task<Order> AddOrderAsync(Order order);
 
-    Task<int> Update(Order order);
+    Task<int> UpdateOrderAsync(Order order);
 
-    Task<int> Delete(int id);
+    Task<int> DeleteOrderAsync(int id);
 
 
     //0723
-    void Add(Order order);
+    //void Add(Order order);
 
 }

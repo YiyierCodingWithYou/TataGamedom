@@ -2,7 +2,7 @@
 using TataGamedom_FrontEnd.Models.EFModels;
 using TataGamedom_FrontEnd.Models.Interfaces;
 
-namespace TataGamedom_FrontEnd.Models.Infra.Order.Create;
+namespace TataGamedom_FrontEnd.Models.Infra.OrderInfra.Create;
 
 public class CreateOrderComandHandler : IRequestHandler<CreateOrderCommand>
 {
@@ -15,9 +15,9 @@ public class CreateOrderComandHandler : IRequestHandler<CreateOrderCommand>
 
     public Task Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        var order = new EFModels.Order 
+        var order = new EFModels.Order
         {
-            
+
         };
     }
 }

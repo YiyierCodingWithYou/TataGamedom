@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace TataGamedom_FrontEnd.Models.Infra.Order.Create;
+namespace TataGamedom_FrontEnd.Models.Infra.OrderInfra.Create;
 
 public record CreateOrderCommand(
     string Index,
