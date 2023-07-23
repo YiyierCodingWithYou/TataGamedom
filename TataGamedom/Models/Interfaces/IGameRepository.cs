@@ -12,21 +12,18 @@ namespace TataGamedom.Models.Interfaces
 	public interface IGameRepository
 	{
 		IEnumerable<GameIndexDto> Search();
+		Game GetGameById(int id);
 
-		GameEditVM GetGameById(int id);
+		IEnumerable<GameClassificationGame> GetGameClassificationGames(int id);
 
 		bool UpddateGame(GameEditDto dto);
 
 		bool Create(GameCreateDto dto);
 
-		GameCreateDto GetGameByName(string chi, string eng);
+		Game GetGameByName(string chi, string eng);
 
 		List<GameClassificationsCode> GetGameClassifications();
-		GameEditCoverImgDto GetGameById2(int id);
-
 		bool EditGameCover(GameEditCoverImgDto dto);
-
-		Game GetGameByName2(string name);
 
 		bool CreateBoard(Game game);
 
@@ -34,13 +31,9 @@ namespace TataGamedom.Models.Interfaces
 
 		bool CreateClassification(Game game, int gameClassificationId);
 
-		List<int> GetGameClassificationsByGameId(int gameId);
-
-		IEnumerable<GameEditVM> GetGameClassificationGames(int id);
+		BackendMember GetBackendMemberName(int? id);
 
 		bool DeleteGameClassificationGames(int id);
-
-		Game GetGameByIdForAddProduct(int id);
 
 		bool CreateProduct(Product product);
 		bool CreateProductImg(ProductImage productImage);

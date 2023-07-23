@@ -45,29 +45,39 @@ namespace TataGamedom.Models.Infra.DapperRepositories
 				return conn.Query<GameClassificationsCode>(sql).ToList();
 			}
 		}
-
-		public GameEditVM GetGameById(int id)
+		public Game GetGameById(int id)
 		{
 			using (var conn = new SqlConnection(_connStr))
 			{
-				string sql = @"SELECT ChiName, EngName, STRING_AGG(GCC.Id, ',') AS SelectedGameClassificationString,Description, G.IsRestrict AS IsRestrict,BM.Name AS ModifiedBackendMemberName, G.ModifiedTime AS ModifiedTime
-FROM Games AS G
-LEFT JOIN GameClassificationGames AS GCG ON GCG.GameId = G.Id
-LEFT JOIN GameClassificationsCodes AS GCC ON GCC.Id = GCG.GameClassificationId
-LEFT JOIN BackendMembers AS BM ON BM.Id = G.ModifiedBackendMemberId
-WHERE G.Id = @Id
-GROUP BY G.Id, G.ChiName,G.EngName,G.Description, G.IsRestrict, G.ModifiedTime, BM.Name
-";
-				return conn.QueryFirstOrDefault<GameEditVM>(sql, new { Id = id });
+				string sql = @"SELECT * FROM Games WHERE Id = @Id";
+				return conn.QueryFirstOrDefault<Game>(sql, new { Id = id });
 			}
 		}
 
-		public GameCreateDto GetGameByName(string chi, string eng)
+
+		public IEnumerable<GameClassificationGame> GetGameClassificationGames(int id)
+		{
+			using(var conn = new SqlConnection(_connStr))
+			{
+				string sql = "SELECT*FROM GameClassificationGames WHERE GameId = @Id";
+				return conn.Query<GameClassificationGame>(sql, new { Id = id });
+			}
+		}
+		public BackendMember GetBackendMemberName(int? id)
+		{
+			using (var conn = new SqlConnection(_connStr))
+			{
+				string sql = "SELECT * FROM BackendMembers WHERE Id = @Id";
+				return conn.QueryFirstOrDefault<BackendMember>(sql, new { Id = id });
+			}
+		}
+
+		public Game GetGameByName(string chi, string eng)
 		{
 			using (var conn = new SqlConnection(_connStr))
 			{
 				string sql = @"SELECT * FROM Games WHERE ChiName=@ChiName OR EngName=@EngName";
-				return conn.QueryFirstOrDefault<GameCreateDto>(sql, new { ChiName = chi, EngName = eng });
+				return conn.QueryFirstOrDefault<Game>(sql, new { ChiName = chi, EngName = eng });
 			}
 		}
 
@@ -116,15 +126,6 @@ GROUP BY
 			}
 		}
 
-		public GameEditCoverImgDto GetGameById2(int id)
-		{
-			using (var conn = new SqlConnection(_connStr))
-			{
-				string sql = @"SELECT * FROM Games WHERE Id=@id";
-				return conn.QueryFirstOrDefault<GameEditCoverImgDto>(sql, new { Id = id });
-			}
-		}
-
 		public bool EditGameCover(GameEditCoverImgDto dto)
 		{
 			using (var conn = new SqlConnection(_connStr))
@@ -132,15 +133,6 @@ GROUP BY
 				string sql = @"UPDATE Games SET GameCoverImg = @GameCoverImg,ModifiedTime=@ModifiedTime, ModifiedBackendMemberId=@ModifiedBackendMemberId  WHERE Id = @Id";
 				var rowAffected = conn.Execute(sql, dto);
 				return rowAffected > 0;
-			}
-		}
-
-		public Game GetGameByName2(string name)
-		{
-			using (var conn = new SqlConnection(_connStr))
-			{
-				string sql = @"SELECT * FROM Games WHERE ChiName=@ChiName";
-				return conn.QueryFirstOrDefault<Game>(sql, new { ChiName = name });
 			}
 		}
 
@@ -172,24 +164,7 @@ GROUP BY
 				return rowAffected > 0;
 			}
 		}
-		public List<int> GetGameClassificationsByGameId(int gameId)
-		{
-			using (var conn = new SqlConnection(_connStr))
-			{
-				string sql = @"SELECT GameClassificationId FROM GameClassificationGames WHERE GameId = @GameId;";
-				return conn.Query<int>(sql, new { GameId = gameId }).ToList();
-			}
-		}
-
-		public IEnumerable<GameEditVM> GetGameClassificationGames(int id)
-		{
-			using (var conn = new SqlConnection(_connStr))
-			{
-				string sql = @"SELECT * FROM GameClassificationGames WHERE GameId = @Id";
-				return conn.Query<GameEditVM>(sql, new { Id = id });
-			}
-		}
-
+		
 		public bool DeleteGameClassificationGames(int id)
 		{
 			using (var conn = new SqlConnection(_connStr))
@@ -200,15 +175,6 @@ GROUP BY
 			}
 		}
 
-		//用來改成通用的
-		public Game GetGameByIdForAddProduct(int id)
-		{
-			using (var conn = new SqlConnection(_connStr))
-			{
-				string sql = @"SELECT*FROM Games WHERE Id = @Id;";
-				return conn.QueryFirstOrDefault<Game>(sql, new { Id = id });
-			}
-		}
 
 		public bool CreateProduct(Product product)
 		{
