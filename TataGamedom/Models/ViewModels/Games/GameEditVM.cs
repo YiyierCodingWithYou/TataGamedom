@@ -7,7 +7,7 @@ using TataGamedom.Models.EFModels;
 
 namespace TataGamedom.Models.ViewModels.Games
 {
-	public class GameEditVM
+	public class GameEditVM : IValidatableObject
 	{
 		public int Id { get; set; }
 
@@ -25,7 +25,7 @@ namespace TataGamedom.Models.ViewModels.Games
 		
 		public string SelectedGameClassificationString { get; set; }
 		[Display(Name = "遊戲類別（複選最多兩項）")]
-		[Required(ErrorMessage = "請選擇遊戲分類")]
+		[Required]
 		public List<int> SelectedGameClassification { get; set; }
 
 		[Display(Name = "遊戲介紹")]
@@ -41,9 +41,17 @@ namespace TataGamedom.Models.ViewModels.Games
 		[Display(Name = "最後修改者")]
 		public string ModifiedBackendMemberName { get; set; }
 
-		public int ModifiedBackendMemberId { get; set; }
+		public int? ModifiedBackendMemberId { get; set; }
 
-        public Game Game { get; set; }
 
-    }
+		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+		{
+			var model = validationContext.ObjectInstance as GameEditVM;
+
+			if (model.SelectedGameClassification != null && model.SelectedGameClassification.Count > 2)
+			{
+				yield return new ValidationResult("最多只能選擇兩項分類！", new List<string> { "SelectedGameClassification" });
+			}
+		}
+	}
 }
