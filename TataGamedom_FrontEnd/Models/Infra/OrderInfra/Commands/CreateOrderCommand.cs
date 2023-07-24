@@ -1,6 +1,7 @@
 ﻿using MediatR;
+using TataGamedom_FrontEnd.Models.EFModels;
 
-namespace TataGamedom_FrontEnd.Models.Infra.OrderInfra.Create;
+namespace TataGamedom_FrontEnd.Models.Infra.OrderInfra.Commands;
 
 public record CreateOrderCommand(
     string Index,
@@ -15,7 +16,4 @@ public record CreateOrderCommand(
     string ToAddress,
     DateTime? SentAt,
     DateTime? DeliveredAt,
-    string? TrackingNum) : IRequest
-{
-}
-
+    string? TrackingNum) : IRequest<Order>;
