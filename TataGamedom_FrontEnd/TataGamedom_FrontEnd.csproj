@@ -17,6 +17,8 @@
 
   <ItemGroup>
     <Folder Include="Models\Dtos\" />
+    <Folder Include="Models\Infra\OrderInfra\Commands\" />
+    <Folder Include="Models\Infra\OrderInfra\Handlers\" />
     <Folder Include="Models\Interfaces\" />
     <Folder Include="Models\ViewModels\" />
     <Folder Include="Models\Services\" />
