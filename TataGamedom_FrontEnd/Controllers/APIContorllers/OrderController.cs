@@ -19,9 +19,9 @@ public class OrderController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<Order>>> Get()
-    {
-        return Ok(await _mediator.Send(new GetOrderListQuery()));
-    }
+    
+    =>  Ok(await _mediator.Send(new GetOrderListQuery()));
+    
 
     [HttpGet("{id : int}")]
     public string Get(int id)
