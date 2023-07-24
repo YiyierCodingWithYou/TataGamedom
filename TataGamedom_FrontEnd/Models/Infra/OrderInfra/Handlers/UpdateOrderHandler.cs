@@ -26,12 +26,12 @@ public class UpdateOrderHandler : IRequestHandler<UpdateOrderCommand, int>
             order.OrderStatusId = request.OrderStatusId;
             order.ShipmentStatusId = request.ShipmentStatusId;
             order.PaymentStatusId = request.PaymentStatusId;
-            order.CompletedAt = request.CompletedAt;
+            //order.CompletedAt = request.CompletedAt;
             order.ShipmemtMethodId = request.ShipmemtMethodId;
-            order.RecipientName = request.RecipientName;
-            order.ToAddress = request.ToAddress;
-            order.SentAt = request.SentAt;
-            order.DeliveredAt = request.DeliveredAt;
+            //order.RecipientName = request.RecipientName;
+            //order.ToAddress = request.ToAddress;
+            //order.SentAt = request.SentAt;
+            //order.DeliveredAt = request.DeliveredAt;
             order.TrackingNum = request.TrackingNum;
 
             return await _orderRepository.UpdateOrderAsync(order);
