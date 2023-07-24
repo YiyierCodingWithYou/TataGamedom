@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Reflection;
 using TataGamedom_FrontEnd.Models.EFModels;
+using TataGamedom_FrontEnd.Models.Infra.OrderInfra;
+using TataGamedom_FrontEnd.Models.Interfaces;
 
 namespace TataGamedom_FrontEnd
 {
@@ -16,11 +19,14 @@ namespace TataGamedom_FrontEnd
 
 			builder.Services.AddControllersWithViews();
 
-               builder.Services.AddEndpointsApiExplorer();
+			builder.Services.AddEndpointsApiExplorer();
+
+            builder.Services.AddMediatR(configuration => configuration.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
+
+			builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 
-
-			var app = builder.Build();
+            var app = builder.Build();
 
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())
