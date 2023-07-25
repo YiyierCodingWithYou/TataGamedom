@@ -1,9 +1,10 @@
 Working On
-	Order
-	[] Add Irepo¡Brepo
-	[] Add MediatR¡BCQRS Baisc Setup
+	Debug Put()
 	
 To Do
 	
 
 Completed
+	Order
+	[v] Add Irepo¡Brepo
+	[v] Add MediatR¡BCQRS Baisc Setup

@@ -23,11 +23,12 @@ public class OrderController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<Order>>> Get()
-    
-        =>Ok(await _mediator.Send(new GetOrderListQuery()));
+    {
+        return Ok(await _mediator.Send(new GetOrderListQuery()));
+    }
 
 
-    [HttpGet("{id : int}")]
+    [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
