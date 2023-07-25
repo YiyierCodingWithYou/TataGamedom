@@ -449,8 +449,9 @@ namespace TataGamedom.Models.Services
 				{
 					return Result.Fail("匯入失敗：" + ex.Message);
 				}
+				return Result.Success();
 			}
-			return Result.Success();
+			return Result.Fail("未選擇上傳檔案");
 		}
 	}
 }
