@@ -29,7 +29,7 @@
         </div>
 
         <div class="mb-3">
-            @Html.LabelFor(model => model.SelectedGameClassification, htmlAttributes: new { @class = "form-label col-3" })
+            @Html.LabelFor(model => model.SelectedGameClassification, htmlAttributes: new { @class = "form-label col-6" })
             <br />
             <div class="form-control chooseBlock">
                 @foreach (var category in Model.GameClassification.Skip(1))

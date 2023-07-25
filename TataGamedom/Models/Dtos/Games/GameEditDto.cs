@@ -39,7 +39,7 @@ namespace TataGamedom.Models.Dtos.Games
 		[Display(Name = "最後修改者")]
 
 		public string ModifiedBackendMemberName { get; set; }
-		public int ModifiedBackendMemberId { get; set; }
+		public int? ModifiedBackendMemberId { get; set; }
 
 	}
 
