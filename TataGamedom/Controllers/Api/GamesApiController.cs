@@ -6,10 +6,15 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using TataGamedom.Models.EFModels;
 using TataGamedom.Models.Infra;
+using TataGamedom.Models.Infra.DapperRepositories;
+using TataGamedom.Models.Interfaces;
+using TataGamedom.Models.Services;
+using TataGamedom.Models.ViewModels.Games;
 
 namespace TataGamedom.Controllers.Api
 {
@@ -17,77 +22,24 @@ namespace TataGamedom.Controllers.Api
     {
         private AppDbContext db = new AppDbContext();
 
-        // GET: api/GamesApi
-        //public IQueryable<Game> GetGames()
-        //{
-        //    return db.Games;
-        //}
+		// GET: api/GamesApi/5
+        public async Task<IEnumerable<GameIndexVM>> GetGamesList()
+        {
+			IEnumerable<GameIndexVM> games = await GetGames();
+			return games;
+		}
 
-        //// GET: api/GamesApi/5
-        //[ResponseType(typeof(Game))]
-        //public IHttpActionResult GetGame(int id)
-        //{
-        //    Game game = db.Games.Find(id);
-        //    if (game == null)
-        //    {
-        //        return NotFound();
-        //    }
+		private async Task<IEnumerable<GameIndexVM>> GetGames()
+		{
+			return await Task.Run(() =>
+			{
+				IGameRepository repo = new GameDapperRepository();
+				GameService service = new GameService(repo);
+				return service.Search();
+			});
+		}
 
-        //    return Ok(game);
-        //}
-
-        //// PUT: api/GamesApi/5
-        //[ResponseType(typeof(void))]
-        //public IHttpActionResult PutGame(int id, Game game)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    if (id != game.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    db.Entry(game).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        db.SaveChanges();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!GameExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return StatusCode(HttpStatusCode.NoContent);
-        //}
-
-        //// POST: api/GamesApi
-        //[ResponseType(typeof(Game))]
-        //public IHttpActionResult PostGame(Game game)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    db.Games.Add(game);
-        //    db.SaveChanges();
-
-        //    return CreatedAtRoute("DefaultApi", new { id = game.Id }, game);
-        //}
-
-        // DELETE: api/GamesApi/5
-        [ResponseType(typeof(ApiResult))]
+		[ResponseType(typeof(ApiResult))]
         public ApiResult DeleteGame(int id)
         {
             Game game = db.Games.Find(id);
@@ -120,7 +72,7 @@ namespace TataGamedom.Controllers.Api
 				}
 				catch (Exception ex)
                 {
-					return ApiResult.Fail("無法刪除該遊戲，因為它與其他資料有關聯，請聯繫工程師 :) ");
+					return ApiResult.Fail("無法刪除該遊戲，因" + ex.Message + "，請聯繫工程師 :) ");
 				}		
 			}
             return ApiResult.Success("遊戲刪除成功！");
