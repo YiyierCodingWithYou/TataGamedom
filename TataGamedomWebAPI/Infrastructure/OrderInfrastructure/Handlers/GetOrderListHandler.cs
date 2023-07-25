@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using TataGamedom_FrontEnd.Models.Infra.OrderInfra.Queries;
 using TataGamedom_FrontEnd.Models.Interfaces;
+using TataGamedomWebAPI.Models.Dtos;
 using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedom_FrontEnd.Models.Infra.OrderInfra.Handlers;

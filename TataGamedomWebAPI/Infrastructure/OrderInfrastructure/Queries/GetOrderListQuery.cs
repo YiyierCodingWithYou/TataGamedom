@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using TataGamedomWebAPI.Models.Dtos;
 using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedom_FrontEnd.Models.Infra.OrderInfra.Queries;

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TataGamedom_FrontEnd.Models.Infra.OrderInfra.Queries;
 using TataGamedomWebAPI.Infrastructure.OrderInfrastructure.Commands;
+using TataGamedomWebAPI.Models.Dtos;
 using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Controllers;
@@ -50,15 +51,11 @@ public class OrderController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Order>> Post([FromBody] Order order)
+    public async Task<ActionResult<Order>> Post([FromBody] OrderCreateDto order)
     {
         if (order == null)
         {
             return BadRequest(order);
-        }
-        if (order.Id > 0)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError);
         }
         return Ok(await _mediator.Send(
             new CreateOrderCommand(

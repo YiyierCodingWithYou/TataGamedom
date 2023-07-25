@@ -8,6 +8,6 @@ public record CreateOrderCommand(
     int ShipmentStatusId,
     int PaymentStatusId,
     int ShipmemtMethodId,
-    string RecipientName,
-    string ToAddress) : IRequest<Order>;
+    string? RecipientName,
+    string? ToAddress) : IRequest<Order>;
 

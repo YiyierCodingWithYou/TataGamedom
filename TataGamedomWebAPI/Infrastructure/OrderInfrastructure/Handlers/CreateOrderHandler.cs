@@ -27,8 +27,8 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, Order>
             PaymentStatusId = request.PaymentStatusId,
             CreatedAt = DateTime.Now,
             ShipmemtMethodId = request.ShipmemtMethodId,
-            RecipientName = request.RecipientName,
-            ToAddress = request.ToAddress
+            RecipientName = request.RecipientName!,
+            ToAddress = request.ToAddress!
         };
         return await _orderRepository.AddOrderAsync(order);
     }

@@ -1,10 +1,12 @@
 Working On
-	[]輸出Excel ，匯入Excel
-	[]修放照片的樣式
-	[]建常備品資料表& Data
+	[]Post() =>Order Index
 	
 	
 To Do
+	[]輸出Excel ，匯入Excel
+	[]修放照片的樣式
+	[]建常備品資料表& Data
+
 	[] 進貨推薦清單
 
 	[]排序在換頁時保留

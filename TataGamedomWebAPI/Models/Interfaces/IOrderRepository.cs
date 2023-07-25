@@ -1,4 +1,5 @@
-﻿using TataGamedomWebAPI.Models.EFModels;
+﻿using TataGamedomWebAPI.Models.Dtos;
+using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedom_FrontEnd.Models.Interfaces;
 
@@ -13,9 +14,5 @@ public interface IOrderRepository
     Task<int> UpdateOrderAsync(Order order);
 
     Task<int> DeleteOrderAsync(int id);
-
-
-    //0723
-    //void Add(Order order);
 
 }

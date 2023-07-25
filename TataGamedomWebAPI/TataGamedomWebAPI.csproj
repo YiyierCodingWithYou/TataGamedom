@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="Infrastructure\Data\DapperRepository\" />
-    <Folder Include="Models\Dtos\" />
     <Folder Include="Models\EFModels\" />
     <Folder Include="Models\Services\" />
   </ItemGroup>
