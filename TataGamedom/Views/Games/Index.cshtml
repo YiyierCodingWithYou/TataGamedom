@@ -1,13 +1,13 @@
-﻿@model IEnumerable<TataGamedom.Models.ViewModels.Games.GameIndexVM>
-
+﻿
 @{
     ViewBag.Title = "Index";
 }
 
 @section Styles{
-    <link href="https://cdn.datatables.net/v/bs5/dt-1.13.5/af-2.6.0/b-2.4.0/b-html5-2.4.0/date-1.5.0/sb-1.5.0/sl-1.7.0/datatables.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.2.0/css/fixedHeader.dataTables.min.css">
     <style>
         thead {
             background-color: goldenrod;
@@ -32,32 +32,32 @@
     </div>
 
     <div>
-        <table class="table" id="myTable">
+        <table class="table w-100" id="myTable">
             <thead>
                 <tr>
                     <th class="text-center vertical-align-middle">
-                        @Html.DisplayNameFor(model => model.GameCoverImg)
+                        遊戲封面
                     </th>
                     <th class="text-center vertical-align-middle visually-hidden">
-                        @Html.DisplayNameFor(model => model.Id)
-                    </th>
-                    <th class="text-center vertical-align-middle w-25">
-                        @Html.DisplayNameFor(model => model.ChiName)
+                        遊戲編號
                     </th>
                     <th class="text-center vertical-align-middle">
-                        @Html.DisplayNameFor(model => model.IsRestrict)
+                        遊戲名稱
                     </th>
                     <th class="text-center vertical-align-middle">
-                        @Html.DisplayNameFor(model => model.CreatedBackendMemberName)
+                        年齡限制
                     </th>
-                    <th class="text-center vertical-align-middle" style="width:100px">
-                        @Html.DisplayNameFor(model => model.CreatedTime)
+                    <th class="text-center vertical-align-middle">
+                        創建者
+                    </th>
+                    <th class="text-center vertical-align-middle">
+                        創建時間
                     </th>
                     <th class="text-center vertical-align-middle visually-hidden">
-                        @Html.DisplayNameFor(model => model.ModifiedBackendMemberName)
+                        最後修改者
                     </th>
                     <th class="text-center vertical-align-middle visually-hidden">
-                        @Html.DisplayNameFor(model => model.ModifiedTime)
+                        最後修改時間
                     </th>
                     <th class="text-center vertical-align-middle">編輯</th>
                     <th class="text-center vertical-align-middle">編輯封面</th>
@@ -67,73 +67,6 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td class="text-center vertical-align-middle">
-                            <img src="~/Files/Uploads/@item.GameCoverImg" style="width: 100px" />
-                        </td>
-                        <td class="text-center vertical-align-middle visually-hidden">
-                            @Html.DisplayFor(modelItem => item.Id)
-                        </td>
-                        <td class="vertical-align-middle w-25">
-                            @Html.DisplayFor(modelItem => item.ChiName)
-                        </td>
-
-                        <td class="text-center vertical-align-middle">
-                            @if (item.IsRestrict)
-                            {
-                                <div class="visually-hidden">
-                                    <text>有</text>
-                                </div><i class="fa-regular fa-square-check fa-xl"></i>
-                            }
-                            else
-                            {
-                                <div class="visually-hidden">
-                                    <text>無</text>
-                                </div>
-                                <i class="fa-regular fa-square fa-xl"></i>
-                            }
-                        </td>
-                        <td class="text-center vertical-align-middle">
-                            @Html.DisplayFor(modelItem => item.CreatedBackendMemberName)
-                        </td>
-                        <td class="text-center vertical-align-middle" style="width:100px">
-                            @Html.DisplayFor(modelItem => item.CreatedTime)
-                        </td>
-                        <td class="text-center vertical-align-middle visually-hidden">
-                            @Html.DisplayFor(modelItem => item.ModifiedBackendMemberName)
-                        </td>
-                        <td class="text-center vertical-align-middle visually-hidden">
-                            @item.ModifiedTime.ToString()
-                        </td>
-                        <td class="text-center vertical-align-middle">
-                            <a href="@Url.Action("Edit", new { id = item.Id })" class="icon-link">
-                                <i class="fas fa-pencil-alt"></i>
-                            </a>
-                        </td>
-                        <td class="text-center vertical-align-middle">
-                            <a href="@Url.Action("EditGameCover", new { id = item.Id })" class="icon-link">
-                                <i class="fa-regular fa-image"></i>
-                            </a>
-                        </td>
-                        <td class="text-center vertical-align-middle">
-                            <a href="@Url.Action("Index","GameComments", new { gameCommentId = item.Id })" class="icon-link">
-                                <i class="fa-regular fa-comments"></i>
-                            </a>
-                        </td>
-                        <td class="text-center vertical-align-middle">
-                            <a href="@Url.Action("AddProduct", new { id = item.Id })" class="icon-link">
-                                <i class="fa-solid fa-circle-plus"></i>
-                            </a>
-                        </td>
-                        <td class="text-center vertical-align-middle">
-                            <a href="#" class="icon-link" onclick="confirmDelete('@item.Id')">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </a>
-                        </td>
-                    </tr>
-                }
             </tbody>
 
         </table>
@@ -142,26 +75,91 @@
 @section Scripts{
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"></script>
-    @*<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap.min.js"></script>
-        <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
-        <script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap.min.js"></script>
-        <script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.1/datatables.min.js"></script>*@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
     <script src="https://cdn.datatables.net/v/bs5/dt-1.13.5/af-2.6.0/b-2.4.0/b-html5-2.4.0/date-1.5.0/sb-1.5.0/sl-1.7.0/datatables.min.js"></script>
-    <script src="https://cdn.datatables.net/fixedheader/3.2.0/js/dataTables.fixedHeader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/zh-tw.min.js"></script>
     <script>
+        var baseAddress = "https://localhost:44398";
         $(document).ready(function () {
             $('#myTable').DataTable({
                 dom: 'Qlrtip',
-                fixedHeader: true,
-                select: false,
                 responsive: true,
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/zh-HANT.json',
-                }
+                },
+                ajax: {
+                    url: `${baseAddress}/api/GamesApi`,
+                    type: 'GET',
+                    dataType: 'json',
+                    dataSrc: function (data) { return data; },
+                    error: function (xhr, status, error) {
+                        console.error('API請求失敗:', status, error);
+                    }
+                },
+                columns: [
+                    { data: 'GameCoverImg', width: "10%", render: function (data, type, row, meta) { return '<img src="/Files/Uploads/' + data + '" style="width: 100px" />'; } },
+                    { data: 'Id', className: "text-center vertical-align-middle visually-hidden" },
+                    { data: 'ChiName', width: "25%", className: "vertical-align-middle" },
+                    { data: 'IsRestrict', width: "8%", render: function (data, type, row, meta) { return data ? '<i class="fa-regular fa-square-check fa-xl"></i>' : '<i class="fa-regular fa-square fa-xl"></i>'; }, className: "text-center vertical-align-middle" },
+                    { data: 'CreatedBackendMemberName', width: "10%", className: "text-center vertical-align-middle" },
+                    {
+                        data: 'CreatedTime', width: "11%", className: "text-center vertical-align-middle", render: function (data, type, row) {
+                            let formattedDateTime = moment(data).format('YYYY/MM/DD HH:mm:ss');
+                            return formattedDateTime;
+                        }
+                    },
+                    { data: 'ModifiedBackendMemberName', width: "10%", className: "text-center vertical-align-middle visually-hidden" },
+                    {
+                        data: 'ModifiedTime', width: "11%", className: "text-center vertical-align-middle visually-hidden", render: function (data, type, row) {
+                            let formattedDateTime = moment(data).format('YYYY/MM/DD HH:mm:ss');
+                            return formattedDateTime;
+                        }
+                    },
+                    {
+                        data: null,
+                        width: "5%",
+                        className: "text-center vertical-align-middle",
+                        render: function (data, type, row) {
+                            return `<a href="/Games/Edit/${row.Id}" class="icon-link"><i class="fas fa-pencil-alt"></i>`;
+                        }
+                    },
+                    {
+                        data: null,
+                        width: "8%",
+                        className: "text-center vertical-align-middle",
+                        render: function (data, type, row) {
+                            return `<a href="/Games/EditGameCover/${row.Id}" class="icon-link"><i class="fa-regular fa-image"></i></button></td>`;
+                        }
+                    },
+                    {
+                        data: null,
+                        width: "8%",
+                        className: "text-center vertical-align-middle",
+                        render: function (data, type, row) {
+                            return `<a href="/GameComments/Index?gameCommentId=${row.Id}" class="icon-link"><i class="fa-regular fa-comments"></i>`;
+                        }
+                    },
+                    {
+                        data: null,
+                        width: "8%",
+                        className: "text-center vertical-align-middle",
+                        render: function (data, type, row) {
+                            return `<a href="/Games/AddProduct/${row.Id}" class="icon-link"><i class="fa-solid fa-circle-plus"></i>`;
+                        }
+                    },
+                    {
+                        data: null,
+                        width: "5%",
+                        className: "text-center vertical-align-middle",
+                        render: function (data, type, row) {
+                            return `<a href="#", onclick="confirmDelete(${row.Id})" class="icon-link"><i class="fa-solid fa-trash-can"></i>`;
+                        }
+                    }
+                ],
             });
         });
+
         function confirmDelete(id) {
             console.log(id);
             Swal.fire({
@@ -194,7 +192,7 @@
                             confirmButtonText: '確定'
                         }).then(() => {
                             // 重新導向至 Index 頁面
-                            window.location.href = "/Games/Index";
+                            $('#myTable').DataTable().ajax.reload();
                         });
                     } else {
                         Swal.fire({
