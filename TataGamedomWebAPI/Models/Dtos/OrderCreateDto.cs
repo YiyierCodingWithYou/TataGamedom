@@ -17,21 +17,7 @@ public class OrderCreateDto
     public string? RecipientName { get; set; }
 
     public string? ToAddress { get; set; }
-}
 
-public static class OrderDtoExts
-{
-    public static OrderCreateDto ToDto(this Order entity)
-    {
-        return new OrderCreateDto
-        {
-            MemberId = entity.MemberId,
-            OrderStatusId = entity.OrderStatusId,
-            ShipmentStatusId = entity.ShipmentStatusId,
-            PaymentStatusId = entity.PaymentStatusId,
-            ShipmemtMethodId = entity.ShipmemtMethodId,
-            RecipientName = entity.RecipientName,
-            ToAddress = entity.ToAddress,
-        };
-    }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+
 }

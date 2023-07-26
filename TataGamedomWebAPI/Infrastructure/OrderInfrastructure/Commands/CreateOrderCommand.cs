@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using TataGamedomWebAPI.Models.Dtos;
 using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Infrastructure.OrderInfrastructure.Commands;
@@ -9,5 +10,5 @@ public record CreateOrderCommand(
     int PaymentStatusId,
     int ShipmemtMethodId,
     string? RecipientName,
-    string? ToAddress) : IRequest<Order>;
+    string? ToAddress) : IRequest<OrderCreateDto>;
 

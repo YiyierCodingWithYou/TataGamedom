@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using System.Net;
 using TataGamedom_FrontEnd.Models.Interfaces;
 using TataGamedomWebAPI.Infrastructure.OrderInfrastructure.Commands;
-using TataGamedomWebAPI.Models.EFModels;
+using TataGamedomWebAPI.Models.Dtos;
+
 
 namespace TataGamedom_FrontEnd.Models.Infra.OrderInfra.Handlers;
 
-public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, Order>
+public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, OrderCreateDto>
 {
     private readonly IOrderRepository _orderRepository;
 
@@ -16,9 +17,9 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, Order>
         _orderRepository = orderRepository;
     }
 
-    public async Task<Order> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+    public async Task<OrderCreateDto> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     { 
-        Order order = new Order 
+        var order = new OrderCreateDto
         {
             //To do : Index
             MemberId = request.MemberId,
