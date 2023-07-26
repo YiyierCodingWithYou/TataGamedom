@@ -1,6 +1,5 @@
 Working On
 
-	[]給Status預設值 Create Command不傳 Update再傳
 	
 To Do
 	
@@ -16,3 +15,4 @@ Completed
 		[v]Post() =>Order Index
 		[v]Put
 		[v]Delete
+		[v]給Status預設值 Controller Create Command實例不傳 Update再傳

@@ -59,10 +59,6 @@ public class OrderController : ControllerBase
         return Ok(await _mediator.Send(
             new CreateOrderCommand(
             order.MemberId,
-            order.OrderStatusId,
-            order.ShipmentStatusId,
-            order.PaymentStatusId,
-            order.ShipmemtMethodId,
             order.RecipientName,
             order.ToAddress)));
     }
