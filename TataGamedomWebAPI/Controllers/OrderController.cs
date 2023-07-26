@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TataGamedom_FrontEnd.Models.Infra.OrderInfra.Queries;
 using TataGamedomWebAPI.Infrastructure.OrderInfrastructure.Commands;
-using TataGamedomWebAPI.Models.Dtos;
+using TataGamedomWebAPI.Models.Dtos.OrderDto;
 using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Controllers;
@@ -68,9 +68,10 @@ public class OrderController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Put(int id, [FromBody] Order order)
+    public async Task<IActionResult> Put(int id, [FromBody] OrderUpdateDto order)
     {
         if (order == null || id != order.Id)
         {

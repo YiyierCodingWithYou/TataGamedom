@@ -8,4 +8,5 @@ public record UpdateOrderCommand(
     int ShipmentStatusId,
     int PaymentStatusId,
     int ShipmemtMethodId,
-    string? TrackingNum) : IRequest<int>;
+    string? TrackingNum
+    ) : IRequest<int>;

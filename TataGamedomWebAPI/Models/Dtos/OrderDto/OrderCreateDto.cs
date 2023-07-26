@@ -1,6 +1,6 @@
 ﻿using TataGamedomWebAPI.Models.EFModels;
 
-namespace TataGamedomWebAPI.Models.Dtos;
+namespace TataGamedomWebAPI.Models.Dtos.OrderDto;
 
 public class OrderCreateDto
 {
