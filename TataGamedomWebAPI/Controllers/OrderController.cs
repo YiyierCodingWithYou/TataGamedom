@@ -8,7 +8,6 @@ using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Controllers;
 
-//Todo 改DTO
 [EnableCors("AllowAny")]
 [Route("api/[controller]")]
 [ApiController]

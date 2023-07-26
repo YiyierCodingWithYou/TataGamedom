@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Immutable;
+using TataGamedom.Infrastructure;
 using TataGamedom_FrontEnd.Models.Interfaces;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.Dtos;
 using TataGamedomWebAPI.Models.EFModels;
+using TataGamedomWebAPI.Models.Interfaces;
 
 namespace TataGamedom_FrontEnd.Models.Infra.OrderInfra;
 
@@ -17,8 +19,11 @@ public class OrderRepository : IOrderRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Order> AddOrderAsync(OrderCreateDto order)
+    public async Task<Order> AddOrderAsync(Order order)
     {
+        var indexgenertor = new IndexGenerator(await _dbContext.Orders.MaxAsync(o => o.Id));
+        order.Index = indexgenertor.GetOrderIndex(order);
+
         EntityEntry<Order> result = await _dbContext.Orders.AddAsync(order);
         await _dbContext.SaveChangesAsync();
         return result.Entity;

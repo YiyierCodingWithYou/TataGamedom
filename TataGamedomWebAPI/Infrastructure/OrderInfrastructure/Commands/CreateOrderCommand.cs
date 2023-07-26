@@ -10,5 +10,5 @@ public record CreateOrderCommand(
     int PaymentStatusId,
     int ShipmemtMethodId,
     string? RecipientName,
-    string? ToAddress) : IRequest<OrderCreateDto>;
+    string? ToAddress) : IRequest<Order>;
 
