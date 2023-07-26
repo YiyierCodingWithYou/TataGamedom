@@ -43,13 +43,13 @@ public class OrderRepository : IOrderRepository
 
     public async Task<Order?> GetOrderByIdAsync(int id)
     {
-        var order = await _dbContext.Orders.Where(o => o.Id == id).FirstOrDefaultAsync();      
+        var order = await _dbContext.Orders.AsNoTracking().Where(o => o.Id == id).FirstOrDefaultAsync();      
         return order;
     }
 
     public async Task<IEnumerable<Order>> GetOrderListAsync()
     {
-        var order = await _dbContext.Orders.ToListAsync();
+        var order = await _dbContext.Orders.AsNoTracking().ToListAsync();
         return order;
     }
 
