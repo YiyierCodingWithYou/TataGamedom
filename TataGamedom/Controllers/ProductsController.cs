@@ -202,10 +202,6 @@ namespace TataGamedom.Controllers
 		public ActionResult Upload(HttpPostedFileBase file)
 		{
 			if (!ModelState.IsValid) { return View(); }
-			if (file == null)
-			{
-				return View();
-			}
 			var currentUserAccount = User.Identity.Name;
 			IProductRepository repo = new ProductDapperRepository();
 			ProductService service = new ProductService(repo);
