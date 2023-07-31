@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Application\Features\Order\Commands\" />
     <Folder Include="Infrastructure\Data\DapperRepository\" />
     <Folder Include="Models\EFModels\" />
     <Folder Include="Models\Services\" />

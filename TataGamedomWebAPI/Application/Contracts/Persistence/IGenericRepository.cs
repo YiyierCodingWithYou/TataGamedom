@@ -2,7 +2,7 @@
 
 public interface IGenericRepository<T> where T : class
 {
-    Task<IReadOnlyList<T>> GetAsync();
+    Task<IReadOnlyList<T>> GetListAsync();
 
     Task<T> GetByIdAsync(int id);
 
