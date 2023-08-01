@@ -8,6 +8,12 @@ namespace TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder
             RuleFor(p => p.Id)
                 .NotEmpty()
                 .WithMessage("{PropertyName} 必填");
+            
+            RuleFor(p => p.TrackingNum)
+                .NotEmpty()
+                .WithMessage("{PropertyName} 必填");
+
+            //Todo 訂單日期
         }
     }
 

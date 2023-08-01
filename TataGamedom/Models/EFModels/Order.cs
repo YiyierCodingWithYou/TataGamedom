@@ -51,7 +51,6 @@ namespace TataGamedom.Models.EFModels
 
         public virtual Member Member { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderItem> OrderItems { get; set; }
 
         public virtual OrderStatusCode OrderStatusCode { get; set; }

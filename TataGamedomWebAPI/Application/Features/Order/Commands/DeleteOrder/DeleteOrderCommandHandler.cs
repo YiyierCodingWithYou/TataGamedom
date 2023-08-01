@@ -18,13 +18,19 @@ public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, Uni
     public async Task<Unit> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
     {
         var orderToBeDeleted = await _orderRepository.GetByIdAsync(request.Id);
-        if (orderToBeDeleted == null) 
-        {
-            throw new NotFoundException(nameof(orderToBeDeleted), request.Id);
-        }
+
+        ValidateRequest(request, orderToBeDeleted);
 
         await _orderRepository.DeleteAsync(orderToBeDeleted);
         _logger.LogInformation("Order were deleted successfully");
         return Unit.Value;
+    }
+
+    private static void ValidateRequest(DeleteOrderCommand request, Models.EFModels.Order orderToBeDeleted)
+    {
+        if (orderToBeDeleted == null)
+        {
+            throw new NotFoundException(nameof(orderToBeDeleted), request.Id);
+        }
     }
 }
