@@ -4,8 +4,10 @@ using TataGamedomWebAPI.Models.Common;
 
 namespace TataGamedomWebAPI.Models.EFModels;
 
-public partial class Order :BaseEntity
+public partial class Order
 {
+    public int Id { get; set; }
+
     public string Index { get; set; } = null!;
 
     public int MemberId { get; set; }
@@ -43,4 +45,9 @@ public partial class Order :BaseEntity
     public virtual ShipmemtMethod? ShipmemtMethod { get; set; }
 
     public virtual ShipmentStatusesCode ShipmentStatus { get; set; } = null!;
+}
+
+public partial class Order :BaseEntity
+{
+
 }

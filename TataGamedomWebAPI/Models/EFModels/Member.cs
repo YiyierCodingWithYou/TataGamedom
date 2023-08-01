@@ -4,8 +4,10 @@ using TataGamedomWebAPI.Models.Common;
 
 namespace TataGamedomWebAPI.Models.EFModels;
 
-public partial class Member : BaseEntity
+public partial class Member
 {
+    public int Id { get; set; }
+
     public string Name { get; set; } = null!;
 
     public string Account { get; set; } = null!;
@@ -75,4 +77,9 @@ public partial class Member : BaseEntity
     public virtual ICollection<PostReport> PostReports { get; set; } = new List<PostReport>();
 
     public virtual ICollection<PostUpDownVote> PostUpDownVotes { get; set; } = new List<PostUpDownVote>();
+}
+
+public partial class Member : BaseEntity 
+{
+
 }
