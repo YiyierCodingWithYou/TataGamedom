@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using TataGamedom_FrontEnd.Models.Infra.OrderInfra;
-using TataGamedom_FrontEnd.Models.Interfaces;
+using TataGamedomWebAPI.Application;
+using TataGamedomWebAPI.Infrastructure;
 using TataGamedomWebAPI.Infrastructure.Data;
+using TataGamedomWebAPI.Infrastructure.TaTaGamedom_Persistence;
 
 namespace TataGamedomWebAPI
 {
@@ -24,11 +25,11 @@ namespace TataGamedomWebAPI
                 );
             });
 
-            builder.Services.AddControllers();
+            builder.Services.AddApplicationServices();
+            builder.Services.AddPersistenceServices(builder.Configuration);
+            builder.Services.AddInfrastructureServices(builder.Configuration);
 
-            //以下兩個重構後後刪掉
-            //builder.Services.AddMediatR(configuration => configuration.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
-            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddControllers();
 
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

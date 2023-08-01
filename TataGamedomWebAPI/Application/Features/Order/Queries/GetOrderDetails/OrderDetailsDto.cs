@@ -1,6 +1,6 @@
 ﻿namespace TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderDetails;
 
-public class OrderDetailDto 
+public class OrderDetailsDto 
 {
     public int Id { get; set; }
 

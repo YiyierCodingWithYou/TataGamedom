@@ -4,9 +4,9 @@ using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Infrastructure.TaTaGamedom_Persistence.Repositories;
 
-public class OrderRepository : GenericRepository<Order>, IOrderRepository
+public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepository
 {
-    public OrderRepository(AppDbContext dbContext) : base(dbContext)
+    public OrderItemRepository(AppDbContext dbContext) : base(dbContext)
     {
     }
 }

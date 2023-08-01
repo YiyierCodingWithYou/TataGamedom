@@ -4,7 +4,7 @@ using TataGamedomWebAPI.Application.Contracts.Persistence;
 
 namespace TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderDetails;
 
-public class GetOrderDetailQueryHandler : IRequestHandler<GetOrderDetailQuery, OrderDetailDto>
+public class GetOrderDetailQueryHandler : IRequestHandler<GetOrderDetailQuery, OrderDetailsDto>
 {
     private readonly IMapper _mapper;
     private readonly IOrderRepository _orderRepository;
@@ -20,11 +20,11 @@ public class GetOrderDetailQueryHandler : IRequestHandler<GetOrderDetailQuery, O
         this._logger = logger;
     }
 
-    public async Task<OrderDetailDto> Handle(GetOrderDetailQuery request, CancellationToken cancellationToken)
+    public async Task<OrderDetailsDto> Handle(GetOrderDetailQuery request, CancellationToken cancellationToken)
     {
         var orderDetail = await _orderRepository.GetByIdAsync(request.Id);
         
-        var response = _mapper.Map<OrderDetailDto>(orderDetail);
+        var response = _mapper.Map<OrderDetailsDto>(orderDetail);
 
         _logger.LogInformation("OrderDetail were retrieved successfully");
 

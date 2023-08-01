@@ -1,106 +1,69 @@
-﻿//using MediatR;
-//using Microsoft.AspNetCore.Cors;
-//using Microsoft.AspNetCore.Mvc;
-//using TataGamedom_FrontEnd.Models.Infra.OrderInfra.Queries;
-//using TataGamedomWebAPI.Infrastructure.OrderInfrastructure.Commands;
-//using TataGamedomWebAPI.Models.Dtos.OrderDto;
-//using TataGamedomWebAPI.Models.EFModels;
+﻿using MediatR;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using TataGamedomWebAPI.Application.Features.Order.Commands.CreateOrder;
+using TataGamedomWebAPI.Application.Features.Order.Commands.DeleteOrder;
+using TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder;
+using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderDetails;
+using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderList;
 
-//namespace TataGamedomWebAPI.Controllers;
+namespace TataGamedomWebAPI.Controllers;
 
-//[EnableCors("AllowAny")]
-//[Route("api/[controller]")]
-//[ApiController]
-//public class OrderController : ControllerBase
-//{
-//    private readonly IMediator _mediator;
+[EnableCors("AllowAny")]
+[Route("api/[controller]")]
+[ApiController]
+public class OrdersController : ControllerBase
+{
+    private readonly IMediator _mediator;
 
-//    public OrderController(IMediator mediator)
-//    {
-//        _mediator = mediator;
-//    }
+    public OrdersController(IMediator mediator)
+    {
+        this._mediator = mediator;
+    }
 
-//    [HttpGet]
-//    [ProducesResponseType(StatusCodes.Status200OK)]
-//    public async Task<ActionResult<IEnumerable<Order>>> Get()
-//    {
-//        return Ok(await _mediator.Send(new GetOrderListQuery()));
-//    }
+    [HttpGet]
+    public async Task<List<OrderDto>> Get()
+    {
+        var Orders = await _mediator.Send(new GetOrderListQuery());
+        return Orders;
+    }
 
+    [HttpGet("{id}")]
+    public async Task<ActionResult<OrderDetailsDto>> Get(int id)
+    {
+        var Order = await _mediator.Send(new GetOrderDetailQuery(id));
+        return Ok(Order);
+    }
 
-//    [HttpGet("{id:int}")]
-//    [ProducesResponseType(StatusCodes.Status200OK)]
-//    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-//    [ProducesResponseType(StatusCodes.Status404NotFound)]
-//    public async Task<ActionResult<Order>> Get(int id)
-//    {
-//        if (id == 0)
-//        {
-//            return BadRequest();
-//        }
-//        Order order = await _mediator.Send(new GetOrderByIdQuery(id));
-//        if (order == null)
-//        {
-//            return NotFound();
-//        }
-//        return Ok(order);
-//    }
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> Post(CreateOrderCommand Order)
+    {
+        var response = await _mediator.Send(Order);
+        return CreatedAtAction(nameof(Get), new { id = response });
+    }
 
-//    [HttpPost]
-//    [ProducesResponseType(StatusCodes.Status201Created)]
-//    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-//    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-//    public async Task<ActionResult<Order>> Post([FromBody] OrderCreateDto order)
-//    {
-//        if (order == null)
-//        {
-//            return BadRequest(order);
-//        }
-//        return Ok(await _mediator.Send(
-//            new CreateOrderCommand(
-//            order.MemberId,
-//            order.RecipientName,
-//            order.ToAddress)));
-//    }
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesDefaultResponseType]
+    public async Task<ActionResult> Put(UpdateOrderCommand Order)
+    {
+        await _mediator.Send(Order);
+        return NoContent();
+    }
 
-//    [HttpPut("{id:int}")]
-//    [ProducesResponseType(StatusCodes.Status200OK)]
-//    [ProducesResponseType(StatusCodes.Status204NoContent)]
-//    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-//    public async Task<IActionResult> Put(int id, [FromBody] OrderUpdateDto order)
-//    {
-//        if (order == null || id != order.Id)
-//        {
-//            return BadRequest();
-//        }
-//        return Ok(await _mediator.Send(
-//            new UpdateOrderCommand(
-//            order.Id,
-//            order.OrderStatusId,
-//            order.ShipmentStatusId,
-//            order.PaymentStatusId,
-//            order.ShipmemtMethodId,
-//            order.TrackingNum)));
-//    }
-
-//    [HttpDelete("{id:int}")]
-//    [ProducesResponseType(StatusCodes.Status204NoContent)]
-//    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-//    [ProducesResponseType(StatusCodes.Status404NotFound)]
-//    public async Task<IActionResult> Delete(int id)
-//    {
-//        if (id <= 0)
-//        {
-//            return BadRequest();
-//        }
-
-//        Order order = await _mediator.Send(new GetOrderByIdQuery(id));
-//        if (order == null)
-//        {
-//            return NotFound();
-//        }
-
-//        await _mediator.Send(new DeleteOrderCommand(id));
-//        return NoContent();
-//    }
-//}
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesDefaultResponseType]
+    public async Task<ActionResult> Delete(int id)
+    {
+        var command = new DeleteOrderCommand { Id = id };
+        await _mediator.Send(command);
+        return NoContent();
+    }
+}
