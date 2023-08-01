@@ -2,7 +2,7 @@
 
 namespace TataGamedomWebAPI.Application.Contracts.Persistence;
 
-public interface IInventoryItemRepository : IGenericRepository<InventoryItem>
+public interface IMemberRepository : IGenericRepository<InventoryItem>
 {
-
+    Task<bool> IsMemberExist(int id);
 }
