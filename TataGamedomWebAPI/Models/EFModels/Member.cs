@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using TataGamedomWebAPI.Models.Common;
 
 namespace TataGamedomWebAPI.Models.EFModels;
 
@@ -78,4 +77,3 @@ public partial class Member
 
     public virtual ICollection<PostUpDownVote> PostUpDownVotes { get; set; } = new List<PostUpDownVote>();
 }
-

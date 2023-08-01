@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using TataGamedomWebAPI.Models.Common;
 
 namespace TataGamedomWebAPI.Models.EFModels;
 
@@ -46,4 +45,3 @@ public partial class Order
 
     public virtual ShipmentStatusesCode ShipmentStatus { get; set; } = null!;
 }
-

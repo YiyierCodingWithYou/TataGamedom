@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using TataGamedomWebAPI.Models.Common;
 
 namespace TataGamedomWebAPI.Models.EFModels;
 
@@ -26,5 +25,3 @@ public partial class OrderItemReturn
 
     public virtual OrderItem OrderItem { get; set; } = null!;
 }
-
-
