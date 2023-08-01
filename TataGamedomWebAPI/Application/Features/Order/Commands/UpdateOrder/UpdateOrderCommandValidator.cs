@@ -15,5 +15,4 @@ namespace TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder
 
     //訂單明細含實體商品 => TrackingNum必填
 
-    //訂單明細只含虛擬商品 => 
 }
