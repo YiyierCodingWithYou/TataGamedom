@@ -4,9 +4,9 @@ using TataGamedomWebAPI.Models.Common;
 
 namespace TataGamedomWebAPI.Models.EFModels;
 
-public partial class InventoryItem : BaseEntity
+public partial class InventoryItem
 {
-    //public int Id { get; set; }
+    public int Id { get; set; }
 
     public string Index { get; set; } = null!;
 
@@ -24,3 +24,5 @@ public partial class InventoryItem : BaseEntity
 
     public virtual StockInSheet StockInSheet { get; set; } = null!;
 }
+
+
