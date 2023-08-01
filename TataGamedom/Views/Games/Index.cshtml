@@ -53,10 +53,10 @@
                     <th class="text-center vertical-align-middle">
                         創建時間
                     </th>
-                    <th class="text-center vertical-align-middle visually-hidden">
+                    <th class="text-center vertical-align-middle">
                         最後修改者
                     </th>
-                    <th class="text-center vertical-align-middle visually-hidden">
+                    <th class="text-center vertical-align-middle">
                         最後修改時間
                     </th>
                     <th class="text-center vertical-align-middle">編輯</th>
@@ -98,8 +98,8 @@
                     }
                 },
                 columns: [
-                    { data: 'GameCoverImg', width: "10%", render: function (data, type, row, meta) { return '<img src="/Files/Uploads/' + data + '" style="width: 100px" />'; } },
-                    { data: 'Id', className: "text-center vertical-align-middle visually-hidden" },
+                    { data: 'GameCoverImg', width: "8%", render: function (data, type, row, meta) { return '<img src="/Files/Uploads/' + data + '" style="width: 100px" />'; }, className:"text-center vertical-align-middle" },
+                    { data: 'Id', className: "text-center vertical-align-middle" },
                     { data: 'ChiName', width: "25%", className: "vertical-align-middle" },
                     { data: 'IsRestrict', width: "8%", render: function (data, type, row, meta) { return data ? '<i class="fa-regular fa-square-check fa-xl"></i>' : '<i class="fa-regular fa-square fa-xl"></i>'; }, className: "text-center vertical-align-middle" },
                     { data: 'CreatedBackendMemberName', width: "10%", className: "text-center vertical-align-middle" },
@@ -109,9 +109,9 @@
                             return formattedDateTime;
                         }
                     },
-                    { data: 'ModifiedBackendMemberName', width: "10%", className: "text-center vertical-align-middle visually-hidden" },
+                    { data: 'ModifiedBackendMemberName', width: "10%", className: "text-center vertical-align-middle" },
                     {
-                        data: 'ModifiedTime', width: "11%", className: "text-center vertical-align-middle visually-hidden", render: function (data, type, row) {
+                        data: 'ModifiedTime', width: "11%", className: "text-center vertical-align-middle", render: function (data, type, row) {
                             let formattedDateTime = moment(data).format('YYYY/MM/DD HH:mm:ss');
                             return formattedDateTime;
                         }
@@ -157,6 +157,21 @@
                         }
                     }
                 ],
+                columnDefs: [
+                    {
+                        target: 1,
+                        visible: false
+                    },
+                    {
+                        target: 6,
+                        visible: false
+                    },
+                    {
+                        target: 7,
+                        visible: false
+                    },
+                    
+                ]
             });
         });
 
