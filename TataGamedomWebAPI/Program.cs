@@ -26,7 +26,8 @@ namespace TataGamedomWebAPI
 
             builder.Services.AddControllers();
 
-            builder.Services.AddMediatR(configuration => configuration.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
+            //以下兩個重構後後刪掉
+            //builder.Services.AddMediatR(configuration => configuration.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 
