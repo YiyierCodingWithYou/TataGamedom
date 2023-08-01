@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using TataGamedomWebAPI.Models.Common;
 
 namespace TataGamedomWebAPI.Models.EFModels;
 
-public partial class Order
+public partial class Order :BaseEntity
 {
-    public int Id { get; set; }
-
     public string Index { get; set; } = null!;
 
     public int MemberId { get; set; }

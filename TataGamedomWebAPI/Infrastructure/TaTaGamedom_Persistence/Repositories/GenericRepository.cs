@@ -7,7 +7,7 @@ namespace TataGamedomWebAPI.Infrastructure.TaTaGamedom_Persistence.Repositories;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 {
-    private readonly AppDbContext _dbContext;
+    protected readonly AppDbContext _dbContext;
 
     public GenericRepository(AppDbContext dbContext)
     {

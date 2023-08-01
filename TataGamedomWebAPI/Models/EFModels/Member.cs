@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using TataGamedomWebAPI.Models.Common;
 
 namespace TataGamedomWebAPI.Models.EFModels;
 
-public partial class Member
+public partial class Member : BaseEntity
 {
-    public int Id { get; set; }
-
     public string Name { get; set; } = null!;
 
     public string Account { get; set; } = null!;
