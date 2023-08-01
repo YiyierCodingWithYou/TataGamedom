@@ -47,7 +47,3 @@ public partial class Order
     public virtual ShipmentStatusesCode ShipmentStatus { get; set; } = null!;
 }
 
-public partial class Order :BaseEntity
-{
-
-}

@@ -27,7 +27,4 @@ public partial class OrderItemReturn
     public virtual OrderItem OrderItem { get; set; } = null!;
 }
 
-public partial class OrderItemReturn : BaseEntity 
-{
-}
 

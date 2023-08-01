@@ -79,7 +79,3 @@ public partial class Member
     public virtual ICollection<PostUpDownVote> PostUpDownVotes { get; set; } = new List<PostUpDownVote>();
 }
 
-public partial class Member : BaseEntity 
-{
-
-}
