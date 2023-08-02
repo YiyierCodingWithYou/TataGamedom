@@ -38,7 +38,7 @@ JOIN ShipmentStatusesCodes AS SSC ON O.ShipmentStatusId= SSC.Id
 JOIN Members AS M ON O.MemberId = M.Id
 LEFT JOIN OrderItems AS OI ON O.Id = OI.OrderId";
 
-			string sqlSort = sortInfo.sqlSort();
+			string sqlSort = sortInfo.SqlSort();
 
 			string sqlGroupByOrderby = $@"GROUP BY
 O.[Index], O.CreatedAt, OSC.[Name], PSC.[Name], SSC.[Name],
@@ -156,7 +156,7 @@ M.[Name], O.OrderStatusId, O.ShipmentStatusId, O.PaymentStatusId,O.Id
 		/// 取得排序sql
 		/// </summary>
 		/// <returns></returns>
-		public string sqlSort()
+		public string SqlSort()
 		{
 			switch (this.ColumnName)
 			{
@@ -300,7 +300,7 @@ M.[Name], O.OrderStatusId, O.ShipmentStatusId, O.PaymentStatusId,O.Id
 		/// <returns></returns>
 		public string GetUrl(int pageNum) => string.Format(urlTemplate, pageNum);
 
-		public string sqlPage(Criteria criteria, SortInfo sortInfo)
+		public string SqlPage(Criteria criteria, SortInfo sortInfo)
 		{
 			int recordStartIndex = (PageNum - 1) * PageSize;
 			return $@"
