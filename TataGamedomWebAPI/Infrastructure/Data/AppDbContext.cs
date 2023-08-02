@@ -831,12 +831,10 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.ShipmemtMethod).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.ShipmemtMethodId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Orders__Shipmemt__540C7B00");
 
             entity.HasOne(d => d.ShipmentStatus).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.ShipmentStatusId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Orders__Shipment__55009F39");
         });
 
