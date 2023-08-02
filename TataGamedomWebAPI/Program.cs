@@ -4,6 +4,8 @@ using TataGamedomWebAPI.Application;
 using TataGamedomWebAPI.Infrastructure;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Infrastructure.TaTaGamedom_Persistence;
+using Microsoft.AspNetCore.Authentication.Cookies; // 引入 CookieAuthenticationDefaults 命名空間
+
 
 namespace TataGamedomWebAPI
 {
@@ -33,8 +35,17 @@ namespace TataGamedomWebAPI
 
 
             builder.Services.AddControllers();
+			// Add authentication
+			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+			{
+				// 未登入時會自動導到這個網址
+				options.LoginPath = new PathString("/api/Login/NoLogin");
+			});
+
 
             builder.Services.AddEndpointsApiExplorer();
+			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+			builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
@@ -49,7 +60,12 @@ namespace TataGamedomWebAPI
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+			app.UseRouting();
+
+			// 設定身份驗證
+			app.UseAuthentication();
+
+			app.UseAuthorization();
 
 
             app.MapControllers();
