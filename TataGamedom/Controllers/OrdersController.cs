@@ -42,7 +42,7 @@ namespace TataGamedom.Controllers
 			ViewBag.PageInfo = pageInfo;
 
 
-			string sqlAddPage = GetSql(criteria, sortInfo) + pageInfo.sqlPage(criteria, sortInfo);
+			string sqlAddPage = GetSql(criteria, sortInfo) + pageInfo.SqlPage(criteria, sortInfo);
 			var orders = _service.Search(criteria, sortInfo, sqlAddPage).Select(order => order.ToIndexVM());
 			return View(orders);
 		}

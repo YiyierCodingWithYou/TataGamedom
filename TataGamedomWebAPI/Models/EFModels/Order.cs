@@ -13,7 +13,7 @@ public partial class Order
 
     public int OrderStatusId { get; set; }
 
-    public int ShipmentStatusId { get; set; }
+    public int? ShipmentStatusId { get; set; }
 
     public int PaymentStatusId { get; set; }
 
@@ -21,11 +21,11 @@ public partial class Order
 
     public DateTime? CompletedAt { get; set; }
 
-    public int ShipmemtMethodId { get; set; }
+    public int? ShipmemtMethodId { get; set; }
 
-    public string RecipientName { get; set; } = null!;
+    public string? RecipientName { get; set; }
 
-    public string ToAddress { get; set; } = null!;
+    public string? ToAddress { get; set; }
 
     public DateTime? SentAt { get; set; }
 
@@ -41,7 +41,7 @@ public partial class Order
 
     public virtual PaymentStatusCode PaymentStatus { get; set; } = null!;
 
-    public virtual ShipmemtMethod ShipmemtMethod { get; set; } = null!;
+    public virtual ShipmemtMethod? ShipmemtMethod { get; set; }
 
-    public virtual ShipmentStatusesCode ShipmentStatus { get; set; } = null!;
+    public virtual ShipmentStatusesCode? ShipmentStatus { get; set; }
 }
