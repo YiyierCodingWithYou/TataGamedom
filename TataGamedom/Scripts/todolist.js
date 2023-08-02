@@ -13,7 +13,7 @@ let dayName = date.toLocaleString(lang, {
 
 dayTitle.innerHTML = dayName;
 
-let todos = []; // 存储待办事项的数组
+let todos = []; 
 
 const generateTemplate = (todo) => {
     const html = `<li>

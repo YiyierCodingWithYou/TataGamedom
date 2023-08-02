@@ -372,7 +372,7 @@ body::after {
     border-radius: 1rem 1rem 1rem 1rem;
     /*    box-shadow: 0 0 15px 2px rgba(212, 175, 55, 0.1);*/
     box-shadow: rgba(218, 165, 32, 0.3) 5px 5px, rgba(218, 165, 32, 0.2) 10px 10px;
-    min-height: calc(100vh - 6rem);
+    /*min-height: calc(100vh - 6rem);*/
 }
 
 @keyframes animate-height {
