@@ -14,7 +14,9 @@ using TataGamedomWebAPI.Models.EFModels;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using TataGamedomWebAPI.Models.Dtos;
+using TataGamedomWebAPI.Models.DTOs.Shop;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Globalization;
 
 namespace TataGamedomWebAPI.Controllers
 {
@@ -31,101 +33,139 @@ namespace TataGamedomWebAPI.Controllers
 
 		// GET: api/Products
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<ProductsDTO>>> GetProducts(string? keyword, int page = 1, int pageSize = 9)
+		public async Task<ActionResult<ProductsIndexDTO>> GetProducts(string? keyword,string? classification, string? sortBy, bool? isAscending, int page = 1, int pageSize = 9)
 		{
 			if (_context.Products == null)
 			{
 				return NotFound();
 			}
-
-			var products = await _context.Products
+			var currentTime = DateTime.Now;
+			IQueryable<ProductsDTO> products = _context.Products
+				.Include(p => p.CouponsProducts)
+				.ThenInclude(c => c.Coupon)
 				.Include(p => p.Game)
 				.ThenInclude(g => g.GameClassificationGames)
 				.ThenInclude(gc => gc.GameClassification)
-				.Include(p => p.GamePlatform) 
-				.Where(p => p.Game.ChiName.Contains(keyword ?? string.Empty) || p.Game.EngName.Contains(keyword ?? string.Empty))
+				.Include(p => p.GamePlatform)
+				.Where(p => p.Game.ChiName.Contains(keyword ?? string.Empty) ||
+							p.Game.EngName.Contains(keyword ?? string.Empty) ||
+							p.GamePlatform.Name.Contains(keyword ?? string.Empty)) //||
+				//p.Game.GameClassificationGames.Any(gc => gc.GameClassification.Name.Contains(classification?? string.Empty)))
 				.Select(p => new ProductsDTO
 				{
 					Id = p.Id,
 					Index = p.Index,
 					IsVirtual = p.IsVirtual,
 					Price = p.Price,
+					SpecialPrice = (p.CouponsProducts.Any(c => currentTime >= c.Coupon.StartTime && currentTime <= c.Coupon.EndTime))
+									? (int)Math.Round(p.CouponsProducts
+										.Select(c => c.Coupon.DiscountTypeId == 1
+											? p.Price * (c.Coupon.Discount / 100.0)
+											: (c.Coupon.DiscountTypeId == 2
+												? p.Price - c.Coupon.Discount
+												: p.Price))
+										.FirstOrDefault(), 1)
+									: p.Price,
 					GamePlatformName = p.GamePlatform.Name,
 					SaleDate = p.SaleDate,
+					Score = Math.Round(p.Game.GameComments.Select(c => (double?)c.Score).Average() ?? 0.0, 1),
 					ChiName = p.Game.ChiName,
 					EngName = p.Game.EngName,
 					IsRestrict = p.Game.IsRestrict,
 					GameCoverImg = p.Game.GameCoverImg,
-					Classification = p.Game.GameClassificationGames.Select(gc => gc.GameClassification.Name).ToList()
-				})
-				.Skip((page - 1) * pageSize)
+					Classification = p.Game.GameClassificationGames.Select(gc => gc.GameClassification.Name)
+				});
+
+			switch (sortBy)
+			{
+				case "Price":
+					products = (isAscending == false)
+						? products.OrderByDescending(p => p.SpecialPrice)
+						: products.OrderBy(p => p.SpecialPrice);
+					break;
+				case "SaleDate":
+					products = (isAscending == false)
+						? products.OrderByDescending(p => p.SaleDate)
+						: products.OrderBy(p => p.SaleDate);
+					break;
+				default:
+					products = products.OrderBy(p => p.Id);
+					break;
+			}
+
+			int totalCount = await products.CountAsync();
+			int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+			List<ProductsDTO> productsList = await products
+				.Skip(pageSize * (page - 1))
 				.Take(pageSize)
 				.ToListAsync();
 
-			return Ok(products);
+			ProductsIndexDTO productsDTO = new ProductsIndexDTO
+			{
+				Products = productsList,
+				TotalPages = totalPages
+			};
+			return productsDTO;
 		}
-		//public async Task<ActionResult<ProductsIndexDTO>> GetProducts(string? keyword, int page = 1, int pageSize = 9)
-		//{
-		//	if (_context.Products == null)
-		//	{
-		//		return NotFound();
-		//	}
-		//	var products = _context.Products.Include(p=>p.Game).AsQueryable();
-		//	var classification = _context.GameClassificationGames.Include(c=>c.)
-
-		//	using (var conn = _context.Database.GetDbConnection())
-		//	{
-		//		string sql = @"
-		//	 SELECT P.Id, P.[Index], P.IsVirtual, P.Price, GPC.Name AS GamePlatformName, P.SaleDate, G.ChiName, G.EngName, G.IsRestrict, G.GameCoverImg
-		//	 FROM Products AS P
-		//	 JOIN Games AS G ON G.Id = P.GameId
-		//	 JOIN CouponsProducts AS CP ON CP.ProductId = P.Id
-		//	 JOIN Coupons AS C ON C.Id = CP.CouponId
-		//	 JOIN GamePlatformsCodes AS GPC ON GPC.Id = P.GamePlatformId ";
-
-		//		if (!string.IsNullOrEmpty(keyword))
-		//		{
-		//			sql += $@"WHERE G.ChiName LIKE '%{keyword}%' OR G.EngName LIKE '%{keyword}%'";
-		//		}
-		//		var products = await conn.QueryAsync<ProductsDTO>(sql);
-
-		//		//分頁
-		//		int totalCount = products.Count();
-		//		int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-		//		products = products.Skip(pageSize * (page - 1)).Take(pageSize);
-
-		//		ProductsIndexDTO productsDTO = new ProductsIndexDTO
-		//		{
-		//			Products = products.ToList(),
-		//			TotalPages = totalPages
-		//		};
-		//		return productsDTO;
-		//	}
-		//	return null;
-		//}
 
 		// GET: api/Products/5
 		[HttpGet("{id}")]
-		public async Task<ActionResult<Product>> GetProduct(int id)
+		public async Task<ActionResult<SingleProductDTO>> GetProduct(int id)
 		{
 			if (_context.Products == null)
 			{
 				return NotFound();
 			}
-			var product = await _context.Products.FindAsync(id);
+			var currentTime = DateTime.Now;
+			SingleProductDTO? product =await _context.Products
+				.Where(p => p.Id == id)
+				.Include(p => p.CouponsProducts)
+				.ThenInclude(c => c.Coupon)
+				.Include(p=>p.ProductImages)
+				.Include(p => p.Game)
+				.ThenInclude(g => g.GameClassificationGames)
+				.ThenInclude(gc => gc.GameClassification)
+				.Include(p => p.GamePlatform)
+				.Select(p => new SingleProductDTO
+				{
+					Id = p.Id,
+					Index = p.Index,
+					IsVirtual = p.IsVirtual,
+					Price = p.Price,
+					SpecialPrice = (p.CouponsProducts.Any(c => currentTime >= c.Coupon.StartTime && currentTime <= c.Coupon.EndTime))
+									? (int)Math.Round(p.CouponsProducts
+										.Select(c => c.Coupon.DiscountTypeId == 1
+											? p.Price * (c.Coupon.Discount / 100.0)
+											: (c.Coupon.DiscountTypeId == 2
+												? p.Price - c.Coupon.Discount
+												: p.Price))
+										.FirstOrDefault(), 1)
+									: p.Price,
+					GamePlatformName = p.GamePlatform.Name,
+					SaleDate = p.SaleDate,
+					Score = Math.Round(p.Game.GameComments.Select(c => (double?)c.Score).Average() ?? 0.0, 1),
+					ChiName = p.Game.ChiName,
+					EngName = p.Game.EngName,
+					Description = p.Game.Description,
+					SystemRequire = p.SystemRequire,
+					IsRestrict = p.Game.IsRestrict,
+					GameCoverImg = p.Game.GameCoverImg,
+					Classification = p.Game.GameClassificationGames.Select(gc => gc.GameClassification.Name),
+					Coupons = p.CouponsProducts.Select(c=>c.Coupon.Name),
+					CouponDescription = p.CouponsProducts.Select (c=>c.Coupon.Description),
+					ProductImg = p.ProductImages.Select(p=>p.Image)!,
+				}).FirstOrDefaultAsync();
 
 			if (product == null)
 			{
 				return NotFound();
 			}
-
 			return product;
 		}
 
 		// PUT: api/Products/5
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutProduct(int id, Product product)
+		public async Task<IActionResult> PutSingleProduct(int id, Product product)
 		{
 			if (id != product.Id)
 			{
