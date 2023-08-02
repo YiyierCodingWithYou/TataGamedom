@@ -27,8 +27,6 @@
     <Folder Include="Application\Features\InventoryItem\Commands\CreateInventoryItem\" />
     <Folder Include="Application\Features\InventoryItem\Commands\DeleteInventoryItem\" />
     <Folder Include="Application\Features\InventoryItem\Commands\UpdateInventoryItem\" />
-    <Folder Include="Application\Features\InventoryItem\Queries\GetInventoryItemDetails\" />
-    <Folder Include="Application\Features\InventoryItem\Queries\GetInventoryItemList\" />
     <Folder Include="Application\Features\InventoryItem\Shared\" />
     <Folder Include="Application\Features\OrderItem\Shared\" />
     <Folder Include="Infrastructure\Data\DapperRepository\" />
