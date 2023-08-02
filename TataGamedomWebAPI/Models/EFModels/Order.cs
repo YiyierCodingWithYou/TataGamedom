@@ -13,7 +13,7 @@ public partial class Order
 
     public int OrderStatusId { get; set; }
 
-    public int ShipmentStatusId { get; set; }
+    public int? ShipmentStatusId { get; set; }
 
     public int PaymentStatusId { get; set; }
 
@@ -43,5 +43,5 @@ public partial class Order
 
     public virtual ShipmemtMethod? ShipmemtMethod { get; set; }
 
-    public virtual ShipmentStatusesCode ShipmentStatus { get; set; } = null!;
+    public virtual ShipmentStatusesCode? ShipmentStatus { get; set; }
 }
