@@ -5,15 +5,15 @@ using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Infrastructure.TaTaGamedom_Persistence.Repositories;
 
-public class OrderRepository : GenericRepository<Order>, IOrderRepository
+public class ProductRepository : GenericRepository<Product>, IProductRepository
 {
-    public OrderRepository(AppDbContext dbContext) : base(dbContext)
+    public ProductRepository(AppDbContext dbContext) : base (dbContext)
     {
     }
 
-    public async Task<bool> IsOrderExist(int orderId)
+    public async Task<bool> IsProductExist(int productId)
     {
-        return await _dbContext.Orders.AnyAsync(o => o.Id == orderId);
+        return await _dbContext.Products.AnyAsync(p => p.Id == productId);
     }
 }
 

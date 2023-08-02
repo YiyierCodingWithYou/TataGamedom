@@ -21,12 +21,12 @@ public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, Uni
 
         ValidateRequest(request, orderToBeDeleted);
 
-        await _orderRepository.DeleteAsync(orderToBeDeleted);
+        await _orderRepository.DeleteAsync(orderToBeDeleted!);
         _logger.LogInformation("Order were deleted successfully");
         return Unit.Value;
     }
 
-    private static void ValidateRequest(DeleteOrderCommand request, Models.EFModels.Order orderToBeDeleted)
+    private static void ValidateRequest(DeleteOrderCommand request, Models.EFModels.Order? orderToBeDeleted)
     {
         if (orderToBeDeleted == null)
         {

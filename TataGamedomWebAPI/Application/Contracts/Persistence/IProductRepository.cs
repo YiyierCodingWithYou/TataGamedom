@@ -2,8 +2,7 @@
 
 namespace TataGamedomWebAPI.Application.Contracts.Persistence;
 
-public interface IOrderRepository : IGenericRepository<Order>
+public interface IProductRepository : IGenericRepository<Product>
 {
-    Task<bool> IsOrderExist(int orderId);
+    Task<bool> IsProductExist(int productId);
 }
-
