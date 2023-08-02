@@ -8,7 +8,7 @@ public class CreateOrderItemReturnCommand : IRequest<int>
 
     public int OrderItemId { get; set; }
 
-    public string Reason { get; set; } = string.Empty;
+    public string? Reason { get; set; } = string.Empty;
 
     public DateTime IssuedAt { get; set; } = DateTime.Now;
 

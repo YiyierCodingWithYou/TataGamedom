@@ -29,8 +29,9 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Uni
     {
         await ValidateRequest(request);
 
-        var orderTobeUpdated = await _orderRepository.GetByIdAsync(request.Id);
+        Models.EFModels.Order? orderTobeUpdated = await _orderRepository.GetByIdAsync(request.Id);
         orderTobeUpdated = _mapper.Map(request, orderTobeUpdated);
+
         await _orderRepository.UpdateAsync(orderTobeUpdated);
         _logger.LogInformation("Order were updated successfully");
 

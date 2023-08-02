@@ -28,7 +28,7 @@ public class DeleteOrderItemCommandHandler : IRequestHandler<DeleteOrderItemComm
 
         await _orderItemRepository.DeleteAsync(orderItemTobeDeleted);
         
-        _logger.LogInformation("OrderItem were deleted successfully");
+        _logger.LogInformation("OrderItem was deleted successfully");
         
         return Unit.Value;
 

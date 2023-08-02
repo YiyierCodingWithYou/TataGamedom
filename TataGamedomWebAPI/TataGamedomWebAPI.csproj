@@ -30,9 +30,6 @@
     <Folder Include="Application\Features\InventoryItem\Queries\GetInventoryItemDetails\" />
     <Folder Include="Application\Features\InventoryItem\Queries\GetInventoryItemList\" />
     <Folder Include="Application\Features\InventoryItem\Shared\" />
-    <Folder Include="Application\Features\OrderItemReturn\Commands\DeleteOrderItemReturn\" />
-    <Folder Include="Application\Features\OrderItemReturn\Commands\UpdateOrderItemReturn\" />
-    <Folder Include="Application\Features\OrderItemReturn\Shared\" />
     <Folder Include="Application\Features\OrderItem\Shared\" />
     <Folder Include="Infrastructure\Data\DapperRepository\" />
     <Folder Include="Infrastructure\Data\EFRepository\" />
