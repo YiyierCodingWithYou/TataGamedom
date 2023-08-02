@@ -12,12 +12,12 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Uni
 {
     private readonly IMapper _mapper;
     private readonly IOrderRepository _orderRepository;
-    private readonly IApperLogger<UpdateOrderCommandHandler> _logger;
+    private readonly IAppLogger<UpdateOrderCommandHandler> _logger;
 
     public UpdateOrderCommandHandler(
         IMapper mapper, 
         IOrderRepository orderRepository, 
-        IApperLogger<UpdateOrderCommandHandler> logger)
+        IAppLogger<UpdateOrderCommandHandler> logger)
     {
         this._mapper = mapper;
         this._orderRepository = orderRepository;

@@ -10,12 +10,12 @@ public class GetOrderItemListQueryHandler : IRequestHandler<GetOrderItemListQuer
 {
     private readonly IMapper _mapper;
     private readonly IOrderItemRepository _orderItemRepository;
-    private readonly IApperLogger<GetOrderItemListQueryHandler> _logger;
+    private readonly IAppLogger<GetOrderItemListQueryHandler> _logger;
 
     public GetOrderItemListQueryHandler(
         IMapper mapper,
         IOrderItemRepository orderItemRepository,
-        IApperLogger<GetOrderItemListQueryHandler> logger)
+        IAppLogger<GetOrderItemListQueryHandler> logger)
     {
         this._mapper = mapper;
         this._orderItemRepository = orderItemRepository;

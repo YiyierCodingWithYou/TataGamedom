@@ -1,4 +1,5 @@
-﻿using TataGamedomWebAPI.Application.Contracts.Persistence;
+﻿using Microsoft.EntityFrameworkCore;
+using TataGamedomWebAPI.Application.Contracts.Persistence;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.EFModels;
 
@@ -8,6 +9,11 @@ public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepos
 {
     public OrderItemRepository(AppDbContext dbContext) : base(dbContext)
     {
+    }
+
+    public async Task<bool> IsOrderItemExist(int orderItemId)
+    {
+        return await _dbContext.OrderItems.AnyAsync(o => o.Id == orderItemId);
     }
 }
 

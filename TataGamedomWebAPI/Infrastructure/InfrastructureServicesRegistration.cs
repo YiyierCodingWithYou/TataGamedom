@@ -9,7 +9,7 @@ public static class InfrastructureServicesRegistration
     {
         //Todo Email
 
-        services.AddScoped(typeof(IApperLogger<>), typeof(LoggerAdapter<>));
+        services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
 
         return services;
     }

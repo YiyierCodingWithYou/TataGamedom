@@ -12,13 +12,13 @@ namespace TataGamedomWebAPI.Application.Features.Order.Commands.CreateOrder
         private readonly IMapper _mapper;
         private readonly IOrderRepository _orderRepository;
         private readonly IMemberRepository _memberRepository;
-        private readonly IApperLogger<CreateOrderCommandHandler> _logger;
+        private readonly IAppLogger<CreateOrderCommandHandler> _logger;
 
         public CreateOrderCommandHandler(
             IMapper mapper, 
             IOrderRepository orderRepository,
             IMemberRepository memberRepository,
-            IApperLogger<CreateOrderCommandHandler> logger)
+            IAppLogger<CreateOrderCommandHandler> logger)
         {
             this._mapper = mapper;
             this._orderRepository = orderRepository;
@@ -30,7 +30,7 @@ namespace TataGamedomWebAPI.Application.Features.Order.Commands.CreateOrder
         {
             await ValidateRequest(request);
 
-            var orderTobeCreated = _mapper.Map<Models.EFModels.Order>(request);
+            Models.EFModels.Order orderTobeCreated = _mapper.Map<Models.EFModels.Order>(request);
             await _orderRepository.CreateAsync(orderTobeCreated);
 
             _logger.LogInformation("Created successfully");

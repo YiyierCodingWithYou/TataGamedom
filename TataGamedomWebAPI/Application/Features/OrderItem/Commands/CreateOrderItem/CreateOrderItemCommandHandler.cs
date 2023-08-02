@@ -14,7 +14,7 @@ public class CreateOrderItemCommandHandler : IRequestHandler<CreateOrderItemComm
     private readonly IOrderItemRepository _orderItemRepository;
     private readonly IProductRepository _productRepository;
     private readonly IInventoryItemRepository _inventoryItemRepository;
-    private readonly IApperLogger<CreateOrderItemCommandHandler> _logger;
+    private readonly IAppLogger<CreateOrderItemCommandHandler> _logger;
 
     public CreateOrderItemCommandHandler(
         IMapper mapper,
@@ -22,7 +22,7 @@ public class CreateOrderItemCommandHandler : IRequestHandler<CreateOrderItemComm
         IOrderItemRepository orderItemRepository,
         IProductRepository productRepository,
         IInventoryItemRepository inventoryItemRepository,
-        IApperLogger<CreateOrderItemCommandHandler> logger)
+        IAppLogger<CreateOrderItemCommandHandler> logger)
     {
         this._mapper = mapper;
         this._orderRepository = orderRepository;

@@ -8,11 +8,11 @@ namespace TataGamedomWebAPI.Application.Features.OrderItem.Commands.DeleteOrderI
 public class DeleteOrderItemCommandHandler : IRequestHandler<DeleteOrderItemCommand, Unit>
 {
     private readonly IOrderItemRepository _orderItemRepository;
-    private readonly IApperLogger<DeleteOrderItemCommandHandler> _logger;
+    private readonly IAppLogger<DeleteOrderItemCommandHandler> _logger;
 
     public DeleteOrderItemCommandHandler(
         IOrderItemRepository orderItemRepository, 
-        IApperLogger<DeleteOrderItemCommandHandler> logger)
+        IAppLogger<DeleteOrderItemCommandHandler> logger)
     {
         this._orderItemRepository = orderItemRepository;
         this._logger = logger;
