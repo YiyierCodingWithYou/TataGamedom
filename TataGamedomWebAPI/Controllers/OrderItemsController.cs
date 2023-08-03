@@ -6,54 +6,46 @@ using TataGamedomWebAPI.Application.Features.Order.Commands.DeleteOrder;
 using TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder;
 using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderDetails;
 using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderList;
+using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateOrderItem;
+using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemDetails;
+using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemList;
 
 namespace TataGamedomWebAPI.Controllers;
 
 [EnableCors("AllowAny")]
 [Route("api/[controller]")]
 [ApiController]
-public class OrdersController : ControllerBase
+public class OrderItemsController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public OrdersController(IMediator mediator)
+    public OrderItemsController(IMediator mediator)
     {
         this._mediator = mediator;
     }
 
     [HttpGet]
-    public async Task<List<OrderDto>> Get()
+    public async Task<List<OrderItemDto>> Get()
     {
-        var Orders = await _mediator.Send(new GetOrderListQuery());
-        return Orders;
+        var orderItems = await _mediator.Send(new GetOrderItemListQuery());
+        return orderItems;
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<OrderDetailsDto>> Get(int id)
     {
-        var Order = await _mediator.Send(new GetOrderDetailQuery(id));
-        return Ok(Order);
+        var orderItemDetails = await _mediator.Send(new GetOrderItemDetailsQuery(id));
+        return Ok(orderItemDetails);
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> Post(CreateOrderCommand Order)
+    public async Task<ActionResult> Post(CreateOrderItemCommand orderItem)
     {
-        var response = await _mediator.Send(Order);
+        var response = await _mediator.Send(orderItem);
         return CreatedAtAction(nameof(Get), new { id = response });
-    }
-
-    [HttpPut("{id}")]
-    [ProducesResponseType(StatusCodes.Status202Accepted)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesDefaultResponseType]
-    public async Task<ActionResult> Put(UpdateOrderCommand Order)
-    {
-        await _mediator.Send(Order);
-        return NoContent();
     }
 
     [HttpDelete("{id}")]

@@ -9,12 +9,12 @@ public class GetOrderListQueryHandler : IRequestHandler<GetOrderListQuery, List<
 {
     private readonly IMapper _mapper;
     private readonly IOrderRepository _orderRepository;
-    private readonly IApperLogger<GetOrderListQueryHandler> _logger;
+    private readonly IAppLogger<GetOrderListQueryHandler> _logger;
 
     public GetOrderListQueryHandler(
         IMapper mapper, 
         IOrderRepository orderRepository,
-        IApperLogger<GetOrderListQueryHandler> logger)
+        IAppLogger<GetOrderListQueryHandler> logger)
     {
         this._mapper = mapper;
         this._orderRepository = orderRepository;

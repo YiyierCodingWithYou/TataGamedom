@@ -8,9 +8,9 @@ namespace TataGamedomWebAPI.Application.Features.Order.Commands.DeleteOrder;
 public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, Unit>
 {
     private readonly IOrderRepository _orderRepository;
-    private readonly IApperLogger<DeleteOrderCommandHandler> _logger;
+    private readonly IAppLogger<DeleteOrderCommandHandler> _logger;
 
-    public DeleteOrderCommandHandler(IOrderRepository orderRepository, IApperLogger<DeleteOrderCommandHandler> logger)
+    public DeleteOrderCommandHandler(IOrderRepository orderRepository, IAppLogger<DeleteOrderCommandHandler> logger)
     {
         this._orderRepository = orderRepository;
         this._logger = logger;
@@ -21,12 +21,12 @@ public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, Uni
 
         ValidateRequest(request, orderToBeDeleted);
 
-        await _orderRepository.DeleteAsync(orderToBeDeleted);
+        await _orderRepository.DeleteAsync(orderToBeDeleted!);
         _logger.LogInformation("Order were deleted successfully");
         return Unit.Value;
     }
 
-    private static void ValidateRequest(DeleteOrderCommand request, Models.EFModels.Order orderToBeDeleted)
+    private static void ValidateRequest(DeleteOrderCommand request, Models.EFModels.Order? orderToBeDeleted)
     {
         if (orderToBeDeleted == null)
         {
