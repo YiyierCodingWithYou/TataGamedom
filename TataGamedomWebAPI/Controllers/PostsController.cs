@@ -7,22 +7,31 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.Dtos;
+using TataGamedomWebAPI.Models.DTOs.Post;
 using TataGamedomWebAPI.Models.EFModels;
+using TataGamedomWebAPI.Models.Infra;
 using TataGamedomWebAPI.Models.Services;
 
 namespace TataGamedomWebAPI.Controllers
 {
-	[Route("api/[controller]")]
+	enum Vote
+	{
+		Up=1,
+		Down=0,
+	}
+
+    [Route("api/[controller]")]
 	[ApiController]
 	public class PostsController : ControllerBase
 	{
 		private readonly AppDbContext _context;
+		private SimpleHelper _simpleHelper;
 
 		public PostsController(AppDbContext context)
 		{
 			_context = context;
+			_simpleHelper = new SimpleHelper(_context); 
 		}
-
 
 		// GET: api/Posts
 		[HttpGet]
@@ -68,6 +77,7 @@ namespace TataGamedomWebAPI.Controllers
 			var posts = await query.Select(p => new PostReadDto
 			{
 				PostId = p.Id,
+				Title = p.Title,
 				PostContent = p.Content,
 				DateTime = p.Datetime,
 				BoardId = p.BoardId??0,
@@ -109,7 +119,7 @@ namespace TataGamedomWebAPI.Controllers
 		}
 
 
-		//// GET: aci/Posts/5
+		// GET: aci/Posts/5
 		//[HttpGet("{id}")]
 		//public async Task<ActionResult<Post>> GetPost(int id)
 		//{
@@ -130,68 +140,175 @@ namespace TataGamedomWebAPI.Controllers
 
 		// PUT: api/Posts/5
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutPost(int id, Post post)
+		public async Task<ApiResult> EditPost(int id, PostEditoDto dto)
 		{
-			if (id != post.Id)
+
+
+			if (id != dto.Id)
 			{
-				return BadRequest();
+				return ApiResult.Fail("修改失敗");
 			}
 
-			_context.Entry(post).State = EntityState.Modified;
+			Post existingEntity = _context.Posts.Find(id);
+			if (existingEntity == null)
+			{
+				return ApiResult.Fail("修改失敗");
+			}
+
 
 			try
 			{
+				existingEntity.Title = dto.Title;
+				existingEntity.Content = dto.Content;
+				existingEntity.LastEditDatetime = DateTime.Now;
 				await _context.SaveChangesAsync();
 			}
 			catch (DbUpdateConcurrencyException)
 			{
 				if (!PostExists(id))
 				{
-					return NotFound();
+					return ApiResult.Fail("修改失敗");
 				}
 				else
 				{
-					throw;
+					return ApiResult.Fail("修改失敗");
 				}
 			}
 
-			return NoContent();
+			return ApiResult.Success("修改成功");
+		}
+
+		[HttpPut("{postId}/Vote/{voteType}")]
+		public async Task<ApiResult> VotePost(int postId, string voteType)
+		{
+			Post existingPost = _context.Posts.Find(postId);
+			//var memberAccount = User.Identity.Name;
+			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
+			int memberId = 3; // 王五 wangwu 測試用
+			var IsVoted = _simpleHelper.IsPostVoted(postId, memberId);
+
+			if (existingPost == null)
+			{
+				return ApiResult.Fail("不存在該文章");
+			}
+
+			if(IsVoted.IsVoted)
+			{
+				PostUpDownVote vote = _context.PostUpDownVotes.Find(IsVoted.voteId);
+				try
+				{
+					_context.PostUpDownVotes.Remove(vote);
+					await _context.SaveChangesAsync();
+					return ApiResult.Success("完成取消投票");
+				}
+				catch (Exception ex)
+				{
+					return ApiResult.Fail("無法取消投票" + ex.Message);
+				}
+			}
+
+			if (!Enum.TryParse<Vote>(voteType, out var voteValue))
+			{
+				return ApiResult.Fail("不支援的投票類型");
+			}
+
+			PostUpDownVote newVote= new PostUpDownVote
+			{
+				Id = 0,
+				MemberId = memberId,
+				PostId = postId,
+				Date = DateTime.Now,
+				Type = (voteValue == Vote.Up)
+			};
+
+			try
+			{
+					_context.PostUpDownVotes.Add(newVote);
+					await _context.SaveChangesAsync();
+				}
+			catch (DbUpdateConcurrencyException ex)
+				{
+					return ApiResult.Fail("Vote失敗"+ex);
+
+				}
+
+			return ApiResult.Success("Vote成功");
 		}
 
 		// POST: api/Posts
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPost]
-		public async Task<ActionResult<Post>> PostPost(Post post)
+		public async Task<ApiResult> CreatePost(PostCreateDto dto)
 		{
-			if (_context.Posts == null)
-			{
-				return Problem("Entity set 'AppDbContext.Posts'  is null.");
+
+			int memberId = _simpleHelper.memberIdByAccount(dto.MemberAccount);
+			if (memberId == 0)
+			{ 
+				return ApiResult.Fail("沒這個會員");
 			}
-			_context.Posts.Add(post);
+
+			Post newPost = new Post
+			{
+				Id = 0,
+				MemberId = memberId,
+				BoardId = dto.BoardId,
+				Title = dto.Title,
+				Content = dto.Content,
+				Datetime = DateTime.Now,
+				LastEditDatetime = DateTime.Now,
+				ActiveFlag = true
+			};
+			//if (_context.Posts == null)
+			//{
+			//	return Problem("Entity set 'AppDbContext.Posts'  is null.");
+			//}
+			try
+			{
+			_context.Posts.Add(newPost);
 			await _context.SaveChangesAsync();
 
-			return CreatedAtAction("GetPost", new { id = post.Id }, post);
+			}catch (DbUpdateConcurrencyException)
+			{
+				return ApiResult.Fail("發布失敗");
+			}
+
+			return ApiResult.Success("發布成功");
+			//return CreatedAtAction("GetPost", new { id = post.Id }, post);
 		}
 
 		// DELETE: api/Posts/5
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeletePost(int id)
+		public async Task<ApiResult> DeletePost(int id)
 		{
-			if (_context.Posts == null)
+			//var memberAccount = User.Identity.Name;
+			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
+			int memberId = 3; // 王五 wangwu 測試用
+
+			Post existingEntity = _context.Posts.Find(id);
+
+			if (existingEntity == null)
 			{
-				return NotFound();
-			}
-			var post = await _context.Posts.FindAsync(id);
-			if (post == null)
-			{
-				return NotFound();
+				return ApiResult.Fail("找不到這篇Psot,刪除失敗");
 			}
 
-			_context.Posts.Remove(post);
-			await _context.SaveChangesAsync();
+			if ( memberId != existingEntity.MemberId &&  _simpleHelper.IsBoadMod(existingEntity.BoardId??0 , memberId) ) 
+			{
+				return ApiResult.Fail("刪除失敗，本人或板手才可以刪除");
+			}
 
-			return NoContent();
+			try
+			{
+				existingEntity.DeleteDatetime = DateTime.Now;
+				existingEntity.ActiveFlag = false;
+				await _context.SaveChangesAsync();
+			}catch (DbUpdateConcurrencyException)
+			{
+				return ApiResult.Fail("刪除失敗");
+			}
+
+			return ApiResult.Success("刪除成功");
 		}
 
 		private bool PostExists(int id)
