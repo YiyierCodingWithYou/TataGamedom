@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TataGamedomWebAPI.Infrastructure.Data;
-using TataGamedomWebAPI.Models.Dtos;
 using TataGamedomWebAPI.Models.EFModels;
 using Microsoft.AspNetCore.Authorization;
+using TataGamedomWebAPI.Models.DTOs.Members;
 
 namespace TataGamedomWebAPI.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class LoginController : ControllerBase
 	{
@@ -49,12 +49,15 @@ namespace TataGamedomWebAPI.Controllers
 			}
 			
 		}
+
 		[Authorize]
 		[HttpDelete]
 		public void logout()
 		{
 			HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 		}
+
+
 		[HttpGet("NoLogin")]
 		public string noLogin()
 		{
