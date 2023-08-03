@@ -17,6 +17,9 @@ using Microsoft.Data.SqlClient;
 using TataGamedomWebAPI.Models.DTOs.Shop;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Globalization;
+using Microsoft.Extensions.Hosting;
+using TataGamedomWebAPI.Models.Dtos;
+using System.Security.Claims;
 
 namespace TataGamedomWebAPI.Controllers
 {
@@ -33,7 +36,7 @@ namespace TataGamedomWebAPI.Controllers
 
 		// GET: api/Products
 		[HttpGet]
-		public async Task<ActionResult<ProductsIndexDTO>> GetProducts(string? keyword,string? classification, string? sortBy, bool? isAscending, int page = 1, int pageSize = 9)
+		public async Task<ActionResult<ProductsIndexDTO>> GetProducts(string? keyword, string? classification, string? sortBy, bool? isAscending, int page = 1, int pageSize = 9)
 		{
 			if (_context.Products == null)
 			{
@@ -47,10 +50,10 @@ namespace TataGamedomWebAPI.Controllers
 				.ThenInclude(g => g.GameClassificationGames)
 				.ThenInclude(gc => gc.GameClassification)
 				.Include(p => p.GamePlatform)
-				.Where(p => p.Game.ChiName.Contains(keyword ?? string.Empty) ||
-							p.Game.EngName.Contains(keyword ?? string.Empty) ||
-							p.GamePlatform.Name.Contains(keyword ?? string.Empty)) //||
-				//p.Game.GameClassificationGames.Any(gc => gc.GameClassification.Name.Contains(classification?? string.Empty)))
+				.Where(p => (p.Game.ChiName.Contains(keyword ?? string.Empty) ||
+					 p.Game.EngName.Contains(keyword ?? string.Empty) ||
+					 p.GamePlatform.Name.Contains(keyword ?? string.Empty)) &&
+					 p.Game.GameClassificationGames.Any(c => c.GameClassification.Name.Contains(classification ?? string.Empty)))
 				.Select(p => new ProductsDTO
 				{
 					Id = p.Id,
@@ -110,18 +113,18 @@ namespace TataGamedomWebAPI.Controllers
 
 		// GET: api/Products/5
 		[HttpGet("{id}")]
-		public async Task<ActionResult<SingleProductDTO>> GetProduct(int id)
+		public async Task<ActionResult<SingleProductDTO>> GetSingleProduct(int id, int page = 1, int pageSize = 5)
 		{
 			if (_context.Products == null)
 			{
 				return NotFound();
 			}
 			var currentTime = DateTime.Now;
-			SingleProductDTO? product =await _context.Products
+			SingleProductDTO? product = await _context.Products
 				.Where(p => p.Id == id)
 				.Include(p => p.CouponsProducts)
 				.ThenInclude(c => c.Coupon)
-				.Include(p=>p.ProductImages)
+				.Include(p => p.ProductImages)
 				.Include(p => p.Game)
 				.ThenInclude(g => g.GameClassificationGames)
 				.ThenInclude(gc => gc.GameClassification)
@@ -130,9 +133,10 @@ namespace TataGamedomWebAPI.Controllers
 				{
 					Id = p.Id,
 					Index = p.Index,
+					GameId = p.GameId,
 					IsVirtual = p.IsVirtual,
 					Price = p.Price,
-					SpecialPrice = (p.CouponsProducts.Any(c => currentTime >= c.Coupon.StartTime && currentTime <= c.Coupon.EndTime))
+					SpecialPrice = p.CouponsProducts.Any(c => currentTime >= c.Coupon.StartTime && currentTime <= c.Coupon.EndTime)
 									? (int)Math.Round(p.CouponsProducts
 										.Select(c => c.Coupon.DiscountTypeId == 1
 											? p.Price * (c.Coupon.Discount / 100.0)
@@ -151,86 +155,76 @@ namespace TataGamedomWebAPI.Controllers
 					IsRestrict = p.Game.IsRestrict,
 					GameCoverImg = p.Game.GameCoverImg,
 					Classification = p.Game.GameClassificationGames.Select(gc => gc.GameClassification.Name),
-					Coupons = p.CouponsProducts.Select(c=>c.Coupon.Name),
-					CouponDescription = p.CouponsProducts.Select (c=>c.Coupon.Description),
-					ProductImg = p.ProductImages.Select(p=>p.Image)!,
+					Coupons = p.CouponsProducts
+								.Where(c => currentTime >= c.Coupon.StartTime && currentTime <= c.Coupon.EndTime)
+								.Select(c => c.Coupon.Name),
+					CouponDescription = p.CouponsProducts
+								.Where(c => currentTime >= c.Coupon.StartTime && currentTime <= c.Coupon.EndTime)
+								.Select(c => c.Coupon.Description),
+					ProductImg = p.ProductImages.Select(p => p.Image)!,
+					CommentCount = p.Game.GameComments.Count()
 				}).FirstOrDefaultAsync();
 
-			if (product == null)
-			{
-				return NotFound();
-			}
+			//做評論的分頁
+			var (comments, totalPages) = GetGameComments(_context, product.GameId, page, pageSize);
+			product.GameComments = comments;
+			product.TotalPages = totalPages;
+
 			return product;
 		}
 
-		// PUT: api/Products/5
-		[HttpPut("{id}")]
-		public async Task<IActionResult> PutSingleProduct(int id, Product product)
+		//回傳value tuple
+		private (IEnumerable<GameCommentsDTO> Comments, int TotalPages) GetGameComments(AppDbContext context, int? gameId, int page, int pageSize)
 		{
-			if (id != product.Id)
+			var query = context.GameComments.AsQueryable();
+			query = query.Where(p => p.GameId == gameId);
+			var comments = query.Select(c => new GameCommentsDTO
 			{
-				return BadRequest();
-			}
+				Id = c.Id,
+				MemberName = c.Member.Name,
+				Content = c.Content,
+				Score = c.Score,
+				CreatedTime = c.CreatedTime,
 
-			_context.Entry(product).State = EntityState.Modified;
+			}).ToList();
 
-			try
-			{
-				await _context.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!ProductExists(id))
-				{
-					return NotFound();
-				}
-				else
-				{
-					throw;
-				}
-			}
+			int totalCount = comments.Count();
+			int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+			List<GameCommentsDTO> commentsList = comments
+				.OrderByDescending(c => c.CreatedTime)
+				.Skip(pageSize * (page - 1))
+				.Take(pageSize)
+				.ToList();
 
-			return NoContent();
+			return (commentsList, totalPages);
 		}
 
 		// POST: api/Products
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-		[HttpPost]
-		public async Task<ActionResult<Product>> PostProduct(Product product)
+		[HttpPost("{id}")]
+		public async Task<ActionResult<GameComment>> PostComment(int productId,CommentsCreateDTO commentsCreateDTO)
 		{
 			if (_context.Products == null)
 			{
 				return Problem("Entity set 'AppDbContext.Products'  is null.");
 			}
-			_context.Products.Add(product);
+			string? userName = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == userName);
+			var product = await _context.Products.FirstOrDefaultAsync(p=>p.Id== productId);
+			
+			GameComment comments = new GameComment
+			{
+				GameId = product.GameId ?? 0,
+				MemberId = user.Id,
+				Content = commentsCreateDTO.Content,
+				Score = commentsCreateDTO.Score,
+				ActiveFlag = true,
+				CreatedTime = DateTime.Now
+			};
+			_context.GameComments.Add(comments);
 			await _context.SaveChangesAsync();
 
-			return CreatedAtAction("GetProduct", new { id = product.Id }, product);
-		}
-
-		// DELETE: api/Products/5
-		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteProduct(int id)
-		{
-			if (_context.Products == null)
-			{
-				return NotFound();
-			}
-			var product = await _context.Products.FindAsync(id);
-			if (product == null)
-			{
-				return NotFound();
-			}
-
-			_context.Products.Remove(product);
-			await _context.SaveChangesAsync();
-
-			return NoContent();
-		}
-
-		private bool ProductExists(int id)
-		{
-			return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
+			return CreatedAtAction("GetSingleProduct", new { id = productId }, comments);
 		}
 	}
 }
