@@ -50,9 +50,22 @@ namespace TataGamedomWebAPI.Controllers
 
 				var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 				HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-				return "ok";
+				return "已成功登入";
 			}
 
+		}
+
+		[Authorize]
+		[HttpDelete("Logout")]
+		public void Logout()
+		{
+			HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+		}
+
+		[HttpGet("NoLogin")]
+		public string noLogin()
+		{
+			return "未登入";
 		}
 
 		//// GET: api/Members
@@ -150,13 +163,18 @@ namespace TataGamedomWebAPI.Controllers
 
         // POST: api/Members
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("Register")]
         public async Task<ActionResult<Member>> PostMember(RegisterDto registerDto)
 		{
           if (_context.Members == null)
           {
               return Problem("Entity set 'AppDbContext.Members'  is null.");
           }
+
+            if (await _context.Members.AnyAsync(m => m.Account == registerDto.Account))
+            {
+				return BadRequest("此帳號已經有人使用過囉");
+			}
 
 			Member member = new Member
 			{ 

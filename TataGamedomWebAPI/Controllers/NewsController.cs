@@ -26,43 +26,45 @@ namespace TataGamedomWebAPI.Controllers
             _context = context;
         }
 
-        // GET: api/News
-        [HttpGet]
-		public async Task<ActionResult<NewsListDto>> GetNews(string? keyword,int page = 1,int pageSize = 9)
+		// GET: api/News
+		[HttpGet]
+        public async Task<ActionResult<NewsListDto>> GetNews(string? keyword, int page = 1, int pageSize = 9)
         {
-          if (_context.News == null)
-          {
-              return NotFound();
-          }
-       //  var news = await _context.News.ToListAsync();
+            if (_context.News == null)
+            {
+                return NotFound();
+            }
+
             using (var conn = _context.Database.GetDbConnection())
             {
-                string sql = @"SELECT n.Id, n.Title, n.ScheduleDate, b.Name AS BackendMemberName,ncc.Name as NewsCategoryName,
-            COUNT(nv.MemberId) AS ViewCount, COUNT(nl.MemberId) AS LikeCount, n.ActiveFlag
-            FROM news AS n
-            JOIN BackendMembers AS b ON b.Id = n.BackendMemberId 
-			LEFT JOIN NewsCategoryCodes AS ncc ON ncc.Id = n.NewsCategoryId
-            LEFT JOIN GameClassificationsCodes AS gc ON gc.Id = n.GamesId
-            LEFT JOIN NewsViews AS nv ON nv.NewsId = n.Id
-            LEFT JOIN NewsLikes AS nl ON nl.NewsId = n.Id
-			GROUP BY n.Id, n.Title, n.ScheduleDate, b.Name, gc.Name, n.ActiveFlag,ncc.Name";
+                string sql = @"SELECT n.Id, n.Title, n.ScheduleDate, b.Name AS BackendMemberName, ncc.Name as NewsCategoryName,
+                              COUNT(nv.MemberId) AS ViewCount, COUNT(nl.MemberId) AS LikeCount, n.ActiveFlag
+                              FROM news AS n
+                              JOIN BackendMembers AS b ON b.Id = n.BackendMemberId 
+                              LEFT JOIN NewsCategoryCodes AS ncc ON ncc.Id = n.NewsCategoryId
+                              LEFT JOIN GameClassificationsCodes AS gc ON gc.Id = n.GamesId
+                              LEFT JOIN NewsViews AS nv ON nv.NewsId = n.Id
+                              LEFT JOIN NewsLikes AS nl ON nl.NewsId = n.Id";
 
-				if (!string.IsNullOrEmpty(keyword))
-				{
-					sql += $@"WHERE n,Title LIKE '%{keyword}%' LIKE '%{keyword}%'";
-				}
-                var news = await conn.QueryAsync<NewsDto>(sql);
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    sql += " WHERE n.Title LIKE @Keyword";
+                }
 
-				int totalCount = news.Count(); //總共幾筆
-												   //int pageSize = 9;  //每頁9筆資料
-				int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize); //計算出共幾頁 
+                sql += " GROUP BY n.Id, n.Title, n.ScheduleDate, b.Name, gc.Name, n.ActiveFlag, ncc.Name";
+
+                var queryParams = new { Keyword = $"%{keyword}%" };
+                var news = await conn.QueryAsync<NewsDto>(sql, queryParams);
+
+                int totalCount = news.Count();
+                int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
                 news = news.Skip(pageSize * (page - 1)).Take(pageSize);
 
-				return new NewsListDto { News =  news,TotalPage = totalPages };
-			}
-
+                return new NewsListDto { News = news, TotalPage = totalPages };
+            }
         }
+
 
         // GET: api/News/5
         [HttpGet("{id}")]
