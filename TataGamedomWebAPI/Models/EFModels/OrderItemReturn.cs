@@ -11,7 +11,7 @@ public partial class OrderItemReturn
 
     public int OrderItemId { get; set; }
 
-    public string Reason { get; set; } = null!;
+    public string? Reason { get; set; }
 
     public DateTime IssuedAt { get; set; }
 

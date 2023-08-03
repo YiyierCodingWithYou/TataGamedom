@@ -1481,7 +1481,6 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Reason")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 

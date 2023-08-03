@@ -2,7 +2,7 @@
 
 namespace TataGamedomWebAPI.Infrastructure.Logging;
 
-public class LoggerAdapter<T> : IApperLogger<T>
+public class LoggerAdapter<T> : IAppLogger<T>
 {
     private readonly ILogger<T> _logger;
     public LoggerAdapter(ILoggerFactory loggerFactory)

@@ -171,7 +171,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Announcement>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Announce__3214EC07F1B63E09");
+            entity.HasKey(e => e.Id).HasName("PK__Announce__3214EC076F8C9048");
 
             entity.ToTable("Announcement");
 
@@ -180,14 +180,14 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<ApprovalStatusCode>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Approval__3214EC07715E72A2");
+            entity.HasKey(e => e.Id).HasName("PK__Approval__3214EC0710AED82C");
 
             entity.Property(e => e.Name).HasMaxLength(20);
         });
 
         modelBuilder.Entity<BackendMember>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BackendM__3214EC07892FBEE5");
+            entity.HasKey(e => e.Id).HasName("PK__BackendM__3214EC0742E417C8");
 
             entity.Property(e => e.Account)
                 .HasMaxLength(30)
@@ -213,14 +213,14 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<BackendMembersPermissionsCode>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BackendM__3214EC074BF2668A");
+            entity.HasKey(e => e.Id).HasName("PK__BackendM__3214EC075E7D4653");
 
             entity.Property(e => e.Name).HasMaxLength(20);
         });
 
         modelBuilder.Entity<BackendMembersRolePermission>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BackendM__3214EC0705AED9AC");
+            entity.HasKey(e => e.Id).HasName("PK__BackendM__3214EC070FF5C968");
 
             entity.HasOne(d => d.BackendMemberPermission).WithMany(p => p.BackendMembersRolePermissions)
                 .HasForeignKey(d => d.BackendMemberPermissionId)
@@ -235,14 +235,14 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<BackendMembersRolesCode>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BackendM__3214EC07DBB7DB62");
+            entity.HasKey(e => e.Id).HasName("PK__BackendM__3214EC070C563F31");
 
             entity.Property(e => e.Name).HasMaxLength(20);
         });
 
         modelBuilder.Entity<Board>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Boards__3214EC0763C11E97");
+            entity.HasKey(e => e.Id).HasName("PK__Boards__3214EC07F6EFB42E");
 
             entity.Property(e => e.BoardHeaderCoverImg).IsUnicode(false);
             entity.Property(e => e.CreatedTime).HasColumnType("datetime");
@@ -260,7 +260,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<BoardsModerator>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BoardsMo__3214EC07E121DB19");
+            entity.HasKey(e => e.Id).HasName("PK__BoardsMo__3214EC0762456D53");
 
             entity.Property(e => e.EndDate).HasColumnType("datetime");
             entity.Property(e => e.StartDate).HasColumnType("datetime");
@@ -278,7 +278,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<BoardsModeratorsApplication>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BoardsMo__3214EC0758CACCBB");
+            entity.HasKey(e => e.Id).HasName("PK__BoardsMo__3214EC075247CC98");
 
             entity.Property(e => e.ApplyDate).HasColumnType("datetime");
             entity.Property(e => e.ApplyReason).HasMaxLength(500);
@@ -305,7 +305,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<BucketLog>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BucketLo__3214EC07FDBE622F");
+            entity.HasKey(e => e.Id).HasName("PK__BucketLo__3214EC07B517B10B");
 
             entity.Property(e => e.BucketReason).HasMaxLength(500);
             entity.Property(e => e.EndTime).HasColumnType("datetime");
@@ -332,7 +332,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Carts__3214EC07A42495C4");
+            entity.HasKey(e => e.Id).HasName("PK__Carts__3214EC074F6F2B07");
 
             entity.HasOne(d => d.Member).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.MemberId)
@@ -358,7 +358,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Coupon>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Coupons__3214EC07B56A276C");
+            entity.HasKey(e => e.Id).HasName("PK__Coupons__3214EC07709360B4");
 
             entity.Property(e => e.CreatedTime).HasColumnType("datetime");
             entity.Property(e => e.Description).HasMaxLength(30);
@@ -384,7 +384,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<CouponsProduct>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__CouponsP__3214EC07D7A95FA4");
+            entity.HasKey(e => e.Id).HasName("PK__CouponsP__3214EC07D4B7EA50");
 
             entity.HasOne(d => d.Coupon).WithMany(p => p.CouponsProducts)
                 .HasForeignKey(d => d.CouponId)
@@ -399,14 +399,14 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<DiscountTypeCode>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Discount__3214EC0719A58A2E");
+            entity.HasKey(e => e.Id).HasName("PK__Discount__3214EC076BDBF8A4");
 
             entity.Property(e => e.Name).HasMaxLength(30);
         });
 
         modelBuilder.Entity<Faq>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__FAQ__3214EC07506BE7A3");
+            entity.HasKey(e => e.Id).HasName("PK__FAQ__3214EC07C2215F22");
 
             entity.ToTable("FAQ");
 
@@ -419,7 +419,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Game>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Games__3214EC070D02D8EF");
+            entity.HasKey(e => e.Id).HasName("PK__Games__3214EC0723B3415E");
 
             entity.Property(e => e.ChiName).HasMaxLength(50);
             entity.Property(e => e.CreatedTime).HasColumnType("datetime");
@@ -440,7 +440,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<GameClassificationGame>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__GameClas__3214EC07E7C6506F");
+            entity.HasKey(e => e.Id).HasName("PK__GameClas__3214EC07366124A6");
 
             entity.HasOne(d => d.GameClassification).WithMany(p => p.GameClassificationGames)
                 .HasForeignKey(d => d.GameClassificationId)
@@ -455,14 +455,14 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<GameClassificationsCode>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__GameClas__3214EC07D746F384");
+            entity.HasKey(e => e.Id).HasName("PK__GameClas__3214EC076BDA457A");
 
             entity.Property(e => e.Name).HasMaxLength(10);
         });
 
         modelBuilder.Entity<GameComment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__GameComm__3214EC07030555F4");
+            entity.HasKey(e => e.Id).HasName("PK__GameComm__3214EC0781DC040F");
 
             entity.Property(e => e.Content).HasMaxLength(500);
             entity.Property(e => e.CreatedTime).HasColumnType("datetime");
@@ -485,7 +485,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<GamePlatformsCode>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__GamePlat__3214EC071813C18C");
+            entity.HasKey(e => e.Id).HasName("PK__GamePlat__3214EC0719D38634");
 
             entity.Property(e => e.Name)
                 .HasMaxLength(10)
@@ -506,9 +506,9 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<InventoryItem>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Inventor__3214EC070410B333");
+            entity.HasKey(e => e.Id).HasName("PK__Inventor__3214EC0781DD9C1A");
 
-            entity.HasIndex(e => e.Index, "UQ__Inventor__9A5B62298899D272").IsUnique();
+            entity.HasIndex(e => e.Index, "UQ__Inventor__9A5B6229FC4610D4").IsUnique();
 
             entity.Property(e => e.Cost).HasColumnType("decimal(8, 0)");
             entity.Property(e => e.GameKey).HasMaxLength(50);
@@ -527,7 +527,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Issue>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Issues__3214EC0760F065A6");
+            entity.HasKey(e => e.Id).HasName("PK__Issues__3214EC07BE9CBF53");
 
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.File).HasMaxLength(600);
@@ -547,14 +547,14 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<IssueStatusCode>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__IssueSta__3214EC0711DB6759");
+            entity.HasKey(e => e.Id).HasName("PK__IssueSta__3214EC07FB07D6D1");
 
             entity.Property(e => e.Name).HasMaxLength(50);
         });
 
         modelBuilder.Entity<IssueTypesCode>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__IssueTyp__3214EC07CB6B8C2B");
+            entity.HasKey(e => e.Id).HasName("PK__IssueTyp__3214EC0751A7A365");
 
             entity.Property(e => e.TypeName).HasMaxLength(50);
         });
@@ -613,7 +613,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Member>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Members__3214EC075DB55458");
+            entity.HasKey(e => e.Id).HasName("PK__Members__3214EC07786C974D");
 
             entity.Property(e => e.Account)
                 .HasMaxLength(30)
@@ -639,7 +639,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<MemberProductView>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MemberPr__3214EC079C7EB0E3");
+            entity.HasKey(e => e.Id).HasName("PK__MemberPr__3214EC077814EA21");
 
             entity.Property(e => e.ViewTime).HasColumnType("datetime");
 
@@ -656,7 +656,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<MembersBoard>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MembersB__3214EC07921921C4");
+            entity.HasKey(e => e.Id).HasName("PK__MembersB__3214EC0710BB5BF7");
 
             entity.HasOne(d => d.Board).WithMany(p => p.MembersBoards)
                 .HasForeignKey(d => d.BoardId)
@@ -671,7 +671,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<News>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__News__3214EC070A9B0028");
+            entity.HasKey(e => e.Id).HasName("PK__News__3214EC07D97613C4");
 
             entity.Property(e => e.CoverImg).HasMaxLength(100);
             entity.Property(e => e.DeleteDatetime).HasColumnType("datetime");
@@ -700,14 +700,14 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<NewsCategoryCode>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__NewsCate__3214EC07C415AAE1");
+            entity.HasKey(e => e.Id).HasName("PK__NewsCate__3214EC07397B86D6");
 
             entity.Property(e => e.Name).HasMaxLength(50);
         });
 
         modelBuilder.Entity<NewsComment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__NewsComm__3214EC078DD250B9");
+            entity.HasKey(e => e.Id).HasName("PK__NewsComm__3214EC07623FFBBE");
 
             entity.Property(e => e.Content).HasMaxLength(280);
             entity.Property(e => e.DeleteDatetime).HasColumnType("datetime");
@@ -735,7 +735,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<NewsLike>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__NewsLike__3214EC070F7B6BBE");
+            entity.HasKey(e => e.Id).HasName("PK__NewsLike__3214EC07E892DBB6");
 
             entity.Property(e => e.Time).HasColumnType("datetime");
 
@@ -752,7 +752,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<NewsView>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__NewsView__3214EC0707B7CC86");
+            entity.HasKey(e => e.Id).HasName("PK__NewsView__3214EC0767C2DA08");
 
             entity.Property(e => e.ViewTime).HasColumnType("datetime");
 
@@ -769,7 +769,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Newsletter>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Newslett__3214EC073CCC2318");
+            entity.HasKey(e => e.Id).HasName("PK__Newslett__3214EC073D3E894F");
 
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
 
@@ -780,7 +780,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<NewsletterLog>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Newslett__3214EC07E1E593C4");
+            entity.HasKey(e => e.Id).HasName("PK__Newslett__3214EC076ABB543D");
 
             entity.Property(e => e.AddresseeMemberEmail)
                 .HasMaxLength(150)
@@ -801,9 +801,9 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Orders__3214EC07912CC776");
+            entity.HasKey(e => e.Id).HasName("PK__Orders__3214EC0743A819E5");
 
-            entity.HasIndex(e => e.Index, "UQ__Orders__9A5B62294F1074CA").IsUnique();
+            entity.HasIndex(e => e.Index, "UQ__Orders__9A5B62299A9DCB7B").IsUnique();
 
             entity.Property(e => e.CompletedAt).HasColumnType("datetime");
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
@@ -840,11 +840,11 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<OrderItem>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__OrderIte__3214EC07AA14E0FB");
+            entity.HasKey(e => e.Id).HasName("PK__OrderIte__3214EC07A2DE618F");
 
-            entity.HasIndex(e => e.InventoryItemId, "UQ__OrderIte__3BB2AC81B514CEF3").IsUnique();
+            entity.HasIndex(e => e.InventoryItemId, "UQ__OrderIte__3BB2AC81819DD448").IsUnique();
 
-            entity.HasIndex(e => e.Index, "UQ__OrderIte__9A5B622946796E6F").IsUnique();
+            entity.HasIndex(e => e.Index, "UQ__OrderIte__9A5B62295905CB9C").IsUnique();
 
             entity.Property(e => e.Index).HasMaxLength(20);
             entity.Property(e => e.ProductPrice).HasColumnType("decimal(8, 0)");
@@ -867,11 +867,11 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<OrderItemReturn>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__OrderIte__3214EC07DCB2365F");
+            entity.HasKey(e => e.Id).HasName("PK__OrderIte__3214EC07661B879E");
 
-            entity.HasIndex(e => e.OrderItemId, "UQ__OrderIte__57ED0680AA4D0A1A").IsUnique();
+            entity.HasIndex(e => e.OrderItemId, "UQ__OrderIte__57ED0680FBF10CC1").IsUnique();
 
-            entity.HasIndex(e => e.Index, "UQ__OrderIte__9A5B6229679BBBB7").IsUnique();
+            entity.HasIndex(e => e.Index, "UQ__OrderIte__9A5B6229DB395A7A").IsUnique();
 
             entity.Property(e => e.CompletedAt).HasColumnType("datetime");
             entity.Property(e => e.Index).HasMaxLength(20);
@@ -886,7 +886,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<OrderItemsCoupon>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__OrderIte__3214EC078A9338FB");
+            entity.HasKey(e => e.Id).HasName("PK__OrderIte__3214EC07A8696374");
 
             entity.HasOne(d => d.Coupon).WithMany(p => p.OrderItemsCoupons)
                 .HasForeignKey(d => d.CouponId)
@@ -900,21 +900,21 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<OrderStatusCode>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__OrderSta__3214EC07A4057244");
+            entity.HasKey(e => e.Id).HasName("PK__OrderSta__3214EC074E846712");
 
             entity.Property(e => e.Name).HasMaxLength(15);
         });
 
         modelBuilder.Entity<PaymentStatusCode>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PaymentS__3214EC07F423EB39");
+            entity.HasKey(e => e.Id).HasName("PK__PaymentS__3214EC075DEA360F");
 
             entity.Property(e => e.Name).HasMaxLength(15);
         });
 
         modelBuilder.Entity<Post>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Posts__3214EC077FD211C3");
+            entity.HasKey(e => e.Id).HasName("PK__Posts__3214EC077E146464");
 
             entity.Property(e => e.Content).HasMaxLength(1500);
             entity.Property(e => e.Datetime).HasColumnType("datetime");
@@ -941,7 +941,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<PostComment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PostComm__3214EC07B9E30250");
+            entity.HasKey(e => e.Id).HasName("PK__PostComm__3214EC075BFE8522");
 
             entity.Property(e => e.Content).HasMaxLength(280);
             entity.Property(e => e.Datetime).HasColumnType("datetime");
@@ -972,7 +972,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<PostCommentReport>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PostComm__3214EC0722542986");
+            entity.HasKey(e => e.Id).HasName("PK__PostComm__3214EC0726002056");
 
             entity.Property(e => e.Datetime).HasColumnType("datetime");
             entity.Property(e => e.MemberId).HasColumnName("MemberID");
@@ -996,7 +996,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<PostCommentUpDownVote>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PostComm__3214EC074FD7F5F9");
+            entity.HasKey(e => e.Id).HasName("PK__PostComm__3214EC07F4AA3635");
 
             entity.Property(e => e.Date).HasColumnType("datetime");
 
@@ -1013,7 +1013,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<PostEditLog>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PostEdit__3214EC0723DCCF8C");
+            entity.HasKey(e => e.Id).HasName("PK__PostEdit__3214EC0776F1E205");
 
             entity.Property(e => e.ContentBeforeEdit).HasMaxLength(1500);
             entity.Property(e => e.EditDatetime).HasColumnType("datetime");
@@ -1026,7 +1026,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<PostReport>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PostRepo__3214EC0746BEE8DC");
+            entity.HasKey(e => e.Id).HasName("PK__PostRepo__3214EC07520839C0");
 
             entity.Property(e => e.Datetime).HasColumnType("datetime");
             entity.Property(e => e.MemberId).HasColumnName("MemberID");
@@ -1050,7 +1050,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<PostUpDownVote>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PostUpDo__3214EC07F0A50A33");
+            entity.HasKey(e => e.Id).HasName("PK__PostUpDo__3214EC07DC31F491");
 
             entity.Property(e => e.Date).HasColumnType("datetime");
 
@@ -1067,9 +1067,9 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Products__3214EC0786846FA5");
+            entity.HasKey(e => e.Id).HasName("PK__Products__3214EC0752E4CA1C");
 
-            entity.HasIndex(e => e.Index, "UQ__Products__9A5B622951704656").IsUnique();
+            entity.HasIndex(e => e.Index, "UQ__Products__9A5B6229BF6A6C19").IsUnique();
 
             entity.Property(e => e.CreatedTime).HasColumnType("datetime");
             entity.Property(e => e.Index).HasMaxLength(20);
@@ -1103,7 +1103,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<ProductImage>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ProductI__3214EC07F790AD59");
+            entity.HasKey(e => e.Id).HasName("PK__ProductI__3214EC070B8CB976");
 
             entity.Property(e => e.Image).HasMaxLength(100);
 
@@ -1115,14 +1115,14 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<ProductStatusCode>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ProductS__3214EC0783BF59EF");
+            entity.HasKey(e => e.Id).HasName("PK__ProductS__3214EC07A0DA3444");
 
             entity.Property(e => e.Name).HasMaxLength(5);
         });
 
         modelBuilder.Entity<Reply>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Replies__3214EC07E297DE44");
+            entity.HasKey(e => e.Id).HasName("PK__Replies__3214EC076418D4EC");
 
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
 
@@ -1173,9 +1173,9 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<ShipmemtMethod>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Shipmemt__3214EC076C89209E");
+            entity.HasKey(e => e.Id).HasName("PK__Shipmemt__3214EC077A58408D");
 
-            entity.HasIndex(e => e.Name, "UQ__Shipmemt__737584F6D7EB709F").IsUnique();
+            entity.HasIndex(e => e.Name, "UQ__Shipmemt__737584F6F62D8AB5").IsUnique();
 
             entity.Property(e => e.Cost).HasColumnType("decimal(8, 0)");
             entity.Property(e => e.Name).HasMaxLength(20);
@@ -1183,14 +1183,14 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<ShipmentStatusesCode>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Shipment__3214EC0711535789");
+            entity.HasKey(e => e.Id).HasName("PK__Shipment__3214EC07DAF1C49F");
 
             entity.Property(e => e.Name).HasMaxLength(15);
         });
 
         modelBuilder.Entity<StandardProduct>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Standard__3214EC07B90493CD");
+            entity.HasKey(e => e.Id).HasName("PK__Standard__3214EC074DA067DA");
 
             entity.HasOne(d => d.Product).WithMany(p => p.StandardProducts)
                 .HasForeignKey(d => d.ProductId)
@@ -1218,9 +1218,9 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<StockInSheet>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__StockInS__3214EC07DEF4B42B");
+            entity.HasKey(e => e.Id).HasName("PK__StockInS__3214EC07C1EF7C51");
 
-            entity.HasIndex(e => e.Index, "UQ__StockInS__9A5B62296CA1340F").IsUnique();
+            entity.HasIndex(e => e.Index, "UQ__StockInS__9A5B6229FB91117E").IsUnique();
 
             entity.Property(e => e.ArrivedAt).HasColumnType("datetime");
             entity.Property(e => e.Index).HasMaxLength(20);
@@ -1239,14 +1239,14 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<StockInStatusCode>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__StockInS__3214EC07DF81451D");
+            entity.HasKey(e => e.Id).HasName("PK__StockInS__3214EC076CDB2D70");
 
             entity.Property(e => e.Name).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Supplier>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Supplier__3214EC0723B8674F");
+            entity.HasKey(e => e.Id).HasName("PK__Supplier__3214EC073AA4C416");
 
             entity.Property(e => e.Email).HasMaxLength(30);
             entity.Property(e => e.Name).HasMaxLength(50);

@@ -11,9 +11,9 @@ public class MemberRepository : GenericRepository<Member>, IMemberRepository
     {
     }
 
-    public Task<bool> IsMemberExist(int id)
+    public async Task<bool> IsMemberExist(int id)
     {
-        return _dbContext.Members.AnyAsync(m => m.Id == id);
+        return await _dbContext.Members.AnyAsync(m => m.Id == id);
     }
 }
 
