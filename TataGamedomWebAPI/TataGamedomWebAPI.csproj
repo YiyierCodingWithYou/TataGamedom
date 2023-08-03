@@ -24,9 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Features\InventoryItem\Commands\CreateInventoryItem\" />
-    <Folder Include="Application\Features\InventoryItem\Commands\DeleteInventoryItem\" />
-    <Folder Include="Application\Features\InventoryItem\Commands\UpdateInventoryItem\" />
     <Folder Include="Application\Features\InventoryItem\Shared\" />
     <Folder Include="Application\Features\OrderItem\Shared\" />
     <Folder Include="Infrastructure\Data\DapperRepository\" />

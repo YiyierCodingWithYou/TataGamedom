@@ -22,10 +22,10 @@ public class OrderItemReturnsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<List<OrderItemReturnDto>> Get()
+    public async Task<ActionResult<List<OrderItemReturnDto>>> Get()
     {
         var orderItemReturn = await _mediator.Send(new GetOrderItemReturnListQuery());
-        return orderItemReturn;
+        return Ok(orderItemReturn);
     }
 
     [HttpGet("{id}")]
