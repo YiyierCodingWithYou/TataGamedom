@@ -2,7 +2,7 @@
 
 namespace TataGamedomWebAPI.Application.Features.InventoryItem.Queries.GetInventoryItemDetails;
 
-public class InventoryItemDetaisDto
+public class InventoryItemDetailsDto
 {
     public int Id { get; set; }
 
