@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,15 +13,13 @@ using TataGamedomWebAPI.Models.EFModels;
 using TataGamedomWebAPI.Models.Infra;
 using TataGamedomWebAPI.Models.Services;
 
+
 namespace TataGamedomWebAPI.Controllers
 {
-	enum Vote
-	{
-		Up=1,
-		Down=0,
-	}
 
-    [Route("api/[controller]")]
+
+	[EnableCors("AllowAny")]
+	[Route("api/[controller]")]
 	[ApiController]
 	public class PostsController : ControllerBase
 	{
@@ -144,8 +143,6 @@ namespace TataGamedomWebAPI.Controllers
 		[HttpPut("{id}")]
 		public async Task<ApiResult> EditPost(int id, PostEditoDto dto)
 		{
-
-
 			if (id != dto.Id)
 			{
 				return ApiResult.Fail("修改失敗");
@@ -227,10 +224,9 @@ namespace TataGamedomWebAPI.Controllers
 			{
 					_context.PostUpDownVotes.Add(newVote);
 					await _context.SaveChangesAsync();
-				}
-			catch (DbUpdateConcurrencyException ex)
-				{
-					return ApiResult.Fail("Vote失敗"+ex);
+				}catch (DbUpdateConcurrencyException ex)
+			{
+				return ApiResult.Fail("Vote失敗"+ex);
 
 				}
 
@@ -242,8 +238,9 @@ namespace TataGamedomWebAPI.Controllers
 		[HttpPost]
 		public async Task<ApiResult> CreatePost(PostCreateDto dto)
 		{
-
-			int memberId = _simpleHelper.memberIdByAccount(dto.MemberAccount);
+			//var memberAccount = User.Identity.Name;
+			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
+			int memberId = 3; // 王五 wangwu 測試用
 			if (memberId == 0)
 			{ 
 				return ApiResult.Fail("沒這個會員");
