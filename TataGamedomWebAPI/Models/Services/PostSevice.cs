@@ -1,9 +1,10 @@
 ﻿using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.Dtos;
+using TataGamedomWebAPI.Models.DTOs.Post;
 
 namespace TataGamedomWebAPI.Models.Services
 {
-	public class PostSevice
+    public class PostSevice
 	{
 		private readonly AppDbContext _context;
 
