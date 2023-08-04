@@ -25,6 +25,8 @@ public partial class Post
 
     public int? DeleteBackendMemberId { get; set; }
 
+    public string? Title { get; set; }
+
     public virtual Board? Board { get; set; }
 
     public virtual BackendMember? DeleteBackendMember { get; set; }
