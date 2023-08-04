@@ -224,7 +224,7 @@ namespace TataGamedomWebAPI.Controllers
 			_context.GameComments.Add(comments);
 			await _context.SaveChangesAsync();
 
-			return CreatedAtAction("GetSingleProduct", new { id = productId }, comments);
+			return Ok("發表評論成功");
 		}
 	}
 }
