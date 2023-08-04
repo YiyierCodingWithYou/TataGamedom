@@ -25,7 +25,7 @@ public partial class Order
 
     public string? RecipientName { get; set; }
 
-    public string? ToAddress { get; set; }
+    public string ToAddress { get; set; } = null!;
 
     public DateTime? SentAt { get; set; }
 

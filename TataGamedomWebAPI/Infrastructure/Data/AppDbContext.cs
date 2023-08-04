@@ -208,7 +208,7 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.BackendMembersRole).WithMany(p => p.BackendMembers)
                 .HasForeignKey(d => d.BackendMembersRoleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BackendMe__Backe__17F790F9");
+                .HasConstraintName("FK__BackendMe__Backe__2B0A656D");
         });
 
         modelBuilder.Entity<BackendMembersPermissionsCode>(entity =>
@@ -225,12 +225,12 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.BackendMemberPermission).WithMany(p => p.BackendMembersRolePermissions)
                 .HasForeignKey(d => d.BackendMemberPermissionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BackendMe__Backe__19DFD96B");
+                .HasConstraintName("FK__BackendMe__Backe__2CF2ADDF");
 
             entity.HasOne(d => d.BackendMembersRole).WithMany(p => p.BackendMembersRolePermissions)
                 .HasForeignKey(d => d.BackendMembersRoleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BackendMe__Backe__18EBB532");
+                .HasConstraintName("FK__BackendMe__Backe__2BFE89A6");
         });
 
         modelBuilder.Entity<BackendMembersRolesCode>(entity =>
@@ -251,11 +251,11 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.CreatedBackendMember).WithMany(p => p.Boards)
                 .HasForeignKey(d => d.CreatedBackendMemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Boards__CreatedB__1AD3FDA4");
+                .HasConstraintName("FK__Boards__CreatedB__662B2B3B");
 
             entity.HasOne(d => d.Game).WithMany(p => p.Boards)
                 .HasForeignKey(d => d.GameId)
-                .HasConstraintName("FK__Boards__GameId__1BC821DD");
+                .HasConstraintName("FK__Boards__GameId__65370702");
         });
 
         modelBuilder.Entity<BoardsModerator>(entity =>
@@ -268,12 +268,12 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Board).WithMany(p => p.BoardsModerators)
                 .HasForeignKey(d => d.BoardId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BoardsMod__Board__1CBC4616");
+                .HasConstraintName("FK__BoardsMod__Board__681373AD");
 
             entity.HasOne(d => d.ModeratorMember).WithMany(p => p.BoardsModerators)
                 .HasForeignKey(d => d.ModeratorMemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BoardsMod__Moder__1DB06A4F");
+                .HasConstraintName("FK__BoardsMod__Moder__671F4F74");
         });
 
         modelBuilder.Entity<BoardsModeratorsApplication>(entity =>
@@ -286,21 +286,21 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.ApprovalStatus).WithMany(p => p.BoardsModeratorsApplications)
                 .HasForeignKey(d => d.ApprovalStatusId)
-                .HasConstraintName("FK__BoardsMod__Appro__1EA48E88");
+                .HasConstraintName("FK__BoardsMod__Appro__6BE40491");
 
             entity.HasOne(d => d.BackendMember).WithMany(p => p.BoardsModeratorsApplications)
                 .HasForeignKey(d => d.BackendMemberId)
-                .HasConstraintName("FK__BoardsMod__Backe__1F98B2C1");
+                .HasConstraintName("FK__BoardsMod__Backe__6AEFE058");
 
             entity.HasOne(d => d.Board).WithMany(p => p.BoardsModeratorsApplications)
                 .HasForeignKey(d => d.BoardId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BoardsMod__Board__208CD6FA");
+                .HasConstraintName("FK__BoardsMod__Board__69FBBC1F");
 
             entity.HasOne(d => d.Member).WithMany(p => p.BoardsModeratorsApplications)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BoardsMod__Membe__2180FB33");
+                .HasConstraintName("FK__BoardsMod__Membe__690797E6");
         });
 
         modelBuilder.Entity<BucketLog>(entity =>
@@ -313,21 +313,21 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.BackendMmember).WithMany(p => p.BucketLogs)
                 .HasForeignKey(d => d.BackendMmemberId)
-                .HasConstraintName("FK__BucketLog__Backe__22751F6C");
+                .HasConstraintName("FK__BucketLog__Backe__03BB8E22");
 
             entity.HasOne(d => d.Board).WithMany(p => p.BucketLogs)
                 .HasForeignKey(d => d.BoardId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BucketLog__Board__236943A5");
+                .HasConstraintName("FK__BucketLog__Board__04AFB25B");
 
             entity.HasOne(d => d.BucketMember).WithMany(p => p.BucketLogBucketMembers)
                 .HasForeignKey(d => d.BucketMemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BucketLog__Bucke__245D67DE");
+                .HasConstraintName("FK__BucketLog__Bucke__01D345B0");
 
             entity.HasOne(d => d.ModeratorMember).WithMany(p => p.BucketLogModeratorMembers)
                 .HasForeignKey(d => d.ModeratorMemberId)
-                .HasConstraintName("FK__BucketLog__Moder__25518C17");
+                .HasConstraintName("FK__BucketLog__Moder__02C769E9");
         });
 
         modelBuilder.Entity<Cart>(entity =>
@@ -337,12 +337,12 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Member).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Carts__MemberId__2645B050");
+                .HasConstraintName("FK__Carts__MemberId__42E1EEFE");
 
             entity.HasOne(d => d.Product).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Carts__ProductId__2739D489");
+                .HasConstraintName("FK__Carts__ProductId__43D61337");
         });
 
         modelBuilder.Entity<Counter>(entity =>
@@ -370,16 +370,16 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.CreatedBackendMember).WithMany(p => p.CouponCreatedBackendMembers)
                 .HasForeignKey(d => d.CreatedBackendMemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Coupons__Created__282DF8C2");
+                .HasConstraintName("FK__Coupons__Created__3864608B");
 
             entity.HasOne(d => d.DiscountType).WithMany(p => p.Coupons)
                 .HasForeignKey(d => d.DiscountTypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Coupons__Discoun__29221CFB");
+                .HasConstraintName("FK__Coupons__Discoun__37703C52");
 
             entity.HasOne(d => d.ModifiedBackendMember).WithMany(p => p.CouponModifiedBackendMembers)
                 .HasForeignKey(d => d.ModifiedBackendMemberId)
-                .HasConstraintName("FK__Coupons__Modifie__2A164134");
+                .HasConstraintName("FK__Coupons__Modifie__395884C4");
         });
 
         modelBuilder.Entity<CouponsProduct>(entity =>
@@ -389,12 +389,12 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Coupon).WithMany(p => p.CouponsProducts)
                 .HasForeignKey(d => d.CouponId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CouponsPr__Coupo__2B0A656D");
+                .HasConstraintName("FK__CouponsPr__Coupo__3A4CA8FD");
 
             entity.HasOne(d => d.Product).WithMany(p => p.CouponsProducts)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CouponsPr__Produ__2BFE89A6");
+                .HasConstraintName("FK__CouponsPr__Produ__3B40CD36");
         });
 
         modelBuilder.Entity<DiscountTypeCode>(entity =>
@@ -414,7 +414,7 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.IssueType).WithMany(p => p.Faqs)
                 .HasForeignKey(d => d.IssueTypeId)
-                .HasConstraintName("FK__FAQ__IssueTypeId__2CF2ADDF");
+                .HasConstraintName("FK__FAQ__IssueTypeId__05A3D694");
         });
 
         modelBuilder.Entity<Game>(entity =>
@@ -431,11 +431,11 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.CreatedBackendMember).WithMany(p => p.GameCreatedBackendMembers)
                 .HasForeignKey(d => d.CreatedBackendMemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Games__CreatedBa__32AB8735");
+                .HasConstraintName("FK__Games__CreatedBa__30C33EC3");
 
             entity.HasOne(d => d.ModifiedBackendMember).WithMany(p => p.GameModifiedBackendMembers)
                 .HasForeignKey(d => d.ModifiedBackendMemberId)
-                .HasConstraintName("FK__Games__ModifiedB__339FAB6E");
+                .HasConstraintName("FK__Games__ModifiedB__31B762FC");
         });
 
         modelBuilder.Entity<GameClassificationGame>(entity =>
@@ -445,12 +445,12 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.GameClassification).WithMany(p => p.GameClassificationGames)
                 .HasForeignKey(d => d.GameClassificationId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GameClass__GameC__2DE6D218");
+                .HasConstraintName("FK__GameClass__GameC__3D2915A8");
 
             entity.HasOne(d => d.Game).WithMany(p => p.GameClassificationGames)
                 .HasForeignKey(d => d.GameId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GameClass__GameI__2EDAF651");
+                .HasConstraintName("FK__GameClass__GameI__3C34F16F");
         });
 
         modelBuilder.Entity<GameClassificationsCode>(entity =>
@@ -470,17 +470,17 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.DeleteBackendMember).WithMany(p => p.GameComments)
                 .HasForeignKey(d => d.DeleteBackendMemberId)
-                .HasConstraintName("FK__GameComme__Delet__2FCF1A8A");
+                .HasConstraintName("FK__GameComme__Delet__40058253");
 
             entity.HasOne(d => d.Game).WithMany(p => p.GameComments)
                 .HasForeignKey(d => d.GameId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GameComme__GameI__30C33EC3");
+                .HasConstraintName("FK__GameComme__GameI__3E1D39E1");
 
             entity.HasOne(d => d.Member).WithMany(p => p.GameComments)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GameComme__Membe__31B762FC");
+                .HasConstraintName("FK__GameComme__Membe__3F115E1A");
         });
 
         modelBuilder.Entity<GamePlatformsCode>(entity =>
@@ -517,12 +517,12 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Product).WithMany(p => p.InventoryItems)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Inventory__Produ__3493CFA7");
+                .HasConstraintName("FK__Inventory__Produ__55009F39");
 
             entity.HasOne(d => d.StockInSheet).WithMany(p => p.InventoryItems)
                 .HasForeignKey(d => d.StockInSheetId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Inventory__Stock__3587F3E0");
+                .HasConstraintName("FK__Inventory__Stock__55F4C372");
         });
 
         modelBuilder.Entity<Issue>(entity =>
@@ -534,15 +534,15 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.IssueType).WithMany(p => p.Issues)
                 .HasForeignKey(d => d.IssueTypeId)
-                .HasConstraintName("FK__Issues__IssueTyp__367C1819");
+                .HasConstraintName("FK__Issues__IssueTyp__46B27FE2");
 
             entity.HasOne(d => d.Member).WithMany(p => p.Issues)
                 .HasForeignKey(d => d.MemberId)
-                .HasConstraintName("FK__Issues__MemberId__37703C52");
+                .HasConstraintName("FK__Issues__MemberId__45BE5BA9");
 
             entity.HasOne(d => d.StatusNavigation).WithMany(p => p.Issues)
                 .HasForeignKey(d => d.Status)
-                .HasConstraintName("FK__Issues__Status__3864608B");
+                .HasConstraintName("FK__Issues__Status__47A6A41B");
         });
 
         modelBuilder.Entity<IssueStatusCode>(entity =>
@@ -646,12 +646,12 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Member).WithMany(p => p.MemberProductViews)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__MemberPro__Membe__395884C4");
+                .HasConstraintName("FK__MemberPro__Membe__40F9A68C");
 
             entity.HasOne(d => d.Product).WithMany(p => p.MemberProductViews)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__MemberPro__Produ__3A4CA8FD");
+                .HasConstraintName("FK__MemberPro__Produ__41EDCAC5");
         });
 
         modelBuilder.Entity<MembersBoard>(entity =>
@@ -661,12 +661,12 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Board).WithMany(p => p.MembersBoards)
                 .HasForeignKey(d => d.BoardId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__MembersBo__Board__3B40CD36");
+                .HasConstraintName("FK__MembersBo__Board__6DCC4D03");
 
             entity.HasOne(d => d.Member).WithMany(p => p.MembersBoards)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__MembersBo__Membe__3C34F16F");
+                .HasConstraintName("FK__MembersBo__Membe__6CD828CA");
         });
 
         modelBuilder.Entity<News>(entity =>
@@ -682,20 +682,20 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.BackendMember).WithMany(p => p.NewsBackendMembers)
                 .HasForeignKey(d => d.BackendMemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__News__BackendMem__3D2915A8");
+                .HasConstraintName("FK__News__BackendMem__59C55456");
 
             entity.HasOne(d => d.DeleteBackendMember).WithMany(p => p.NewsDeleteBackendMembers)
                 .HasForeignKey(d => d.DeleteBackendMemberId)
-                .HasConstraintName("FK__News__DeleteBack__3E1D39E1");
+                .HasConstraintName("FK__News__DeleteBack__5CA1C101");
 
             entity.HasOne(d => d.Games).WithMany(p => p.News)
                 .HasForeignKey(d => d.GamesId)
-                .HasConstraintName("FK__News__GamesId__3F115E1A");
+                .HasConstraintName("FK__News__GamesId__5BAD9CC8");
 
             entity.HasOne(d => d.NewsCategory).WithMany(p => p.News)
                 .HasForeignKey(d => d.NewsCategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__News__NewsCatego__40058253");
+                .HasConstraintName("FK__News__NewsCatego__5AB9788F");
         });
 
         modelBuilder.Entity<NewsCategoryCode>(entity =>
@@ -716,21 +716,21 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.DeleteBackendMember).WithMany(p => p.NewsComments)
                 .HasForeignKey(d => d.DeleteBackendMemberId)
-                .HasConstraintName("FK__NewsComme__Delet__41EDCAC5");
+                .HasConstraintName("FK__NewsComme__Delet__607251E5");
 
             entity.HasOne(d => d.DeleteMember).WithMany(p => p.NewsCommentDeleteMembers)
                 .HasForeignKey(d => d.DeleteMemberId)
-                .HasConstraintName("FK__NewsComme__Delet__40F9A68C");
+                .HasConstraintName("FK__NewsComme__Delet__5F7E2DAC");
 
             entity.HasOne(d => d.Member).WithMany(p => p.NewsCommentMembers)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__NewsComme__Membe__42E1EEFE");
+                .HasConstraintName("FK__NewsComme__Membe__5E8A0973");
 
             entity.HasOne(d => d.News).WithMany(p => p.NewsComments)
                 .HasForeignKey(d => d.NewsId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__NewsComme__NewsI__43D61337");
+                .HasConstraintName("FK__NewsComme__NewsI__5D95E53A");
         });
 
         modelBuilder.Entity<NewsLike>(entity =>
@@ -742,12 +742,12 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Member).WithMany(p => p.NewsLikes)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__NewsLikes__Membe__47A6A41B");
+                .HasConstraintName("FK__NewsLikes__Membe__625A9A57");
 
             entity.HasOne(d => d.News).WithMany(p => p.NewsLikes)
                 .HasForeignKey(d => d.NewsId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__NewsLikes__NewsI__489AC854");
+                .HasConstraintName("FK__NewsLikes__NewsI__6166761E");
         });
 
         modelBuilder.Entity<NewsView>(entity =>
@@ -759,12 +759,12 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Member).WithMany(p => p.NewsViews)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__NewsViews__Membe__498EEC8D");
+                .HasConstraintName("FK__NewsViews__Membe__6442E2C9");
 
             entity.HasOne(d => d.News).WithMany(p => p.NewsViews)
                 .HasForeignKey(d => d.NewsId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__NewsViews__NewsI__4A8310C6");
+                .HasConstraintName("FK__NewsViews__NewsI__634EBE90");
         });
 
         modelBuilder.Entity<Newsletter>(entity =>
@@ -775,7 +775,7 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.BackendMember).WithMany(p => p.Newsletters)
                 .HasForeignKey(d => d.BackendMemberId)
-                .HasConstraintName("FK__Newslette__Backe__46B27FE2");
+                .HasConstraintName("FK__Newslette__Backe__2DE6D218");
         });
 
         modelBuilder.Entity<NewsletterLog>(entity =>
@@ -792,11 +792,11 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.AddresseeMember).WithMany(p => p.NewsletterLogs)
                 .HasForeignKey(d => d.AddresseeMemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Newslette__Addre__44CA3770");
+                .HasConstraintName("FK__Newslette__Addre__2FCF1A8A");
 
             entity.HasOne(d => d.Newsletter).WithMany(p => p.NewsletterLogs)
                 .HasForeignKey(d => d.NewsletterId)
-                .HasConstraintName("FK__Newslette__Newsl__45BE5BA9");
+                .HasConstraintName("FK__Newslette__Newsl__2EDAF651");
         });
 
         modelBuilder.Entity<Order>(entity =>
@@ -817,25 +817,25 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Member).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Orders__MemberId__51300E55");
+                .HasConstraintName("FK__Orders__MemberId__4A8310C6");
 
             entity.HasOne(d => d.OrderStatus).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.OrderStatusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Orders__OrderSta__5224328E");
+                .HasConstraintName("FK__Orders__OrderSta__4B7734FF");
 
             entity.HasOne(d => d.PaymentStatus).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.PaymentStatusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Orders__PaymentS__531856C7");
+                .HasConstraintName("FK__Orders__PaymentS__4D5F7D71");
 
             entity.HasOne(d => d.ShipmemtMethod).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.ShipmemtMethodId)
-                .HasConstraintName("FK__Orders__Shipmemt__540C7B00");
+                .HasConstraintName("FK__Orders__Shipmemt__4E53A1AA");
 
             entity.HasOne(d => d.ShipmentStatus).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.ShipmentStatusId)
-                .HasConstraintName("FK__Orders__Shipment__55009F39");
+                .HasConstraintName("FK__Orders__Shipment__4C6B5938");
         });
 
         modelBuilder.Entity<OrderItem>(entity =>
@@ -852,17 +852,17 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.InventoryItem).WithOne(p => p.OrderItem)
                 .HasForeignKey<OrderItem>(d => d.InventoryItemId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderItem__Inven__4C6B5938");
+                .HasConstraintName("FK__OrderItem__Inven__51300E55");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderItems)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderItem__Order__4D5F7D71");
+                .HasConstraintName("FK__OrderItem__Order__4F47C5E3");
 
             entity.HasOne(d => d.Product).WithMany(p => p.OrderItems)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderItem__Produ__4E53A1AA");
+                .HasConstraintName("FK__OrderItem__Produ__503BEA1C");
         });
 
         modelBuilder.Entity<OrderItemReturn>(entity =>
@@ -881,7 +881,7 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.OrderItem).WithOne(p => p.OrderItemReturn)
                 .HasForeignKey<OrderItemReturn>(d => d.OrderItemId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderItem__Order__4B7734FF");
+                .HasConstraintName("FK__OrderItem__Order__5224328E");
         });
 
         modelBuilder.Entity<OrderItemsCoupon>(entity =>
@@ -890,12 +890,12 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Coupon).WithMany(p => p.OrderItemsCoupons)
                 .HasForeignKey(d => d.CouponId)
-                .HasConstraintName("FK__OrderItem__Coupo__4F47C5E3");
+                .HasConstraintName("FK__OrderItem__Coupo__540C7B00");
 
             entity.HasOne(d => d.OrderItem).WithMany(p => p.OrderItemsCoupons)
                 .HasForeignKey(d => d.OrderItemId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderItem__Order__503BEA1C");
+                .HasConstraintName("FK__OrderItem__Order__531856C7");
         });
 
         modelBuilder.Entity<OrderStatusCode>(entity =>
@@ -923,20 +923,20 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Board).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.BoardId)
-                .HasConstraintName("FK__Posts__BoardId__634EBE90");
+                .HasConstraintName("FK__Posts__BoardId__6FB49575");
 
             entity.HasOne(d => d.DeleteBackendMember).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.DeleteBackendMemberId)
-                .HasConstraintName("FK__Posts__DeleteBac__6442E2C9");
+                .HasConstraintName("FK__Posts__DeleteBac__719CDDE7");
 
             entity.HasOne(d => d.DeleteMember).WithMany(p => p.PostDeleteMembers)
                 .HasForeignKey(d => d.DeleteMemberId)
-                .HasConstraintName("FK__Posts__DeleteMem__65370702");
+                .HasConstraintName("FK__Posts__DeleteMem__70A8B9AE");
 
             entity.HasOne(d => d.Member).WithMany(p => p.PostMembers)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Posts__MemberId__662B2B3B");
+                .HasConstraintName("FK__Posts__MemberId__6EC0713C");
         });
 
         modelBuilder.Entity<PostComment>(entity =>
@@ -949,25 +949,25 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.DeleteBackendMember).WithMany(p => p.PostComments)
                 .HasForeignKey(d => d.DeleteBackendMemberId)
-                .HasConstraintName("FK__PostComme__Delet__59C55456");
+                .HasConstraintName("FK__PostComme__Delet__76619304");
 
             entity.HasOne(d => d.DeleteMember).WithMany(p => p.PostCommentDeleteMembers)
                 .HasForeignKey(d => d.DeleteMemberId)
-                .HasConstraintName("FK__PostComme__Delet__58D1301D");
+                .HasConstraintName("FK__PostComme__Delet__756D6ECB");
 
             entity.HasOne(d => d.Member).WithMany(p => p.PostCommentMembers)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PostComme__Membe__5AB9788F");
+                .HasConstraintName("FK__PostComme__Membe__73852659");
 
             entity.HasOne(d => d.Parent).WithMany(p => p.InverseParent)
                 .HasForeignKey(d => d.ParentId)
-                .HasConstraintName("FK__PostComme__Paren__5BAD9CC8");
+                .HasConstraintName("FK__PostComme__Paren__7755B73D");
 
             entity.HasOne(d => d.Post).WithMany(p => p.PostComments)
                 .HasForeignKey(d => d.PostId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PostComme__PostI__5CA1C101");
+                .HasConstraintName("FK__PostComme__PostI__74794A92");
         });
 
         modelBuilder.Entity<PostCommentReport>(entity =>
@@ -982,16 +982,16 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Member).WithMany(p => p.PostCommentReports)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PostComme__Membe__55F4C372");
+                .HasConstraintName("FK__PostComme__Membe__7FEAFD3E");
 
             entity.HasOne(d => d.PostComment).WithMany(p => p.PostCommentReports)
                 .HasForeignKey(d => d.PostCommentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PostComme__PostC__56E8E7AB");
+                .HasConstraintName("FK__PostComme__PostC__7EF6D905");
 
             entity.HasOne(d => d.ReviewerBackenMember).WithMany(p => p.PostCommentReports)
                 .HasForeignKey(d => d.ReviewerBackenMemberId)
-                .HasConstraintName("FK__PostComme__Revie__57DD0BE4");
+                .HasConstraintName("FK__PostComme__Revie__00DF2177");
         });
 
         modelBuilder.Entity<PostCommentUpDownVote>(entity =>
@@ -1003,12 +1003,12 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Member).WithMany(p => p.PostCommentUpDownVotes)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PostComme__Membe__5D95E53A");
+                .HasConstraintName("FK__PostComme__Membe__7A3223E8");
 
             entity.HasOne(d => d.PostComment).WithMany(p => p.PostCommentUpDownVotes)
                 .HasForeignKey(d => d.PostCommentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PostComme__PostC__5E8A0973");
+                .HasConstraintName("FK__PostComme__PostC__7B264821");
         });
 
         modelBuilder.Entity<PostEditLog>(entity =>
@@ -1021,7 +1021,7 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Post).WithMany(p => p.PostEditLogs)
                 .HasForeignKey(d => d.PostId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PostEditL__PostI__5F7E2DAC");
+                .HasConstraintName("FK__PostEditL__PostI__72910220");
         });
 
         modelBuilder.Entity<PostReport>(entity =>
@@ -1036,16 +1036,16 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Member).WithMany(p => p.PostReports)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PostRepor__Membe__607251E5");
+                .HasConstraintName("FK__PostRepor__Membe__7D0E9093");
 
             entity.HasOne(d => d.Post).WithMany(p => p.PostReports)
                 .HasForeignKey(d => d.PostId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PostRepor__PostI__6166761E");
+                .HasConstraintName("FK__PostRepor__PostI__7C1A6C5A");
 
             entity.HasOne(d => d.ReviewerBackenMember).WithMany(p => p.PostReports)
                 .HasForeignKey(d => d.ReviewerBackenMemberId)
-                .HasConstraintName("FK__PostRepor__Revie__625A9A57");
+                .HasConstraintName("FK__PostRepor__Revie__7E02B4CC");
         });
 
         modelBuilder.Entity<PostUpDownVote>(entity =>
@@ -1057,12 +1057,12 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Member).WithMany(p => p.PostUpDownVotes)
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PostUpDow__Membe__671F4F74");
+                .HasConstraintName("FK__PostUpDow__Membe__7849DB76");
 
             entity.HasOne(d => d.Post).WithMany(p => p.PostUpDownVotes)
                 .HasForeignKey(d => d.PostId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PostUpDow__PostI__681373AD");
+                .HasConstraintName("FK__PostUpDow__PostI__793DFFAF");
         });
 
         modelBuilder.Entity<Product>(entity =>
@@ -1080,25 +1080,25 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.CreatedBackendMember).WithMany(p => p.ProductCreatedBackendMembers)
                 .HasForeignKey(d => d.CreatedBackendMemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Products__Create__69FBBC1F");
+                .HasConstraintName("FK__Products__Create__3587F3E0");
 
             entity.HasOne(d => d.Game).WithMany(p => p.Products)
                 .HasForeignKey(d => d.GameId)
-                .HasConstraintName("FK__Products__GameId__6AEFE058");
+                .HasConstraintName("FK__Products__GameId__32AB8735");
 
             entity.HasOne(d => d.GamePlatform).WithMany(p => p.Products)
                 .HasForeignKey(d => d.GamePlatformId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Products__GamePl__6BE40491");
+                .HasConstraintName("FK__Products__GamePl__339FAB6E");
 
             entity.HasOne(d => d.ModifiedBackendMember).WithMany(p => p.ProductModifiedBackendMembers)
                 .HasForeignKey(d => d.ModifiedBackendMemberId)
-                .HasConstraintName("FK__Products__Modifi__6CD828CA");
+                .HasConstraintName("FK__Products__Modifi__367C1819");
 
             entity.HasOne(d => d.ProductStatus).WithMany(p => p.Products)
                 .HasForeignKey(d => d.ProductStatusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Products__Produc__6DCC4D03");
+                .HasConstraintName("FK__Products__Produc__3493CFA7");
         });
 
         modelBuilder.Entity<ProductImage>(entity =>
@@ -1110,7 +1110,7 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Product).WithMany(p => p.ProductImages)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ProductIm__Produ__690797E6");
+                .HasConstraintName("FK__ProductIm__Produ__44CA3770");
         });
 
         modelBuilder.Entity<ProductStatusCode>(entity =>
@@ -1128,11 +1128,11 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.BackendMember).WithMany(p => p.Replies)
                 .HasForeignKey(d => d.BackendMemberId)
-                .HasConstraintName("FK__Replies__Backend__6EC0713C");
+                .HasConstraintName("FK__Replies__Backend__498EEC8D");
 
             entity.HasOne(d => d.Issue).WithMany(p => p.Replies)
                 .HasForeignKey(d => d.IssueId)
-                .HasConstraintName("FK__Replies__IssueId__6FB49575");
+                .HasConstraintName("FK__Replies__IssueId__489AC854");
         });
 
         modelBuilder.Entity<Schema>(entity =>
@@ -1195,7 +1195,7 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Product).WithMany(p => p.StandardProducts)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__StandardP__Produ__70A8B9AE");
+                .HasConstraintName("FK__StandardP__Produ__58D1301D");
         });
 
         modelBuilder.Entity<State>(entity =>
@@ -1229,12 +1229,12 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.StockInStatus).WithMany(p => p.StockInSheets)
                 .HasForeignKey(d => d.StockInStatusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__StockInSh__Stock__719CDDE7");
+                .HasConstraintName("FK__StockInSh__Stock__56E8E7AB");
 
             entity.HasOne(d => d.Supplier).WithMany(p => p.StockInSheets)
                 .HasForeignKey(d => d.SupplierId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__StockInSh__Suppl__72910220");
+                .HasConstraintName("FK__StockInSh__Suppl__57DD0BE4");
         });
 
         modelBuilder.Entity<StockInStatusCode>(entity =>
