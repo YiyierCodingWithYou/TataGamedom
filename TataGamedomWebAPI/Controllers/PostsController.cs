@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TataGamedomWebAPI.Infrastructure;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.Dtos;
 using TataGamedomWebAPI.Models.DTOs.Post;
 using TataGamedomWebAPI.Models.EFModels;
-using TataGamedomWebAPI.Models.Infra;
 using TataGamedomWebAPI.Models.Services;
 
 
@@ -18,7 +18,7 @@ namespace TataGamedomWebAPI.Controllers
 {
 
 
-	[EnableCors("AllowAny")]
+    [EnableCors("AllowAny")]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class PostsController : ControllerBase
@@ -181,7 +181,7 @@ namespace TataGamedomWebAPI.Controllers
 		public async Task<ApiResult> VotePost(int postId, string voteType)
 		{
 			Post existingPost = _context.Posts.Find(postId);
-			//var memberAccount = User.Identity.Name;
+			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
 			int memberId = 3; // 王五 wangwu 測試用
 			var IsVoted = _simpleHelper.IsPostVoted(postId, memberId);
@@ -238,7 +238,7 @@ namespace TataGamedomWebAPI.Controllers
 		[HttpPost]
 		public async Task<ApiResult> CreatePost(PostCreateDto dto)
 		{
-			//var memberAccount = User.Identity.Name;
+			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
 			int memberId = 3; // 王五 wangwu 測試用
 			if (memberId == 0)
@@ -279,7 +279,7 @@ namespace TataGamedomWebAPI.Controllers
 		[HttpDelete("{id}")]
 		public async Task<ApiResult> DeletePost(int id)
 		{
-			//var memberAccount = User.Identity.Name;
+			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
 			int memberId = 3; // 王五 wangwu 測試用
 
@@ -298,6 +298,7 @@ namespace TataGamedomWebAPI.Controllers
 			try
 			{
 				existingEntity.DeleteDatetime = DateTime.Now;
+				existingEntity.DeleteMemberId = memberId;
 				existingEntity.ActiveFlag = false;
 				await _context.SaveChangesAsync();
 			}catch (DbUpdateConcurrencyException)

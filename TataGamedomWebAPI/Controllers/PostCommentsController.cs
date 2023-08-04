@@ -7,33 +7,34 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TataGamedomWebAPI.Infrastructure;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.DTOs.PostComment;
 using TataGamedomWebAPI.Models.EFModels;
-using TataGamedomWebAPI.Models.Infra;
 
 
 namespace TataGamedomWebAPI.Controllers
 {
-	[EnableCors("AllowAny")]
+    [EnableCors("AllowAny")]
 	[Route("api/[controller]")]
-    [ApiController]
-    public class PostCommentsController : ControllerBase
-    {
-        private readonly AppDbContext _context;
-        private SimpleHelper _simpleHelper;
+	[ApiController]
+	public class PostCommentsController : ControllerBase
+	{
+		private readonly AppDbContext _context;
+		private SimpleHelper _simpleHelper;
 
-        public PostCommentsController(AppDbContext context)
-        {
-            _context = context;
-            _simpleHelper = new SimpleHelper(context);
-        }
+		public PostCommentsController(AppDbContext context)
+		{
+			_context = context;
+			_simpleHelper = new SimpleHelper(context);
+		}
+
 
 		[HttpPut("{commentId}/Vote/{voteType}")]
 		public async Task<ApiResult> VotePost(int commentId, string voteType)
 		{
 			PostComment existingPost = _context.PostComments.Find(commentId);
-			//var memberAccount = User.Identity.Name;
+			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
 			int memberId = 3; // 王五 wangwu 測試用
 			var IsVoted = _simpleHelper.IsCommentVoted(commentId, memberId);
@@ -89,9 +90,9 @@ namespace TataGamedomWebAPI.Controllers
 		// POST: api/PostComments
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPost]
-        public async Task<ApiResult> CreartePostComment(CommentCreateDto dto)
+		public async Task<ApiResult> CreartePostComment(CommentCreateDto dto)
 		{
-			//var memberAccount = User.Identity.Name;
+			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
 			int memberId = 3; // 王五 wangwu 測試用
 			if (memberId == 0)
@@ -103,7 +104,7 @@ namespace TataGamedomWebAPI.Controllers
 			{
 				Id = 0,
 				MemberId = memberId,
-                PostId = dto.PostId,
+				PostId = dto.PostId,
 				Content = dto.Content,
 				Datetime = DateTime.Now,
 				ActiveFlag = true
@@ -123,9 +124,9 @@ namespace TataGamedomWebAPI.Controllers
 
 		// DELETE: api/PostComments/5
 		[HttpDelete("{id}")]
-        public async Task<ApiResult> DeletePostComment(int id)
-        {
-			//var memberAccount = User.Identity.Name;
+		public async Task<ApiResult> DeletePostComment(int id)
+		{
+			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
 			int memberId = 3; // 王五 wangwu 測試用
 
@@ -144,6 +145,7 @@ namespace TataGamedomWebAPI.Controllers
 			try
 			{
 				existingEntity.DeleteDatetime = DateTime.Now;
+				existingEntity.DeleteMemberId = memberId;
 				existingEntity.ActiveFlag = false;
 				await _context.SaveChangesAsync();
 			}
@@ -155,9 +157,9 @@ namespace TataGamedomWebAPI.Controllers
 			return ApiResult.Success("刪除成功");
 		}
 
-        private bool PostCommentExists(int id)
-        {
-            return (_context.PostComments?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
-    }
+		private bool PostCommentExists(int id)
+		{
+			return (_context.PostComments?.Any(e => e.Id == id)).GetValueOrDefault();
+		}
+	}
 }
