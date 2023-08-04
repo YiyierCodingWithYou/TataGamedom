@@ -1,4 +1,6 @@
-﻿namespace TataGamedomWebAPI.Models.DTOs.Shop
+﻿using TataGamedomWebAPI.Models.EFModels;
+
+namespace TataGamedomWebAPI.Models.DTOs.Shop
 {
 	public class SingleProductDTO
 	{
@@ -7,8 +9,9 @@
 		public string Index { get; set; } = null!;
 
 		public bool IsVirtual { get; set; }
+        public int? GameId { get; set; }
 
-		public int Price { get; set; }
+        public int Price { get; set; }
 		public int SpecialPrice { get; set; }
 		public string GamePlatformName { get; set; }
 		public double Score { get; set; }
@@ -30,6 +33,9 @@
 
         public IEnumerable<string>? Classification { get; set; }
 
-        public int MyProperty { get; set; }
+		public int CommentCount { get; set; }
+        public IEnumerable<GameCommentsDTO> GameComments { get; set; }
+
+        public int TotalPages { get; set; }
     }
 }

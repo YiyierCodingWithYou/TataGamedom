@@ -23,5 +23,6 @@
         public string GameCoverImg { get; set; } = null!;
 
         public IEnumerable<string> Classification { get; set; }
+
     }
 }
