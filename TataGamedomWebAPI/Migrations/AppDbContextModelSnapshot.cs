@@ -1369,16 +1369,17 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("RecipientName")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime?>("SentAt")
                         .HasColumnType("datetime");
 
-                    b.Property<int?>("ShipmemtMethodId")
+                    b.Property<int>("ShipmemtMethodId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ShipmentStatusId")
+                    b.Property<int>("ShipmentStatusId")
                         .HasColumnType("int");
 
                     b.Property<string>("ToAddress")
@@ -1482,7 +1483,6 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Reason")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 

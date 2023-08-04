@@ -1,4 +1,5 @@
-﻿using TataGamedomWebAPI.Application.Contracts.Persistence;
+﻿using Microsoft.EntityFrameworkCore;
+using TataGamedomWebAPI.Application.Contracts.Persistence;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.EFModels;
 
@@ -8,6 +9,16 @@ public class InventoryItemRepository : GenericRepository<InventoryItem>, IInvent
 {
     public InventoryItemRepository(AppDbContext dbContext) : base(dbContext)
     {
+    }
+
+    public async Task<bool> IsInventoryItemExist(int inventoryItemId)
+    {
+        return await _dbContext.InventoryItems.AnyAsync(i => i.Id == inventoryItemId);
+    }
+
+    public async Task<bool> IsInventoryItemNotSold(int inventoryItemId)
+    {
+        return await _dbContext.OrderItems.AnyAsync(o => o.InventoryItemId == inventoryItemId) == false;
     }
 }
 
