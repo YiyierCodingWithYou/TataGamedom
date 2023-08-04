@@ -91,12 +91,10 @@ namespace TataGamedomWebAPI.Controllers
               return NotFound();
           }
             var cart = await _context.Carts.FindAsync(id);
-
             if (cart == null)
             {
                 return NotFound();
             }
-
             return cart;
         }
 

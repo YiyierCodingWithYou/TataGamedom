@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TataGamedomWebAPI.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using TataGamedomWebAPI.Infrastructure.Data;
 namespace TataGamedomWebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230802123540_PostAddTitleColumn")]
+    partial class PostAddTitleColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1369,17 +1372,16 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("RecipientName")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime?>("SentAt")
                         .HasColumnType("datetime");
 
-                    b.Property<int>("ShipmemtMethodId")
+                    b.Property<int?>("ShipmemtMethodId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ShipmentStatusId")
+                    b.Property<int?>("ShipmentStatusId")
                         .HasColumnType("int");
 
                     b.Property<string>("ToAddress")
@@ -1483,6 +1485,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Reason")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
