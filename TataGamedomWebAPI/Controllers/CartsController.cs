@@ -86,8 +86,6 @@ namespace TataGamedomWebAPI.Controllers
 								})
 								.ToListAsync();
 		}
-            return cart;
-        }
 
 		// PUT: api/Carts/5
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -104,27 +102,37 @@ namespace TataGamedomWebAPI.Controllers
 		{
 			// 取得目前購物車主檔
 			var account = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			//var account = "zhangsan";
 			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
 
 			List<CartItemDTO> cartItems = await GetCartItems(user, DateTime.Now);
 
-			foreach(var item in cartItems)
+			Cart thisProduct = await _context.Carts.FirstOrDefaultAsync(p => p.ProductId == productId && p.MemberId == user.Id);
+
+			if (newQty == 0)
 			{
-				if (newQty == 0)
+				try
 				{
-					var cartItem = await _context.Carts.FindAsync(item.Product.Id);
-					if (cartItem != null)
-					{
-						_context.Carts.Remove(cartItem);
-					}
+					_context.Carts.Remove(thisProduct);
+					await _context.SaveChangesAsync();
 				}
-				else
+				catch
 				{
-					var cartItemInDb = await _context.Carts.FindAsync(item.Product.Id);
-					cartItemInDb.Quantity = newQty;
+					return BadRequest();
 				}
 			}
-			await _context.SaveChangesAsync();
+			else
+			{
+				try
+				{
+					thisProduct.Quantity = newQty;
+					await _context.SaveChangesAsync();
+				}
+				catch
+				{
+					return BadRequest();
+				}
+			}
 			return Ok();
 		}
 
