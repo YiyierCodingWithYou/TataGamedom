@@ -2,6 +2,7 @@
 using TataGamedomWebAPI.Application.Features.InventoryItem.Commands.CreateInventoryItem;
 using TataGamedomWebAPI.Application.Features.InventoryItem.Queries.GetInventoryItemDetails;
 using TataGamedomWebAPI.Application.Features.InventoryItem.Queries.GetInventoryItemList;
+using TataGamedomWebAPI.Application.Features.InventoryItem.Queries.GetRemainingInventoryDetails;
 using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Application.MappingProfiles;

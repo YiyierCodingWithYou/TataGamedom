@@ -26,6 +26,7 @@ public class GetInventoryItemDetailsQueryHandler : IRequestHandler<GetInventoryI
         Models.EFModels.InventoryItem? inventoryItems = await _inventoryItemRepository.GetByIdAsync(request.Id);
         var response = _mapper.Map<InventoryItemDetailsDto>(inventoryItems);
 
+        _logger.LogInformation("InventoryItemDetails were retrieved successfully");
         return response;
     }
 }
