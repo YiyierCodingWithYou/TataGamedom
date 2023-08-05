@@ -3,7 +3,6 @@ using MediatR;
 using TataGamedomWebAPI.Application.Contracts.Logging;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
 using TataGamedomWebAPI.Application.Exceptions;
-using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Application.Features.Order.Commands.CreateOrder
 {
