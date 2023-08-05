@@ -6,8 +6,8 @@ public class ProductTopFiveSalesDto
 {
     public int Id { get; set; }
 
-    public required GameDto Game { get; set; }
+    public required string GameChiName { get; set; }
 
-    public required GamePlatformsCodeDto GamePlatformsCode { get; set; }
+    public required string GamePlatformName { get; set; }
 
 }

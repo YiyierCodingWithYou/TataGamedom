@@ -23,7 +23,7 @@ public class GetProductTopFiveSalesListQueryHandler : IRequestHandler<GetProduct
 
     public async Task<List<ProductTopFiveSalesDto>> Handle(GetProductTopFiveSalesListQuery request, CancellationToken cancellationToken)
     {
-        var productTopFiveSalesList = await _productRepository.GetProductTopFiveSalesWithDetails();
+        List<Models.EFModels.Product> productTopFiveSalesList = await _productRepository.GetProductTopFiveSalesWithDetails();
         var response = _mapper.Map<List<ProductTopFiveSalesDto>>(productTopFiveSalesList);
 
         _logger.LogInformation("ProductTopFiveSalesList were retrived successfully");

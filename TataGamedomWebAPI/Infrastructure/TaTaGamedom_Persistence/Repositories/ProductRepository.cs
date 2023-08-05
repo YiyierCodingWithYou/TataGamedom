@@ -11,26 +11,27 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
     }
 
-    public async Task GetProductTopFiveSalesWithDetails()
-    {
-        List<IGrouping<int, int>> productTopFiveSales = await _dbContext.OrderItems
-            .GroupBy(o => o.ProductId, o => o.ProductId)
-            .OrderByDescending(o => o.Count())
-            .Take(5)
-            .ToListAsync();
-
-
-
-        var topFiveSalesWithDetails = await _dbContext.Products
-            .Include(p => p.Game)
-            .Include(p => p.GamePlatform)
-            //.Where(p => p.Id == productTopFiveSales.)
-            //Todo
-    }
-
     public async Task<bool> IsProductExist(int productId)
     {
         return await _dbContext.Products.AnyAsync(p => p.Id == productId);
+    }
+
+    async Task<List<Product>> IProductRepository.GetProductTopFiveSalesWithDetails()
+    {
+        List<int> productTopFiveSaleId = await _dbContext.OrderItems
+            .GroupBy(o => o.ProductId)
+            .OrderByDescending(o => o.Count())
+            .Select(g => g.Key)
+            .Take(5)
+            .ToListAsync();
+
+        List<Product> productsWithDetails = await _dbContext.Products
+            .Where(p => productTopFiveSaleId.Contains(p.Id))
+            .Include(p => p.Game)
+            .Include(p => p.GamePlatform)
+            .ToListAsync();
+
+        return productsWithDetails;
     }
 }
 
