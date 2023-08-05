@@ -35,6 +35,7 @@ namespace TataGamedomWebAPI
 
 
             builder.Services.AddControllers();
+
 			// Add authentication
 			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 			{
@@ -56,14 +57,15 @@ namespace TataGamedomWebAPI
                 app.UseSwaggerUI();
             }
 
-            app.UseCors();
 
             app.UseHttpsRedirection();
 
 			app.UseRouting();
 
-			// 設定身份驗證
-			app.UseAuthentication();
+            app.UseCors();
+
+            // 設定身份驗證
+            app.UseAuthentication();
 
 			app.UseAuthorization();
 
