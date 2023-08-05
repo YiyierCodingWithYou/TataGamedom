@@ -28,7 +28,7 @@ public class InventoryItemsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<InventoryItemDto>> Get(int id) => Ok(await _mediator.Send(new GetInventoryItemDetailsQuery(id)));
 
-    [HttpGet("{productId}/RemainingQuantity")]
+    [HttpGet("RemainingQuantity/{productId}")]
     public async Task<ActionResult<int>> RemainingInventoryQuantity(int productId) 
         => Ok(await _mediator.Send(new GetRemainingInventoryQuantityQuery(productId)));
 
