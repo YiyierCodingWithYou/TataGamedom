@@ -1,4 +1,5 @@
 ﻿using TataGamedomWebAPI.Models.Dtos;
+using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Application.Features.InventoryItem.Queries.GetInventoryItemDetails;
 
@@ -16,11 +17,6 @@ public class InventoryItemDetailsDto
 
     public string? GameKey { get; set; }
 
-    //public required ProductDto product{ get; set; }
 }
 
-public class ProductDto 
-{
-    public int Id { get; set; }
-    //public GameDto MyProperty { get; set; }
-}
+

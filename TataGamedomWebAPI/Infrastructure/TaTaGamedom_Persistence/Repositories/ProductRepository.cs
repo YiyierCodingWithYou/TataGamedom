@@ -15,5 +15,23 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
         return await _dbContext.Products.AnyAsync(p => p.Id == productId);
     }
+
+    async Task<List<Product>> IProductRepository.GetProductTopFiveSalesWithDetails()
+    {
+        List<int> productTopFiveSaleId = await _dbContext.OrderItems
+            .GroupBy(o => o.ProductId)
+            .OrderByDescending(o => o.Count())
+            .Select(g => g.Key)
+            .Take(5)
+            .ToListAsync();
+
+        List<Product> productsWithDetails = await _dbContext.Products
+            .Where(p => productTopFiveSaleId.Contains(p.Id))
+            .Include(p => p.Game)
+            .Include(p => p.GamePlatform)
+            .ToListAsync();
+
+        return productsWithDetails;
+    }
 }
 
