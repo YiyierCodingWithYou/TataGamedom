@@ -23,7 +23,7 @@ public class GetOrderListByAccountQueryHandler : IRequestHandler<GetOrderListByA
     {
         List<OrderWithDeatilsDto> response = await _orderRepository.GetOrderWithDetailsByAccount(request.Account);
       
-        _logger.LogInformation("This user's order list with deatils were retrived successfully");
+        _logger.LogInformation("Orders were retrived successfully");
         return response;
 
     }
