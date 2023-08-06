@@ -10,7 +10,9 @@
 
         public string Password { get; set; } = null!;
 
-        public DateTime Birthday { get; set; }
+        public string CheckPassword { get; set; } = null!;
+
+		public DateTime Birthday { get; set; }
 
         public string Email { get; set; } = null!;
 
