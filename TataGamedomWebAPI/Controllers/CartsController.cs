@@ -57,34 +57,40 @@ namespace TataGamedomWebAPI.Controllers
 		private async Task<List<CartItemDTO>> GetCartItems(Member? user, DateTime currentTime)
 		{
 			return await _context.Carts
-								.Where(c => c.MemberId == user.Id)
-								.Select(c => new CartItemDTO
-								{
-									Product = new ProductsDTO
-									{
-										Id = c.Product.Id,
-										Index = c.Product.Index,
-										IsVirtual = c.Product.IsVirtual,
-										Price = c.Product.Price,
-										SpecialPrice = c.Product.CouponsProducts
-											.Any(cp => currentTime >= cp.Coupon.StartTime && currentTime <= cp.Coupon.EndTime && cp.ProductId == c.ProductId)
-											? (int)Math.Round(c.Product.CouponsProducts
-														.Where(cp => currentTime >= cp.Coupon.StartTime && currentTime <= cp.Coupon.EndTime && cp.ProductId == c.ProductId)
-														.Select(cp => cp.Coupon.DiscountTypeId == 1
-														? c.Product.Price * (cp.Coupon.Discount / 100.0)
-														: (cp.Coupon.DiscountTypeId == 2
-														? c.Product.Price - cp.Coupon.Discount
-														: c.Product.Price))
-														.FirstOrDefault(), 1)
-											: c.Product.Price,
-										GamePlatformName = c.Product.GamePlatform.Name,
-										SaleDate = c.Product.SaleDate,
-										ChiName = c.Product.Game.ChiName,
-										GameCoverImg = c.Product.Game.GameCoverImg,
-									},
-									Qty = c.Quantity
-								})
-								.ToListAsync();
+						.Where(c => c.MemberId == user.Id)
+						.Select(c => new CartItemDTO
+						{
+							Product = new SingleProductDTO
+							{
+								Id = c.Product.Id,
+								Index = c.Product.Index,
+								IsVirtual = c.Product.IsVirtual,
+								Price = c.Product.Price,
+								SpecialPrice = c.Product.CouponsProducts
+					.Any(cp => currentTime >= cp.Coupon.StartTime && currentTime <= cp.Coupon.EndTime && cp.ProductId == c.ProductId)
+					? (int)Math.Round(c.Product.CouponsProducts
+								.Where(cp => currentTime >= cp.Coupon.StartTime && currentTime <= cp.Coupon.EndTime && cp.ProductId == c.ProductId)
+								.Select(cp => cp.Coupon.DiscountTypeId == 1
+								? c.Product.Price * (cp.Coupon.Discount / 100.0)
+								: (cp.Coupon.DiscountTypeId == 2
+								? c.Product.Price - cp.Coupon.Discount
+								: c.Product.Price))
+								.FirstOrDefault(), 1)
+					: c.Product.Price,
+								GamePlatformName = c.Product.GamePlatform.Name,
+								SaleDate = c.Product.SaleDate,
+								ChiName = c.Product.Game.ChiName,
+								GameCoverImg = c.Product.Game.GameCoverImg,
+								ProductImg = c.Product.ProductImages.Select(p => p.Image),
+								Coupons = c.Product.CouponsProducts.Where(c => currentTime >= c.Coupon.StartTime && currentTime <= c.Coupon.EndTime)
+						.Select(c => c.Coupon.Name),
+								CouponDescription = c.Product.CouponsProducts
+						.Where(c => currentTime >= c.Coupon.StartTime && currentTime <= c.Coupon.EndTime)
+						.Select(c => c.Coupon.Description),
+							},
+							Qty = c.Quantity
+						})
+						.ToListAsync();
 		}
 
 		// PUT: api/Carts/5
@@ -111,27 +117,13 @@ namespace TataGamedomWebAPI.Controllers
 
 			if (newQty == 0)
 			{
-				try
-				{
 					_context.Carts.Remove(thisProduct);
 					await _context.SaveChangesAsync();
-				}
-				catch
-				{
-					return BadRequest();
-				}
 			}
 			else
-			{
-				try
-				{
+			{ 				
 					thisProduct.Quantity = newQty;
 					await _context.SaveChangesAsync();
-				}
-				catch
-				{
-					return BadRequest();
-				}
 			}
 			return Ok();
 		}
