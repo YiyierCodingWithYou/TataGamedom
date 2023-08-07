@@ -2,7 +2,7 @@
     <div>
     <ul>
       <!-- 使用 v-for 將 classifications 的每個元素都渲染成一個 <li> -->
-      <li v-for="classification in classifications" :key="classification.name" @click="classificationHandler(classification)">
+      <li v-for="classification in classifications" :key="classification.name" @click="classificationHandler(classification.name)">
         {{ classification.name }}
       </li>
     </ul>
