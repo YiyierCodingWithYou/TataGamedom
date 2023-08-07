@@ -21,7 +21,7 @@
                 <v-row>
                     <v-col cols="4" v-for="product in products" :key="product.id">
                         <v-card>
-                            <v-img class="align-end text-white" height="200" :src="imgLink" cover></v-img>
+                            <v-img class="align-end text-white" height="200" :src="img+product.gameCoverImg" cover></v-img>
                             <v-card-title class="pt-2 justify-center text-center">
                                 {{ product.chiName }}
                             </v-card-title>
@@ -76,7 +76,7 @@ const loadProducts = async () => {
     totalPages.value = datas.totalPages
 }
 
-let imgLink = `https://localhost:44398/Files/Uploads/${products.gameCoverImg}`
+let img = 'https://localhost:7081/Files/Uploads/'
 
 // onMounted(() => {
 //     loadProducts()

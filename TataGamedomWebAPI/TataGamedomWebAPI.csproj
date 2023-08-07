@@ -7,6 +7,104 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Files\GameImg\Animal.jpg" />
+    <None Remove="Files\GameImg\Pokemon01.jpg" />
+    <None Remove="Files\GameImg\Zelda01.jpg" />
+    <None Remove="Files\GameImg\Zelda02.jpg" />
+    <None Remove="Files\Images\arniya.jpg" />
+    <None Remove="Files\Images\controller.png" />
+    <None Remove="Files\Images\kill.jpg" />
+    <None Remove="Files\Images\otter.png" />
+    <None Remove="Files\Images\password.png" />
+    <None Remove="Files\Images\profile.png" />
+    <None Remove="Files\Images\tata.PNG" />
+    <None Remove="Files\Images\tata1.PNG" />
+    <None Remove="Files\Mails\77_gmail.com 20230628_174620.txt" />
+    <None Remove="Files\NewsImages\78122566.jpg" />
+    <None Remove="Files\NewsImages\78197554.jpg" />
+    <None Remove="Files\NewsImages\82749573.jpg" />
+    <None Remove="Files\NewsImages\b27859dfa6e12a2e9_700.jpg" />
+    <None Remove="Files\NewsImages\delete.png" />
+    <None Remove="Files\NewsImages\HN74VjF.png" />
+    <None Remove="Files\NewsImages\POCHA.jpg" />
+    <None Remove="Files\NewsImages\re.png" />
+    <None Remove="Files\NewsImages\stop.png" />
+    <None Remove="Files\Uploads\1 (2).jpg" />
+    <None Remove="Files\Uploads\1.jpg" />
+    <None Remove="Files\Uploads\2 (2).jpg" />
+    <None Remove="Files\Uploads\2.jpg" />
+    <None Remove="Files\Uploads\3 (2).jpg" />
+    <None Remove="Files\Uploads\3.jpg" />
+    <None Remove="Files\Uploads\4 (2).jpg" />
+    <None Remove="Files\Uploads\4.jpg" />
+    <None Remove="Files\Uploads\5.jpg" />
+    <None Remove="Files\Uploads\6.jpg" />
+    <None Remove="Files\Uploads\Animal.jpg" />
+    <None Remove="Files\Uploads\assassinscreed.jpg" />
+    <None Remove="Files\Uploads\Cyberpunk 2077.jpg" />
+    <None Remove="Files\Uploads\Diablo.jpg" />
+    <None Remove="Files\Uploads\Fire Emblem Engage.jpg" />
+    <None Remove="Files\Uploads\GodofWar.jpg" />
+    <None Remove="Files\Uploads\KirbyStar.jpg" />
+    <None Remove="Files\Uploads\NieR.jpg" />
+    <None Remove="Files\Uploads\Overwatch.jpg" />
+    <None Remove="Files\Uploads\Pokemon01.jpg" />
+    <None Remove="Files\Uploads\Pokemon02.jpg" />
+    <None Remove="Files\Uploads\Zelda01.jpg" />
+    <None Remove="Files\Uploads\Zelda02.jpg" />
+    <None Remove="Files\Uploads\Zelda03.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Files\GameImg\Zelda01.jpg" />
+    <Content Include="Files\GameImg\Pokemon01.jpg" />
+    <Content Include="Files\GameImg\Zelda02.jpg" />
+    <Content Include="Files\GameImg\Animal.jpg" />
+    <Content Include="Files\Images\arniya.jpg" />
+    <Content Include="Files\Images\controller.png" />
+    <Content Include="Files\Images\kill.jpg" />
+    <Content Include="Files\Images\otter.png" />
+    <Content Include="Files\Images\password.png" />
+    <Content Include="Files\Images\profile.png" />
+    <Content Include="Files\Images\tata.PNG" />
+    <Content Include="Files\Images\tata1.PNG" />
+    <Content Include="Files\Mails\77_gmail.com 20230628_174620.txt" />
+    <Content Include="Files\NewsImages\78122566.jpg" />
+    <Content Include="Files\NewsImages\78197554.jpg" />
+    <Content Include="Files\NewsImages\82749573.jpg" />
+    <Content Include="Files\NewsImages\b27859dfa6e12a2e9_700.jpg" />
+    <Content Include="Files\NewsImages\delete.png" />
+    <Content Include="Files\NewsImages\HN74VjF.png" />
+    <Content Include="Files\NewsImages\POCHA.jpg" />
+    <Content Include="Files\NewsImages\re.png" />
+    <Content Include="Files\NewsImages\stop.png" />
+    <Content Include="Files\Uploads\1 (2).jpg" />
+    <Content Include="Files\Uploads\1.jpg" />
+    <Content Include="Files\Uploads\2 (2).jpg" />
+    <Content Include="Files\Uploads\2.jpg" />
+    <Content Include="Files\Uploads\3 (2).jpg" />
+    <Content Include="Files\Uploads\3.jpg" />
+    <Content Include="Files\Uploads\4 (2).jpg" />
+    <Content Include="Files\Uploads\4.jpg" />
+    <Content Include="Files\Uploads\5.jpg" />
+    <Content Include="Files\Uploads\6.jpg" />
+    <Content Include="Files\Uploads\Animal.jpg" />
+    <Content Include="Files\Uploads\assassinscreed.jpg" />
+    <Content Include="Files\Uploads\Cyberpunk 2077.jpg" />
+    <Content Include="Files\Uploads\Diablo.jpg" />
+    <Content Include="Files\Uploads\Fire Emblem Engage.jpg" />
+    <Content Include="Files\Uploads\GodofWar.jpg" />
+    <Content Include="Files\Uploads\KirbyStar.jpg" />
+    <Content Include="Files\Uploads\NieR.jpg" />
+    <Content Include="Files\Uploads\Overwatch.jpg" />
+    <Content Include="Files\Uploads\Pokemon01.jpg" />
+    <Content Include="Files\Uploads\Pokemon02.jpg" />
+    <Content Include="Files\Uploads\Zelda01.jpg" />
+    <Content Include="Files\Uploads\Zelda02.jpg" />
+    <Content Include="Files\Uploads\Zelda03.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Dapper" Version="2.0.143" />

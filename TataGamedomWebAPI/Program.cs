@@ -64,8 +64,20 @@ namespace TataGamedomWebAPI
 
             app.UseCors();
 
-            // 設定身份驗證
-            app.UseAuthentication();
+            //Files
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "Files")),
+                RequestPath = "/Files"
+
+            });
+
+
+
+
+			// 設定身份驗證
+			app.UseAuthentication();
 
 			app.UseAuthorization();
 
