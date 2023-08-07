@@ -41,7 +41,10 @@ namespace TataGamedomWebAPI
 			{
 				// 未登入時會自動導到這個網址
 				options.LoginPath = new PathString("/api/Login/NoLogin");
-			});
+                //options.ExpireTimeSpan = TimeSpan.FromDays(1);
+                //options.Cookie.Domain = "http://localhost:3000";
+                //options.Cookie.HttpOnly = true;
+            });
 
 
             builder.Services.AddEndpointsApiExplorer();
