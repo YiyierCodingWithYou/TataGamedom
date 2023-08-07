@@ -5,7 +5,7 @@ using TataGamedomWebAPI.Infrastructure;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Infrastructure.TaTaGamedom_Persistence;
 using Microsoft.AspNetCore.Authentication.Cookies; // 引入 CookieAuthenticationDefaults 命名空間
-
+using Microsoft.Extensions.FileProviders;
 
 namespace TataGamedomWebAPI
 {
