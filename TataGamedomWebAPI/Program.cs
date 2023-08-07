@@ -5,7 +5,7 @@ using TataGamedomWebAPI.Infrastructure;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Infrastructure.TaTaGamedom_Persistence;
 using Microsoft.AspNetCore.Authentication.Cookies; // 引入 CookieAuthenticationDefaults 命名空間
-
+using Microsoft.Extensions.FileProviders;
 
 namespace TataGamedomWebAPI
 {
@@ -63,6 +63,14 @@ namespace TataGamedomWebAPI
 			app.UseRouting();
 
             app.UseCors();
+
+            //Files
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "Files")),
+                RequestPath = "/Files"
+            });
 
             // 設定身份驗證
             app.UseAuthentication();
