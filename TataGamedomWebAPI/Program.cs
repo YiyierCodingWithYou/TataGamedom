@@ -72,7 +72,7 @@ namespace TataGamedomWebAPI
                 RequestPath = "/Files"
             });
 
-            // 設定身份驗證
+            // setting Authorized
             app.UseAuthentication();
 
 			app.UseAuthorization();
