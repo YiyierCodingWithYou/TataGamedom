@@ -21,7 +21,7 @@
                 <v-row>
                     <v-col cols="4" v-for="product in products" :key="product.id">
                         <v-card>
-                            <v-img class="align-end text-white" height="200" src="???" cover></v-img>
+                            <v-img class="align-end text-white" height="200" :src="img+product.gameCoverImg" cover></v-img>
                             <v-card-title class="pt-2 justify-center text-center">
                                 {{ product.chiName }}
                             </v-card-title>
@@ -58,6 +58,7 @@ import { ref, reactive, onMounted } from 'vue'
 import SearchTextBox from '../eCommerce/SearchTextBox.vue'
 import ClassificationList from '../eCommerce/ClassificationList.vue'
 
+
 const keyword = ref("")
 const classification = ref("")
 const sortBy = ref("")
@@ -67,13 +68,15 @@ const totalPages = ref(1)  //共幾頁
 const thePage = ref(1)  //第幾頁
 const API = 'https://localhost:7081/api/'//import.meta.env.VITE_API_URL
 const loadProducts = async () => {
-
+    
     const response = await fetch(`${API}Products?keyword=${keyword.value}&classification=${classification.value}&sortBy=${sortBy.value}&isAscending=${isAscending.value}&page=${thePage.value}`)
     const datas = await response.json()
     products.value = datas.products
     console.log(products.value)
     totalPages.value = datas.totalPages
 }
+
+let img = 'https://localhost:7081/Files/Uploads/'
 
 // onMounted(() => {
 //     loadProducts()
