@@ -7,6 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Files\GameImg\Animal.jpg" />
+    <None Remove="Files\GameImg\Pokemon01.jpg" />
+    <None Remove="Files\GameImg\Zelda01.jpg" />
+    <None Remove="Files\GameImg\Zelda02.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Files\GameImg\Zelda01.jpg" />
+    <Content Include="Files\GameImg\Pokemon01.jpg" />
+    <Content Include="Files\GameImg\Zelda02.jpg" />
+    <Content Include="Files\GameImg\Animal.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Dapper" Version="2.0.143" />
