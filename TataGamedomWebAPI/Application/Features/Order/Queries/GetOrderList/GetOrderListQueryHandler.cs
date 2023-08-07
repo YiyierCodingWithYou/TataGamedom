@@ -23,7 +23,7 @@ public class GetOrderListQueryHandler : IRequestHandler<GetOrderListQuery, List<
 
     public async Task<List<OrderDto>> Handle(GetOrderListQuery request, CancellationToken cancellationToken)
     {
-        var order = await _orderRepository.GetListAsync();
+        IReadOnlyList<Models.EFModels.Order> order = await _orderRepository.GetListAsync();
 
         var response = _mapper.Map<List<OrderDto>>(order);
 
