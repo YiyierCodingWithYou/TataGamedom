@@ -15,6 +15,7 @@ using TataGamedomWebAPI.Models.DTOs.Members;
 using TataGamedomWebAPI.Models.DTOs.News;
 using TataGamedomWebAPI.Infrastructure;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Cors;
 
 namespace TataGamedomWebAPI.Controllers
 {
@@ -30,6 +31,7 @@ namespace TataGamedomWebAPI.Controllers
         }
 
 		// POST: api/Members/Login
+		[EnableCors("AllowAny")]
 		[HttpPost("Login")]
 		public string Login(LoginDTO dto)
 		{
@@ -57,9 +59,17 @@ namespace TataGamedomWebAPI.Controllers
                     new Claim("Membersid",user.Id.ToString())//抓ID欄位
                 };
 
+
+				//var authenticationProperties = new AuthenticationProperties();
+				//authenticationProperties.IsPersistent = true;
+				//authenticationProperties.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30);
+				//authenticationProperties.AllowRefresh = true;
+
 				var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 				HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-                return "已成功登入";
+				//HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authenticationProperties);
+
+				return "已成功登入";
 
             }
 
