@@ -20,9 +20,11 @@ using System.Globalization;
 using Microsoft.Extensions.Hosting;
 using TataGamedomWebAPI.Models.Dtos;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Cors;
 
 namespace TataGamedomWebAPI.Controllers
 {
+	[EnableCors("AllowAny")]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class ProductsController : ControllerBase
@@ -226,5 +228,17 @@ namespace TataGamedomWebAPI.Controllers
 
 			return Ok("發表評論成功");
 		}
+
+		[HttpGet("Classification")]
+		public async Task<IEnumerable<GameClassificationsCode>> GetClassification()
+		{
+			if (_context.GameClassificationsCodes == null)
+			{
+				return null;
+			}
+			var classification = _context.GameClassificationsCodes.AsQueryable();
+			return classification;
+		}
+
 	}
 }
