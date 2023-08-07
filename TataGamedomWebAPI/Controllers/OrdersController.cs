@@ -6,6 +6,7 @@ using TataGamedomWebAPI.Application.Features.Order.Commands.DeleteOrder;
 using TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder;
 using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderDetails;
 using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderList;
+using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderListByAccount;
 
 namespace TataGamedomWebAPI.Controllers;
 
@@ -34,6 +35,14 @@ public class OrdersController : ControllerBase
         var order = await _mediator.Send(new GetOrderDetailQuery(id));
         return Ok(order);
     }
+
+    [HttpGet("user/{account}")]
+    public async Task<ActionResult<List<OrderWithDeatilsDto>>> Get(string account)
+    {
+        var orderList = await _mediator.Send(new GetOrderListByAccountQuery(account));
+        return Ok(orderList);
+    }
+
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]

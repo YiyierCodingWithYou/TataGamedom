@@ -1,7 +1,7 @@
 <template>
-    <ProductList />
+    <eCommerceIndex />
   </template>
   
   <script setup>
-    import ProductList from '@/components/eCommerce/Products.vue'
+    import eCommerceIndex from '@/components/eCommerce/Products.vue'
   </script>
