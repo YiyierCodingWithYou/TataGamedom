@@ -9,6 +9,7 @@ using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderList;
 using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateOrderItem;
 using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemDetails;
 using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemList;
+using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemListByAccount;
 using TataGamedomWebAPI.Application.Features.Product.Queries.GetProductTopFiveSalesList;
 
 namespace TataGamedomWebAPI.Controllers;
@@ -37,6 +38,13 @@ public class OrderItemsController : ControllerBase
     {
         var products = await _mediator.Send(new GetProductTopFiveSalesListQuery());
         return Ok(products);
+    }
+
+    [HttpGet("order/{orderId}")]
+    public async Task<ActionResult<List<OrderItemWithDetailsDto>>> GetListByAccountAndOrderIdWithDetails(int orderId) 
+    {
+        var orderItemList = await _mediator.Send(new GetOrderItemListByOrderIdQuery(orderId));
+        return Ok(orderItemList);
     }
 
     [HttpGet("{id}")]

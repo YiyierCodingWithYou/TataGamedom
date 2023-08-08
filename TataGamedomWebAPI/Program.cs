@@ -5,7 +5,7 @@ using TataGamedomWebAPI.Infrastructure;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Infrastructure.TaTaGamedom_Persistence;
 using Microsoft.AspNetCore.Authentication.Cookies; // 引入 CookieAuthenticationDefaults 命名空間
-
+using Microsoft.Extensions.FileProviders;
 
 namespace TataGamedomWebAPI
 {
@@ -41,7 +41,10 @@ namespace TataGamedomWebAPI
 			{
 				// 未登入時會自動導到這個網址
 				options.LoginPath = new PathString("/api/Login/NoLogin");
-			});
+                //options.ExpireTimeSpan = TimeSpan.FromDays(1);
+                //options.Cookie.Domain = "http://localhost:3000";
+                //options.Cookie.HttpOnly = true;
+            });
 
 
             builder.Services.AddEndpointsApiExplorer();
@@ -63,6 +66,14 @@ namespace TataGamedomWebAPI
 			app.UseRouting();
 
             app.UseCors();
+
+            //Files
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "Files")),
+                RequestPath = "/Files"
+            });
 
             // 設定身份驗證
             app.UseAuthentication();

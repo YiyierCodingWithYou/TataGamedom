@@ -13,6 +13,9 @@ using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.EFModels;
 using TataGamedomWebAPI.Models.DTOs.Members;
 using TataGamedomWebAPI.Models.DTOs.News;
+using TataGamedomWebAPI.Infrastructure;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Cors;
 
 namespace TataGamedomWebAPI.Controllers
 {
@@ -28,12 +31,15 @@ namespace TataGamedomWebAPI.Controllers
         }
 
 		// POST: api/Members/Login
+		[EnableCors("AllowAny")]
 		[HttpPost("Login")]
 		public string Login(LoginDTO dto)
 		{
+            var hashOrigPwd = HashUtility.ToSHA256(dto.Password, "!@#$$DGTEGYT");
+
 			var user = (from u in _context.Members
 						where u.Account == dto.Account
-						&& u.Password == dto.Password
+						&& u.Password == hashOrigPwd
 						select u).SingleOrDefault();
 
 			if (user == null)
@@ -42,18 +48,32 @@ namespace TataGamedomWebAPI.Controllers
 			}
 			else
 			{
+				//string memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+				//string memberName = HttpContext.User.FindFirstValue("FullName");
 				var claims = new List<Claim>
 				{
-					new Claim(ClaimTypes.Name, user.Account),
-					new Claim("FullName", user.Name),
+                    //這邊可以自定義
+					//new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), //抓ID
+					new Claim(ClaimTypes.Name, user.Account),//抓帳號
+					new Claim("MembersName", user.Name),//抓名字
+                    new Claim("Membersid",user.Id.ToString())//抓ID欄位
                 };
+
+
+				//var authenticationProperties = new AuthenticationProperties();
+				//authenticationProperties.IsPersistent = true;
+				//authenticationProperties.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30);
+				//authenticationProperties.AllowRefresh = true;
 
 				var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 				HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-				return "已成功登入";
-			}
+				//HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authenticationProperties);
 
-		}
+				return "已成功登入";
+
+            }
+
+        }
 
 		[Authorize]
 		[HttpDelete("Logout")]
@@ -176,13 +196,24 @@ namespace TataGamedomWebAPI.Controllers
 				return BadRequest("此帳號已經有人使用過囉");
 			}
 
+			if (registerDto.Password != registerDto.CheckPassword)
+			{
+				return BadRequest("兩次輸入的密碼不相符，請重新確認。");
+			}
+
+			var hashOrigPwd = HashUtility.ToSHA256(registerDto.Password, "!@#$$DGTEGYT");
+			//var hashCheckPwd = HashUtility.ToSHA256(registerDto.CheckPassword, "!@#$$DGTEGYT");
+
+            //驗證用不寫入SQL
+			registerDto.CheckPassword = null;
+
 			Member member = new Member
 			{ 
                 Id = registerDto.Id,
                 Name = registerDto.Name,
                 Account = registerDto.Account,
-                Password = registerDto.Password,
-                Birthday = registerDto.Birthday,
+                Password = hashOrigPwd,
+			    Birthday = registerDto.Birthday,
                 Email = registerDto.Email,
                 Phone = registerDto.Phone,
                 RegistrationDate = DateTime.Now,
@@ -190,8 +221,9 @@ namespace TataGamedomWebAPI.Controllers
                 IsConfirmed = false,
                 ConfirmCode = registerDto.ConfirmCode,
                 ActiveFlag = true
-            };
-            await _context.Members.AddAsync(member);
+			};
+
+			await _context.Members.AddAsync(member);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetMember", new { id = member.Id }, member);
