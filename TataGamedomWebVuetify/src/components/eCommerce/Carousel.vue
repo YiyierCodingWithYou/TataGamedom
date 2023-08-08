@@ -25,7 +25,6 @@ const loadTopFiveCover = async () => {
   const response = await fetch(`${API}OrderItems/ProductTopFiveSales`);
   const datas = await response.json();
   topFive.value = datas;
-  console.log(topFive.value);
 };
 onMounted(() => {
   loadTopFiveCover();
