@@ -21,15 +21,27 @@ namespace TataGamedomWebAPI
             .LogTo(Console.WriteLine, LogLevel.Information));
 
             //CORS
-            string MyAllowOrigins = "AllowAny";
+            string MyAllowCookies = "AllowCookie";
             builder.Services.AddCors(options => {
                 options.AddPolicy(
-                    name: MyAllowOrigins, policy => policy.WithOrigins("*").WithHeaders("*").WithMethods("*")
+                    //name: MyAllowOrigins, policy => policy.WithOrigins("*").WithHeaders("*").WithMethods("*")
+                    name: MyAllowCookies,
+        policy => policy.WithOrigins("https://localhost:3000")
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .AllowCredentials()
                 );
             });
 
-            //Repository, Tools, Third-Party Service
-            builder.Services.AddApplicationServices();
+			string MyAllowOrigins = "AllowAny";
+			builder.Services.AddCors(options => {
+				options.AddPolicy(
+					name: MyAllowOrigins, policy => policy.WithOrigins("*").WithHeaders("*").WithMethods("*")
+				);
+			});
+
+			//Repository, Tools, Third-Party Service
+			builder.Services.AddApplicationServices();
             builder.Services.AddPersistenceServices(builder.Configuration);
             builder.Services.AddInfrastructureServices(builder.Configuration);
 
@@ -41,10 +53,12 @@ namespace TataGamedomWebAPI
 			{
 				// 未登入時會自動導到這個網址
 				options.LoginPath = new PathString("/api/Login/NoLogin");
-                //options.ExpireTimeSpan = TimeSpan.FromDays(1);
-                //options.Cookie.Domain = "http://localhost:3000";
-                //options.Cookie.HttpOnly = true;
-            });
+				//options.ExpireTimeSpan = TimeSpan.FromDays(1);
+				//options.Cookie.Domain = "http://localhost:3000";
+				//options.Cookie.HttpOnly = true;
+				options.Cookie.SameSite = SameSiteMode.None;
+				options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+			});
 
 
             builder.Services.AddEndpointsApiExplorer();
