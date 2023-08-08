@@ -2,6 +2,8 @@
 
 public class OrderItemWithDetailsDto
 {
+    public int Id { get; set; }
+
     public string GameGameCoverImg { get; set; } = string.Empty;
 
     public string GameChiName { get; set; } = string.Empty;
