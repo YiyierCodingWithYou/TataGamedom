@@ -25,7 +25,7 @@ public class GetOrderItemListByOrderIdQueryHandler : IRequestHandler<GetOrderIte
         {
             string template = string.Empty;
             template = orderItem.GameGameCoverImg;
-            orderItem.GameGameCoverImg = "https://localhost:7081/Files/GameImg/" + template;
+            orderItem.GameGameCoverImg = "https://localhost:7081/Files/Uploads/" + template;
         }
 
         _logger.LogInformation("OrderItemList was retrived succcessfully");

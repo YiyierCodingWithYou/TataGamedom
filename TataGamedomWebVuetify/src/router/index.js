@@ -71,11 +71,16 @@ const routes = [
         path: '/Orders/:id',
         name: 'OrderDetails',
         component: OrderDetails,
-        children: [
-          {
-            path: 'OrderItemReturn', name: 'OrderItemReturn', component: OrderItemReturn
-          }
-        ]
+        // children: [
+        //   {
+        //     path: 'OrderItemReturn', name: 'OrderItemReturn', component: OrderItemReturn
+        //   }
+        // ]
+      },
+      {
+        path: '/OrderItemReturn:id',  //id
+        name: 'OrderItemReturn',
+        component: OrderItemReturn
       },
       {
         path: '/SupportHub',

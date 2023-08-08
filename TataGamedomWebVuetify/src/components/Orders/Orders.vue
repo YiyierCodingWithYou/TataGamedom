@@ -3,7 +3,7 @@
     <p v-else-if="!isLoading && error">{{ error }}</p>
     <p v-else-if="!isLoading && (!results || results.length === 0)">無訂單紀錄</p>
 
-    <v-table v-else fixed-header height="500">
+    <v-table v-else fixed-header density="comfortable" hover="true" height="800" >
         <thead>
             <tr>
                 <th class="text-left">
@@ -90,4 +90,5 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

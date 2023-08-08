@@ -1,8 +1,7 @@
 <template>
-  Test
   <v-sheet width="300" class="mx-auto">
     <form @submit.prevent="submit">
-      <v-text-field v-model="GameName" disabled label="遊戲"></v-text-field>
+      <v-text-field v-model="GameName" disabled :label="GameName"></v-text-field>
 
       <v-textarea clearable clear-icon="mdi-close-circle" label="退貨理由" v-model="Reason"></v-textarea>
 
@@ -16,8 +15,8 @@
 export default {
   data() {
     return {
-      GameName: '',
-      orderItemId: null,
+      GameName: this.$route.params.gameChiName,
+      orderItemId: this.$route.params.id,
       Reason: '',
       invalidInput: false
     }

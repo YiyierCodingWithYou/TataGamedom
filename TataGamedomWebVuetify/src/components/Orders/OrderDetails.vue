@@ -1,7 +1,6 @@
 <template>
-  <div class="d-flex align-center flex-column">
-    <v-card v-for="orderItem in results" :key="orderItem.id" class="mx-auto" max-width="344" variant="outlined">
-      <v-img :src="orderItem.gameGameCoverImg" height="200px" cover></v-img>
+    <v-card v-for="orderItem in results" :key="orderItem.id" class="mx-auto mb-3 overflow-auto" max-width="500" variant="outlined">
+      <v-img :src="orderItem.gameGameCoverImg" height="200px" ></v-img>
       <v-card-title>
         {{ orderItem.gameChiName }}
       </v-card-title>
@@ -17,17 +16,17 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="show = !show">
+        <v-btn :icon="shownItems[orderItem.id] ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="toggleShow(orderItem.id)">
         </v-btn>
       </v-card-actions>
 
       <v-expand-transition>
-        <div v-show="show">
+        <div v-if="shownItems[orderItem.id]">
           <v-divider></v-divider>
 
-          <v-btn color="orange-lighten-2" variant="text">
-            <router-view></router-view>
-            <router-link to="/Orders/id/OrderItemReturn">申請退貨</router-link>
+          <v-btn color="orange-lighten-2" variant="text" 
+          @click="navigateToOrderItemReturn(orderItem)">
+            申請退貨
           </v-btn>
 
           <v-btn color="orange-lighten-2" variant="text">
@@ -36,7 +35,6 @@
         </div>
       </v-expand-transition>
     </v-card>
-  </div>
 </template>
 
 <script>
@@ -44,10 +42,17 @@ export default {
   data() {
     return {
       results: [],
-      show: false
+      shownItems: {}
     }
   },
   methods: {
+    toggleShow(orderItemId) {
+      if (this.shownItems[orderItemId] === undefined) {
+        this.shownItems[orderItemId] = true;
+    } else {
+        this.shownItems[orderItemId] = !this.shownItems[orderItemId];
+    }
+    },
     loadData() {
       const orderId = this.$route.params.id;
 
@@ -63,6 +68,7 @@ export default {
           for (const id in data) {
             results.push({
               id: id,
+              orderItemId: data[id].id,
               gameChiName: data[id].gameChiName,
               gameGameCoverImg: data[id].gameGameCoverImg,
               discountedPrice: data[id].discountedPrice,
@@ -70,6 +76,7 @@ export default {
             });
           }
           this.results = results;
+          this.shownItems[id] = false;
         })
         .catch((error) => {
           this.isLoading = false;
@@ -77,6 +84,15 @@ export default {
           this.error = 'Failed to fetch data - please try again later.';
         });
     },
+    navigateToOrderItemReturn(orderItem) {
+            this.$router.push({ 
+              name: 'OrderItemReturn', 
+              params: {
+                 id: orderItem.orderItemId,
+                 gameChiName: orderItem.gameChiName
+                }
+            })
+        }
 
   },
   mounted() {
