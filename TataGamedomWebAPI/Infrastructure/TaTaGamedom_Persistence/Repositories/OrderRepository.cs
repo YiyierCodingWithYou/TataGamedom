@@ -24,6 +24,7 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
             .Where(o => o.Member.Account == account)
             .Select(o => new OrderWithDeatilsDto
             {
+                Id = o.Id,
                 GameChiName = o.OrderItems.Select(oi => oi.Product.Game!.ChiName).ToList(),
                 ProductIsVirtual = o.OrderItems.Select(oi => oi.Product.IsVirtual).ToList(),
                 CreatedAt = o.CreatedAt,
