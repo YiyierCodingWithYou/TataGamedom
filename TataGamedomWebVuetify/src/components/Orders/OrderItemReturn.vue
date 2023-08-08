@@ -2,7 +2,6 @@
   <v-sheet width="300" class="mx-auto">
     <form @submit.prevent="submit">
       <v-text-field v-model="GameName" disabled :label="GameName"></v-text-field>
-
       <v-textarea clearable clear-icon="mdi-close-circle" label="退貨理由" v-model="Reason"></v-textarea>
 
       <v-btn class="me-4" type="submit">
@@ -19,8 +18,10 @@ export default {
       orderItemId: this.$route.params.id,
       Reason: '',
       invalidInput: false
+
     }
   },
+
   methods: {
     submitSurvey() {
       if (this.orderItemId === null) {

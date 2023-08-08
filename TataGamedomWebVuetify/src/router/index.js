@@ -78,7 +78,7 @@ const routes = [
         // ]
       },
       {
-        path: '/OrderItemReturn:id',  //id
+        path: '/OrderItemReturn/:id/:gameChiName',  //id
         name: 'OrderItemReturn',
         component: OrderItemReturn
       },
