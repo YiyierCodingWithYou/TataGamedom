@@ -1,7 +1,5 @@
 <template>
   <div class="d-flex align-center flex-column">
-
-
     <v-card v-for="orderItem in results" :key="orderItem.id" class="mx-auto" max-width="344" variant="outlined">
       <v-img :src="orderItem.gameGameCoverImg" height="200px" cover></v-img>
       <v-card-title>

@@ -37,16 +37,6 @@
   
 <script>
 export default {
-    //
-    computed: {
-        isOrder() {
-            return this.$store.getters['Orders/isOrder']
-        },
-        filter() {
-            return this.$store.getters['Orders/orders']
-        }
-    },
-    //
     data() {
         return {
             results: []
