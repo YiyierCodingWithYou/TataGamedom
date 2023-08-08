@@ -38,7 +38,7 @@ namespace TataGamedomWebAPI.Controllers
 
 		// GET: api/Products
 		[HttpGet]
-		public async Task<ActionResult<ProductsIndexDTO>> GetProducts(string? keyword, string? classification, string? sortBy, bool? isAscending, int page = 1, int pageSize = 9)
+		public async Task<ActionResult<ProductsIndexDTO>> GetProducts(string? keyword, string? platform, string? classification, string? sortBy, bool? isAscending, int page = 1, int pageSize = 9)
 		{
 			if (_context.Products == null)
 			{
@@ -52,10 +52,10 @@ namespace TataGamedomWebAPI.Controllers
 				.ThenInclude(g => g.GameClassificationGames)
 				.ThenInclude(gc => gc.GameClassification)
 				.Include(p => p.GamePlatform)
-				.Where(p => (p.Game.ChiName.Contains(keyword ?? string.Empty) ||
-					 p.Game.EngName.Contains(keyword ?? string.Empty) ||
-					 p.GamePlatform.Name.Contains(keyword ?? string.Empty)) &&
-					 p.Game.GameClassificationGames.Any(c => c.GameClassification.Name.Contains(classification ?? string.Empty)))
+				.Where(p =>
+		(string.IsNullOrEmpty(keyword) || p.Game.ChiName.Contains(keyword) || p.Game.EngName.Contains(keyword)) &&
+		(string.IsNullOrEmpty(platform) || p.GamePlatform.Name.Contains(platform)) &&
+		(string.IsNullOrEmpty(classification) || p.Game.GameClassificationGames.Any(c => c.GameClassification.Name.Contains(classification))))
 				.Select(p => new ProductsDTO
 				{
 					Id = p.Id,
@@ -204,7 +204,7 @@ namespace TataGamedomWebAPI.Controllers
 		// POST: api/Products
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPost("{id}")]
-		public async Task<ActionResult<GameComment>> PostComment(int productId,CommentsCreateDTO commentsCreateDTO)
+		public async Task<ActionResult<GameComment>> PostComment(int productId, CommentsCreateDTO commentsCreateDTO)
 		{
 			if (_context.Products == null)
 			{
@@ -212,8 +212,8 @@ namespace TataGamedomWebAPI.Controllers
 			}
 			string? userName = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == userName);
-			var product = await _context.Products.FirstOrDefaultAsync(p=>p.Id== productId);
-			
+			var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
+
 			GameComment comments = new GameComment
 			{
 				GameId = product.GameId ?? 0,
