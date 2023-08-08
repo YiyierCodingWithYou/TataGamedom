@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "target": "esnext",
+      "module": "esnext",
+      "moduleResolution": "node",
+      "jsx": "preserve",
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "strict": true,
+      "lib": ["esnext", "dom"],
+      "types": ["vite/client", "vue"],
+      "baseUrl": ".",                // 用於解析非相對模塊名稱的基礎目錄
+      "paths": {
+        "@/*": ["src/*"]             // 路徑映射，此例將 @ 映射到 src 目錄
+      }
+    },
+    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/types/**/*.d.ts"]
+  }
+  

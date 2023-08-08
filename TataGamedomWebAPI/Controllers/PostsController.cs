@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using TataGamedomWebAPI.Infrastructure;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.Dtos;
@@ -18,7 +20,7 @@ namespace TataGamedomWebAPI.Controllers
 {
 
 
-    [EnableCors("AllowAny")]
+	[EnableCors("AllowAny")]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class PostsController : ControllerBase
@@ -29,15 +31,62 @@ namespace TataGamedomWebAPI.Controllers
 		public PostsController(AppDbContext context)
 		{
 			_context = context;
-			_simpleHelper = new SimpleHelper(_context); 
+			_simpleHelper = new SimpleHelper(_context);
+		}
+
+		// GET: api/Posts
+		[HttpGet("{postId}")]
+		public async Task<PostReadDto> GetPosts(int? postId)
+		{
+			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			//int? memberId = _simpleHelper.memberIdByAccount(memberAccount)??null;
+			int? memberId = 3; // 王五 wangwu 測試用
+
+			PostReadDto postDto = await _context.Posts.Where(p => p.Id == postId).Select(post => 
+			new PostReadDto
+			{
+				PostId = post.Id,
+				Title = post.Title,
+				PostContent = post.Content,
+				DateTime = post.Datetime,
+				BoardId = post.BoardId ?? 0,
+				BoardName = post.Board.Name,
+				MemberAccount = post.Member.Account,
+				MemberId = post.Member.Id,
+				MemberName = post.Member.Name,
+				VoteUp = post.PostUpDownVotes.Count(v => v.PostId == post.Id && v.Type == true),
+				VoteDown = post.PostUpDownVotes.Count(v => v.PostId == post.Id && v.Type == false),
+				CommentCount = post.PostComments.Count(c => c.PostId == post.Id && c.ActiveFlag == true),
+				IsEdited = (post.LastEditDatetime != post.Datetime),
+				LastEditDatetime = post.LastEditDatetime
+			}).FirstOrDefaultAsync();
+
+			if(postDto == null)
+			{
+				return null;
+			}	
+			
+			postDto.Comments = GetPostsComments(_context, postDto.PostId, memberId);
+
+			if (memberId != null)
+			{
+					postDto.IsAuthor = _simpleHelper.PostIsAuthor(postDto.PostId, memberId ?? 0);
+					postDto.IsMod = _simpleHelper.IsBoardMod(postDto.BoardId, memberId ?? 0);
+					postDto.Voted = _simpleHelper.IsPostVoted(postDto.PostId, memberId ?? 0).voteType;
+			}
+
+			return postDto;
 		}
 
 		// GET: api/Posts
 		[HttpGet]
 		public async Task<IEnumerable<PostReadDto>> GetPosts(string? keyword, int? postId, string? MemberAccount, string? BoardName, int page = 1)
 		{
+			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			//int? memberId = _simpleHelper.memberIdByAccount(memberAccount)??null;
+			int? memberId = 3; // 王五 wangwu 測試用
 
-			int pageSize = 3;
+			int pageSize = 5;
 			int skipCount = (page - 1) * pageSize;
 
 			var query = _context.Posts.AsQueryable();
@@ -79,9 +128,10 @@ namespace TataGamedomWebAPI.Controllers
 				Title = p.Title,
 				PostContent = p.Content,
 				DateTime = p.Datetime,
-				BoardId = p.BoardId??0,
-				BoardName = p.Board.Name??string.Empty,
+				BoardId = p.BoardId ?? 0,
+				BoardName = p.Board.Name ?? string.Empty,
 				MemberAccount = p.Member.Account,
+				MemberId = p.Member.Id,
 				MemberName = p.Member.Name,
 				VoteUp = p.PostUpDownVotes.Count(v => v.PostId == p.Id && v.Type == true),
 				VoteDown = p.PostUpDownVotes.Count(v => v.PostId == p.Id && v.Type == false),
@@ -93,16 +143,26 @@ namespace TataGamedomWebAPI.Controllers
 
 			foreach (var post in posts)
 			{
-				post.Comments = GetPostsComments(_context, post.PostId);
+				post.Comments = GetPostsComments(_context, post.PostId, memberId);
+			}
+
+			if (memberId != null)
+			{
+				foreach (var post in posts)
+				{
+					post.IsAuthor = _simpleHelper.PostIsAuthor(post.PostId, memberId ?? 0);
+					post.IsMod = _simpleHelper.IsBoardMod(post.BoardId, memberId ?? 0);
+					post.Voted = _simpleHelper.IsPostVoted(post.PostId, memberId ?? 0).voteType;
+				}
 			}
 
 			return posts;
 		}
 
-		private IEnumerable<CommentReadDto> GetPostsComments(AppDbContext context, int postId)
+		private IEnumerable<CommentReadDto> GetPostsComments(AppDbContext context, int postId, int? memberId)
 		{
 			var query = context.PostComments.AsQueryable();
-			query = query.Where(p => p.PostId == postId && p.ActiveFlag==true);
+			query = query.Where(p => p.PostId == postId && p.ActiveFlag == true);
 			var comments = query.Select(c => new CommentReadDto
 			{
 				CommentId = c.Id,
@@ -112,8 +172,18 @@ namespace TataGamedomWebAPI.Controllers
 				MemberName = c.Member.Name,
 				VoteUp = c.PostCommentUpDownVotes.Count(v => v.PostCommentId == c.Id && v.Type == true),
 				VoteDown = c.PostCommentUpDownVotes.Count(v => v.PostCommentId == c.Id && v.Type == false),
+				PostId = c.PostId,
 			}).ToList();
 
+			if (memberId != null)
+			{
+				foreach (var comment in comments)
+				{
+					comment.IsAuthor = _simpleHelper.PostIsAuthor(comment.CommentId, memberId ?? 0);
+					comment.IsMod = _simpleHelper.IsBoardMod(comment.CommentId, memberId ?? 0);
+					comment.Voted = _simpleHelper.IsCommentVoted(comment.CommentId, memberId ?? 0).voteType;
+				}
+			}
 			return comments;
 		}
 
@@ -191,7 +261,7 @@ namespace TataGamedomWebAPI.Controllers
 				return ApiResult.Fail("不存在該文章");
 			}
 
-			if(IsVoted.IsVoted)
+			if (IsVoted.IsVoted)
 			{
 				PostUpDownVote vote = _context.PostUpDownVotes.Find(IsVoted.voteId);
 				try
@@ -211,7 +281,7 @@ namespace TataGamedomWebAPI.Controllers
 				return ApiResult.Fail("不支援的投票類型");
 			}
 
-			PostUpDownVote newVote= new PostUpDownVote
+			PostUpDownVote newVote = new PostUpDownVote
 			{
 				Id = 0,
 				MemberId = memberId,
@@ -222,13 +292,14 @@ namespace TataGamedomWebAPI.Controllers
 
 			try
 			{
-					_context.PostUpDownVotes.Add(newVote);
-					await _context.SaveChangesAsync();
-				}catch (DbUpdateConcurrencyException ex)
+				_context.PostUpDownVotes.Add(newVote);
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException ex)
 			{
-				return ApiResult.Fail("Vote失敗"+ex);
+				return ApiResult.Fail("Vote失敗" + ex);
 
-				}
+			}
 
 			return ApiResult.Success("Vote成功");
 		}
@@ -242,7 +313,7 @@ namespace TataGamedomWebAPI.Controllers
 			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
 			int memberId = 3; // 王五 wangwu 測試用
 			if (memberId == 0)
-			{ 
+			{
 				return ApiResult.Fail("沒這個會員");
 			}
 
@@ -263,10 +334,11 @@ namespace TataGamedomWebAPI.Controllers
 			//}
 			try
 			{
-			_context.Posts.Add(newPost);
-			await _context.SaveChangesAsync();
+				_context.Posts.Add(newPost);
+				await _context.SaveChangesAsync();
 
-			}catch (DbUpdateConcurrencyException)
+			}
+			catch (DbUpdateConcurrencyException)
 			{
 				return ApiResult.Fail("發布失敗");
 			}
@@ -290,7 +362,7 @@ namespace TataGamedomWebAPI.Controllers
 				return ApiResult.Fail("找不到這篇Psot,刪除失敗");
 			}
 
-			if ( memberId != existingEntity.MemberId &&  _simpleHelper.IsBoadMod(existingEntity.BoardId??0 , memberId) ) 
+			if (memberId != existingEntity.MemberId && _simpleHelper.IsBoardMod(existingEntity.BoardId ?? 0, memberId))
 			{
 				return ApiResult.Fail("刪除失敗，本人或板手才可以刪除");
 			}
@@ -301,7 +373,8 @@ namespace TataGamedomWebAPI.Controllers
 				existingEntity.DeleteMemberId = memberId;
 				existingEntity.ActiveFlag = false;
 				await _context.SaveChangesAsync();
-			}catch (DbUpdateConcurrencyException)
+			}
+			catch (DbUpdateConcurrencyException)
 			{
 				return ApiResult.Fail("刪除失敗");
 			}

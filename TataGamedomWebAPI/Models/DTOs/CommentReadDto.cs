@@ -9,5 +9,9 @@
 		public string MemberName { get; set; }
         public int VoteUp { get; set; }
 		public int VoteDown { get; set; }
+		public bool IsAuthor { get; set; }
+		public bool IsMod { get; set; }
+		public string? Voted { get; set; }
+		public int PostId { get; set; }
 	}
 }
