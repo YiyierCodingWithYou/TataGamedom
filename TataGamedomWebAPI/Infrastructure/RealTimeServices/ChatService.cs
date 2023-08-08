@@ -30,21 +30,9 @@ public class ChatService : IChatServices
             BackendMember = backendMember,
         };
 
-        
+        await _dbContext.AddAsync(message);
+        await _dbContext.SaveChangesAsync();
+        await _hubContext.Clients.All.SendAsync("ReceiveMessage", message);     
     }
 }
 
-public class ChatHub : Hub
-{
-
-}
-
-
-public class ChatMessage
-{
-    public int Id { get; set; }
-    public string Content { get; set; } = string.Empty;
-    public DateTime Timestamp { get; set; }
-    public Member? Member { get; set; }
-    public BackendMember? BackendMember  { get; set; }
-}

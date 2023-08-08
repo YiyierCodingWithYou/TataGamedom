@@ -855,7 +855,6 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.ShipmentStatus).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.ShipmentStatusId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Orders__Shipment__681373AD");
         });
 
@@ -941,6 +940,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Datetime).HasColumnType("datetime");
             entity.Property(e => e.DeleteDatetime).HasColumnType("datetime");
             entity.Property(e => e.LastEditDatetime).HasColumnType("datetime");
+            entity.Property(e => e.Title).HasMaxLength(50);
 
             entity.HasOne(d => d.Board).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.BoardId)

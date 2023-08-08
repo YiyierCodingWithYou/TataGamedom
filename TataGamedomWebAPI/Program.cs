@@ -6,6 +6,7 @@ using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Infrastructure.TaTaGamedom_Persistence;
 using Microsoft.AspNetCore.Authentication.Cookies; // 引入 CookieAuthenticationDefaults 命名空間
 using Microsoft.Extensions.FileProviders;
+using TataGamedomWebAPI.Infrastructure.RealTimeServices;
 
 namespace TataGamedomWebAPI
 {
@@ -80,6 +81,8 @@ namespace TataGamedomWebAPI
 
 			app.UseAuthorization();
 
+            //SignalR
+            app.MapHub<ChatHub>("/RealTimeServices/ChatHub");
 
             app.MapControllers();
 
