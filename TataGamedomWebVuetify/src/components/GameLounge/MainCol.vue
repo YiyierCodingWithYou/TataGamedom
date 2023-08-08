@@ -2,12 +2,6 @@
   <v-col cols="12" sm="8">
     <v-sheet min-height="70vh" rounded="lg">
       <v-container>
-        <v-text-field
-          label="page"
-          variant="outlined"
-          v-model="page"
-          @change="loadPosts"
-        ></v-text-field>
         <NewPostBtn></NewPostBtn>
         <v-col v-for="post in posts" :key="post.postId">
           <PostCard :post="post"></PostCard>
@@ -38,23 +32,29 @@ import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css"; //required if you're not going to override default slots
 
 interface Comment {
-  comment: string;
-  userName: string;
-  userAccount: string;
-  time: string;
+  commentContent: string;
+  dateTime: string;
+  memberAccount: string;
+  memberName: string;
+  voteUp: number;
+  voteDown: number;
+  voted: string;
 }
 
 interface Post {
   postId: string;
   title: string;
-  content: string;
-  userName: string;
-  userAccount: string;
-  time: string;
-  like: number;
-  unlike: number;
-  commentNumber: number;
-  commentList: Comment[];
+  postContent: string;
+  memberId: number;
+  memberAccount: string;
+  memberName: string;
+  voteUp: number;
+  voteDown: number;
+  commentCount: number;
+  isEdited: boolean;
+  isAuthor: boolean;
+  voted: string;
+  comments: Comment[];
 }
 
 const page = ref<number>(1);

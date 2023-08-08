@@ -9,32 +9,34 @@
     </v-card-item>
     <v-card-text v-html="post.postContent"> </v-card-text>
     <v-card-actions>
-      <v-btn :color="isVoted ? 'red' : 'grey'"
+      <v-btn
+        @click="vote('post', post.postId, 'Up', post.postId)"
+        :color="post.voted === 'Up' ? 'red' : 'blue-grey-lighten-4'"
         >❤️ <span>{{ post.voteUp }}</span>
       </v-btn>
-      <v-btn :color="isVoted ? 'black' : 'grey'"
+      <v-btn
+        @click="vote('post', post.postId, 'Down', post.postId)"
+        :color="post.voted === 'Down' ? 'black' : 'blue-grey-lighten-4'"
         >💀<span>{{ post.voteDown }}</span></v-btn
       >
       <v-btn v-show="false">修改</v-btn>
       <v-btn v-show="false">刪除</v-btn>
-      <v-btn @click="showComments">展開回應 ({{ post.commentCount }}) </v-btn>
-      <v-btn @click="showCommentsInput">發表回應</v-btn>
+      <v-btn @click="showComments">展開 ({{ post.commentCount }}) </v-btn>
+      <v-btn @click="showCommentsInput">回應</v-btn>
       <span class="ms-auto text-caption">{{ post.lastEditDatetime }}</span>
       <span class="text-caption" v-show="post.isEdited">已修改</span>
     </v-card-actions>
-    <v-card-action>
-      <v-text-field
-        v-show="showCommentInputBool"
-        clearable
-        label="回應"
-        v-model="message"
-        append-inner-icon="mdi-message-processing"
-        @click:append-inner="sendMessage"
-      ></v-text-field>
-    </v-card-action>
+    <v-text-field
+      v-show="showCommentInputBool"
+      clearable
+      label="回應"
+      v-model="message"
+      append-inner-icon="mdi-message-processing"
+      @click:append-inner="newComment(post.postId)"
+    ></v-text-field>
     <v-card
       v-for="(comment, index) in comments"
-      :key="index"
+      :key="comment.commentId"
       class="comment"
       v-show="showCommentsBool"
       variant="outlined"
@@ -45,10 +47,14 @@
       </v-card-item>
       <v-card-text> {{ comment.commentContent }} </v-card-text>
       <v-card-actions>
-        <v-btn :color="isVoted ? 'red' : 'grey'"
+        <v-btn
+          @click="vote('comment', comment.commentId, 'Up', comment.postId)"
+          :color="comment.voted === 'Up' ? 'red' : 'blue-grey-lighten-4'"
           >❤️<span>{{ comment.voteUp }}</span>
         </v-btn>
-        <v-btn :color="isVoted ? 'black' : 'grey'"
+        <v-btn
+          @click="vote('comment', comment.commentId, 'Down', comment.postId)"
+          :color="comment.voted === 'Down' ? 'black' : 'blue-grey-lighten-4'"
           >💀<span>{{ comment.voteDown }}</span></v-btn
         >
         <span class="ms-auto text-caption">{{ comment.dateTime }}</span>
@@ -57,26 +63,108 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, watchEffect } from "vue";
+
+interface Comment {
+  commentContent: string;
+  dateTime: string;
+  memberAccount: string;
+  memberName: string;
+  voteUp: number;
+  voteDown: number;
+  voted: string;
+  postId: number;
+}
+
+interface Post {
+  postId: string;
+  title: string;
+  postContent: string;
+  memberId: number;
+  memberAccount: string;
+  memberName: string;
+  voteUp: number;
+  voteDown: number;
+  commentCount: number;
+  isEdited: boolean;
+  isAuthor: boolean;
+  voted: string;
+  comments: Comment[];
+}
+
+const baseAddress = "https://localhost:7081/api/";
 const message = ref("");
 const props = defineProps(["post"]);
-const post = computed(() => props.post);
-const comments = computed(() => post.value.comments || []);
-const isVoted = ref(true);
+const post = ref<Post>(props.post);
+const comments = ref<Comment[]>([]);
+
+watchEffect(() => {
+  comments.value =
+    post.value.comments?.map((comment) => {
+      return comment;
+    }) || [];
+});
+
+const isVoted = ref<boolean>();
 let showCommentsBool = ref(false);
 let showCommentInputBool = ref(false);
-const sendMessage = () => {
-  alert(message.value);
-};
 const showComments = () => {
   showCommentsBool.value = !showCommentsBool.value;
 };
 const showCommentsInput = () => {
   showCommentInputBool.value = !showCommentInputBool.value;
 };
+const vote = async (
+  type: string,
+  voteCommentId: number,
+  upOrDown: string,
+  postId: number
+) => {
+  try {
+    const response = await fetch(
+      `${baseAddress}${
+        type === "post" ? "Posts" : "PostComments"
+      }/${voteCommentId}/Vote/${upOrDown}`,
+      {
+        method: "PUT",
+      }
+    );
+    let result = await response.json();
+    await reloadPost(postId);
+  } catch {
+    alert(":<");
+  }
+};
+const reloadPost = async (id: number): Promise<void> => {
+  try {
+    const response = await fetch(`${baseAddress}Posts/${id}`);
+    const data: Post = await response.json();
+    post.value = data;
+  } catch (error) {
+    console.error("Error loading posts:", error);
+  }
+};
 
-const vote = (type: string, upOrDown: string): void => {
-  alert("voted!");
+const newComment = async (postId: number) => {
+  if (message.value.trim() != "") {
+    try {
+      const response = await fetch(`${baseAddress}PostComments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId: postId,
+          content: message.value,
+        }),
+      });
+      let result = await response.json();
+      await reloadPost(postId);
+      message.value = "";
+    } catch {
+      alert(":<");
+    }
+  }
 };
 </script>
 <style scoped>
