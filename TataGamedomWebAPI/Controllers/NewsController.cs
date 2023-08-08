@@ -19,21 +19,23 @@ using TataGamedomWebAPI.Models.DTOs.Members;
 using TataGamedomWebAPI.Models.DTOs.News;
 using TataGamedomWebAPI.Models.EFModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Cors;
 
 namespace TataGamedomWebAPI.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class NewsController : ControllerBase
-    {
-        private readonly AppDbContext _context;
+	[Route("api/[controller]")]
+	[ApiController]
+	public class NewsController : ControllerBase
+	{
+		private readonly AppDbContext _context;
 
-        public NewsController(AppDbContext context)
-        {
-            _context = context;
-        }
+		public NewsController(AppDbContext context)
+		{
+			_context = context;
+		}
 
 		// GET: api/News
+		[EnableCors("AllowAny")]
 		[HttpGet]
         public async Task<ActionResult<NewsListDto>> GetNews(string? keyword, string? gamesCategory ,int page = 1, int pageSize = 10)
         {
@@ -44,7 +46,7 @@ namespace TataGamedomWebAPI.Controllers
 
             using (var conn = _context.Database.GetDbConnection())
             {
-                string sql = @"SELECT n.Id, n.Title, n.Content, n.ScheduleDate, b.Name AS BackendMemberName, ncc.Name as NewsCategoryName,
+                string sql = @"SELECT n.Id, n.Title, n.Content, n.ScheduleDate, b.Name AS BackendMemberName, ncc.Name as NewsCategoryName,n.CoverImg,
                               COUNT(nv.MemberId) AS ViewCount, COUNT(nl.MemberId) AS LikeCount, n.ActiveFlag,gc.Name
                               FROM news AS n
                               JOIN BackendMembers AS b ON b.Id = n.BackendMemberId 
@@ -73,7 +75,7 @@ namespace TataGamedomWebAPI.Controllers
 					}
 				}
 
-				sql += " GROUP BY n.Id, n.Title, n.Content,n.ScheduleDate, b.Name, gc.Name, n.ActiveFlag, ncc.Name";
+				sql += " GROUP BY n.Id, n.Title, n.Content,n.ScheduleDate, b.Name, gc.Name, n.ActiveFlag, ncc.Name,n.CoverImg";
 
                 var queryParams = new { Keyword = $"%{keyword}%" , GamesCategory = $"%{gamesCategory}%" };
                 var news = await conn.QueryAsync<NewsDto>(sql, queryParams);
@@ -98,7 +100,7 @@ namespace TataGamedomWebAPI.Controllers
             }
             using (var conn = _context.Database.GetDbConnection())
             {
-                string sql = @"SELECT n.Id, n.Title, n.Content, n.ScheduleDate, b.Name AS BackendMemberName, ncc.Name as NewsCategoryName,gc.Name,
+                string sql = @"SELECT n.Id, n.Title, n.Content, n.ScheduleDate, b.Name AS BackendMemberName, ncc.Name as NewsCategoryName,gc.Name,n.CoverImg,
                               COUNT(nv.MemberId) AS ViewCount, COUNT(nl.MemberId) AS LikeCount, n.ActiveFlag
                               FROM news AS n
                               JOIN BackendMembers AS b ON b.Id = n.BackendMemberId 
@@ -107,7 +109,7 @@ namespace TataGamedomWebAPI.Controllers
                               LEFT JOIN NewsViews AS nv ON nv.NewsId = n.Id
                               LEFT JOIN NewsLikes AS nl ON nl.NewsId = n.Id
 							  where n.id = @Id
-							  GROUP BY n.Id, n.Title, n.Content,n.ScheduleDate, b.Name, gc.Name, n.ActiveFlag, ncc.Name";
+							  GROUP BY n.Id, n.Title, n.Content,n.ScheduleDate, b.Name, gc.Name, n.ActiveFlag, ncc.Name,n.CoverImg";
 
                 var news =  conn.QueryFirstOrDefault<NewsDto>(sql, new { Id = id });
 

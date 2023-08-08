@@ -4,8 +4,9 @@ import eCommerce from '../views/eCommerceIndex.vue'
 import SingleProduct from '../views/SingleProduct.vue'
 import Members from '../views/Members.vue'
 import News from '../views/NewsIndex.vue'
-import LoginVue from '@/components/Members/Login.vue'
 import RegisterVue from '@/components/Members/Register.vue'
+import Login from '@/components/Members/Login.vue'
+import ForgetPwd from '@/components/Members/ForgetPwd.vue'
 const routes = [
   {
     path: '/',
@@ -46,14 +47,19 @@ const routes = [
         component: News,
       },
       {
-        path: '/Members/Login',
-        name: 'Login',
-        component: LoginVue,
-      },
-      {
         path: '/Members/Register',
         name: 'Register',
         component: RegisterVue,
+      },
+      {
+        path: '/Members/Login',
+        name: 'Login',
+        component: Login,
+      },
+      {
+        path: '/Members/ForgetPwd',
+        name: 'ForgetPwd',
+        component: ForgetPwd,
       },
     ],
   },

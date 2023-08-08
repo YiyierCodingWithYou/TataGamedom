@@ -1,11 +1,10 @@
 <template>
-   <NewsCarousel/>
-  </template>
+  <News />
+</template>
     
 <script setup>
-import NewsCarousel from '@/components/News/NewsCarousel.vue';
+import News from "@/components/News/News.vue";
 </script>
     
 <style>
-    
 </style>

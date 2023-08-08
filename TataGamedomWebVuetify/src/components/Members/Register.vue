@@ -1,6 +1,6 @@
 <template>
-        <h2>註冊頁面</h2>
-        <v-card
+  <h2>註冊頁面</h2>
+  <v-card
     class="mx-auto"
     color="black"
     max-width="344"
@@ -32,6 +32,7 @@
         v-model="password"
         color="primary"
         label="Password"
+        type="Password"
         placeholder="Enter your password"
         variant="underlined"
       ></v-text-field>
@@ -58,17 +59,16 @@
 </template>
     
 <script>
-    export default {
-    data: () => ({
-      first: null,
-      last: null,
-      email: null,
-      password: null,
-      terms: false,
-    }),
-  }
+export default {
+  data: () => ({
+    first: null,
+    last: null,
+    email: null,
+    password: null,
+    terms: false,
+  }),
+};
 </script>
     
 <style>
-    
 </style>

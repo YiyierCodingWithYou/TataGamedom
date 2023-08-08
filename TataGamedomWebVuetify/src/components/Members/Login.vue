@@ -1,87 +1,117 @@
 <template>
-  <h2>登入頁面</h2>
-  <v-sheet class="pa-12" rounded>
-    <v-card color="black" class="mx-auto px-6 py-8" max-width="344">
-      <v-form v-model="form" @submit.prevent="onSubmit">
-        <v-text-field v-model="account" :readonly="loading" :rules="[required]" class="mb-2" clearable label="帳號"
-          placeholder="請輸入帳號"></v-text-field>
+  <div>
+    <v-card
+      class="mx-auto pa-12 pb-8 mt-16"
+      elevation="8"
+      max-width="448"
+      rounded="lg"
+      style="background-color: black; color: white"
+    >
+      <div class="text-subtitle-1 text-medium-emphasis text-white">帳號</div>
 
-        <v-text-field v-model="password" :readonly="loading" :rules="[required]" clearable label="密碼"
-          placeholder="請輸入密碼"></v-text-field>
+      <v-text-field
+        v-model="account"
+        density="compact"
+        placeholder="請輸入帳號"
+        prepend-inner-icon="mdi-account-outline"
+        variant="outlined"
+      ></v-text-field>
 
-        <br>
+      <div
+        class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between"
+      >
+        密碼
 
-        <v-btn :disabled="!form" :loading="loading" block color="success" size="large" type="submit" variant="elevated">
-          登入
-        </v-btn>
-      </v-form>
+        <a
+          class="text-caption text-decoration-none text-blue"
+          href="#"
+          rel="noopener noreferrer"
+          @click="ForgetPwd"
+        >
+          忘記密碼?</a
+        >
+      </div>
+
+      <v-text-field
+        v-model="password"
+        :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+        :type="visible ? 'text' : 'password'"
+        density="compact"
+        placeholder="請輸入密碼"
+        prepend-inner-icon="mdi-lock-outline"
+        variant="outlined"
+        @click:append-inner="visible = !visible"
+      ></v-text-field>
+
+      <v-btn
+        block
+        class="mb-8 mt-5"
+        color="blue"
+        size="large"
+        variant="tonal"
+        @click="onSubmit"
+      >
+        登入
+      </v-btn>
+
+      <v-card-text class="text-center">
+        <a
+          class="text-blue text-decoration-none"
+          href="#"
+          rel="noopener noreferrer"
+          @click="goToRegister"
+        >
+          立即註冊 <v-icon icon="mdi-chevron-right"></v-icon>
+        </a>
+      </v-card-text>
     </v-card>
-  </v-sheet>
+  </div>
 </template>
     
 <script>
-import axios from 'axios';
+import axios from "axios";
+import ForgetPwd from "./ForgetPwd.vue";
 
 export default {
   data: () => ({
-    form: false,
-    email: null,
-    password: null,
-    loading: false,
+    visible: false,
+    account: "", // Add this line
+    password: "", // Add this line
   }),
-
   methods: {
     onSubmit() {
-      axios.post('https://localhost:7081/api/members/login', { account: this.account, password: this.password }).then((res) => {
-        console.log(res);
-        if (res.data === "已成功登入") {
-          console.log("登入成功")
-
+      axios
+        .post(
+          "https://localhost:7081/api/members/login",
+          {
+            account: this.account,
+            password: this.password,
+          },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          console.log("登入成功");
           this.$router.push({
-            name: 'Home',
-          })
-        }
-        else {
-          console.log("登入失敗")
-        }
-      }).catch(err => {
-        console.log(err)
-      })
-
-      // if (!this.form) return
-
-      // this.loading = true
-
-      // setTimeout(() => (this.loading = false), 2000)
+            name: "Home",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          console.log("登入失敗");
+        });
     },
-    required(v) {
-      return !!v || 'Field is required'
+    goToRegister() {
+      this.$router.push("/members/register");
+    },
+    ForgetPwd() {
+      this.$router.push("/members/ForgetPwd");
     },
   },
-}
-// import { ref } from "vue";
-// const API = "https://localhost:7081/api/";
-// export default {
-//   data: () => ({
-//     form: false,
-//     account: null,
-//     password: null,
-//     loading: false,
-//   }),
-
-//   methods: {
-//     onSubmit() {
-//       if (!this.form) return
-
-//       this.loading = true
-
-//       setTimeout(() => (this.loading = false), 2000)
-//     },
-//     required(v) {
-//       return !!v || 'Field is required'
-//     },
-//   },
-// }
+};
 </script>
     
-<style></style>
+<style>
+</style>
