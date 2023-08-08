@@ -1,39 +1,49 @@
 <template>
-    <div>
+  <div>
     <ul>
-      <!-- 使用 v-for 將 classifications 的每個元素都渲染成一個 <li> -->
-      <li v-for="classification in classifications" :key="classification.name" @click="classificationHandler(classification)">
-        {{ classification.name }}
+      <li v-for="classification in classifications" :key="classification.name">
+        <button
+          @click.prevent="classificationHandler(classification.name)"
+          :class="{
+            'link-like-button': true,
+            'selected-item': selectedClassification === classification.name,
+          }"
+        >
+          {{ classification.name }}
+        </button>
       </li>
     </ul>
   </div>
 </template>
-    
+
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, onMounted, defineEmits } from "vue";
 
-const keyword = ref("")
+const classifications = ref([]);
+const selectedClassification = ref("");
 
-const classifications = ref([])
-
-const API = 'https://localhost:7081/api/'
+const API = "https://localhost:7081/api/";
 
 const loadClassification = async () => {
-    const response = await fetch(`${API}Products/Classification`)
-    const datas = await response.json()
-    classifications.value = datas
-    console.log(classifications.value)
-}
+  const response = await fetch(`${API}Products/Classification`);
+  const datas = await response.json();
+  classifications.value = datas;
+};
 onMounted(() => {
-    loadClassification()
-})
+  loadClassification();
+});
 
-const emit = defineEmits(["classificationInput"])
+const emit = defineEmits(["classificationInput"]);
 
-const classificationHandler = () => {
-    //引發事件 子將資料傳給父
-    emit("classificationInput", classification.value)
-}
+const classificationHandler = (name) => {
+  selectedClassification.value = name;
+  //
+  emit("classificationInput", name);
+};
 </script>
-    
-<style></style>
+
+<style>
+.selected-item {
+  background-color: #ffbf5d;
+}
+</style>

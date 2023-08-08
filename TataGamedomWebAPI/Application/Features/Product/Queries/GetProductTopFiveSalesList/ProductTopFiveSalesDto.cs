@@ -10,4 +10,6 @@ public class ProductTopFiveSalesDto
 
     public required string GamePlatformName { get; set; }
 
+    public string GameGameCoverImg { get; set; } = string.Empty;
+
 }

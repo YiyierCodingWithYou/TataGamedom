@@ -15,6 +15,7 @@ using TataGamedomWebAPI.Models.DTOs.Members;
 using TataGamedomWebAPI.Models.DTOs.News;
 using TataGamedomWebAPI.Infrastructure;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Cors;
 
 namespace TataGamedomWebAPI.Controllers
 {
@@ -30,8 +31,13 @@ namespace TataGamedomWebAPI.Controllers
         }
 
 		// POST: api/Members/Login
+		[EnableCors("AllowCookie")]
 		[HttpPost("Login")]
-		public string Login(LoginDTO dto)
+		[ProducesResponseType(StatusCodes.Status201Created)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		//public string Login(LoginDTO dto)
+		public async Task<ActionResult> Login(LoginDTO dto)
 		{
             var hashOrigPwd = HashUtility.ToSHA256(dto.Password, "!@#$$DGTEGYT");
 
@@ -42,7 +48,7 @@ namespace TataGamedomWebAPI.Controllers
 
 			if (user == null)
 			{
-				return "帳號密碼錯誤";
+				return BadRequest("帳號密碼錯誤");
 			}
 			else
 			{
@@ -57,9 +63,17 @@ namespace TataGamedomWebAPI.Controllers
                     new Claim("Membersid",user.Id.ToString())//抓ID欄位
                 };
 
+
+				//var authenticationProperties = new AuthenticationProperties();
+				//authenticationProperties.IsPersistent = true;
+				//authenticationProperties.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30);
+				//authenticationProperties.AllowRefresh = true;
+
 				var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 				HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-                return "已成功登入";
+				//HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authenticationProperties);
+
+				return Ok();
 
             }
 
