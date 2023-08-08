@@ -1,11 +1,6 @@
 <template>
   <v-carousel hide-delimiters style="height: 500px">
-    <v-carousel-item
-      v-for="item in news"
-      :key="item.id"
-      :src="img + item.coverImg"
-      cover
-    >
+    <v-carousel-item v-for="item in news" :key="item.id" :src="img + item.coverImg" cover>
       <div class="title">
         <p class="titleword">{{ item.title }}</p>
       </div>
@@ -32,7 +27,7 @@ export default {
       }
     };
 
-    onMounted(loadNews);
+    loadNews();
 
     return {
       news,
@@ -45,7 +40,7 @@ export default {
 
 <style>
 .title {
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.8);
   height: 100px;
   margin-top: 400px;
 }

@@ -12,6 +12,7 @@
         <v-expansion-panel title="獺獺好" text="大家試試看好像會變簡單">
         </v-expansion-panel>
       </v-expansion-panels>
+
       <div class="py-14" />
 
       <v-row class="d-flex align-center justify-center">
@@ -28,6 +29,20 @@
             Components
           </v-btn>
         </v-col>
+
+        <v-select
+          label="Select"
+          :items="[
+            'California',
+            'Colorado',
+            'Florida',
+            'Georgia',
+            'Texas',
+            'Wyoming',
+          ]"
+          @update:model-value="test1"
+          variant="underlined"
+        ></v-select>
 
         <v-col cols="auto">
           <v-btn
@@ -64,5 +79,7 @@
 </template>
 
 <script setup>
-//
+const test1 = () => {
+  console.log("可以動");
+};
 </script>
