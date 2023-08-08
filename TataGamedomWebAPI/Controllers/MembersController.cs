@@ -31,9 +31,13 @@ namespace TataGamedomWebAPI.Controllers
         }
 
 		// POST: api/Members/Login
-		[EnableCors("AllowAny")]
+		[EnableCors("AllowCookie")]
 		[HttpPost("Login")]
-		public string Login(LoginDTO dto)
+		[ProducesResponseType(StatusCodes.Status201Created)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		//public string Login(LoginDTO dto)
+		public async Task<ActionResult> Login(LoginDTO dto)
 		{
             var hashOrigPwd = HashUtility.ToSHA256(dto.Password, "!@#$$DGTEGYT");
 
@@ -44,7 +48,7 @@ namespace TataGamedomWebAPI.Controllers
 
 			if (user == null)
 			{
-				return "帳號密碼錯誤";
+				return BadRequest("帳號密碼錯誤");
 			}
 			else
 			{
@@ -69,7 +73,7 @@ namespace TataGamedomWebAPI.Controllers
 				HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 				//HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authenticationProperties);
 
-				return "已成功登入";
+				return Ok();
 
             }
 
