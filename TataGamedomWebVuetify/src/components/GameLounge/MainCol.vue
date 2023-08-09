@@ -3,9 +3,11 @@
     <v-sheet min-height="70vh" rounded="lg">
       <v-container>
         <NewPostBtn></NewPostBtn>
-        <v-col v-for="post in posts" :key="post.postId">
-          <PostCard :post="post"></PostCard>
-        </v-col>
+        <PostCard
+          v-for="post in posts"
+          :key="post.postId"
+          :post="post"
+        ></PostCard>
         <InfiniteLoading @infinite="loadPosts">
           <template #complete>
             <p class="text-center">已經看完所有貼文🦦</p>
@@ -77,9 +79,5 @@ const loadPosts = async ($state: any) => {
     $state.error(); // 如果加載出錯，告訴組件加載出錯
   }
 };
-
-// onMounted(() => {
-//   loadPosts();
-// });
 </script>
 <style scoped></style>

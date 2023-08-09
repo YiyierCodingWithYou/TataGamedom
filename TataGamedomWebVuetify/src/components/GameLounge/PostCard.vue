@@ -1,5 +1,10 @@
 <template lang="">
-  <v-card variant="outlined" class="post mb-3" :data-id="post.postId">
+  <v-card
+    variant="outlined"
+    class="post mb-3"
+    :data-id="post.postId"
+    v-if="post.activeFlag"
+  >
     <v-card-item>
       <v-card-title>{{ post.title }}</v-card-title>
       <v-card-subtitle
@@ -14,17 +19,37 @@
         :color="post.voted === 'Up' ? 'red' : 'blue-grey-lighten-4'"
         >❤️ <span>{{ post.voteUp }}</span>
       </v-btn>
+
       <v-btn
         @click="vote('post', post.postId, 'Down', post.postId)"
         :color="post.voted === 'Down' ? 'black' : 'blue-grey-lighten-4'"
-        >💀<span>{{ post.voteDown }}</span></v-btn
+        >💀<span>{{ post.voteDown }}</span>
+      </v-btn>
+
+      <v-btn @click="showCommentsInput">
+        <span class="material-symbols-rounded size-20"> chat_bubble </span>
+      </v-btn>
+
+      <v-btn @click="showComments">
+        <span class="material-symbols-rounded size-20"> more_horiz </span>
+        ({{ post.commentCount }})
+      </v-btn>
+
+      <v-btn v-show="post.isAuthor === true">
+        <span class="material-symbols-rounded size-20"> edit_square </span>
+      </v-btn>
+
+      <v-btn
+        v-show="post.isAuthor || post.isMod"
+        @click="deleteContent('post', post.postId, post.postId)"
       >
-      <v-btn v-show="false">修改</v-btn>
-      <v-btn v-show="false">刪除</v-btn>
-      <v-btn @click="showComments">展開 ({{ post.commentCount }}) </v-btn>
-      <v-btn @click="showCommentsInput">回應</v-btn>
-      <span class="ms-auto text-caption">{{ post.lastEditDatetime }}</span>
-      <span class="text-caption" v-show="post.isEdited">已修改</span>
+        <span class="material-symbols-rounded size-20"> delete </span>
+      </v-btn>
+
+      <span class="ms-auto text-caption">{{
+        relativeTime(post.lastEditDatetime)
+      }}</span>
+      <span class="text-caption" v-show="post.isEdited">修改</span>
     </v-card-actions>
     <v-text-field
       v-show="showCommentInputBool"
@@ -33,6 +58,7 @@
       v-model="message"
       append-inner-icon="mdi-message-processing"
       @click:append-inner="newComment(post.postId)"
+      @keyup.enter="newComment(post.postId)"
     ></v-text-field>
     <v-card
       v-for="(comment, index) in comments"
@@ -42,7 +68,7 @@
       variant="outlined"
       :data-comment-id="comment.commentId"
     >
-      <v-card-item>
+      <v-card-item v-if="comment.activeFlag">
         <v-card-subtitle>{{ comment.memberAccount }}</v-card-subtitle>
       </v-card-item>
       <v-card-text> {{ comment.commentContent }} </v-card-text>
@@ -55,15 +81,25 @@
         <v-btn
           @click="vote('comment', comment.commentId, 'Down', comment.postId)"
           :color="comment.voted === 'Down' ? 'black' : 'blue-grey-lighten-4'"
-          >💀<span>{{ comment.voteDown }}</span></v-btn
+          >💀<span>{{ comment.voteDown }}</span>
+        </v-btn>
+        <v-btn
+          v-show="comment.isAuthor || comment.isMod"
+          @click="deleteContent('comment', comment.commentId, comment.postId)"
         >
-        <span class="ms-auto text-caption">{{ comment.dateTime }}</span>
+          <span class="material-symbols-rounded size-20"> delete </span>
+        </v-btn>
+        <span class="ms-auto text-caption">{{
+          relativeTime(comment.dateTime)
+        }}</span>
       </v-card-actions>
     </v-card>
   </v-card>
 </template>
 <script setup lang="ts">
-import { ref, reactive, computed, watchEffect } from "vue";
+import { ref, reactive, computed, watchEffect, onMounted } from "vue";
+import { formatDistanceToNow } from "date-fns";
+import { zhTW } from "date-fns/locale";
 
 interface Comment {
   commentContent: string;
@@ -72,8 +108,12 @@ interface Comment {
   memberName: string;
   voteUp: number;
   voteDown: number;
+  isEdited: boolean;
+  isAuthor: boolean;
+  isMod: boolean;
   voted: string;
   postId: number;
+  activeFlag: boolean;
 }
 
 interface Post {
@@ -88,7 +128,9 @@ interface Post {
   commentCount: number;
   isEdited: boolean;
   isAuthor: boolean;
+  isMod: boolean;
   voted: string;
+  activeFlag: boolean;
   comments: Comment[];
 }
 
@@ -99,13 +141,9 @@ const post = ref<Post>(props.post);
 const comments = ref<Comment[]>([]);
 
 watchEffect(() => {
-  comments.value =
-    post.value.comments?.map((comment) => {
-      return comment;
-    }) || [];
+  comments.value = post.value.comments || [];
 });
 
-const isVoted = ref<boolean>();
 let showCommentsBool = ref(false);
 let showCommentInputBool = ref(false);
 const showComments = () => {
@@ -114,6 +152,13 @@ const showComments = () => {
 const showCommentsInput = () => {
   showCommentInputBool.value = !showCommentInputBool.value;
 };
+const relativeTime = (datetime: string) => {
+  // 轉換字串為日期對象
+  const date = new Date(datetime);
+  // 使用 formatDistanceToNow 來獲取相對時間
+  return formatDistanceToNow(date, { addSuffix: true, locale: zhTW });
+};
+
 const vote = async (
   type: string,
   voteCommentId: number,
@@ -135,6 +180,26 @@ const vote = async (
     alert(":<");
   }
 };
+
+const deleteContent = async (
+  type: string,
+  deleteId: number,
+  postId: number
+) => {
+  try {
+    const response = await fetch(
+      `${baseAddress}${type === "post" ? "Posts" : "PostComments"}/${deleteId}`,
+      {
+        method: "DELETE",
+      }
+    );
+    let result = await response.json();
+    await reloadPost(postId);
+  } catch {
+    alert(":<");
+  }
+};
+
 const reloadPost = async (id: number): Promise<void> => {
   try {
     const response = await fetch(`${baseAddress}Posts/${id}`);
