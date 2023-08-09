@@ -19,8 +19,8 @@
         :color="post.voted === 'Down' ? 'black' : 'blue-grey-lighten-4'"
         >💀<span>{{ post.voteDown }}</span></v-btn
       >
-      <v-btn v-show="false">修改</v-btn>
-      <v-btn v-show="false">刪除</v-btn>
+      <v-btn v-show="post.isAuthor === true">修改</v-btn>
+      <v-btn v-show="post.isAuthor || post.isMod">刪除</v-btn>
       <v-btn @click="showComments">展開 ({{ post.commentCount }}) </v-btn>
       <v-btn @click="showCommentsInput">回應</v-btn>
       <span class="ms-auto text-caption">{{ post.lastEditDatetime }}</span>
@@ -72,6 +72,9 @@ interface Comment {
   memberName: string;
   voteUp: number;
   voteDown: number;
+  isEdited: boolean;
+  isAuthor: boolean;
+  isMod: boolean;
   voted: string;
   postId: number;
 }
@@ -88,6 +91,7 @@ interface Post {
   commentCount: number;
   isEdited: boolean;
   isAuthor: boolean;
+  isMod: boolean;
   voted: string;
   comments: Comment[];
 }
