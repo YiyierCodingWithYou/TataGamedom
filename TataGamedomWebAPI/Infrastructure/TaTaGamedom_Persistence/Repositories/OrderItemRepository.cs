@@ -26,6 +26,7 @@ public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepos
             .Where(oi => oi.OrderId == orderId)
             .Select(oi => new OrderItemWithDetailsDto
             {
+                Id = oi.Id,
                 GameGameCoverImg = oi.Product.Game!.GameCoverImg,
                 GameChiName = oi.Product.Game.ChiName,
                 DiscountedPrice = 0,
