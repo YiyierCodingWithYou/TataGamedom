@@ -8,7 +8,7 @@
     >
     </v-carousel-item>
   </v-carousel>
-  <v-sheet class="me-auto" elevation="8">
+  <v-sheet class="me-auto">
     <v-slide-group
       v-model="model"
       class="pa-4 d-flex justify-center align-center"

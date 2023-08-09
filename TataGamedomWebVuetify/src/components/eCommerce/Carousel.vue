@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-carousel show-arrows="hover" cycle interval="3000">
+    <v-carousel show-arrows="hover" cycle>
       <v-carousel-item
         v-for="product in topFive"
         :src="imgLink + product.gameGameCoverImg"

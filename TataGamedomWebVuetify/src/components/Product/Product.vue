@@ -1,12 +1,32 @@
 <template>
-  <h2>{{ product.chiName }}</h2>
   <SingleProductCarousel :productData="product"></SingleProductCarousel>
+  <v-main class="bg-grey-lighten-2">
+    <v-container>
+      <v-row>
+        <v-col cols="2">
+          <v-sheet rounded="lg">
+            <v-list rounded="lg">
+              <!-- 放入左側邊攔 -->
+            </v-list>
+          </v-sheet>
+        </v-col>
+
+        <v-col >
+          <v-sheet rounded="lg">
+            <ProductDetail :productData="product" class="justify-center"></ProductDetail>
+          </v-sheet>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-main>
 </template>
           
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import SingleProductCarousel from "../Product/SingleProductCarousel.vue";
+import ProductDetail from "../Product/ProductDetail.vue";
+
 
 const route = useRoute();
 const productId = route.params.productId;
@@ -31,5 +51,4 @@ onMounted(() => {
 </script>
 
           
-<style>
-</style>
+<style></style>
