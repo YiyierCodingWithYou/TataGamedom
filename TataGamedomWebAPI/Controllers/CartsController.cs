@@ -142,6 +142,10 @@ namespace TataGamedomWebAPI.Controllers
 			var account = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 			//var account = "lisi";
 			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
+			if(user == null)
+			{
+				return ApiResult.Fail("請先登入會員");
+			}
 			var existingCartItem = await _context.Carts
 		.FirstOrDefaultAsync(m => m.MemberId == user.Id && m.ProductId == cartItemCreateDTO.ProductId);
 			if (existingCartItem != null)
