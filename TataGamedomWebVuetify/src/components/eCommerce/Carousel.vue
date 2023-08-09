@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-carousel show-arrows="hover" v-model="currentIndex" :interval="3000">
+    <v-carousel show-arrows="hover" cycle interval="3000">
       <v-carousel-item
         v-for="product in topFive"
         :src="imgLink + product.gameGameCoverImg"
@@ -26,13 +26,9 @@ const loadTopFiveCover = async () => {
   const datas = await response.json();
   topFive.value = datas;
 };
+
 onMounted(() => {
   loadTopFiveCover();
-  const intervalTime = 3000;
-  setInterval(() => {
-    // 自動切換到下一張圖片
-    currentIndex.value = (currentIndex.value + 1) % topFive.value.length;
-  }, intervalTime);
 });
 </script>
     
