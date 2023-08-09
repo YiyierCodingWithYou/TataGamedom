@@ -4,8 +4,9 @@ import eCommerce from '../views/eCommerceIndex.vue'
 import SingleProduct from '../views/SingleProduct.vue'
 import Members from '../views/Members.vue'
 import News from '../views/NewsIndex.vue'
-import LoginVue from '@/components/Members/Login.vue'
 import RegisterVue from '@/components/Members/Register.vue'
+import Login from '@/components/Members/Login.vue'
+import ForgetPwd from '@/components/Members/ForgetPwd.vue'
 import Orders from '../views/Orders.vue'
 import OrderDetails from '../views/OrderDetails.vue'
 import OrderItemReturn from '../views/OrderItemReturn.vue'
@@ -15,16 +16,32 @@ import SupportHub from '../views/SupportHub.vue'
 
 const routes = [
   {
-    path: '/',
-    component: () => import('@/layouts/default/Default.vue'),
+    path: "/",
+    component: () => import("@/layouts/default/Default.vue"),
     children: [
       {
-        path: '',
-        name: 'Home',
+        path: "",
+        name: "Home",
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+        component: () =>
+          import(/* webpackChunkName: "home" */ "@/views/Home.vue"),
+      },
+    ],
+  },
+  {
+    path: "/GameLounge",
+    component: () => import("@/layouts/default/Default.vue"),
+    children: [
+      {
+        path: "",
+        name: "GameLounge",
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+          import(/* webpackChunkName: "home" */ "@/views/GameLounge.vue"),
       },
       {
         path: '/eCommerce',
@@ -53,14 +70,19 @@ const routes = [
         component: News,
       },
       {
-        path: '/Members/Login',
-        name: 'Login',
-        component: LoginVue,
-      },
-      {
         path: '/Members/Register',
         name: 'Register',
         component: RegisterVue,
+      },
+      {
+        path: '/Members/Login',
+        name: 'Login',
+        component: Login,
+      },
+      {
+        path: '/Members/ForgetPwd',
+        name: 'ForgetPwd',
+        component: ForgetPwd,
       },
       {
         path: '/Orders',
@@ -89,11 +111,11 @@ const routes = [
       },
     ],
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-})
+});
 
-export default router
+export default router;

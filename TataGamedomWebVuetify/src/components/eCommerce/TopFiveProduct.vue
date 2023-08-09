@@ -3,7 +3,7 @@
     <ul>
       <li v-for="product in topFive" :key="product.id" class="mt-8">
         <div class="d-flex">
-          <img :src="imgLink + product.gameGameCoverImg" width="150" />
+          <img :src="imgLink + product.gameGameCoverImg" width="150" cover />
           <div class="d-flex flex-column">
             <v-chip class="ma-2 w100 justify-center" color="primary">
               {{ product.gamePlatformName }}
@@ -26,7 +26,6 @@ const loadTopFive = async () => {
   const response = await fetch(`${API}OrderItems/ProductTopFiveSales`);
   const datas = await response.json();
   topFive.value = datas;
-  console.log(topFive.value);
 };
 onMounted(() => {
   loadTopFive();

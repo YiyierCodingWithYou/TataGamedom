@@ -41,24 +41,55 @@ namespace TataGamedomWebAPI.Infrastructure
             return id;
         }
 
-        public bool IsBoadMod(int boardId, int memberId)
+        public bool IsBoardMod(int boardId, int memberId)
         {
             var result = _context.BoardsModerators.Any(m => m.BoardId == boardId && m.ModeratorMemberId == memberId);
             return result;
         }
 
-        public (bool IsVoted, int? voteId) IsPostVoted(int postId, int memberId)
+        public (bool IsVoted, int? voteId, string? voteType) IsPostVoted(int postId, int memberId)
         {
             var result = _context.PostUpDownVotes.FirstOrDefault(v => v.PostId == postId && v.MemberId == memberId);
             var voteId = result != null ? result.Id : (int?)null;
-            return (result != null, voteId);
+            string? voteType = null;
+			if (result != null)
+            {
+             voteType = (result.Type) ? "Up" : "Down";
+            }
+			return (result != null, voteId, voteType);
         }
 
-        public (bool IsVoted, int? voteId) IsCommentVoted(int commentId, int memberId)
+        public (bool IsVoted, int? voteId, string? voteType) IsCommentVoted(int commentId, int memberId)
         {
             var result = _context.PostCommentUpDownVotes.FirstOrDefault(v => v.PostCommentId == commentId && v.MemberId == memberId);
             var voteId = result != null ? result.Id : (int?)null;
-            return (result != null, voteId);
-        }
-    }
+			string? voteType = null;
+			if (result != null)
+			{
+				voteType = (result.Type) ? "Up" : "Down";
+			}
+			return (result != null, voteId, voteType);
+		}
+
+        public bool PostIsAuthor(int postId, int memberId) {
+			var result = _context.Posts.FirstOrDefault(p => p.Id == postId && p.MemberId == memberId);
+            return result != null;
+		}
+
+		public bool CommentIsAuthor (int commentId, int memberId)
+		{
+			var result = _context.PostComments.FirstOrDefault(c => c.Id == commentId && c.MemberId == memberId);
+			return result != null;
+		}
+
+
+		public bool PostIsMod(int postId, int memberId)
+        {
+			var boardId = _context.Posts.FirstOrDefault(p => p.Id == postId)?.BoardId;
+            return IsBoardMod(boardId ?? 0, memberId);
+		}   
+
+	}
+
+
 }
