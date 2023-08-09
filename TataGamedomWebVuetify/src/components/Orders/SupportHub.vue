@@ -1,20 +1,30 @@
 <template>
-  <div class="container">
+  <v-container>
     <div class="row">&nbsp;</div>
-    <div class="row">
-      <div class="col-3">Sender</div>
-      <div class="col-4"><input type="text" v-model="senderAccount" /></div>
-    </div>
-    <div class="row">
-      <div class="col-3">Message</div>
-      <div class="col-4"><input type="text" v-model="chatMessage" /></div>
-    </div>
-    <div class="row">&nbsp;</div>
-    <div class="row">
-      <div class="col-6">
-        <input type="button" :disabled="isButtonDisabled" @click.prevent="sendMessage" value="Send Message" />
-      </div>
-    </div>
+
+    <v-text-field
+      label="Sender"
+      :rules="rules"
+      hide-details="auto"
+      v-model="senderAccount"
+      placeholder="請輸入姓名"
+    ></v-text-field>
+
+
+    <v-text-field
+      label="Message"
+      :rules="rules"
+      hide-details="auto"
+      v-model="chatMessage"
+      placeholder="你的訊息"
+      :disabled="isButtonDisabled"
+      @keyup.enter="sendMessage"
+    ></v-text-field>
+    <v-col cols="auto">
+        <v-btn density="compact" icon="mdi-plus" :disabled="isButtonDisabled" @click.prevent="sendMessage" value="Send Message"></v-btn>
+      </v-col>
+
+        <!-- <input type="button"  /> -->
     <div class="row">
       <div class="col-12">
         <hr />
@@ -27,7 +37,7 @@
         </ul>
       </div>
     </div>
-  </div>
+  </v-container>
 </template>
   
 <script>
