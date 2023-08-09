@@ -14,17 +14,34 @@
         :color="post.voted === 'Up' ? 'red' : 'blue-grey-lighten-4'"
         >❤️ <span>{{ post.voteUp }}</span>
       </v-btn>
+
       <v-btn
         @click="vote('post', post.postId, 'Down', post.postId)"
         :color="post.voted === 'Down' ? 'black' : 'blue-grey-lighten-4'"
-        >💀<span>{{ post.voteDown }}</span></v-btn
-      >
-      <v-btn v-show="post.isAuthor === true">修改</v-btn>
-      <v-btn v-show="post.isAuthor || post.isMod">刪除</v-btn>
-      <v-btn @click="showComments">展開 ({{ post.commentCount }}) </v-btn>
-      <v-btn @click="showCommentsInput">回應</v-btn>
-      <span class="ms-auto text-caption">{{ post.lastEditDatetime }}</span>
-      <span class="text-caption" v-show="post.isEdited">已修改</span>
+        >💀<span>{{ post.voteDown }}</span>
+      </v-btn>
+
+      <v-btn @click="showCommentsInput">
+        <span class="material-symbols-rounded size-20"> chat_bubble </span>
+      </v-btn>
+
+      <v-btn @click="showComments">
+        <span class="material-symbols-rounded size-20"> more_horiz </span>
+        ({{ post.commentCount }})
+      </v-btn>
+
+      <v-btn v-show="post.isAuthor === true">
+        <span class="material-symbols-rounded size-20"> edit_square </span>
+      </v-btn>
+
+      <v-btn v-show="post.isAuthor || post.isMod">
+        <span class="material-symbols-rounded size-20"> delete </span>
+      </v-btn>
+
+      <span class="ms-auto text-caption">{{
+        relativeTime(post.lastEditDatetime)
+      }}</span>
+      <span class="text-caption" v-show="post.isEdited">修改</span>
     </v-card-actions>
     <v-text-field
       v-show="showCommentInputBool"
@@ -57,13 +74,22 @@
           :color="comment.voted === 'Down' ? 'black' : 'blue-grey-lighten-4'"
           >💀<span>{{ comment.voteDown }}</span></v-btn
         >
-        <span class="ms-auto text-caption">{{ comment.dateTime }}</span>
+        <v-btn v-show="comment.isAuthor || comment.isMod">
+          <span class="material-symbols-rounded size-20"> delete </span>
+        </v-btn>
+        <span class="ms-auto text-caption">{{
+          relativeTime(comment.dateTime)
+        }}</span>
       </v-card-actions>
     </v-card>
   </v-card>
 </template>
 <script setup lang="ts">
-import { ref, reactive, computed, watchEffect } from "vue";
+import { ref, reactive, computed, watchEffect, onMounted } from "vue";
+import { formatDistanceToNow } from "date-fns";
+import { zhTW } from "date-fns/locale";
+
+console.log(moment().format("LLLL")); // 這應該返回中文格式的日期和時間
 
 interface Comment {
   commentContent: string;
@@ -103,13 +129,9 @@ const post = ref<Post>(props.post);
 const comments = ref<Comment[]>([]);
 
 watchEffect(() => {
-  comments.value =
-    post.value.comments?.map((comment) => {
-      return comment;
-    }) || [];
+  comments.value = post.value.comments || [];
 });
 
-const isVoted = ref<boolean>();
 let showCommentsBool = ref(false);
 let showCommentInputBool = ref(false);
 const showComments = () => {
@@ -118,6 +140,13 @@ const showComments = () => {
 const showCommentsInput = () => {
   showCommentInputBool.value = !showCommentInputBool.value;
 };
+const relativeTime = (datetime: string) => {
+  // 轉換字串為日期對象
+  const date = new Date(datetime);
+  // 使用 formatDistanceToNow 來獲取相對時間
+  return formatDistanceToNow(date, { addSuffix: true, locale: zhTW });
+};
+
 const vote = async (
   type: string,
   voteCommentId: number,
