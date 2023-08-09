@@ -6,7 +6,7 @@ using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Infrastructure.RealTimeServices;
 
-public class ChatService : IChatServices
+public class ChatService : IChatService
 {
     private readonly IHubContext<ChatHub> _hubContext;
     private readonly AppDbContext _dbContext;
@@ -30,8 +30,9 @@ public class ChatService : IChatServices
             BackendMember = backendMember,
         };
 
-        await _dbContext.AddAsync(message);
-        await _dbContext.SaveChangesAsync();
+
+        _dbContext.ChatMessages.Add(message);
+        await _dbContext.SaveChangesAsync();      
         await _hubContext.Clients.All.SendAsync("ReceiveMessage", message);     
     }
 }

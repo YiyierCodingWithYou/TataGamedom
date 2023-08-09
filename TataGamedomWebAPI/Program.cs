@@ -96,7 +96,7 @@ namespace TataGamedomWebAPI
 			app.UseAuthorization();
 
             //SignalR
-            app.MapHub<ChatHub>("/RealTimeServices/ChatHub");
+            app.MapHub<ChatHub>("/ChatHub");
 
             app.MapControllers();
 

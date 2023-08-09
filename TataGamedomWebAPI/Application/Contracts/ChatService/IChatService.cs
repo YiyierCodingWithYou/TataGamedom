@@ -1,6 +1,6 @@
 ﻿namespace TataGamedomWebAPI.Application.Contracts.ChatService;
 
-public interface IChatServices
+public interface IChatService
 {
    Task SendMessage(string userName, string messageContent);
 }
