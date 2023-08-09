@@ -2,6 +2,7 @@
   <div>
     <carousel></carousel>
   </div>
+  <!-- 之後把左側欄切出去 -->
   <div class="container mt-10">
     <v-row class="row">
       <v-col cols="2">
@@ -132,26 +133,14 @@ const sortBy = ref("");
 const isAscending = ref("");
 const platform = ref("");
 const products = ref([]);
-const totalPages = ref(); //共幾頁
-const thePage = ref(1); //第幾頁
-const API = "https://localhost:7081/api/"; //import.meta.env.VITE_API_URL
-const loadProducts = async () => {
-  const response = await fetch(
-    `${API}Products?keyword=${keyword.value}&platform=${platform.value}&classification=${classification.value}&sortBy=${sortBy.value}&isAscending=${isAscending.value}&page=${thePage.value}`
-  );
-  const datas = await response.json();
-  products.value = datas.products;
-  totalPages.value = datas.totalPages;
-};
-
+const totalPages = ref();
+const thePage = ref(1);
 let img = "https://localhost:7081/Files/Uploads/";
-
 const select = ref({
   sort: "",
   ascending: "",
   label: "請選擇排序方式",
 });
-
 const items = ref([
   { sort: "", ascending: "", label: "預設" },
   { sort: "SaleDate", ascending: "true", label: "依日期排序：由舊到新" },
@@ -159,15 +148,29 @@ const items = ref([
   { sort: "Price", ascending: "true", label: "依售價排序：由低到高" },
   { sort: "Price", ascending: "false", label: "依售價排序：由高到低" },
 ]);
+const inputPlatform = ref("");
+const API = "https://localhost:7081/api/";
 
+const loadProducts = async () => {
+  const response = await fetch(
+    `${API}Products?keyword=${keyword.value}&platform=${platform.value}&classification=${classification.value}&sortBy=${sortBy.value}&isAscending=${isAscending.value}&page=${thePage.value}`,
+    {
+      method: "GET",
+    }
+  );
+  const datas = await response.json();
+  products.value = datas.products;
+  totalPages.value = datas.totalPages;
+};
+
+//排序
 const sortItems = () => {
   sortBy.value = select.value.sort;
   isAscending.value = select.value.ascending;
   loadProducts();
 };
 
-const inputPlatform = ref("");
-
+//平台
 const sortPlatform = () => {
   if (inputPlatform.value != undefined) {
     platform.value = inputPlatform.value;
@@ -215,9 +218,8 @@ const Add2Cart = async (productId) => {
       qty: 1,
     }),
   });
-  // 這裡你可以處理 response 的回傳資料
   let result = await response.json();
-  alert("商品" + result.message);
+  alert(result.message);
 };
 
 onMounted(() => {
@@ -226,7 +228,6 @@ onMounted(() => {
 
 //跳轉到商品頁面
 const GetSingleProduct = async (productId) => {
-  alert(productId);
   router.push({
     name: "SingleProduct",
     params: { productId: productId },
