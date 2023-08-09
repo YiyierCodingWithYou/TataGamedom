@@ -20,8 +20,13 @@ namespace TataGamedomWebAPI
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
             .LogTo(Console.WriteLine, LogLevel.Information));
 
-            //CORS
-            string MyAllowCookies = "AllowCookie";
+            //IHttpContextAccessor
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddHttpContextAccessor();
+
+
+			//CORS
+			string MyAllowCookies = "AllowCookie";
             builder.Services.AddCors(options => {
                 options.AddPolicy(
                     //name: MyAllowOrigins, policy => policy.WithOrigins("*").WithHeaders("*").WithMethods("*")

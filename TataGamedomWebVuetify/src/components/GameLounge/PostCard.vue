@@ -1,5 +1,10 @@
 <template lang="">
-  <v-card variant="outlined" class="post mb-3" :data-id="post.postId">
+  <v-card
+    variant="outlined"
+    class="post mb-3"
+    :data-id="post.postId"
+    v-if="post.activeFlag"
+  >
     <v-card-item>
       <v-card-title>{{ post.title }}</v-card-title>
       <v-card-subtitle
@@ -34,7 +39,10 @@
         <span class="material-symbols-rounded size-20"> edit_square </span>
       </v-btn>
 
-      <v-btn v-show="post.isAuthor || post.isMod">
+      <v-btn
+        v-show="post.isAuthor || post.isMod"
+        @click="deleteContent('post', post.postId, post.postId)"
+      >
         <span class="material-symbols-rounded size-20"> delete </span>
       </v-btn>
 
@@ -50,6 +58,7 @@
       v-model="message"
       append-inner-icon="mdi-message-processing"
       @click:append-inner="newComment(post.postId)"
+      @keyup.enter="newComment(post.postId)"
     ></v-text-field>
     <v-card
       v-for="(comment, index) in comments"
@@ -59,7 +68,7 @@
       variant="outlined"
       :data-comment-id="comment.commentId"
     >
-      <v-card-item>
+      <v-card-item v-if="comment.activeFlag">
         <v-card-subtitle>{{ comment.memberAccount }}</v-card-subtitle>
       </v-card-item>
       <v-card-text> {{ comment.commentContent }} </v-card-text>
@@ -72,9 +81,12 @@
         <v-btn
           @click="vote('comment', comment.commentId, 'Down', comment.postId)"
           :color="comment.voted === 'Down' ? 'black' : 'blue-grey-lighten-4'"
-          >💀<span>{{ comment.voteDown }}</span></v-btn
+          >💀<span>{{ comment.voteDown }}</span>
+        </v-btn>
+        <v-btn
+          v-show="comment.isAuthor || comment.isMod"
+          @click="deleteContent('comment', comment.commentId, comment.postId)"
         >
-        <v-btn v-show="comment.isAuthor || comment.isMod">
           <span class="material-symbols-rounded size-20"> delete </span>
         </v-btn>
         <span class="ms-auto text-caption">{{
@@ -89,8 +101,6 @@ import { ref, reactive, computed, watchEffect, onMounted } from "vue";
 import { formatDistanceToNow } from "date-fns";
 import { zhTW } from "date-fns/locale";
 
-console.log(moment().format("LLLL")); // 這應該返回中文格式的日期和時間
-
 interface Comment {
   commentContent: string;
   dateTime: string;
@@ -103,6 +113,7 @@ interface Comment {
   isMod: boolean;
   voted: string;
   postId: number;
+  activeFlag: boolean;
 }
 
 interface Post {
@@ -119,6 +130,7 @@ interface Post {
   isAuthor: boolean;
   isMod: boolean;
   voted: string;
+  activeFlag: boolean;
   comments: Comment[];
 }
 
@@ -168,6 +180,26 @@ const vote = async (
     alert(":<");
   }
 };
+
+const deleteContent = async (
+  type: string,
+  deleteId: number,
+  postId: number
+) => {
+  try {
+    const response = await fetch(
+      `${baseAddress}${type === "post" ? "Posts" : "PostComments"}/${deleteId}`,
+      {
+        method: "DELETE",
+      }
+    );
+    let result = await response.json();
+    await reloadPost(postId);
+  } catch {
+    alert(":<");
+  }
+};
+
 const reloadPost = async (id: number): Promise<void> => {
   try {
     const response = await fetch(`${baseAddress}Posts/${id}`);

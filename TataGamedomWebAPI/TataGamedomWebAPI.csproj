@@ -124,6 +124,7 @@
   <ItemGroup>
     <Folder Include="Application\Features\InventoryItem\Shared\" />
     <Folder Include="Application\Features\OrderItem\Shared\" />
+    <Folder Include="Files\Uploads\PostComment\" />
     <Folder Include="Infrastructure\Data\DapperRepository\" />
     <Folder Include="Infrastructure\Data\EFRepository\" />
     <Folder Include="Models\EFModels\" />

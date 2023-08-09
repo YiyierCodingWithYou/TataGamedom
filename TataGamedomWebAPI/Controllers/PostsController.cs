@@ -58,7 +58,8 @@ namespace TataGamedomWebAPI.Controllers
 				VoteDown = post.PostUpDownVotes.Count(v => v.PostId == post.Id && v.Type == false),
 				CommentCount = post.PostComments.Count(c => c.PostId == post.Id && c.ActiveFlag == true),
 				IsEdited = (post.LastEditDatetime != post.Datetime),
-				LastEditDatetime = post.LastEditDatetime
+				LastEditDatetime = post.LastEditDatetime,
+				ActiveFlag = post.ActiveFlag
 			}).FirstOrDefaultAsync();
 
 			if(postDto == null)
@@ -137,7 +138,8 @@ namespace TataGamedomWebAPI.Controllers
 				VoteDown = p.PostUpDownVotes.Count(v => v.PostId == p.Id && v.Type == false),
 				CommentCount = p.PostComments.Count(c => c.PostId == p.Id && c.ActiveFlag == true),
 				IsEdited = (p.LastEditDatetime != p.Datetime),
-				LastEditDatetime = p.LastEditDatetime
+				LastEditDatetime = p.LastEditDatetime,
+				ActiveFlag = p.ActiveFlag
 
 			}).ToListAsync();
 
@@ -173,13 +175,16 @@ namespace TataGamedomWebAPI.Controllers
 				VoteUp = c.PostCommentUpDownVotes.Count(v => v.PostCommentId == c.Id && v.Type == true),
 				VoteDown = c.PostCommentUpDownVotes.Count(v => v.PostCommentId == c.Id && v.Type == false),
 				PostId = c.PostId,
-			}).ToList();
+				ActiveFlag = c.ActiveFlag
+			})
+				.OrderByDescending(c=>c.DateTime)
+				.ToList();
 
 			if (memberId != null)
 			{
 				foreach (var comment in comments)
 				{
-					comment.IsAuthor = _simpleHelper.PostIsAuthor(comment.CommentId, memberId ?? 0);
+					comment.IsAuthor = _simpleHelper.CommentIsAuthor(comment.CommentId, memberId ?? 0);
 					comment.IsMod = _simpleHelper.IsBoardMod(comment.CommentId, memberId ?? 0);
 					comment.Voted = _simpleHelper.IsCommentVoted(comment.CommentId, memberId ?? 0).voteType;
 				}
