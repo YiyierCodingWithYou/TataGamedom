@@ -2,6 +2,7 @@
 
 public class OrderWithDeatilsDto
 {
+    public int Id { get; set; }
     public required List<string> GameChiName { get; set; }
 
     public required List<bool> ProductIsVirtual { get; set; }

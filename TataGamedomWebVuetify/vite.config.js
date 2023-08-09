@@ -13,7 +13,13 @@ import mkcert from "vite-plugin-mkcert";
 export default defineConfig({
   plugins: [
     vue({
-      template: { transformAssetUrls }
+      template: { transformAssetUrls },
+
+      compilerOptions: {
+        isCustomElement: tagName => {
+          return tagName === 'vue-advanced-chat' || tagName === 'emoji-picker'
+        }
+      }
     }),
     // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
     vuetify({

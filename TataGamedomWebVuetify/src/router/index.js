@@ -7,6 +7,13 @@ import News from '../views/NewsIndex.vue'
 import RegisterVue from '@/components/Members/Register.vue'
 import Login from '@/components/Members/Login.vue'
 import ForgetPwd from '@/components/Members/ForgetPwd.vue'
+import Orders from '../views/Orders.vue'
+import OrderDetails from '../views/OrderDetails.vue'
+import OrderItemReturn from '../views/OrderItemReturn.vue'
+import SupportHub from '../views/SupportHub.vue'
+
+
+
 const routes = [
   {
     path: "/",
@@ -45,7 +52,7 @@ const routes = [
         component: eCommerce,
       },
       {
-        path: '/eCommerce/Product',
+        path: '/eCommerce/Product/:productId',
         name: 'SingleProduct',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
@@ -76,6 +83,31 @@ const routes = [
         path: '/Members/ForgetPwd',
         name: 'ForgetPwd',
         component: ForgetPwd,
+      },
+      {
+        path: '/Orders',
+        name: 'Orders',
+        component: Orders
+      },
+      {
+        path: '/Orders/:id',
+        name: 'OrderDetails',
+        component: OrderDetails,
+        // children: [
+        //   {
+        //     path: 'OrderItemReturn', name: 'OrderItemReturn', component: OrderItemReturn
+        //   }
+        // ]
+      },
+      {
+        path: '/OrderItemReturn/:id/:gameChiName',  //id
+        name: 'OrderItemReturn',
+        component: OrderItemReturn
+      },
+      {
+        path: '/SupportHub',
+        name: 'SupportHub',
+        component: SupportHub
       },
     ],
   },

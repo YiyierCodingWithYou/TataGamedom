@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Controllers
 {
+	[EnableCors("AllowAny")]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class CartsController : ControllerBase
@@ -117,13 +119,13 @@ namespace TataGamedomWebAPI.Controllers
 
 			if (newQty == 0)
 			{
-					_context.Carts.Remove(thisProduct);
-					await _context.SaveChangesAsync();
+				_context.Carts.Remove(thisProduct);
+				await _context.SaveChangesAsync();
 			}
 			else
-			{ 				
-					thisProduct.Quantity = newQty;
-					await _context.SaveChangesAsync();
+			{
+				thisProduct.Quantity = newQty;
+				await _context.SaveChangesAsync();
 			}
 			return Ok();
 		}
@@ -138,24 +140,46 @@ namespace TataGamedomWebAPI.Controllers
 				return ApiResult.Fail("Entity set 'AppDbContext.Carts'  is null.");
 			}
 			var account = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			//var account = "lisi";
 			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
-			Cart cart = new Cart
+			if(user == null)
 			{
-				MemberId = user.Id,
-				ProductId = cartItemCreateDTO.ProductId,
-				Quantity = cartItemCreateDTO.Qty
-			};
+				return ApiResult.Fail("請先登入會員");
+			}
+			var existingCartItem = await _context.Carts
+		.FirstOrDefaultAsync(m => m.MemberId == user.Id && m.ProductId == cartItemCreateDTO.ProductId);
+			if (existingCartItem != null)
+			{
+				// 若已有相同商品，則將數量增加
+				existingCartItem.Quantity += cartItemCreateDTO.Qty;
+			}
+			else
+			{
+				Cart cart = new Cart
+				{
+					MemberId = user.Id,
+					ProductId = cartItemCreateDTO.ProductId,
+					Quantity = cartItemCreateDTO.Qty
+				};
+
+				try
+				{
+					await _context.Carts.AddAsync(cart);
+				}
+				catch (Exception ex)
+				{
+					return ApiResult.Fail("加入購物車失敗！");
+				}
+			}
 
 			try
 			{
-				await _context.Carts.AddAsync(cart);
 				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{
 				return ApiResult.Fail("加入購物車失敗！");
 			}
-
 			return ApiResult.Success("已成功加入購物車！");
 		}
 
