@@ -20,11 +20,11 @@
       :disabled="isButtonDisabled"
       @keyup.enter="sendMessage"
     ></v-text-field>
+    
     <v-col cols="auto">
         <v-btn density="compact" icon="mdi-plus" :disabled="isButtonDisabled" @click.prevent="sendMessage" value="Send Message"></v-btn>
       </v-col>
 
-        <!-- <input type="button"  /> -->
     <div class="row">
       <div class="col-12">
         <hr />
