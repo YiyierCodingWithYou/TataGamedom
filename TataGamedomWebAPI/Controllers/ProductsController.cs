@@ -21,6 +21,7 @@ using Microsoft.Extensions.Hosting;
 using TataGamedomWebAPI.Models.Dtos;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Cors;
+using TataGamedomWebAPI.Infrastructure;
 
 namespace TataGamedomWebAPI.Controllers
 {
@@ -192,8 +193,7 @@ namespace TataGamedomWebAPI.Controllers
 
 			int totalCount = comments.Count();
 			int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-			List<GameCommentsDTO> commentsList = comments
-				.OrderByDescending(c => c.CreatedTime)
+			List<GameCommentsDTO> commentsList =comments
 				.Skip(pageSize * (page - 1))
 				.Take(pageSize)
 				.ToList();
@@ -204,16 +204,19 @@ namespace TataGamedomWebAPI.Controllers
 		// POST: api/Products
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPost("{id}")]
-		public async Task<ActionResult<GameComment>> PostComment(int productId, CommentsCreateDTO commentsCreateDTO)
+		public async Task<ApiResult> PostComment(int productId, CommentsCreateDTO commentsCreateDTO)
 		{
 			if (_context.Products == null)
 			{
-				return Problem("Entity set 'AppDbContext.Products'  is null.");
+				return ApiResult.Fail("無此商品");
 			}
 			string? userName = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == userName);
 			var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
-
+			if(user == null)
+			{
+				return ApiResult.Fail("請先登入會員");
+			}
 			GameComment comments = new GameComment
 			{
 				GameId = product.GameId ?? 0,
@@ -226,7 +229,7 @@ namespace TataGamedomWebAPI.Controllers
 			_context.GameComments.Add(comments);
 			await _context.SaveChangesAsync();
 
-			return Ok("發表評論成功");
+			return ApiResult.Success("發表評論成功");
 		}
 
 		[HttpGet("Classification")]

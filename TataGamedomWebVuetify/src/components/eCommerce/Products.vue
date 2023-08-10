@@ -20,7 +20,12 @@
         ></ClassificationList>
         <div>🎮 熱賣遊戲TOP 5</div>
         <hr />
-        <TopFiveProduct class="mb-10"></TopFiveProduct>
+        <div>
+          <TopFiveProduct
+            class="mb-10"
+            @getProductInput="GetSingleProduct"
+          ></TopFiveProduct>
+        </div>
       </v-col>
       <v-col cols="10">
         <div class="d-flex">
@@ -83,11 +88,16 @@
                 </v-card-title>
               </div>
               <v-card-text class="d-flex justify-center">
-                <div>
-                  <s>{{ product.price }}</s>
+                <div v-if="product.price != product.specialPrice">
+                  <span
+                    ><s>${{ product.price }}</s
+                    >　</span
+                  >
+                  <span>${{ product.specialPrice }}</span>
                 </div>
-                <div>　</div>
-                <div>{{ product.specialPrice }}</div>
+                <div v-else>
+                  <div>${{ product.price }}</div>
+                </div>
               </v-card-text>
 
               <v-rating
@@ -148,6 +158,7 @@ const items = ref([
   { sort: "Price", ascending: "true", label: "依售價排序：由低到高" },
   { sort: "Price", ascending: "false", label: "依售價排序：由高到低" },
 ]);
+
 const inputPlatform = ref("");
 const API = "https://localhost:7081/api/";
 
@@ -209,9 +220,9 @@ const clickHandler = (nextPage) => {
 const Add2Cart = async (productId) => {
   const response = await fetch(`${API}Carts`, {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      Authorization: document.cookie,
     },
     body: JSON.stringify({
       productId: productId,
@@ -236,11 +247,4 @@ const GetSingleProduct = async (productId) => {
 </script>
 
 <style>
-.currentPage {
-  background-color: lightgray;
-}
-
-.pagination li {
-  cursor: pointer;
-}
 </style>

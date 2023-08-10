@@ -11,8 +11,7 @@ import Orders from '../views/Orders.vue'
 import OrderDetails from '../views/OrderDetails.vue'
 import OrderItemReturn from '../views/OrderItemReturn.vue'
 import SupportHub from '../views/SupportHub.vue'
-
-
+import LinePay from '../views/LinePay.vue'
 
 const routes = [
   {
@@ -92,15 +91,10 @@ const routes = [
       {
         path: '/Orders/:id',
         name: 'OrderDetails',
-        component: OrderDetails,
-        // children: [
-        //   {
-        //     path: 'OrderItemReturn', name: 'OrderItemReturn', component: OrderItemReturn
-        //   }
-        // ]
+        component: OrderDetails
       },
       {
-        path: '/OrderItemReturn/:id/:gameChiName',  //id
+        path: '/OrderItemReturn/:id/:gameChiName',
         name: 'OrderItemReturn',
         component: OrderItemReturn
       },
@@ -108,6 +102,11 @@ const routes = [
         path: '/SupportHub',
         name: 'SupportHub',
         component: SupportHub
+      },
+      {
+        path: '/LinePay',
+        name: 'LinePay',
+        component: LinePay
       },
     ],
   },

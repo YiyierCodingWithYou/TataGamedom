@@ -21,7 +21,7 @@ public class GetOrderListByAccountQueryHandler : IRequestHandler<GetOrderListByA
 
     public async Task<List<OrderWithDeatilsDto>> Handle(GetOrderListByAccountQuery request, CancellationToken cancellationToken)
     {
-        List<OrderWithDeatilsDto> response = await _orderRepository.GetOrderWithDetailsByAccount(request.Account);
+        List<OrderWithDeatilsDto> response = await _orderRepository.GetOrderWithDetailsByAccount();
       
         _logger.LogInformation("Orders were retrived successfully");
         return response;

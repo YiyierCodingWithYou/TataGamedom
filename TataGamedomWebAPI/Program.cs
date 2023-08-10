@@ -21,8 +21,10 @@ namespace TataGamedomWebAPI
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
             .LogTo(Console.WriteLine, LogLevel.Information));
 
-            //IHttpContextAccessor
+            
             builder.Services.AddControllersWithViews();
+
+            //IHttpContextAccessor
             builder.Services.AddHttpContextAccessor();
 
 
@@ -32,7 +34,7 @@ namespace TataGamedomWebAPI
                 options.AddPolicy(
                     //name: MyAllowOrigins, policy => policy.WithOrigins("*").WithHeaders("*").WithMethods("*")
                     name: MyAllowCookies,
-        policy => policy.WithOrigins("https://localhost:3000","https://127.0.0.1:3000")
+        policy => policy.WithOrigins("https://localhost:3000", "https://127.0.0.1:3000")
                       .AllowAnyHeader()
                       .AllowAnyMethod()
                       .AllowCredentials()
@@ -64,11 +66,11 @@ namespace TataGamedomWebAPI
 				//options.Cookie.HttpOnly = true;
 				options.Cookie.SameSite = SameSiteMode.None;
 				options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.ExpireTimeSpan = TimeSpan.FromDays(7);
 			});
 
 
             builder.Services.AddEndpointsApiExplorer();
-			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 

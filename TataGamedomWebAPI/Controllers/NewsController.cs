@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Cors;
 
 namespace TataGamedomWebAPI.Controllers
 {
+	[EnableCors("AllowAny")]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class NewsController : ControllerBase
@@ -160,22 +161,26 @@ values(@NewsId, @MemberId, getdate())";
 			}
 		}
 
-
+	
 		[HttpGet("HotNews")]
-		public async Task<ActionResult<News>> GetHotNews(int id)
+		public async Task<ActionResult<HotNewsDTO>> GetHotNews()
 		{
 			if (_context.News == null)
 			{
 				return NotFound();
 			}
-			var news = await _context.News.AsNoTracking().FirstOrDefaultAsync(n => n.Id == id);
-
-			if (news == null)
+			using (var conn = _context.Database.GetDbConnection())
 			{
-				return NotFound();
-			}
+				string sql = @"SELECT TOP 5 n.Id, n.Title, n.ScheduleDate, n.CoverImg,
+       COUNT(nv.MemberId) AS ViewCount, n.ActiveFlag
+FROM news AS n
+LEFT JOIN NewsViews AS nv ON nv.NewsId = n.Id
+GROUP BY n.Id, n.Title, n.ScheduleDate, n.ActiveFlag, n.CoverImg
+ORDER BY ViewCount DESC";
 
-			return news;
+				var news = await conn.QueryAsync<HotNewsDTO>(sql);
+				return Ok(news);
+			}
 		}
 
 		//// PUT: api/News/5

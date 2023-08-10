@@ -22,7 +22,7 @@ public class OrdersController : ControllerBase
         this._mediator = mediator;
     }
 
-    [HttpGet]
+    [HttpGet("AllOrders")]
     public async Task<List<OrderDto>> Get()
     {
         var orders = await _mediator.Send(new GetOrderListQuery());
@@ -36,10 +36,11 @@ public class OrdersController : ControllerBase
         return Ok(order);
     }
 
-    [HttpGet("user/{account}")]
-    public async Task<ActionResult<List<OrderWithDeatilsDto>>> Get(string account)
+    [HttpGet]
+    [EnableCors("AllowCookie")]
+    public async Task<ActionResult<List<OrderWithDeatilsDto>>> GetByAccount()
     {
-        var orderList = await _mediator.Send(new GetOrderListByAccountQuery(account));
+        var orderList = await _mediator.Send(new GetOrderListByAccountQuery());
         return Ok(orderList);
     }
 
