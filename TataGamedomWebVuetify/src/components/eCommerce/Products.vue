@@ -230,6 +230,11 @@ const Add2Cart = async (productId) => {
     }),
   });
   let result = await response.json();
+  if(result.isFail){
+    router.push({
+    name: "Login"
+  });
+  }
   alert(result.message);
 };
 

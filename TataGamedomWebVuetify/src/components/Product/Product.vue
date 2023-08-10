@@ -16,9 +16,8 @@
             <v-col>
               <v-sheet rounded="lg">
                 <ProductDetail
-                  v-if="product && commentsLength !== undefined"
+                  v-if="product !== undefined"
                   :productData="product"
-                  :commentCount="commentsLength"
                   class="justify-center"
                 ></ProductDetail>
               </v-sheet>
@@ -42,7 +41,7 @@ const productId = route.params.productId;
 const page = ref(1);
 const product = ref({});
 const totalPages = ref(0);
-const commentsLength = ref();
+//const commentsLength = ref();
 
 const loadData = async () => {
   const response = await fetch(
@@ -50,7 +49,8 @@ const loadData = async () => {
   );
   const datas = await response.json();
   product.value = datas;
-  commentsLength.value = datas.gameComments.length;
+  console.log(product.value);
+  ///commentsLength.value = datas.gameComments.length;
   totalPages.value = datas.totalPages;
 };
 
