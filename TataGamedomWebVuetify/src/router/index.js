@@ -52,7 +52,7 @@ const routes = [
         component: eCommerce,
       },
       {
-        path: '/eCommerce/Product',
+        path: '/eCommerce/Product/:productId',
         name: 'SingleProduct',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route

@@ -21,6 +21,7 @@ namespace TataGamedomWebAPI.Models.DTOs.Post
         public bool IsMod { get; set; }
         public string? Voted { get; set; }
         public DateTime LastEditDatetime { get; set; }
+        public bool ActiveFlag { get; set; }
         public IEnumerable<CommentReadDto> Comments { get; set; }
     }
 }

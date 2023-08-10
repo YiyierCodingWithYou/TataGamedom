@@ -13,5 +13,6 @@
 		public bool IsMod { get; set; }
 		public string? Voted { get; set; }
 		public int PostId { get; set; }
+		public bool ActiveFlag { get; set; }
 	}
 }
