@@ -10,7 +10,6 @@
       placeholder="請輸入姓名"
     ></v-text-field>
 
-
     <v-text-field
       label="Message"
       :rules="rules"
@@ -20,10 +19,16 @@
       :disabled="isButtonDisabled"
       @keyup.enter="sendMessage"
     ></v-text-field>
-    
+
     <v-col cols="auto">
-        <v-btn density="compact" icon="mdi-plus" :disabled="isButtonDisabled" @click.prevent="sendMessage" value="Send Message"></v-btn>
-      </v-col>
+      <v-btn
+        density="compact"
+        icon="mdi-plus"
+        :disabled="isButtonDisabled"
+        @click.prevent="sendMessage"
+        value="Send Message"
+      ></v-btn>
+    </v-col>
 
     <div class="row">
       <div class="col-12">
@@ -33,7 +38,9 @@
     <div class="row">
       <div class="col-6">
         <ul>
-          <li v-for="(message, index) in messages" :key="index">{{ message.account }} : {{ message.content }}</li>
+          <li v-for="(message, index) in messages" :key="index">
+            {{ message.account }} : {{ message.content }}
+          </li>
         </ul>
       </div>
     </div>
@@ -41,20 +48,22 @@
 </template>
   
 <script>
-import { ref, onMounted, onUnmounted } from 'vue';
-import * as signalR from '@microsoft/signalr'
+import { ref, onMounted, onUnmounted } from "vue";
+import * as signalR from "@microsoft/signalr";
 
 export default {
   setup() {
-    const senderAccount = ref('');
-    const chatMessage = ref('');
+    const senderAccount = ref("");
+    const chatMessage = ref("");
     const isButtonDisabled = ref(false);
     const messages = ref([]);
 
-    let connectionToChatHub = new signalR.HubConnectionBuilder().withUrl("https://localhost:7081/ChatHub").build();
+    let connectionToChatHub = new signalR.HubConnectionBuilder()
+      .withUrl("https://localhost:7081/ChatHub")
+      .build();
 
     onMounted(() => {
-      connectionToChatHub.start().catch(err => console.error(err.toString()));
+      connectionToChatHub.start().catch((err) => console.error(err.toString()));
       connectionToChatHub.on("ReceiveMessage", receiveMessageHandler);
     });
 
@@ -68,8 +77,10 @@ export default {
     };
 
     const sendMessage = () => {
-      connectionToChatHub.send('SendMessageToAll', senderAccount.value, chatMessage.value)
-        .catch(err => console.error(err.toString()));
+      connectionToChatHub
+        .send("SendMessageToAll", senderAccount.value, chatMessage.value)
+        .catch((err) => console.error(err.toString()));
+      chatMessage.value = "";
     };
 
     return {
@@ -77,10 +88,10 @@ export default {
       chatMessage,
       isButtonDisabled,
       messages,
-      sendMessage
+      sendMessage,
     };
-  }
-}
+  },
+};
 </script>
   
 <style scoped></style>
