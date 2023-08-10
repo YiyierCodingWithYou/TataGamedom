@@ -114,10 +114,10 @@
                 var existingImageCount = $('.picture').length;
                 var uploadedImageCount = $(this)[0].files.length;
                 var totalImageCount = existingImageCount + uploadedImageCount;
-                if (totalImageCount > 6) {
+                if (totalImageCount > 10) {
                     Swal.fire({
                         title: '警告',
-                        text: '商品圖片最多不超過6張',
+                        text: '商品圖片最多不超過10張',
                         icon: 'warning',
                         confirmButtonText: 'OK',
                     }).then((result) => {

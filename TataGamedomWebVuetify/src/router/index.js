@@ -13,7 +13,6 @@ import OrderItemReturn from '../views/OrderItemReturn.vue'
 import SupportHub from '../views/SupportHub.vue'
 import LinePay from '../views/LinePay.vue'
 
-
 const routes = [
   {
     path: "/",
