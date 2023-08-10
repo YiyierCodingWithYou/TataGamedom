@@ -1,31 +1,87 @@
 <template>
-    <vue-advanced-chat
-      :current-user-id="currentUserId"
-      :rooms="JSON.stringify(rooms)"
-      :messages="JSON.stringify(messages)"
-      :room-actions="JSON.stringify(roomActions)"
-    />
-  </template>
+  <v-container>
+    <div class="row">&nbsp;</div>
+
+    <v-text-field
+      label="Sender"
+      :rules="rules"
+      hide-details="auto"
+      v-model="senderAccount"
+      placeholder="請輸入姓名"
+    ></v-text-field>
+
+
+    <v-text-field
+      label="Message"
+      :rules="rules"
+      hide-details="auto"
+      v-model="chatMessage"
+      placeholder="你的訊息"
+      :disabled="isButtonDisabled"
+      @keyup.enter="sendMessage"
+    ></v-text-field>
+    <v-col cols="auto">
+        <v-btn density="compact" icon="mdi-plus" :disabled="isButtonDisabled" @click.prevent="sendMessage" value="Send Message"></v-btn>
+      </v-col>
+
+        <!-- <input type="button"  /> -->
+    <div class="row">
+      <div class="col-12">
+        <hr />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <ul>
+          <li v-for="(message, index) in messages" :key="index">{{ message.account }} : {{ message.content }}</li>
+        </ul>
+      </div>
+    </div>
+  </v-container>
+</template>
   
-  <script>
-    import { register } from 'vue-advanced-chat'
-    register()
+<script>
+import { ref, onMounted, onUnmounted } from 'vue';
+import * as signalR from '@microsoft/signalr'
+
+export default {
+  setup() {
+    const senderAccount = ref('');
+    const chatMessage = ref('');
+    const isButtonDisabled = ref(false);
+    const messages = ref([]);
+
+    let connectionToChatHub = new signalR.HubConnectionBuilder().withUrl("https://localhost:7081/ChatHub").build();
+
+    onMounted(() => {
+      connectionToChatHub.start().catch(err => console.error(err.toString()));
+      connectionToChatHub.on("ReceiveMessage", receiveMessageHandler);
+    });
+
+    onUnmounted(() => {
+      connectionToChatHub.off("ReceiveMessage", receiveMessageHandler);
+      connectionToChatHub.stop();
+    });
+
+    const receiveMessageHandler = (account, content) => {
+      messages.value.push({ account, content });
+    };
+
+    const sendMessage = () => {
+      connectionToChatHub.send('SendMessageToAll', senderAccount.value, chatMessage.value)
+        .catch(err => console.error(err.toString()));
+    };
+
+    return {
+      senderAccount,
+      chatMessage,
+      isButtonDisabled,
+      messages,
+      sendMessage
+    };
+  }
+}
+</script>
   
-    // Or if you used CDN import
-    // window['vue-advanced-chat'].register()
+<style scoped></style>
   
-    export default {
-      data() {
-        return {
-          currentUserId: '1234',
-          rooms: [],
-          messages: [],
-          roomActions: [
-            { name: 'inviteUser', title: 'Invite User' },
-            { name: 'removeUser', title: 'Remove User' },
-            { name: 'deleteRoom', title: 'Delete Room' }
-          ]
-        }
-      }
-    }
-  </script>
