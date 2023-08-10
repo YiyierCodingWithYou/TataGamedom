@@ -59,6 +59,7 @@ namespace TataGamedomWebAPI.Controllers
                     //這邊可以自定義
 					//new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), //抓ID
 					new Claim(ClaimTypes.Name, user.Account),//抓帳號
+                    new Claim("MembersAccount",user.Account),
 					new Claim("MembersName", user.Name),//抓名字
                     new Claim("Membersid",user.Id.ToString())//抓ID欄位
                 };

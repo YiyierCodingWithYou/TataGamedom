@@ -28,10 +28,12 @@ namespace TataGamedomWebAPI.Controllers
 	public class NewsController : ControllerBase
 	{
 		private readonly AppDbContext _context;
+		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public NewsController(AppDbContext context)
+		public NewsController(AppDbContext context, IHttpContextAccessor httpContextAccessor)
 		{
 			_context = context;
+			_httpContextAccessor = httpContextAccessor;
 		}
 
 		// GET: api/News
@@ -141,6 +143,7 @@ ORDER BY Time DESC";
 				var memberId = 1;
 				if(!string.IsNullOrEmpty(User.FindFirstValue("Membersid")))
 				{
+
 					memberId = int.Parse(User.FindFirstValue("Membersid"));
 				}
 

@@ -32,7 +32,7 @@ namespace TataGamedomWebAPI
                 options.AddPolicy(
                     //name: MyAllowOrigins, policy => policy.WithOrigins("*").WithHeaders("*").WithMethods("*")
                     name: MyAllowCookies,
-        policy => policy.WithOrigins("https://localhost:3000")
+        policy => policy.WithOrigins("https://localhost:3000","https://127.0.0.1:3000")
                       .AllowAnyHeader()
                       .AllowAnyMethod()
                       .AllowCredentials()

@@ -30,14 +30,19 @@
         <span class="material-symbols-rounded size-20"> chat_bubble </span>
       </v-btn>
 
-      <v-btn @click="showComments">
+      <v-btn @click="showComments" :disabled="post.commentCount === 0">
         <span class="material-symbols-rounded size-20"> more_horiz </span>
         ({{ post.commentCount }})
       </v-btn>
 
-      <v-btn v-show="post.isAuthor === true">
-        <span class="material-symbols-rounded size-20"> edit_square </span>
-      </v-btn>
+      <editPostBtn
+        v-if="post.isAuthor === true"
+        :boardName="post.boardName"
+        :postId="post.postId"
+        :editor="post.postContent"
+        :title="post.title"
+        @editComplete="reloadPost(post.postId)"
+      ></editPostBtn>
 
       <v-btn
         v-show="post.isAuthor || post.isMod"
@@ -100,6 +105,7 @@
 import { ref, reactive, computed, watchEffect, onMounted } from "vue";
 import { formatDistanceToNow } from "date-fns";
 import { zhTW } from "date-fns/locale";
+import editPostBtn from "./EditPostBtn.vue";
 
 interface Comment {
   commentContent: string;
@@ -172,6 +178,7 @@ const vote = async (
       }/${voteCommentId}/Vote/${upOrDown}`,
       {
         method: "PUT",
+        credentials: "include",
       }
     );
     let result = await response.json();
@@ -191,6 +198,7 @@ const deleteContent = async (
       `${baseAddress}${type === "post" ? "Posts" : "PostComments"}/${deleteId}`,
       {
         method: "DELETE",
+        credentials: "include",
       }
     );
     let result = await response.json();
@@ -202,7 +210,9 @@ const deleteContent = async (
 
 const reloadPost = async (id: number): Promise<void> => {
   try {
-    const response = await fetch(`${baseAddress}Posts/${id}`);
+    const response = await fetch(`${baseAddress}Posts/${id}`, {
+      credentials: "include",
+    });
     const data: Post = await response.json();
     post.value = data;
   } catch (error) {
@@ -218,6 +228,7 @@ const newComment = async (postId: number) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           postId: postId,
           content: message.value,
