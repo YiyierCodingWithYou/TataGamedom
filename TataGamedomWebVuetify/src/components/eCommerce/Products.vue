@@ -127,7 +127,7 @@
     ></v-pagination>
   </div>
 </template>
-    
+
 <script setup>
 import { ref, reactive, onMounted } from "vue";
 import SearchTextBox from "../eCommerce/SearchTextBox.vue";
@@ -245,6 +245,6 @@ const GetSingleProduct = async (productId) => {
   });
 };
 </script>
-    
+
 <style>
 </style>

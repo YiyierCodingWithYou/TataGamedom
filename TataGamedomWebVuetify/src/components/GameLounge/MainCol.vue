@@ -2,7 +2,7 @@
   <v-col cols="12" sm="8">
     <v-sheet min-height="70vh" rounded="lg">
       <v-container>
-        <NewPostBtn></NewPostBtn>
+        <NewPostBtn @postComplete="reloadPosts"></NewPostBtn>
         <PostCard
           v-for="post in posts"
           :key="post.postId"
@@ -27,7 +27,7 @@
   </v-col>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, DefineComponent } from "vue";
+import { onMounted, ref } from "vue";
 import NewPostBtn from "./NewPostBtn.vue";
 import PostCard from "./PostCard.vue";
 import InfiniteLoading from "v3-infinite-loading";
@@ -64,7 +64,9 @@ const baseaddress = "https://localhost:7081/api/";
 const posts = ref<Post[]>([]);
 const loadPosts = async ($state: any) => {
   try {
-    const response = await fetch(`${baseaddress}Posts?page=${page.value}`);
+    const response = await fetch(`${baseaddress}Posts?page=${page.value}`, {
+      credentials: "include",
+    });
     const datas: Post[] = await response.json();
 
     if (datas.length) {
@@ -78,6 +80,12 @@ const loadPosts = async ($state: any) => {
     console.error("Error loading posts:", error);
     $state.error(); // 如果加載出錯，告訴組件加載出錯
   }
+};
+const reloadPosts = () => {
+  console.log("reloadPosts");
+  page.value = 1;
+  posts.value = [];
+  loadPosts({ loaded: () => {}, complete: () => {}, error: () => {} });
 };
 </script>
 <style scoped></style>
