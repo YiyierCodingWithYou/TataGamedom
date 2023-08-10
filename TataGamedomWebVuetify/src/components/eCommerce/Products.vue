@@ -8,21 +8,35 @@
       <v-col cols="2">
         <div>🎮 關鍵字搜尋</div>
         <hr />
-        <SearchTextBox @searchInput="inputHandler" class="mb-10"></SearchTextBox>
+        <SearchTextBox
+          @searchInput="inputHandler"
+          class="mb-10"
+        ></SearchTextBox>
         <div>🎮 依遊戲分類瀏覽</div>
         <hr />
-        <ClassificationList @classificationInput="classificationHandler" class="mb-10"></ClassificationList>
+        <ClassificationList
+          @classificationInput="classificationHandler"
+          class="mb-10"
+        ></ClassificationList>
         <div>🎮 熱賣遊戲TOP 5</div>
         <hr />
-        <TopFiveProduct class="mb-10"></TopFiveProduct>
+        <div>
+          <TopFiveProduct
+            class="mb-10"
+            @getProductInput="GetSingleProduct"
+          ></TopFiveProduct>
+        </div>
       </v-col>
       <v-col cols="10">
-        <v-breadcrumbs :breadcrumb="breadcrumbs">
-            <v-icon icon="mdi-chevron-right"></v-icon>
-        </v-breadcrumbs>
         <div class="d-flex">
           <v-col cols="4" class="me-auto">
-            <v-btn-toggle v-model="inputPlatform" rounded="0" color="#ffbf5d" group @update:model-value="sortPlatform">
+            <v-btn-toggle
+              v-model="inputPlatform"
+              rounded="0"
+              color="#ffbf5d"
+              group
+              @update:model-value="sortPlatform"
+            >
               <v-btn value=""> 所有遊戲 </v-btn>
 
               <v-btn value="PC"> PC </v-btn>
@@ -33,37 +47,70 @@
             </v-btn-toggle>
           </v-col>
           <v-col cols="4">
-            <v-select v-model="select" :items="items" item-title="label" item-value="item" persistent-hint return-object
-              single-line @update:model-value="sortItems">
+            <v-select
+              v-model="select"
+              :items="items"
+              item-title="label"
+              item-value="item"
+              persistent-hint
+              return-object
+              single-line
+              @update:model-value="sortItems"
+            >
             </v-select>
           </v-col>
         </div>
         <v-row>
           <v-col cols="4" v-for="product in products" :key="product.id">
             <v-card height="550">
-              <v-img class="align-end text-white" height="350" :src="img + product.gameCoverImg" cover
-                @click="GetSingleProduct(product.id)"></v-img>
+              <v-img
+                class="align-end text-white"
+                height="350"
+                :src="img + product.gameCoverImg"
+                cover
+                @click="GetSingleProduct(product.id)"
+              ></v-img>
               <div class="d-flex justify-center">
-                <v-chip class="mt-3 d-flex justify-center" color="primary" label text-color="white">
+                <v-chip
+                  class="mt-3 d-flex justify-center"
+                  color="primary"
+                  label
+                  text-color="white"
+                >
                   <v-icon start icon="mdi-label"></v-icon>
                   {{ product.gamePlatformName }}
                 </v-chip>
-                <v-card-title class="mt-1 justify-center text-center" @click="GetSingleProduct(product.id)">
+                <v-card-title
+                  class="mt-1 justify-center text-center"
+                  @click="GetSingleProduct(product.id)"
+                >
                   {{ product.chiName }}
                 </v-card-title>
               </div>
               <v-card-text class="d-flex justify-center">
-                <div>
-                  <s>{{ product.price }}</s>
+                <div v-if="product.price != product.specialPrice">
+                  <span
+                    ><s>${{ product.price }}</s
+                    >　</span
+                  >
+                  <span>${{ product.specialPrice }}</span>
                 </div>
-                <div>　</div>
-                <div>{{ product.specialPrice }}</div>
+                <div v-else>
+                  <div>${{ product.price }}</div>
+                </div>
               </v-card-text>
 
-              <v-rating v-model="product.score" class="ma-2 d-flex justify-center" density="compact" readonly></v-rating>
+              <v-rating
+                v-model="product.score"
+                class="ma-2 d-flex justify-center"
+                density="compact"
+                readonly
+              ></v-rating>
 
               <v-card-actions class="justify-center">
-                <v-btn color="orange" @click="Add2Cart(product.id)">加入購物車</v-btn>
+                <v-btn color="orange" @click="Add2Cart(product.id)"
+                  >加入購物車</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-col>
@@ -72,8 +119,12 @@
     </v-row>
   </div>
   <div class="text-center">
-    <v-pagination v-model="thePage" :length="totalPages" :total-visible="5"
-      @update:model-value="clickHandler"></v-pagination>
+    <v-pagination
+      v-model="thePage"
+      :length="totalPages"
+      :total-visible="5"
+      @update:model-value="clickHandler"
+    ></v-pagination>
   </div>
 </template>
     
@@ -108,23 +159,6 @@ const items = ref([
   { sort: "Price", ascending: "false", label: "依售價排序：由高到低" },
 ]);
 
-const breadcrumbs = ref([
-  {
-    title: '所有商品',
-    disabled: true,
-    href: '#',
-  },
-  {
-    title: '遊戲分類',
-    disabled: true,
-    href: '#',
-  },
-  {
-    title: '???',
-    disabled: true,
-    href: '#',
-  }
-])
 const inputPlatform = ref("");
 const API = "https://localhost:7081/api/";
 
@@ -186,9 +220,9 @@ const clickHandler = (nextPage) => {
 const Add2Cart = async (productId) => {
   const response = await fetch(`${API}Carts`, {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      //"Authorization": document.cookie,
     },
     body: JSON.stringify({
       productId: productId,
@@ -213,11 +247,4 @@ const GetSingleProduct = async (productId) => {
 </script>
     
 <style>
-.currentPage {
-  background-color: lightgray;
-}
-
-.pagination li {
-  cursor: pointer;
-}
 </style>
