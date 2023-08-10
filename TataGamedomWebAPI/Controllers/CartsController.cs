@@ -133,6 +133,7 @@ namespace TataGamedomWebAPI.Controllers
 		// POST: api/Carts
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPost]
+		[EnableCors("AllowCookie")]
 		public async Task<ApiResult> PostCart(CartItemCreateDTO cartItemCreateDTO)
 		{
 			if (_context.Carts == null)
