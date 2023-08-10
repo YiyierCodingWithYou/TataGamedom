@@ -1,14 +1,13 @@
 <template>
-  <H2>是我啦熱門新聞</H2>
-  <v-card class="mx-auto" width="400" v-for="item in news" :key="item.id">
-    <template v-slot:title>{{ item.title }}</template>
+  <v-card class="mx-auto mt-5" width="400" v-for="item in news" :key="item.id">
     <div class="d-flex">
       <img
-        style="height: 225px; width: 400px"
+        style="height: 200px; width: 400px"
         :src="img + item.coverImg"
         alt=""
       />
     </div>
+    <v-card-text> {{ item.title }} </v-card-text>
     <v-card-text> {{ item.scheduleDate }} </v-card-text>
   </v-card>
   <!-- <div>
