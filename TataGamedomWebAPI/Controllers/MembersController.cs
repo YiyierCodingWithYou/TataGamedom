@@ -80,6 +80,7 @@ namespace TataGamedomWebAPI.Controllers
         }
 
 		[Authorize]
+		[EnableCors("AllowCookie")]
 		[HttpDelete("Logout")]
 		public void Logout()
 		{
