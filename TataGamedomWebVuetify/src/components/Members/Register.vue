@@ -1,23 +1,48 @@
 <template>
-  <h2>註冊頁面</h2>
-  <v-card
-    class="mx-auto"
-    color="black"
-    max-width="344"
-    title="User Registration"
-  >
+  <v-card class="mx-auto" color="black" max-width="344" title="使用者註冊">
     <v-container>
       <v-text-field
-        v-model="first"
+        v-model="account"
         color="primary"
-        label="First name"
+        label="帳號"
         variant="underlined"
       ></v-text-field>
 
       <v-text-field
-        v-model="last"
+        v-model="password"
+        :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
         color="primary"
-        label="Last name"
+        label="密碼"
+        :type="passwordVisible ? 'text' : 'password'"
+        variant="underlined"
+        @click:append-inner="passwordVisible = !passwordVisible"
+      ></v-text-field>
+
+      <v-text-field
+        v-model="checkPassword"
+        :append-inner-icon="checkPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary"
+        label="確認密碼"
+        :type="checkPasswordVisible ? 'text' : 'password'"
+        variant="underlined"
+        @click:append-inner="checkPasswordVisible = !checkPasswordVisible"
+      ></v-text-field>
+      <p v-if="password !== checkPassword" class="password-mismatch">
+        密碼需與確認密碼相符
+      </p>
+
+      <v-text-field
+        v-model="name"
+        color="primary"
+        label="姓名"
+        variant="underlined"
+      ></v-text-field>
+
+      <v-text-field
+        v-model="birthday"
+        color="primary"
+        type="date"
+        label="生日"
         variant="underlined"
       ></v-text-field>
 
@@ -29,18 +54,23 @@
       ></v-text-field>
 
       <v-text-field
-        v-model="password"
+        v-model="phone"
         color="primary"
-        label="Password"
-        type="Password"
-        placeholder="Enter your password"
+        label="手機"
+        variant="underlined"
+      ></v-text-field>
+
+      <v-text-field
+        v-model="coverImg"
+        color="primary"
+        label="大頭貼"
         variant="underlined"
       ></v-text-field>
 
       <v-checkbox
         v-model="terms"
         color="secondary"
-        label="I agree to site terms and conditions"
+        label="我同意網站條款和條件"
       ></v-checkbox>
     </v-container>
 
@@ -49,8 +79,8 @@
     <v-card-actions>
       <v-spacer></v-spacer>
 
-      <v-btn color="success">
-        Complete Registration
+      <v-btn color="success" @click="onSubmit">
+        完成註冊
 
         <v-icon icon="mdi-chevron-right" end></v-icon>
       </v-btn>
@@ -59,16 +89,73 @@
 </template>
     
 <script>
+import axios from "axios";
 export default {
   data: () => ({
-    first: null,
-    last: null,
-    email: null,
-    password: null,
+    account: "",
+    password: "",
+    checkPassword: "",
+    passwordsMatch: true,
+    name: "",
+    birthday: "",
+    email: "",
+    phone: "",
+    coverImg: "",
     terms: false,
+    // visible: false,
+    passwordVisible: false,
+    checkPasswordVisible: false,
   }),
+  watch: {
+    password: function () {
+      this.passwordsMatch = this.password === this.checkPassword;
+    },
+    checkPassword: function () {
+      this.passwordsMatch = this.password === this.checkPassword;
+    },
+  },
+  methods: {
+    onSubmit() {
+      if (!this.email || !this.phone) {
+        console.log("請填寫email和phone");
+        return;
+      }
+      axios
+        .post(
+          "https://localhost:7081/api/Members/Register",
+          {
+            account: this.account,
+            password: this.password,
+            checkPassword: this.checkPassword,
+            name: this.name,
+            birthday: this.birthday,
+            email: this.email,
+            phone: this.phone,
+            coverImg: this.coverImg,
+          },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((res) => {
+          this.$router.push({
+            name: "Login",
+          });
+          console.log(res);
+          console.log("註冊成功");
+        })
+        .catch((err) => {
+          console.log(err);
+          console.log("註冊失敗");
+        });
+    },
+  },
 };
 </script>
     
 <style>
+.password-mismatch {
+  color: red;
+  font-size: 14px;
+}
 </style>

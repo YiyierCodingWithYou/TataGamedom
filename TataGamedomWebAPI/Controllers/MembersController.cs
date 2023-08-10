@@ -16,6 +16,7 @@ using TataGamedomWebAPI.Models.DTOs.News;
 using TataGamedomWebAPI.Infrastructure;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Cors;
+using static System.Net.WebRequestMethods;
 
 namespace TataGamedomWebAPI.Controllers
 {
@@ -80,6 +81,7 @@ namespace TataGamedomWebAPI.Controllers
         }
 
 		[Authorize]
+		[EnableCors("AllowCookie")]
 		[HttpDelete("Logout")]
 		public void Logout()
 		{
@@ -104,11 +106,14 @@ namespace TataGamedomWebAPI.Controllers
 		//}
 
 		// GET: api/Members/5
-		[Authorize]
+
 		[HttpGet("{id}")]
         public async Task<ActionResult<MembersDto>> GetMember(int id)
         {
-          if (_context.Members == null)
+            //var userId = HttpContext.User.FindFirstValue("MembersName");
+            //var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
+
+			if (_context.Members == null)
           {
               return NotFound();
           }
@@ -187,6 +192,7 @@ namespace TataGamedomWebAPI.Controllers
 
         // POST: api/Members
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [EnableCors("AllowCookie")]
         [HttpPost("Register")]
         public async Task<ActionResult<Member>> PostMember(RegisterDto registerDto)
 		{
@@ -207,8 +213,8 @@ namespace TataGamedomWebAPI.Controllers
 
 			var hashOrigPwd = HashUtility.ToSHA256(registerDto.Password, "!@#$$DGTEGYT");
 			//var hashCheckPwd = HashUtility.ToSHA256(registerDto.CheckPassword, "!@#$$DGTEGYT");
-
-            //驗證用不寫入SQL
+			var pocha = "POCHA.jpg";
+			//驗證用不寫入SQL
 			registerDto.CheckPassword = null;
 
 			Member member = new Member
@@ -218,14 +224,18 @@ namespace TataGamedomWebAPI.Controllers
                 Account = registerDto.Account,
                 Password = hashOrigPwd,
 			    Birthday = registerDto.Birthday,
-                Email = registerDto.Email,
-                Phone = registerDto.Phone,
-                RegistrationDate = DateTime.Now,
+				Email = !string.IsNullOrEmpty(registerDto.Email) ? registerDto.Email : null,
+				Phone = !string.IsNullOrEmpty(registerDto.Phone) ? registerDto.Phone : null,
+				RegistrationDate = DateTime.Now,
                 IconImg = registerDto.IconImg,
                 IsConfirmed = false,
                 ConfirmCode = registerDto.ConfirmCode,
                 ActiveFlag = true
 			};
+            if (registerDto.IconImg == null)
+            {
+                member.IconImg = pocha;
+            }
 
 			await _context.Members.AddAsync(member);
             await _context.SaveChangesAsync();
