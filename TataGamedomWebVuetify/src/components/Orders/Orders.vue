@@ -44,8 +44,9 @@ export default {
     },
     methods: {
         loadData() {
-            //huangds之後要改成變數
-            fetch('https://localhost:7081/api/Orders/user/huangds')
+            fetch('https://localhost:7081/api/Orders',{
+                credentials: "include"
+            })
                 .then((response) => {
                     if (response.ok) {
                         return response.json();
