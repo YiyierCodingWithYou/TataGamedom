@@ -1,7 +1,7 @@
 <template>
   <NewsCarousel />
   <v-app id="inspire">
-    <v-main class="bg-grey-lighten-3">
+    <v-main class="bg-grey-lighten-3" style="position: relative">
       <v-container class="container">
         <v-row>
           <!-- <v-col cols="9" v-for="(item, index) in news" :key="item.id" :offset="index == 0 ? index : 3"> -->
@@ -17,10 +17,11 @@
                   <div class="ms-5">
                     <div class="text-h4 mb-2">{{ item.title }}</div>
                     <div class="">{{ item.content }}</div>
+                    <div>{{ item.name }}</div>
                     <div class="text-caption mt-7">
                       {{ item.scheduleDate }}
                     </div>
-                    <div>{{ item.name }}</div>
+
                     <v-btn style="position: absolute" variant="outlined"
                       >詳細
                     </v-btn>
@@ -35,13 +36,17 @@
             style="position: absolute; left: 71%; max-width: 550px"
           >
             <v-sheet rounded="lg" min-height="100">
-              <SearchTextBox @searchInput="inputHandler"></SearchTextBox>
+              <h1>關鍵字搜尋</h1>
+              <SearchTextBox
+                class="mt-2"
+                @searchInput="inputHandler"
+              ></SearchTextBox>
             </v-sheet>
           </v-col>
 
           <v-col cols="4" class="gameclass">
             <v-sheet rounded="lg" min-height="400">
-              <h2>遊戲類別</h2>
+              <h1>遊戲類別</h1>
               <NewsGameClass
                 @classificationInput="classificationHandler"
                 class="mt-10"
@@ -51,7 +56,7 @@
 
           <v-col cols="4" class="hotnews">
             <v-sheet rounded="lg" min-height="500">
-              <h2>熱門新聞</h2>
+              <h1 class="">熱門新聞</h1>
               <HotNews></HotNews>
             </v-sheet>
           </v-col>
@@ -62,7 +67,7 @@
 </template>
     
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import NewsCarousel from "../News/NewsCarousel.vue";
 import SearchTextBox from "../News/SearchTextBox.vue";
 import NewsGameClass from "./NewsGameClass.vue";
@@ -86,8 +91,9 @@ const loadNews = async () => {
   console.log(news.value);
 };
 
-loadNews();
-
+onMounted(() => {
+  loadNews();
+});
 //搜尋
 const inputHandler = (value) => {
   keyword.value = value;
@@ -126,5 +132,7 @@ let img = "https://localhost:7081/Files/NewsImages/";
   left: 71%;
   max-width: 550px;
   margin-top: 550px;
+}
+h1 {
 }
 </style>

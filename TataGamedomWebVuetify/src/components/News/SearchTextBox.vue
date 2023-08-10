@@ -4,7 +4,7 @@
     v-model="keyword"
     @input="inputHandler"
     class="form-control"
-    placeholder="請輸入名稱"
+    placeholder="請輸入關鍵字"
   />
 </template>
     
