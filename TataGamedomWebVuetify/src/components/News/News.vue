@@ -9,7 +9,11 @@
             <v-sheet min-height="100" rounded="lg">
               <v-card-item style="">
                 <div class="d-flex">
-                  <img style="height: 225px; width: 400px" :src="img + item.coverImg" alt="" />
+                  <img
+                    style="height: 225px; width: 400px"
+                    :src="img + item.coverImg"
+                    alt=""
+                  />
                   <div class="ms-5">
                     <div class="text-h4 mb-2">{{ item.title }}</div>
                     <div class="">{{ item.content }}</div>
@@ -17,14 +21,19 @@
                       {{ item.scheduleDate }}
                     </div>
                     <div>{{ item.name }}</div>
-                    <v-btn style="position: absolute" variant="outlined">詳細 </v-btn>
+                    <v-btn style="position: absolute" variant="outlined"
+                      >詳細
+                    </v-btn>
                   </div>
                 </div>
               </v-card-item>
             </v-sheet>
           </v-col>
 
-          <v-col cols="4" style="position: absolute; left: 71%; max-width:550px ;">
+          <v-col
+            cols="4"
+            style="position: absolute; left: 71%; max-width: 550px"
+          >
             <v-sheet rounded="lg" min-height="100">
               <SearchTextBox @searchInput="inputHandler"></SearchTextBox>
             </v-sheet>
@@ -33,16 +42,19 @@
           <v-col cols="4" class="gameclass">
             <v-sheet rounded="lg" min-height="400">
               <h2>遊戲類別</h2>
-              <NewsGameClass @classificationInput="classificationHandler" class="mt-10"></NewsGameClass>
+              <NewsGameClass
+                @classificationInput="classificationHandler"
+                class="mt-10"
+              ></NewsGameClass>
             </v-sheet>
           </v-col>
 
           <v-col cols="4" class="hotnews">
             <v-sheet rounded="lg" min-height="500">
               <h2>熱門新聞</h2>
+              <HotNews></HotNews>
             </v-sheet>
           </v-col>
-
         </v-row>
       </v-container>
     </v-main>
@@ -51,14 +63,14 @@
     
 <script setup>
 import { ref, reactive } from "vue";
-
 import NewsCarousel from "../News/NewsCarousel.vue";
 import SearchTextBox from "../News/SearchTextBox.vue";
 import NewsGameClass from "./NewsGameClass.vue";
+import HotNews from "../News/HotNews.vue";
 
 const keyword = ref("");
 const news = ref([]);
-const name = ref("")
+const name = ref("");
 const title = ref("");
 const content = ref("");
 const scheduleDate = ref("");
@@ -90,7 +102,7 @@ const classificationHandler = (value) => {
     name.value = value;
   }
   loadNews();
-}
+};
 
 let img = "https://localhost:7081/Files/NewsImages/";
 </script>
