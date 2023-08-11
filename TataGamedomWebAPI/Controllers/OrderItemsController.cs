@@ -58,7 +58,7 @@ public class OrderItemsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> Post(CreateOrderItemCommand orderItem)
+    public async Task<ActionResult> Post(AddOrderItemToOrderCommand orderItem)
     {
         var response = await _mediator.Send(orderItem);
         return CreatedAtAction(nameof(Get), new { id = response });

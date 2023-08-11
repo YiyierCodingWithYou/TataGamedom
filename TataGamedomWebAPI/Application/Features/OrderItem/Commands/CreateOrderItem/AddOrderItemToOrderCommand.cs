@@ -2,7 +2,7 @@
 
 namespace TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateOrderItem;
 
-public class CreateOrderItemCommand : IRequest<int>
+public class AddOrderItemToOrderCommand : IRequest<List<int>>
 {
     public int OrderId { get; set; }
 

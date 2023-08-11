@@ -12,6 +12,6 @@ public class OrderItemProfile : Profile
     {
         CreateMap<OrderItem, OrderItemDto>();
         CreateMap<OrderItem, OrderItemDetailsDto>();
-        CreateMap<CreateOrderItemCommand, OrderItem>();
+        CreateMap<AddOrderItemToOrderCommand, OrderItem>();
     }
 }
