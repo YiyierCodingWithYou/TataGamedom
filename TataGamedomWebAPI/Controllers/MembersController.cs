@@ -38,7 +38,7 @@ namespace TataGamedomWebAPI.Controllers
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		//public string Login(LoginDTO dto)
-		public async Task<ActionResult> Login(LoginDTO dto)
+		public async Task<ActionResult<string?>> Login(LoginDTO dto)
 		{
             var hashOrigPwd = HashUtility.ToSHA256(dto.Password, "!@#$$DGTEGYT");
 
@@ -75,11 +75,27 @@ namespace TataGamedomWebAPI.Controllers
 				HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 				//HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authenticationProperties);
 
-				return Ok();
+				return Ok( user.Name );
 
             }
 
         }
+
+		private void ClearReturnToRoute()
+		{
+			var returnToRoute = HttpContext.Request.Headers["ReturnToRoute"].ToString();
+			if (!string.IsNullOrEmpty(returnToRoute))
+			{
+				HttpContext.Response.Headers.Remove("ReturnToRoute");
+				Response.Cookies.Append("ReturnToRoute", returnToRoute, new CookieOptions
+				{
+					HttpOnly = true,
+					Expires = DateTime.UtcNow.AddMinutes(-1) // Expire immediately
+				});
+			}
+		}
+
+
 
 		[Authorize]
 		[EnableCors("AllowCookie")]
@@ -263,6 +279,8 @@ namespace TataGamedomWebAPI.Controllers
 
         //    return NoContent();
         //}
+
+
 
         private bool MemberExists(int id)
         {
