@@ -78,6 +78,7 @@ export default {
     account: "", // Add this line
     password: "", // Add this line
   }),
+  emits: ["loginOk"],
   methods: {
     onSubmit() {
       axios
@@ -94,9 +95,16 @@ export default {
         .then((res) => {
           console.log(res);
           console.log("登入成功");
-          this.$router.push({
-            name: "Home",
+          // this.$store.commit("SET_LOGIN", true);
+          this.$store.commit("SET_LOGIN", {
+            isLogined: true,
+            name: res.data,
+            account: this.account,
           });
+          this.$emit("loginOk");
+          this.$router.go(-1);
+
+          localStorage.setItem("returnToRoute", this.$route.fullPath);
         })
         .catch((err) => {
           console.log(err);
