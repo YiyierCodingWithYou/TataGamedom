@@ -19,6 +19,7 @@
                   v-if="product !== undefined"
                   :productData="product"
                   class="justify-center"
+                  @paginationInput="paginationHandler"
                 ></ProductDetail>
               </v-sheet>
             </v-col>
@@ -57,6 +58,11 @@ const loadData = async () => {
 onMounted(() => {
   loadData();
 });
+
+const paginationHandler = (value) => {
+  page.value = value;
+  loadData();
+};
 </script>
 
           
