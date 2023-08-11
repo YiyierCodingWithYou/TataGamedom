@@ -44,6 +44,7 @@ public class InventoryItemsController : ControllerBase
         return CreatedAtAction(nameof(Get), new { id = response });
     }
 
+
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

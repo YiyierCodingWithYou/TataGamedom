@@ -4,13 +4,13 @@ using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateOrderItem;
 
-public class AddOrderItemToOrderCommandValidator : AbstractValidator<AddOrderItemToOrderCommand>
+public class CreateOrderItemCommandValidator : AbstractValidator<CreateOrderItemCommand>
 {
     private readonly IOrderRepository _orderRepository;
     private readonly IProductRepository _productRepository;
     private readonly IInventoryItemRepository _inventoryItemRepository;
 
-    public AddOrderItemToOrderCommandValidator(
+    public CreateOrderItemCommandValidator(
         IOrderRepository orderRepository,
         IProductRepository productRepository,
         IInventoryItemRepository inventoryItemRepository)

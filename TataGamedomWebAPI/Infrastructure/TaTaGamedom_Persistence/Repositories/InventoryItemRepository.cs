@@ -14,7 +14,7 @@ public class InventoryItemRepository : GenericRepository<InventoryItem>, IInvent
 
     public async Task<int> GetRemainingInventoryId(int productId)
     {
-        List<int> inventoryItemIdSoldOutList = await GetSoldOutIdList();
+        var inventoryItemIdSoldOutList = await GetSoldOutIdList();
 
         return await _dbContext.InventoryItems
             .AsNoTracking()
@@ -22,6 +22,16 @@ public class InventoryItemRepository : GenericRepository<InventoryItem>, IInvent
             .Select(i => i.Id)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<int> GetRemainingInventoryId(int productId, HashSet<int> soldOutIds)
+    {
+        return await _dbContext.InventoryItems
+            .AsNoTracking()
+            .Where(i => i.ProductId == productId && soldOutIds.Contains(i.Id) == false)
+            .Select(i => i.Id)
+            .FirstOrDefaultAsync();
+    }
+
 
     public async Task<int> GetRemainingInventoryQuantity(int productId)
     {
@@ -40,6 +50,22 @@ public class InventoryItemRepository : GenericRepository<InventoryItem>, IInvent
         return remainingInventoryQuantity < 0? 0 : remainingInventoryQuantity;
     }
 
+    public async Task<HashSet<int>> GetSoldOutIdList()
+    {
+        var soldOutIds = await _dbContext.OrderItems
+            .AsNoTracking()
+            .Select(oi => oi.InventoryItemId)
+            .ToListAsync();
+
+        return new HashSet<int>(soldOutIds);
+    }
+
+    public async Task<int> GetMaxId()
+    {
+        return await _dbContext.InventoryItems.MaxAsync(i => i.Id);
+    }
+
+
     public async Task<bool> IsInventoryItemExist(int inventoryItemId)
     {
         return await _dbContext.InventoryItems.AnyAsync(i => i.Id == inventoryItemId);
@@ -48,15 +74,6 @@ public class InventoryItemRepository : GenericRepository<InventoryItem>, IInvent
     public async Task<bool> IsInventoryItemNotSoldOut(int inventoryItemId)
     {
         return await _dbContext.OrderItems.AnyAsync(o => o.InventoryItemId == inventoryItemId) == false;
-    }
-
-
-    private async Task<List<int>> GetSoldOutIdList()
-    {
-        return await _dbContext.OrderItems
-            .AsNoTracking()
-            .Select(oi => oi.InventoryItemId)
-            .ToListAsync();
     }
 
 }

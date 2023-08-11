@@ -9,4 +9,6 @@ public interface IIndexGenerator
     string GetOrderItemIndex(OrderItem orderItem, int maxOrderItemId);
 
     string GetOrderItemReturnIndex(OrderItemReturn orderItemReturn, string orderIndex, int maxOrderId);
+
+    string GetSKU(InventoryItem inventoryItemToBeCreated, int maxInventoryItemId);
 }
