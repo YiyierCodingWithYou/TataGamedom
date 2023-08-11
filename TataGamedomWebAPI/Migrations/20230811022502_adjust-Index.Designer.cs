@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TataGamedomWebAPI.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using TataGamedomWebAPI.Infrastructure.Data;
 namespace TataGamedomWebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230811022502_adjust-Index")]
+    partial class adjustIndex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1451,7 +1454,7 @@ namespace TataGamedomWebAPI.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("ProductPrice")
@@ -2829,6 +2832,7 @@ namespace TataGamedomWebAPI.Migrations
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Product", "Product")
                         .WithMany("OrderItems")
                         .HasForeignKey("ProductId")
+                        .IsRequired()
                         .HasConstraintName("FK__OrderItem__Produ__4E53A1AA");
 
                     b.Navigation("InventoryItem");

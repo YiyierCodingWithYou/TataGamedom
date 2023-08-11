@@ -6,6 +6,7 @@ using TataGamedomWebAPI.Application.Features.Order.Commands.DeleteOrder;
 using TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder;
 using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderDetails;
 using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderList;
+using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleOrderItems;
 using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateOrderItem;
 using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemDetails;
 using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemList;
@@ -41,7 +42,7 @@ public class OrderItemsController : ControllerBase
     }
 
     [HttpGet("order/{orderId}")]
-    public async Task<ActionResult<List<OrderItemWithDetailsDto>>> GetListByAccountAndOrderIdWithDetails(int orderId) 
+    public async Task<ActionResult<List<OrderItemWithDetailsDto>>> GetListByAccountAndOrderIdWithDetails(int orderId)
     {
         var orderItemList = await _mediator.Send(new GetOrderItemListByOrderIdQuery(orderId));
         return Ok(orderItemList);
@@ -63,6 +64,18 @@ public class OrderItemsController : ControllerBase
         var response = await _mediator.Send(orderItem);
         return CreatedAtAction(nameof(Get), new { id = response });
     }
+
+
+    [HttpPost("MultipleOrderItems")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> Post(CreateMultipleOrderItemsCommand orderItemList)
+    {
+        List<CreateOrderItemResponseDto> response = await _mediator.Send(orderItemList);
+        return Ok(response);
+    }
+
 
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status202Accepted)]

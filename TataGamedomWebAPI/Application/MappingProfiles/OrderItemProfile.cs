@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleOrderItems;
 using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateOrderItem;
 using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemDetails;
 using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemList;
@@ -13,5 +14,6 @@ public class OrderItemProfile : Profile
         CreateMap<OrderItem, OrderItemDto>();
         CreateMap<OrderItem, OrderItemDetailsDto>();
         CreateMap<CreateOrderItemCommand, OrderItem>();
+        CreateMap<OrderItem, CreateOrderItemResponseDto>().ReverseMap();
     }
 }

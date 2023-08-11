@@ -12,6 +12,27 @@ public class InventoryItemRepository : GenericRepository<InventoryItem>, IInvent
     {
     }
 
+    public async Task<int> GetRemainingInventoryId(int productId)
+    {
+        var inventoryItemIdSoldOutList = await GetSoldOutIdList();
+
+        return await _dbContext.InventoryItems
+            .AsNoTracking()
+            .Where(i => i.ProductId == productId && inventoryItemIdSoldOutList.Contains(i.Id) == false)
+            .Select(i => i.Id)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<int> GetRemainingInventoryId(int productId, HashSet<int> soldOutIds)
+    {
+        return await _dbContext.InventoryItems
+            .AsNoTracking()
+            .Where(i => i.ProductId == productId && soldOutIds.Contains(i.Id) == false)
+            .Select(i => i.Id)
+            .FirstOrDefaultAsync();
+    }
+
+
     public async Task<int> GetRemainingInventoryQuantity(int productId)
     {
         int inventoryItems = await _dbContext.InventoryItems
@@ -29,15 +50,50 @@ public class InventoryItemRepository : GenericRepository<InventoryItem>, IInvent
         return remainingInventoryQuantity < 0? 0 : remainingInventoryQuantity;
     }
 
+    public async Task<HashSet<int>> GetSoldOutIdList()
+    {
+        var soldOutIds = await _dbContext.OrderItems
+            .AsNoTracking()
+            .Select(oi => oi.InventoryItemId)
+            .ToListAsync();
+
+        return new HashSet<int>(soldOutIds);
+    }
+
+    public async Task<List<int>> GetRemaingItemIdListByProductId(int productId)
+    {
+        var remaingInventoryItemIdList = await _dbContext.InventoryItems
+            .AsNoTracking()
+            .Where(ii => ii.ProductId == productId)
+            .GroupJoin(_dbContext.OrderItems,
+                       ii => ii.Id,
+                       oi => oi.InventoryItemId,
+                       (ii, oi) => new { InventoryItem = ii, OrderItem = oi.FirstOrDefault() })
+            .Where(temp => temp.OrderItem == null)
+            .Select(temp => temp.InventoryItem.Id)
+            .ToListAsync();
+
+        return remaingInventoryItemIdList;
+    }
+
+
+
+    public async Task<int> GetMaxId()
+    {
+        return await _dbContext.InventoryItems.MaxAsync(i => i.Id);
+    }
+
 
     public async Task<bool> IsInventoryItemExist(int inventoryItemId)
     {
         return await _dbContext.InventoryItems.AnyAsync(i => i.Id == inventoryItemId);
     }
 
-    public async Task<bool> IsInventoryItemNotSold(int inventoryItemId)
+    public async Task<bool> IsInventoryItemNotSoldOut(int inventoryItemId)
     {
         return await _dbContext.OrderItems.AnyAsync(o => o.InventoryItemId == inventoryItemId) == false;
     }
+
+
 }
 

@@ -19,7 +19,7 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
     async Task<List<Product>> IProductRepository.GetProductTopFiveSalesWithDetails()
     {
         List<int> productTopFiveSaleId = await _dbContext.OrderItems
-            .GroupBy(o => o.ProductId)
+            .GroupBy(o => o.InventoryItem.ProductId)
             .OrderByDescending(o => o.Count())
             .Select(g => g.Key)
             .Take(5)

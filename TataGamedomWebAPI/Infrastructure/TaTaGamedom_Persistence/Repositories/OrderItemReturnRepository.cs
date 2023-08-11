@@ -24,5 +24,10 @@ public class OrderItemReturnRepository : GenericRepository<OrderItemReturn>, IOr
 
         return orderItemReturn;
     }
+
+    public async Task<int> GetMaxId()
+    {
+        return await _dbContext.OrderItemReturns.MaxAsync(o => o.Id);
+    }
 }
 

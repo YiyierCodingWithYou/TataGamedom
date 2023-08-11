@@ -36,5 +36,21 @@ public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepos
 
         return orderItemListWithDetails;
     }
+
+    public async Task<string> GetOrderIndexById(int orderItemId)
+    {
+        string orderIndex = await _dbContext.OrderItems
+            .AsNoTracking()
+            .Where (oi => oi.Id == orderItemId)
+            .Select(oi => oi.Order.Index!)
+            .SingleAsync();
+
+        return orderIndex;
+    }
+
+    public async Task<int> GetMaxId()
+    {
+        return await _dbContext.OrderItems.MaxAsync(oi => oi.Id);
+    }
 }
 
