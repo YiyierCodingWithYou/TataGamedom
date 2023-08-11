@@ -39,12 +39,12 @@ public class CreateOrderItemCommandHandler : IRequestHandler<CreateOrderItemComm
 
     public async Task<int> Handle(CreateOrderItemCommand request, CancellationToken cancellationToken)
     {
+        request.InventoryItemId = await _inventoryItemRepository.GetRemainingInventoryId(request.ProductId);
         await ValidateRequestAsync(request);
 
-        var orderItemTobeCreated = _mapper.Map<Models.EFModels.OrderItem>(request);
+        Models.EFModels.OrderItem orderItemTobeCreated = _mapper.Map<Models.EFModels.OrderItem>(request);
 
         await GenerateIndex(request, orderItemTobeCreated);
-
         await _orderItemRepository.CreateAsync(orderItemTobeCreated);
 
         _logger.LogInformation("Created successfully");

@@ -10,6 +10,6 @@ public class CreateOrderItemCommand : IRequest<int>
 
     public int ProductId { get; set; }
 
-    public int? InventoryItemId { get; set; }
+    public int InventoryItemId { get; set; }
 
 }

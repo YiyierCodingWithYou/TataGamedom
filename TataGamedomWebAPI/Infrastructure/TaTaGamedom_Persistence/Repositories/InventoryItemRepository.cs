@@ -14,9 +14,11 @@ public class InventoryItemRepository : GenericRepository<InventoryItem>, IInvent
 
     public async Task<int> GetRemainingInventoryId(int productId)
     {
+        List<int> inventoryItemIdSoldOutList = await GetSoldOutIdList();
+
         return await _dbContext.InventoryItems
             .AsNoTracking()
-            .Where(i => i.ProductId == productId)
+            .Where(i => i.ProductId == productId && inventoryItemIdSoldOutList.Contains(i.Id) == false)
             .Select(i => i.Id)
             .FirstOrDefaultAsync();
     }
@@ -38,15 +40,24 @@ public class InventoryItemRepository : GenericRepository<InventoryItem>, IInvent
         return remainingInventoryQuantity < 0? 0 : remainingInventoryQuantity;
     }
 
-
     public async Task<bool> IsInventoryItemExist(int inventoryItemId)
     {
         return await _dbContext.InventoryItems.AnyAsync(i => i.Id == inventoryItemId);
     }
 
-    public async Task<bool> IsInventoryItemNotSold(int inventoryItemId)
+    public async Task<bool> IsInventoryItemNotSoldOut(int inventoryItemId)
     {
         return await _dbContext.OrderItems.AnyAsync(o => o.InventoryItemId == inventoryItemId) == false;
     }
+
+
+    private async Task<List<int>> GetSoldOutIdList()
+    {
+        return await _dbContext.OrderItems
+            .AsNoTracking()
+            .Select(oi => oi.InventoryItemId)
+            .ToListAsync();
+    }
+
 }
 

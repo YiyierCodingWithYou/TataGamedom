@@ -35,7 +35,7 @@ public class CreateOrderItemCommandValidator : AbstractValidator<CreateOrderItem
 
     private async Task<bool> InventoryItemMustNotSold(int inventoryItemId, CancellationToken token)
     {
-        return await _inventoryItemRepository.IsInventoryItemNotSold(inventoryItemId);
+        return await _inventoryItemRepository.IsInventoryItemNotSoldOut(inventoryItemId);
     }
 
     private async Task<bool> InventoryItemMustExist(int inventoryItemId, CancellationToken token)
