@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -35,12 +36,13 @@ namespace TataGamedomWebAPI.Controllers
 		}
 
 		// GET: api/Posts
+		[EnableCors("AllowCookie")]
 		[HttpGet("{postId}")]
 		public async Task<PostReadDto> GetPosts(int? postId)
 		{
-			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-			//int? memberId = _simpleHelper.memberIdByAccount(memberAccount)??null;
-			int? memberId = 3; // 王五 wangwu 測試用
+			var account = HttpContext.User.FindFirstValue("MembersAccount");
+			int? memberId = _simpleHelper.memberIdByAccount(account);
+			//int? memberId = 3; // 王五 wangwu 測試用
 
 			PostReadDto postDto = await _context.Posts.Where(p => p.Id == postId).Select(post => 
 			new PostReadDto
@@ -67,7 +69,7 @@ namespace TataGamedomWebAPI.Controllers
 				return null;
 			}	
 			
-			postDto.Comments = GetPostsComments(_context, postDto.PostId, memberId);
+			postDto.Comments = GetPostsComments(_context, postDto.PostId, memberId, postDto.BoardId );
 
 			if (memberId != null)
 			{
@@ -80,12 +82,12 @@ namespace TataGamedomWebAPI.Controllers
 		}
 
 		// GET: api/Posts
+		[EnableCors("AllowCookie")]
 		[HttpGet]
 		public async Task<IEnumerable<PostReadDto>> GetPosts(string? keyword, int? postId, string? MemberAccount, string? BoardName, int page = 1)
 		{
-			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-			//int? memberId = _simpleHelper.memberIdByAccount(memberAccount)??null;
-			int? memberId = 3; // 王五 wangwu 測試用
+			var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			int? memberId = _simpleHelper.memberIdByAccount(memberAccount);
 
 			int pageSize = 5;
 			int skipCount = (page - 1) * pageSize;
@@ -145,7 +147,7 @@ namespace TataGamedomWebAPI.Controllers
 
 			foreach (var post in posts)
 			{
-				post.Comments = GetPostsComments(_context, post.PostId, memberId);
+				post.Comments = GetPostsComments(_context, post.PostId, memberId, post.BoardId);
 			}
 
 			if (memberId != null)
@@ -161,7 +163,7 @@ namespace TataGamedomWebAPI.Controllers
 			return posts;
 		}
 
-		private IEnumerable<CommentReadDto> GetPostsComments(AppDbContext context, int postId, int? memberId)
+		private IEnumerable<CommentReadDto> GetPostsComments(AppDbContext context, int postId, int? memberId,int boardId)
 		{
 			var query = context.PostComments.AsQueryable();
 			query = query.Where(p => p.PostId == postId && p.ActiveFlag == true);
@@ -185,7 +187,7 @@ namespace TataGamedomWebAPI.Controllers
 				foreach (var comment in comments)
 				{
 					comment.IsAuthor = _simpleHelper.CommentIsAuthor(comment.CommentId, memberId ?? 0);
-					comment.IsMod = _simpleHelper.IsBoardMod(comment.CommentId, memberId ?? 0);
+					comment.IsMod = _simpleHelper.IsBoardMod(boardId, memberId ?? 0);
 					comment.Voted = _simpleHelper.IsCommentVoted(comment.CommentId, memberId ?? 0).voteType;
 				}
 			}
@@ -215,6 +217,7 @@ namespace TataGamedomWebAPI.Controllers
 		// PUT: api/Posts/5
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 
+		[EnableCors("AllowCookie")]
 		[HttpPut("{id}")]
 		public async Task<ApiResult> EditPost(int id, PostEditoDto dto)
 		{
@@ -252,13 +255,15 @@ namespace TataGamedomWebAPI.Controllers
 			return ApiResult.Success("修改成功");
 		}
 
+
+		[EnableCors("AllowCookie")]
 		[HttpPut("{postId}/Vote/{voteType}")]
 		public async Task<ApiResult> VotePost(int postId, string voteType)
 		{
 			Post existingPost = _context.Posts.Find(postId);
-			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
-			int memberId = 3; // 王五 wangwu 測試用
+			var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			int memberId = _simpleHelper.memberIdByAccount(memberAccount);
+			//int memberId = 3; // 王五 wangwu 測試用
 			var IsVoted = _simpleHelper.IsPostVoted(postId, memberId);
 
 			if (existingPost == null)
@@ -312,11 +317,12 @@ namespace TataGamedomWebAPI.Controllers
 		// POST: api/Posts
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPost]
+		[EnableCors("AllowCookie")]
 		public async Task<ApiResult> CreatePost(PostCreateDto dto)
 		{
-			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
-			int memberId = 3; // 王五 wangwu 測試用
+			var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			int memberId = _simpleHelper.memberIdByAccount(memberAccount);
+			//int memberId = 3; // 王五 wangwu 測試用
 			if (memberId == 0)
 			{
 				return ApiResult.Fail("沒這個會員");
@@ -352,13 +358,37 @@ namespace TataGamedomWebAPI.Controllers
 			//return CreatedAtAction("GetPost", new { id = post.Id }, post);
 		}
 
+
+		private bool IsTitleAvailible(string title , string content) 
+		{ 
+			if (title.Length > 50)
+			{
+				return false;
+			}
+			return true;
+		}
+
+		private (bool availible, string message) IsContentAvailible(string content)
+		{
+			if (content.Length > 1500)
+			{
+				return (false,"長度不可超過1500字") ;
+			}
+			if (content.Length == 0)
+			{
+				return (false, "必須有內容");
+			}
+			return (true, string.Empty );
+		}	
+
 		// DELETE: api/Posts/5
 		[HttpDelete("{id}")]
+		[EnableCors("AllowCookie")]
 		public async Task<ApiResult> DeletePost(int id)
 		{
-			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
-			int memberId = 3; // 王五 wangwu 測試用
+			var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			int memberId = _simpleHelper.memberIdByAccount(memberAccount);
+			//int memberId = 3; // 王五 wangwu 測試用
 
 			Post existingEntity = _context.Posts.Find(id);
 
@@ -367,7 +397,7 @@ namespace TataGamedomWebAPI.Controllers
 				return ApiResult.Fail("找不到這篇Psot,刪除失敗");
 			}
 
-			if (memberId != existingEntity.MemberId && _simpleHelper.IsBoardMod(existingEntity.BoardId ?? 0, memberId))
+			if (memberId != existingEntity.MemberId && !(_simpleHelper.IsBoardMod(existingEntity.BoardId ?? 0, memberId)))
 			{
 				return ApiResult.Fail("刪除失敗，本人或板手才可以刪除");
 			}

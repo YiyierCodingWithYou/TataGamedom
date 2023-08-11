@@ -1,7 +1,12 @@
 <template>
   <div>
     <ul>
-      <li v-for="product in topFive" :key="product.id" class="mt-8">
+      <li
+        v-for="product in topFive"
+        :key="product.id"
+        class="mt-8"
+        @click="handleProductClick(product.id)"
+      >
         <div class="d-flex">
           <img :src="imgLink + product.gameGameCoverImg" width="150" cover />
           <div class="d-flex flex-column">
@@ -30,6 +35,13 @@ const loadTopFive = async () => {
 onMounted(() => {
   loadTopFive();
 });
+
+//定義父元件傳到子元件的事件名稱
+const emit = defineEmits(["getProductInput"]);
+
+const handleProductClick = (productId) => {
+  emit("getProductInput", productId);
+};
 </script>
     
 <style>

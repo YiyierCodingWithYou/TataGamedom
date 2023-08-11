@@ -73,7 +73,7 @@
             </div>
             <div class="mb-3">
                 @Html.LabelFor(model => model.ProductImg, htmlAttributes: new { @class = "form-label col-md-2" })
-                <input type="file" name="files" class="form-control" multiple onchange="limitFiles(this, 6)" />
+                <input type="file" name="files" class="form-control" multiple onchange="limitFiles(this, 10)" />
                 @Html.ValidationMessageFor(model => model.ProductImg, "", new { @class = "text-danger" })
             </div>
 

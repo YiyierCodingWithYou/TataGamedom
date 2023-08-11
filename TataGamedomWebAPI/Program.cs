@@ -21,8 +21,10 @@ namespace TataGamedomWebAPI
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
             .LogTo(Console.WriteLine, LogLevel.Information));
 
-            //IHttpContextAccessor
+            
             builder.Services.AddControllersWithViews();
+
+            //IHttpContextAccessor
             builder.Services.AddHttpContextAccessor();
 
 
@@ -69,7 +71,6 @@ namespace TataGamedomWebAPI
 
 
             builder.Services.AddEndpointsApiExplorer();
-			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
