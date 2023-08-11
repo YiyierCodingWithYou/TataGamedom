@@ -7,6 +7,7 @@ using TataGamedomWebAPI.Infrastructure.TaTaGamedom_Persistence;
 using Microsoft.AspNetCore.Authentication.Cookies; // 引入 CookieAuthenticationDefaults 命名空間
 using Microsoft.Extensions.FileProviders;
 using TataGamedomWebAPI.Infrastructure.RealTimeServices;
+using TataGamedomWebAPI.Middleware;
 
 namespace TataGamedomWebAPI
 {
@@ -75,6 +76,9 @@ namespace TataGamedomWebAPI
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
+            //Middleware
+            app.UseMiddleware<ExceptionMiddleware>();
 
             if (app.Environment.IsDevelopment())
             {

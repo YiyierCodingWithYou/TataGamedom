@@ -4,5 +4,11 @@ namespace TataGamedomWebAPI.Models.Interfaces;
 
 public interface IIndexGenerator
 {
-    string GetOrderIndex(Order dto);
+    string GetOrderIndex(Order order, int maxOrderId);
+
+    string GetOrderItemIndex(OrderItem orderItem, int maxOrderItemId);
+
+    string GetOrderItemReturnIndex(OrderItemReturn orderItemReturn, string orderIndex, int maxOrderId);
+
+    string GetSKU(InventoryItem inventoryItemToBeCreated, int maxInventoryItemId);
 }

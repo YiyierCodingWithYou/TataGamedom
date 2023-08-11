@@ -24,22 +24,18 @@ public class CreateOrderItemCommandValidator : AbstractValidator<CreateOrderItem
             .MustAsync(OrderMustExist)
             .WithMessage("訂單主檔不存在");
 
-        RuleFor(p => p.ProductId)
-            .NotEmpty()
-            .MustAsync(ProductMustExist)
-            .WithMessage("此產品編號不存在");
 
-        RuleFor(p => p.InventoryItemId)
-            .NotEmpty()
-            .MustAsync(InventoryItemMustExist).WithMessage("此庫存編號不存在")
-            .MustAsync(InventoryItemMustNotSold).WithMessage("此庫存商品已售出");
+        //RuleFor(p => p.InventoryItemId)
+        //    .NotEmpty()
+        //    .MustAsync(InventoryItemMustExist).WithMessage("此庫存編號不存在")
+        //    .MustAsync(InventoryItemMustNotSold).WithMessage("此庫存商品已售出");
 
 
     }
 
     private async Task<bool> InventoryItemMustNotSold(int inventoryItemId, CancellationToken token)
     {
-        return await _inventoryItemRepository.IsInventoryItemNotSold(inventoryItemId);
+        return await _inventoryItemRepository.IsInventoryItemNotSoldOut(inventoryItemId);
     }
 
     private async Task<bool> InventoryItemMustExist(int inventoryItemId, CancellationToken token)

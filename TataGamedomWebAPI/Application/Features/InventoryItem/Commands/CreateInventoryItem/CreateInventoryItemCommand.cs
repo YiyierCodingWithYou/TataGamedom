@@ -4,11 +4,11 @@ namespace TataGamedomWebAPI.Application.Features.InventoryItem.Commands.CreateIn
 
 public class CreateInventoryItemCommand : IRequest<int>
 {
-    public string Index { get; set; } = string.Empty;
+    public string SKU { get; set; } = string.Empty;
 
     public int ProductId { get; set; }
 
-    public int StockInSheetId { get; set; }
+    public int StockInSheetId { get; set; } = 50;  //Todo
 
     public decimal Cost { get; set; }
 

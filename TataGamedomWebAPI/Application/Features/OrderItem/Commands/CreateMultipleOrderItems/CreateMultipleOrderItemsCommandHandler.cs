@@ -3,13 +3,13 @@ using MediatR;
 using TataGamedomWebAPI.Application.Contracts.Logging;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
 using TataGamedomWebAPI.Application.Exceptions;
-using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleOrderItems;
+using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateOrderItem;
 using TataGamedomWebAPI.Models.EFModels;
 using TataGamedomWebAPI.Models.Interfaces;
 
-namespace TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateOrderItem;
+namespace TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleOrderItems;
 
-public class CreateOrderItemCommandHandler : IRequestHandler<CreateOrderItemCommand, CreateOrderItemResponseDto>
+public class CreateMultipleOrderItemsCommandHandler : IRequestHandler<CreateMultipleOrderItemsCommand, List<CreateOrderItemResponseDto>>
 {
     private readonly IMapper _mapper;
     private readonly IOrderRepository _orderRepository;
@@ -19,7 +19,7 @@ public class CreateOrderItemCommandHandler : IRequestHandler<CreateOrderItemComm
     private readonly IAppLogger<CreateOrderItemCommandHandler> _logger;
     private readonly IIndexGenerator _indexGenerator;
 
-    public CreateOrderItemCommandHandler(
+    public CreateMultipleOrderItemsCommandHandler(
         IMapper mapper,
         IOrderRepository orderRepository,
         IOrderItemRepository orderItemRepository,
@@ -37,20 +37,45 @@ public class CreateOrderItemCommandHandler : IRequestHandler<CreateOrderItemComm
         this._indexGenerator = indexGenerator;
     }
 
-    public async Task<CreateOrderItemResponseDto> Handle(CreateOrderItemCommand request, CancellationToken cancellationToken)
+    /// <summary>
+    /// 取得未售出庫存Id => 於迴圈賦值並紀錄已加入的Id => 驗證 => mapping => 產生自訂編號 => 一次新增多筆明細
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<List<CreateOrderItemResponseDto>> Handle(CreateMultipleOrderItemsCommand request, CancellationToken cancellationToken)
     {
-        await ValidateRequestAsync(request);
+        var orderItemToBeCreatedList = new List<Models.EFModels.OrderItem>();
+        HashSet<int> soldOutIds = await _inventoryItemRepository.GetSoldOutIdList();
 
-        Models.EFModels.OrderItem orderItemTobeCreated = _mapper.Map<Models.EFModels.OrderItem>(request);
-        orderItemTobeCreated.InventoryItemId = await _inventoryItemRepository.GetRemainingInventoryId(request.ProductId);
+        foreach (var createOrderItemCommand in request.CreateOrderItemCommandList)
+        {
+            await ValidateRequestAsync(createOrderItemCommand);
 
-        await GenerateIndex(request, orderItemTobeCreated);
-        await _orderItemRepository.CreateAsync(orderItemTobeCreated);
+            var orderItem = _mapper.Map<Models.EFModels.OrderItem>(createOrderItemCommand);
 
-        _logger.LogInformation("Created successfully");
-        return _mapper.Map<CreateOrderItemResponseDto>(orderItemTobeCreated);
+            await AddInventoryIemIdToOrderItem(soldOutIds, createOrderItemCommand, orderItem);
+
+
+            await GenerateIndex(createOrderItemCommand, orderItem);
+
+            orderItemToBeCreatedList.Add(orderItem);
+        }
+
+        await _orderItemRepository.CreateAsync(orderItemToBeCreatedList);
+        _logger.LogInformation("Created multiple order items successfully");
+        
+        
+        return _mapper.Map<List<CreateOrderItemResponseDto>>(orderItemToBeCreatedList);
     }
 
+    private async Task AddInventoryIemIdToOrderItem(HashSet<int> soldOutIds, CreateOrderItemCommand createOrderItemCommand, Models.EFModels.OrderItem orderItem)
+    {
+        int remainingInventoryId = await _inventoryItemRepository.GetRemainingInventoryId(createOrderItemCommand.ProductId, soldOutIds);
+        orderItem.InventoryItemId = remainingInventoryId;
+        
+        soldOutIds.Add(remainingInventoryId);
+    }
 
     private async Task ValidateRequestAsync(CreateOrderItemCommand request)
     {
@@ -58,14 +83,14 @@ public class CreateOrderItemCommandHandler : IRequestHandler<CreateOrderItemComm
                     _orderRepository,
                     _productRepository,
                     _inventoryItemRepository);
-        
+
         var validationResult = await validator.ValidateAsync(request);
         if (validationResult.Errors.Any())
         {
             throw new BadRequestException("Invalid orderItem request", validationResult);
         }
     }
-    
+
     private async Task GenerateIndex(CreateOrderItemCommand request, Models.EFModels.OrderItem orderItemTobeCreated)
     {
         int maxOrderItemId = await _orderItemRepository.GetMaxId();

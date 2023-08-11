@@ -28,6 +28,8 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
         var orderWithDeatilsList = await _dbContext.Orders
             .AsNoTracking()
             .Where(o => o.Member.Account == account)
+            .OrderBy(o => o.OrderStatusId)
+            .ThenByDescending(o => o.CreatedAt)
             .Select(o => new OrderWithDeatilsDto
             {
                 Id = o.Id,
@@ -41,5 +43,11 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
 
         return orderWithDeatilsList;
     }
+
+    public async Task<int> GetMaxId()
+    {
+        return await _dbContext.Orders.MaxAsync(o => o.Id);
+    }
 }
+
 

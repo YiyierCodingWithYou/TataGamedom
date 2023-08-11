@@ -8,6 +8,8 @@ public interface IGenericRepository<T> where T : BaseEntity
 
     Task<T?> GetByIdAsync(int id);
 
+    Task CreateAsync(IEnumerable<T> entities);
+
     Task CreateAsync(T entity);
 
     Task UpdateAsync(T entity);

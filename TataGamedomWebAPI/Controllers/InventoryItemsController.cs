@@ -6,6 +6,7 @@ using TataGamedomWebAPI.Application.Features.InventoryItem.Commands.DeleteInvent
 using TataGamedomWebAPI.Application.Features.InventoryItem.Queries.GetInventoryItemDetails;
 using TataGamedomWebAPI.Application.Features.InventoryItem.Queries.GetInventoryItemList;
 using TataGamedomWebAPI.Application.Features.InventoryItem.Queries.GetRemainingInventoryDetails;
+using TataGamedomWebAPI.Application.Features.InventoryItem.Queries.GetRemainingInventoryList;
 using TataGamedomWebAPI.Application.Features.InventoryItem.Queries.GetRemainingInventoryQuantity;
 
 namespace TataGamedomWebAPI.Controllers;
@@ -30,7 +31,12 @@ public class InventoryItemsController : ControllerBase
 
     [HttpGet("RemainingQuantity/{productId}")]
     public async Task<ActionResult<int>> RemainingInventoryQuantity(int productId) 
-        => Ok(await _mediator.Send(new GetRemainingInventoryQuantityQuery(productId)));
+    => Ok(await _mediator.Send(new GetRemainingInventoryQuantityQuery(productId)));
+
+
+    [HttpGet("RemainingInventoryItemIdList/{productId}")]
+    public async Task<ActionResult<int>> GetRemaingItemIdListByProductId(int productId)
+    => Ok(await _mediator.Send(new GetRemaingItemIdListByProductIdQuery(productId)));
 
 
     [HttpPost]
@@ -43,6 +49,7 @@ public class InventoryItemsController : ControllerBase
         int response = await _mediator.Send(new CreateInventoryItemCommand());
         return CreatedAtAction(nameof(Get), new { id = response });
     }
+
 
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
