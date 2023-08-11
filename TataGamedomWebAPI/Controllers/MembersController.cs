@@ -38,7 +38,7 @@ namespace TataGamedomWebAPI.Controllers
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		//public string Login(LoginDTO dto)
-		public async Task<ActionResult> Login(LoginDTO dto)
+		public async Task<ActionResult<string?>> Login(LoginDTO dto)
 		{
             var hashOrigPwd = HashUtility.ToSHA256(dto.Password, "!@#$$DGTEGYT");
 
@@ -60,6 +60,7 @@ namespace TataGamedomWebAPI.Controllers
                     //這邊可以自定義
 					//new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), //抓ID
 					new Claim(ClaimTypes.Name, user.Account),//抓帳號
+                    new Claim("MembersAccount",user.Account),
 					new Claim("MembersName", user.Name),//抓名字
                     new Claim("Membersid",user.Id.ToString())//抓ID欄位
                 };
@@ -74,11 +75,27 @@ namespace TataGamedomWebAPI.Controllers
 				HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 				//HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authenticationProperties);
 
-				return Ok();
+				return Ok( user.Name );
 
             }
 
         }
+
+		private void ClearReturnToRoute()
+		{
+			var returnToRoute = HttpContext.Request.Headers["ReturnToRoute"].ToString();
+			if (!string.IsNullOrEmpty(returnToRoute))
+			{
+				HttpContext.Response.Headers.Remove("ReturnToRoute");
+				Response.Cookies.Append("ReturnToRoute", returnToRoute, new CookieOptions
+				{
+					HttpOnly = true,
+					Expires = DateTime.UtcNow.AddMinutes(-1) // Expire immediately
+				});
+			}
+		}
+
+
 
 		[Authorize]
 		[EnableCors("AllowCookie")]
@@ -262,6 +279,8 @@ namespace TataGamedomWebAPI.Controllers
 
         //    return NoContent();
         //}
+
+
 
         private bool MemberExists(int id)
         {
