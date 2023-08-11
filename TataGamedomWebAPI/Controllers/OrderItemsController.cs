@@ -72,7 +72,7 @@ public class OrderItemsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Post(CreateMultipleOrderItemsCommand orderItemList)
     {
-        List<Models.EFModels.OrderItem> response = await _mediator.Send(orderItemList);
+        List<CreateOrderItemResponseDto> response = await _mediator.Send(orderItemList);
         return Ok(response);
     }
 

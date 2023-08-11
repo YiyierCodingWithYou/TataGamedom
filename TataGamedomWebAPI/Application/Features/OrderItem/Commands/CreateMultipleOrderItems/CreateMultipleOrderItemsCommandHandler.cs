@@ -9,7 +9,7 @@ using TataGamedomWebAPI.Models.Interfaces;
 
 namespace TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleOrderItems;
 
-public class CreateMultipleOrderItemsCommandHandler : IRequestHandler<CreateMultipleOrderItemsCommand, List<Models.EFModels.OrderItem>>
+public class CreateMultipleOrderItemsCommandHandler : IRequestHandler<CreateMultipleOrderItemsCommand, List<CreateOrderItemResponseDto>>
 {
     private readonly IMapper _mapper;
     private readonly IOrderRepository _orderRepository;
@@ -43,18 +43,19 @@ public class CreateMultipleOrderItemsCommandHandler : IRequestHandler<CreateMult
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<List<Models.EFModels.OrderItem>> Handle(CreateMultipleOrderItemsCommand request, CancellationToken cancellationToken)
+    public async Task<List<CreateOrderItemResponseDto>> Handle(CreateMultipleOrderItemsCommand request, CancellationToken cancellationToken)
     {
         var orderItemToBeCreatedList = new List<Models.EFModels.OrderItem>();
         HashSet<int> soldOutIds = await _inventoryItemRepository.GetSoldOutIdList();
 
         foreach (var createOrderItemCommand in request.CreateOrderItemCommandList)
         {
-            await AddInventoryIemIdToOrderItem(soldOutIds, createOrderItemCommand);
-
             await ValidateRequestAsync(createOrderItemCommand);
 
             var orderItem = _mapper.Map<Models.EFModels.OrderItem>(createOrderItemCommand);
+
+            await AddInventoryIemIdToOrderItem(soldOutIds, createOrderItemCommand, orderItem);
+
 
             await GenerateIndex(createOrderItemCommand, orderItem);
 
@@ -63,13 +64,15 @@ public class CreateMultipleOrderItemsCommandHandler : IRequestHandler<CreateMult
 
         await _orderItemRepository.CreateAsync(orderItemToBeCreatedList);
         _logger.LogInformation("Created multiple order items successfully");
-        return orderItemToBeCreatedList;
+        
+        
+        return _mapper.Map<List<CreateOrderItemResponseDto>>(orderItemToBeCreatedList);
     }
 
-    private async Task AddInventoryIemIdToOrderItem(HashSet<int> soldOutIds, CreateOrderItemCommand createOrderItemCommand)
+    private async Task AddInventoryIemIdToOrderItem(HashSet<int> soldOutIds, CreateOrderItemCommand createOrderItemCommand, Models.EFModels.OrderItem orderItem)
     {
         int remainingInventoryId = await _inventoryItemRepository.GetRemainingInventoryId(createOrderItemCommand.ProductId, soldOutIds);
-        createOrderItemCommand.InventoryItemId = remainingInventoryId;
+        orderItem.InventoryItemId = remainingInventoryId;
         
         soldOutIds.Add(remainingInventoryId);
     }

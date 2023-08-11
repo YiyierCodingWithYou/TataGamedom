@@ -3,12 +3,13 @@ using MediatR;
 using TataGamedomWebAPI.Application.Contracts.Logging;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
 using TataGamedomWebAPI.Application.Exceptions;
+using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleOrderItems;
 using TataGamedomWebAPI.Models.EFModels;
 using TataGamedomWebAPI.Models.Interfaces;
 
 namespace TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateOrderItem;
 
-public class CreateOrderItemCommandHandler : IRequestHandler<CreateOrderItemCommand, int>
+public class CreateOrderItemCommandHandler : IRequestHandler<CreateOrderItemCommand, CreateOrderItemResponseDto>
 {
     private readonly IMapper _mapper;
     private readonly IOrderRepository _orderRepository;
@@ -36,18 +37,18 @@ public class CreateOrderItemCommandHandler : IRequestHandler<CreateOrderItemComm
         this._indexGenerator = indexGenerator;
     }
 
-    public async Task<int> Handle(CreateOrderItemCommand request, CancellationToken cancellationToken)
+    public async Task<CreateOrderItemResponseDto> Handle(CreateOrderItemCommand request, CancellationToken cancellationToken)
     {
-        request.InventoryItemId = await _inventoryItemRepository.GetRemainingInventoryId(request.ProductId);
         await ValidateRequestAsync(request);
 
         Models.EFModels.OrderItem orderItemTobeCreated = _mapper.Map<Models.EFModels.OrderItem>(request);
+        orderItemTobeCreated.InventoryItemId = await _inventoryItemRepository.GetRemainingInventoryId(request.ProductId);
 
         await GenerateIndex(request, orderItemTobeCreated);
         await _orderItemRepository.CreateAsync(orderItemTobeCreated);
 
         _logger.LogInformation("Created successfully");
-        return orderItemTobeCreated.Id;
+        return _mapper.Map<CreateOrderItemResponseDto>(orderItemTobeCreated);
     }
 
 
