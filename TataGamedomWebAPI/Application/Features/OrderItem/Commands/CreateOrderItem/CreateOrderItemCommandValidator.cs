@@ -24,10 +24,6 @@ public class CreateOrderItemCommandValidator : AbstractValidator<CreateOrderItem
             .MustAsync(OrderMustExist)
             .WithMessage("訂單主檔不存在");
 
-        RuleFor(p => p.ProductId)
-            .NotEmpty()
-            .MustAsync(ProductMustExist)
-            .WithMessage("此產品編號不存在");
 
         RuleFor(p => p.InventoryItemId)
             .NotEmpty()

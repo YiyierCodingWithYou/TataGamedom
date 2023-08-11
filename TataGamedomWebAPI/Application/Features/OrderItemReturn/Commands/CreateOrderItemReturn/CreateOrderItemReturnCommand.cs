@@ -4,7 +4,7 @@ namespace TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.Create
 
 public class CreateOrderItemReturnCommand : IRequest<int>
 {
-    public string Index { get; set; } = string.Empty;
+    public string? Index { get; set; } = string.Empty;
 
     public int OrderItemId { get; set; }
 

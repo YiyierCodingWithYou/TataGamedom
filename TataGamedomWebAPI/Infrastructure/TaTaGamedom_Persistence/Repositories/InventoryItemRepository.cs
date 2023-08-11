@@ -12,6 +12,15 @@ public class InventoryItemRepository : GenericRepository<InventoryItem>, IInvent
     {
     }
 
+    public async Task<int> GetRemainingInventoryId(int productId)
+    {
+        return await _dbContext.InventoryItems
+            .AsNoTracking()
+            .Where(i => i.ProductId == productId)
+            .Select(i => i.Id)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<int> GetRemainingInventoryQuantity(int productId)
     {
         int inventoryItems = await _dbContext.InventoryItems

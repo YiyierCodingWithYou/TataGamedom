@@ -122,6 +122,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Application\Features\InventoryItem\Queries\GetRemainingInventoryList\" />
     <Folder Include="Application\Features\InventoryItem\Shared\" />
     <Folder Include="Application\Features\OrderItem\Shared\" />
     <Folder Include="Files\Uploads\PostComment\" />

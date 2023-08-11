@@ -3,7 +3,9 @@ using MediatR;
 using TataGamedomWebAPI.Application.Contracts.Logging;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
 using TataGamedomWebAPI.Application.Exceptions;
+using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.CreateOrderItemReturn;
 using TataGamedomWebAPI.Models.EFModels;
+using TataGamedomWebAPI.Models.Interfaces;
 
 namespace TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateOrderItem;
 
@@ -15,6 +17,7 @@ public class CreateOrderItemCommandHandler : IRequestHandler<CreateOrderItemComm
     private readonly IProductRepository _productRepository;
     private readonly IInventoryItemRepository _inventoryItemRepository;
     private readonly IAppLogger<CreateOrderItemCommandHandler> _logger;
+    private readonly IIndexGenerator _indexGenerator;
 
     public CreateOrderItemCommandHandler(
         IMapper mapper,
@@ -22,7 +25,8 @@ public class CreateOrderItemCommandHandler : IRequestHandler<CreateOrderItemComm
         IOrderItemRepository orderItemRepository,
         IProductRepository productRepository,
         IInventoryItemRepository inventoryItemRepository,
-        IAppLogger<CreateOrderItemCommandHandler> logger)
+        IAppLogger<CreateOrderItemCommandHandler> logger,
+        IIndexGenerator indexGenerator)
     {
         this._mapper = mapper;
         this._orderRepository = orderRepository;
@@ -30,6 +34,7 @@ public class CreateOrderItemCommandHandler : IRequestHandler<CreateOrderItemComm
         this._productRepository = productRepository;
         this._inventoryItemRepository = inventoryItemRepository;
         this._logger = logger;
+        this._indexGenerator = indexGenerator;
     }
 
     public async Task<int> Handle(CreateOrderItemCommand request, CancellationToken cancellationToken)
@@ -37,6 +42,9 @@ public class CreateOrderItemCommandHandler : IRequestHandler<CreateOrderItemComm
         await ValidateRequestAsync(request);
 
         var orderItemTobeCreated = _mapper.Map<Models.EFModels.OrderItem>(request);
+
+        await GenerateIndex(request, orderItemTobeCreated);
+
         await _orderItemRepository.CreateAsync(orderItemTobeCreated);
 
         _logger.LogInformation("Created successfully");
@@ -55,5 +63,12 @@ public class CreateOrderItemCommandHandler : IRequestHandler<CreateOrderItemComm
         {
             throw new BadRequestException("Invalid orderItem request", validationResult);
         }
+    }
+
+
+    private async Task GenerateIndex(CreateOrderItemCommand request, Models.EFModels.OrderItem orderItemTobeCreated)
+    {
+        int maxOrderItemId = await _orderItemRepository.GetMaxId();
+        orderItemTobeCreated.Index = _indexGenerator.GetOrderItemIndex(orderItemTobeCreated, maxOrderItemId);
     }
 }
