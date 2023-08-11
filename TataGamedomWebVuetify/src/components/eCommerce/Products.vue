@@ -104,6 +104,7 @@
                 v-model="product.score"
                 class="ma-2 d-flex justify-center"
                 density="compact"
+                half-increments
                 readonly
               ></v-rating>
 
@@ -127,16 +128,17 @@
     ></v-pagination>
   </div>
 </template>
-    
+
 <script setup>
 import { ref, reactive, onMounted } from "vue";
 import SearchTextBox from "../eCommerce/SearchTextBox.vue";
 import ClassificationList from "../eCommerce/ClassificationList.vue";
 import Carousel from "../eCommerce/Carousel.vue";
 import TopFiveProduct from "../eCommerce/TopFiveProduct.vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const router = useRouter();
+const route = useRoute();
 const keyword = ref("");
 const classification = ref("");
 const sortBy = ref("");
@@ -146,6 +148,13 @@ const products = ref([]);
 const totalPages = ref();
 const thePage = ref(1);
 let img = "https://localhost:7081/Files/Uploads/";
+
+// if (route.params.classification) {
+//   classification = route.params.classification;
+//   // 在这里进行你的操作
+// } else {
+//   classification = "";
+// }
 const select = ref({
   sort: "",
   ascending: "",
@@ -230,6 +239,11 @@ const Add2Cart = async (productId) => {
     }),
   });
   let result = await response.json();
+  if (result.isFail) {
+    router.push({
+      name: "Login",
+    });
+  }
   alert(result.message);
 };
 
@@ -245,6 +259,6 @@ const GetSingleProduct = async (productId) => {
   });
 };
 </script>
-    
+
 <style>
 </style>

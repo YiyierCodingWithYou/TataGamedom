@@ -180,7 +180,7 @@ namespace TataGamedomWebAPI.Controllers
 		private (IEnumerable<GameCommentsDTO> Comments, int TotalPages) GetGameComments(AppDbContext context, int? gameId, int page, int pageSize)
 		{
 			var query = context.GameComments.AsQueryable();
-			query = query.Where(p => p.GameId == gameId);
+			query = query.Where(p => p.GameId == gameId && p.ActiveFlag == true).OrderByDescending(p => p.CreatedTime);
 			var comments = query.Select(c => new GameCommentsDTO
 			{
 				Id = c.Id,

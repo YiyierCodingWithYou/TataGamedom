@@ -34,8 +34,8 @@ namespace TataGamedomWebAPI.Models.DTOs.Shop
         public IEnumerable<string>? Classification { get; set; }
 
 		public int CommentCount { get; set; }
-        public IEnumerable<GameCommentsDTO> GameComments { get; set; }
+		public IEnumerable<GameCommentsDTO> GameComments { get; set; }
 
-        public int TotalPages { get; set; }
-    }
+		public int TotalPages { get; set; }
+	}
 }

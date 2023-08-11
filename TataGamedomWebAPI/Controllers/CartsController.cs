@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,10 +22,12 @@ namespace TataGamedomWebAPI.Controllers
 	public class CartsController : ControllerBase
 	{
 		private readonly AppDbContext _context;
+		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public CartsController(AppDbContext context)
+		public CartsController(AppDbContext context, IHttpContextAccessor httpContextAccessor)
 		{
 			_context = context;
+			_httpContextAccessor = httpContextAccessor;
 		}
 
 		// GET: api/Carts
@@ -132,6 +135,7 @@ namespace TataGamedomWebAPI.Controllers
 
 		// POST: api/Carts
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+	
 		[HttpPost]
 		[EnableCors("AllowCookie")]
 		public async Task<ApiResult> PostCart(CartItemCreateDTO cartItemCreateDTO)
@@ -140,10 +144,12 @@ namespace TataGamedomWebAPI.Controllers
 			{
 				return ApiResult.Fail("Entity set 'AppDbContext.Carts'  is null.");
 			}
-			var account = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			var account = HttpContext.User.FindFirstValue("MembersAccount");
 			//var account = "lisi";
+			//string? identity =  _httpContextAccessor.HttpContext.User.Identity.Name;
 			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
-			if(user == null)
+
+			if (user == null)
 			{
 				return ApiResult.Fail("請先登入會員");
 			}
