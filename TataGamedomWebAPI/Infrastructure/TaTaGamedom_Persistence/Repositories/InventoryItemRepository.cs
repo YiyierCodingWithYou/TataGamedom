@@ -60,6 +60,24 @@ public class InventoryItemRepository : GenericRepository<InventoryItem>, IInvent
         return new HashSet<int>(soldOutIds);
     }
 
+    public async Task<List<int>> GetRemaingItemIdListByProductId(int productId)
+    {
+        var remaingInventoryItemIdList = await _dbContext.InventoryItems
+            .AsNoTracking()
+            .Where(ii => ii.ProductId == productId)
+            .GroupJoin(_dbContext.OrderItems,
+                       ii => ii.Id,
+                       oi => oi.InventoryItemId,
+                       (ii, oi) => new { InventoryItem = ii, OrderItem = oi.FirstOrDefault() })
+            .Where(temp => temp.OrderItem == null)
+            .Select(temp => temp.InventoryItem.Id)
+            .ToListAsync();
+
+        return remaingInventoryItemIdList;
+    }
+
+
+
     public async Task<int> GetMaxId()
     {
         return await _dbContext.InventoryItems.MaxAsync(i => i.Id);
@@ -75,6 +93,7 @@ public class InventoryItemRepository : GenericRepository<InventoryItem>, IInvent
     {
         return await _dbContext.OrderItems.AnyAsync(o => o.InventoryItemId == inventoryItemId) == false;
     }
+
 
 }
 
