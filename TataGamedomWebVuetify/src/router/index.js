@@ -12,6 +12,8 @@ import OrderDetails from '../views/OrderDetails.vue'
 import OrderItemReturn from '../views/OrderItemReturn.vue'
 import SupportHub from '../views/SupportHub.vue'
 import LinePay from '../views/LinePay.vue'
+import LinePayConfirmPayment from '../views/LinePayConfirmPayment.vue'
+
 
 const routes = [
   {
@@ -109,6 +111,11 @@ const routes = [
         path: '/LinePay',
         name: 'LinePay',
         component: LinePay
+      },
+      {
+        path: '/LinePayConfirmPayment',
+        name: 'LinePayConfirmPayment',
+        component: LinePayConfirmPayment
       },
     ],
   },
