@@ -10,28 +10,45 @@
         <th class="text-left">遊戲及類型</th>
         <th class="text-left">總額</th>
         <th class="text-left">狀態</th>
+        <th class="text-left">詳細</th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="order in results" :key="order.id" @click="navigateToOrderDetail(order)" height="200">
+      <tr v-for="order in results" :key="order.id">
         <td>{{ relativeTime(order.createdAt) }}</td>
         <td v-html="combinedGameAndType(order.gameChiName, order.productIsVirtual)"></td>
         <td>{{ order.total }}</td>
         <td>{{ order.orderStatusCodeName }}</td>
+        <td>
+          <v-btn @click="toggleOrderDetail(order.id)">詳細</v-btn>
+          <v-expansion-panels v-if="shownOrder === order.id">
+            <v-expansion-panel>
+              <v-expansion-panel-content>
+                <OrderDetails :orderId="order.orderId" />
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </td>
       </tr>
     </tbody>
   </v-table>
 </template>
+
   
 <script>
 import { zhTW } from "date-fns/locale";
 import { format } from "date-fns";
+import OrderDetails from './OrderDetails.vue';
 
 
 export default {
+  components: {
+    OrderDetails
+  },
   data() {
     return {
       results: [],
+      shownOrder: null
     };
   },
   methods: {
@@ -65,6 +82,13 @@ export default {
           console.log(error);
           this.error = "Failed to fetch data - please try again later.";
         });
+    },
+    toggleOrderDetail(orderId) {
+      if (this.shownOrder === orderId) {
+        this.shownOrder = null;
+      } else {
+        this.shownOrder = orderId;
+      }
     },
 
     toggleShow(order) {

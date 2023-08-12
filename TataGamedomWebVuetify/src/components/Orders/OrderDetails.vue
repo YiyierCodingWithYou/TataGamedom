@@ -1,11 +1,6 @@
 <template>
-  <v-card
-    v-for="orderItem in results"
-    :key="orderItem.id"
-    class="mx-auto mb-3 overflow-auto"
-    max-width="500"
-    variant="outlined"
-  >
+  <v-card v-for="orderItem in results" :key="orderItem.id" class="mx-auto mb-3 overflow-auto" max-width="500"
+    variant="outlined">
     <v-img :src="orderItem.gameGameCoverImg" height="200px"></v-img>
     <v-card-title>
       {{ orderItem.gameChiName }}
@@ -17,10 +12,7 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn
-        :icon="shownItems[orderItem.id] ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-        @click="toggleShow(orderItem.id)"
-      >
+      <v-btn :icon="shownItems[orderItem.id] ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="toggleShow(orderItem.id)">
       </v-btn>
     </v-card-actions>
 
@@ -28,11 +20,7 @@
       <div v-if="shownItems[orderItem.id]">
         <v-divider></v-divider>
 
-        <v-btn
-          color="orange-lighten-2"
-          variant="text"
-          @click="navigateToOrderItemReturn(orderItem)"
-        >
+        <v-btn color="orange-lighten-2" variant="text" @click="navigateToOrderItemReturn(orderItem)">
           申請退貨
         </v-btn>
 
@@ -44,6 +32,11 @@
 
 <script>
 export default {
+  props: {
+    orderId: {
+      required: true
+    }
+  },
   data() {
     return {
       results: [],
@@ -61,7 +54,7 @@ export default {
     loadData() {
       const orderId = this.$route.params.id;
 
-      fetch(`https://localhost:7081/api/OrderItems/order/${orderId}`)
+      fetch(`https://localhost:7081/api/OrderItems/order/${this.orderId}`)
         .then((response) => {
           if (response.ok) {
             return response.json();
