@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar flat :key="forceRerenderKey">
+  <v-app-bar flat>
     <v-app-bar-title>
       <v-icon icon="mdi-circle-slice-4" />
       TataGamedom
@@ -20,7 +20,7 @@ import axios from "axios";
 export default {
   computed: {
     IsLogined() {
-      return this.$store.state.IsLogined;
+      return this.$store.state.isLoggedIn;
     },
     name() {
       return this.$store.state.name;
@@ -35,11 +35,6 @@ export default {
     };
   },
   methods: {
-    reload2() {
-      console.log("reload2動作");
-      this.forceRerenderKey += 1;
-      this.$router.go(0);
-    },
     login() {
       this.returnTo = this.$route.fullPath;
       this.$router.push("/Members/login");
@@ -50,6 +45,19 @@ export default {
       });
       this.$router.go(0);
     },
+    checkLogin() {
+      axios
+        .get("https://localhost:7081/api/Common/IsLoggedIn", {
+          withCredentials: true,
+        })
+        .then((res) => {
+          console.log(res.data);
+          this.$store.commit("SET_LOGIN", res.data);
+        });
+    },
+  },
+  beforeMount() {
+    this.checkLogin();
   },
 };
 </script>
