@@ -28,13 +28,14 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
         var orderWithDeatilsList = await _dbContext.Orders
             .AsNoTracking()
             .Where(o => o.Member.Account == account)
+            .Where(o => o.OrderItems.Any())
             .OrderBy(o => o.OrderStatusId)
             .ThenByDescending(o => o.CreatedAt)
             .Select(o => new OrderWithDeatilsDto
             {
                 Id = o.Id,
-                GameChiName = o.OrderItems.Select(oi => oi.Product.Game!.ChiName).ToList(),
-                ProductIsVirtual = o.OrderItems.Select(oi => oi.Product.IsVirtual).ToList(),
+                GameChiName = o.OrderItems.Select(oi => oi.InventoryItem.Product.Game!.ChiName).ToList(),
+                ProductIsVirtual = o.OrderItems.Select(oi => oi.InventoryItem.Product.IsVirtual).ToList(),
                 CreatedAt = o.CreatedAt,
                 Total = o.OrderItems.Select(oi => oi.ProductPrice).Sum(),
                 OrderStatusCodeName = o.OrderStatus.Name,
