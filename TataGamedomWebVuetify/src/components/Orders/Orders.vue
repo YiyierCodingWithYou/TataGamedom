@@ -3,25 +3,19 @@
   <p v-else-if="!isLoading && error">{{ error }}</p>
   <p v-else-if="!isLoading && (!results || results.length === 0)">無訂單紀錄</p>
 
-  <v-table v-else fixed-header density="comfortable" hover="true" height="800">
+  <v-table v-else fixed-header hover="true" height="800" class="bg-brown-lighten-5">
     <thead>
       <tr>
-        <th class="text-left">遊戲</th>
-        <th class="text-left">類型</th>
         <th class="text-left">日期</th>
+        <th class="text-left">遊戲及類型</th>
         <th class="text-left">總額</th>
-        <th class="text-left">訂單狀態</th>
+        <th class="text-left">狀態</th>
       </tr>
     </thead>
     <tbody>
-      <tr
-        v-for="order in results"
-        :key="order.id"
-        @click="navigateToOrderDetail(order)"
-      >
-        <td v-html="gameNamesWithBreaks(order.gameChiName)"></td>
-        <td v-html="productIsVirtualWithBreaks(order.productIsVirtual)"></td>
-        <td>{{ order.createdAt }}</td>
+      <tr v-for="order in results" :key="order.id" @click="navigateToOrderDetail(order)" height="200">
+        <td>{{ relativeTime(order.createdAt) }}</td>
+        <td v-html="combinedGameAndType(order.gameChiName, order.productIsVirtual)"></td>
         <td>{{ order.total }}</td>
         <td>{{ order.orderStatusCodeName }}</td>
       </tr>
@@ -30,6 +24,10 @@
 </template>
   
 <script>
+import { zhTW } from "date-fns/locale";
+import { format } from "date-fns";
+
+
 export default {
   data() {
     return {
@@ -68,14 +66,26 @@ export default {
           this.error = "Failed to fetch data - please try again later.";
         });
     },
-    gameNamesWithBreaks(gameNames) {
-      return gameNames.join("<br><br>");
+
+    toggleShow(order) {
+      if (this.shownItems[order] === undefined) {
+        this.shownItems[order] = true;
+      } else {
+        this.shownItems[order] = !this.shownItems[order];
+      }
     },
-    productIsVirtualWithBreaks(productIsVirtual) {
-      const transformedNames = productIsVirtual.map((productIsVirtual) =>
-        productIsVirtual ? "序號" : "遊戲片"
-      );
-      return transformedNames.join("<br><br>");
+
+    relativeTime(datetime) {
+      const date = new Date(datetime);
+      return format(date, 'yyyy/MM/dd', { locale: zhTW });
+    },
+
+
+    combinedGameAndType(gameNames, productIsVirtual) {
+      return gameNames.map((name, index) => {
+        const type = productIsVirtual[index] ? "序號" : "遊戲片";
+        return `${name} (${type})`;
+      }).join("<br>");
     },
     navigateToOrderDetail(order) {
       this.$router.push({
@@ -84,11 +94,11 @@ export default {
       });
     },
   },
+
   mounted() {
     this.loadData();
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
