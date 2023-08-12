@@ -67,7 +67,7 @@
     </v-card>
   </div>
 </template>
-    
+
 <script>
 import axios from "axios";
 import ForgetPwd from "./ForgetPwd.vue";
@@ -97,7 +97,7 @@ export default {
           console.log("登入成功");
           // this.$store.commit("SET_LOGIN", true);
           this.$store.commit("SET_LOGIN", {
-            isLogined: true,
+            isLoggedIn: true,
             name: res.data,
             account: this.account,
           });
@@ -120,6 +120,5 @@ export default {
   },
 };
 </script>
-    
-<style>
-</style>
+
+<style></style>
