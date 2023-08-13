@@ -21,9 +21,18 @@
           <td>{{ order.total }}</td>
           <td>{{ order.orderStatusCodeName }}</td>
           <td>
-            <v-icon :key="shownOrder" @click="toggleOrderDetail(order.orderId)">
-              {{ shownOrder === order.orderId ? 'mdi-gamepad-round-up' : 'mdi-gamepad-round-down' }}
-            </v-icon>
+            <v-tooltip text="訂單詳情">
+              <template v-slot:activator="{ props }">
+                <v-btn icon size="large" variant="plain">
+                  <v-icon :key="shownOrder" @click="toggleOrderDetail(order.orderId)" v-bind="props">
+                    {{ shownOrder === order.orderId ? 'mdi-gamepad-round-up' : 'mdi-gamepad-round-down' }}
+                  </v-icon>
+                </v-btn>
+              </template>
+            </v-tooltip>
+
+
+
           </td>
         </tr>
       </transition>
