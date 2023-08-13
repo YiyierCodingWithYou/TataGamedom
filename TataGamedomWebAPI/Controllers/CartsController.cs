@@ -31,6 +31,7 @@ namespace TataGamedomWebAPI.Controllers
 		}
 
 		// GET: api/Carts
+		[EnableCors("AllowCookie")]
 		[HttpGet]
 		public async Task<ActionResult<CartDTO>> GetCart()
 		{

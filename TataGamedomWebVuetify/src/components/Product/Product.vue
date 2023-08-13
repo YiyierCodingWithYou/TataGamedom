@@ -1,15 +1,16 @@
 <template>
     <div>
-        <SingleProductCarousel :productData="product" ref="bookmark"></SingleProductCarousel>
+        <SingleProductCarousel v-if="product !== undefined" :productData="product" ref="bookmark"></SingleProductCarousel>
 
         <v-main class="bg-grey-lighten-2">
             <v-container>
                 <v-row>
-                    <v-col cols="2">
-                        <SideBar @searchInput="inputHandler" @classificationInput="classificationHandler"
-                            @getProductInput="GetSingleProduct"></SideBar>
+                    <v-col cols="3">
+                        <v-sheet rounded="lg">
+                            <SideBar @searchInput="inputHandler" @classificationInput="classificationHandler"
+                                @getProductInput="GetSingleProduct"></SideBar>
+                        </v-sheet>
                     </v-col>
-
                     <v-col>
                         <v-sheet rounded="lg">
                             <ProductDetail v-if="product !== undefined" :productData="product" class="justify-center"
@@ -106,6 +107,4 @@ onMounted(() => {
 });
 </script>
            
-<style>
-
-</style>
+<style></style>
