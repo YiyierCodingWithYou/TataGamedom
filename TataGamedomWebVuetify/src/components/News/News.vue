@@ -9,11 +9,7 @@
             <v-sheet min-height="100" rounded="lg">
               <v-card-item style="">
                 <div class="d-flex">
-                  <img
-                    style="height: 225px; width: 400px"
-                    :src="img + item.coverImg"
-                    alt=""
-                  />
+                  <img style="height: 225px; width: 400px" :src="img + item.coverImg" alt="" />
                   <div class="ms-5">
                     <div class="text-h4 mb-2">{{ item.title }}</div>
                     <div class="">{{ item.content }}</div>
@@ -22,8 +18,7 @@
                       {{ item.scheduleDate }}
                     </div>
 
-                    <v-btn style="position: absolute" variant="outlined"
-                      >詳細
+                    <v-btn style="position: absolute" variant="outlined">詳細
                     </v-btn>
                   </div>
                 </div>
@@ -31,26 +26,17 @@
             </v-sheet>
           </v-col>
 
-          <v-col
-            cols="4"
-            style="position: absolute; left: 71%; max-width: 550px"
-          >
+          <v-col cols="4" style="position: absolute; left: 71%; max-width: 550px">
             <v-sheet rounded="lg" min-height="100">
               <h1>關鍵字搜尋</h1>
-              <SearchTextBox
-                class="mt-2"
-                @searchInput="inputHandler"
-              ></SearchTextBox>
+              <SearchTextBox class="mt-2" @searchInput="inputHandler"></SearchTextBox>
             </v-sheet>
           </v-col>
 
           <v-col cols="4" class="gameclass">
             <v-sheet rounded="lg" min-height="400">
               <h1>遊戲類別</h1>
-              <NewsGameClass
-                @classificationInput="classificationHandler"
-                class="mt-10"
-              ></NewsGameClass>
+              <NewsGameClass @classificationInput="classificationHandler" class="mt-10"></NewsGameClass>
             </v-sheet>
           </v-col>
 
@@ -64,6 +50,10 @@
       </v-container>
     </v-main>
   </v-app>
+  <div class="text-center">
+    <v-pagination v-model="thePage" :length="totalPages" :total-visible="5"
+      @update:model-value="clickHandler"></v-pagination>
+  </div>
 </template>
     
 <script setup>
@@ -79,24 +69,37 @@ const name = ref("");
 const title = ref("");
 const content = ref("");
 const scheduleDate = ref("");
+//const thePage = ref(1);
 
 const totalPages = ref(1); //共幾頁
 const thePage = ref(1); //第幾頁
 const API = "https://localhost:7081/api/";
 
 const loadNews = async () => {
-  const response = await fetch(`${API}News?keyword=${keyword.value}`);
+  const response = await fetch(`${API}News?keyword=${keyword.value}&page=${thePage.value}`);
   const datas = await response.json();
   news.value = datas.news;
-  console.log(news.value);
+  totalPages.value = datas.totalPage;
+  news.value = datas.news;
+  console.log("123132", datas);
+  console.log("456456", news.value);
 };
 
 onMounted(() => {
-  loadNews();
+  if (keyword.value == "") {
+    loadNews();
+  }
+
 });
+
+// goToNews(() => {
+//   this.$router.push("/members/login");
+// })
+
 //搜尋
 const inputHandler = (value) => {
   keyword.value = value;
+  console.log("value", value);
   loadNews();
 };
 
@@ -108,6 +111,17 @@ const classificationHandler = (value) => {
     name.value = value;
   }
   loadNews();
+};
+
+//分頁
+const clickHandler = (nextPage) => {
+  thePage.value = nextPage;
+  loadNews();
+
+  window.scrollTo({
+    top: 500,
+    behavior: "smooth",
+  });
 };
 
 let img = "https://localhost:7081/Files/NewsImages/";
@@ -133,6 +147,6 @@ let img = "https://localhost:7081/Files/NewsImages/";
   max-width: 550px;
   margin-top: 550px;
 }
-h1 {
-}
+
+h1 {}
 </style>
