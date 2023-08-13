@@ -12,7 +12,7 @@ import OrderDetails from '../views/OrderDetails.vue'
 import OrderItemReturn from '../views/OrderItemReturn.vue'
 import SupportHub from '../views/SupportHub.vue'
 import LinePay from '../views/LinePay.vue'
-
+import ActiveRegister from '@/components/Members/ActiveRegister.vue'
 const routes = [
   {
     path: "/",
@@ -108,6 +108,11 @@ const routes = [
         path: '/LinePay',
         name: 'LinePay',
         component: LinePay
+      },
+      {
+        path: '/Members/ActiveRegister',
+        name: 'ActiveRegister',
+        component: ActiveRegister
       },
     ],
   },
