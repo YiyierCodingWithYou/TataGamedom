@@ -1,12 +1,14 @@
 <template>
-  <v-card v-for="orderItem in results" :key="orderItem.id" class="mx-auto mb-3 overflow-auto" max-width="500"
-    variant="outlined">
+  <v-card v-for="orderItem in results" :key="orderItem.id" class="mx-auto mb-1 overflow-auto bg-brown-lighten-4"
+    max-width="auto" variant="outline">
     <v-img :src="orderItem.gameGameCoverImg" height="200px"></v-img>
     <v-card-title>
       {{ orderItem.gameChiName }}
     </v-card-title>
 
     <v-card-subtitle> 金額: {{ orderItem.discountedPrice }} </v-card-subtitle>
+
+    <v-card-subtitle> 優惠: //Todo </v-card-subtitle>
 
     <v-card-subtitle> 類型: {{ orderItem.productIsVirtual }} </v-card-subtitle>
 

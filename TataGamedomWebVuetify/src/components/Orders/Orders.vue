@@ -30,19 +30,27 @@
                 </v-btn>
               </template>
             </v-tooltip>
-
-
-
           </td>
         </tr>
       </transition>
-
     </tbody>
   </v-table>
+
   <transition name="fade-slide">
-    <div v-if="showDetails">
-      <OrderDetailsCards :orderId="shownOrder" />
+    <div v-if="showDetails" class="detail-container bg-brown-lighten-5">
+      <div class="order-detailsCardsCardsCards">
+        <OrderDetailsCards :orderId="shownOrder" />
+      </div>
+      <div class="order-DetailsList">
+        <OrderDetailsList :orderId="shownOrder" />
+      </div>
+      <div class="buttons">
+        <v-btn>SupportHub</v-btn>
+        <v-btn>OrderReturn</v-btn>
+        <v-btn>ShipmentTracking</v-btn>
+      </div>
     </div>
+
   </transition>
 </template>
 
@@ -51,11 +59,12 @@
 import { zhTW } from "date-fns/locale";
 import { format } from "date-fns";
 import OrderDetailsCards from './OrderDetailsCards.vue';
-
+import OrderDetailsList from './OrderDetailsList.vue';
 
 export default {
   components: {
-    OrderDetailsCards
+    OrderDetailsCards,
+    OrderDetailsList
   },
   data() {
     return {
@@ -150,5 +159,21 @@ export default {
 .fade-slide-leave-active {
   transition: opacity 1s, transform 0.7s ease-in-out;
 
+}
+
+.detail-container {
+  display: flex;
+}
+
+.order-detailsCardsCardsCards,
+.order-DetailsList {
+  flex: 5;
+}
+
+.buttons {
+  flex: 2;
+  display: flex;
+  justify-content: space-between;
+  /* 確保按鈕之間有間距 */
 }
 </style>
