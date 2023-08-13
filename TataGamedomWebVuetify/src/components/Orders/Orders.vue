@@ -6,7 +6,7 @@
   <v-table v-else fixed-header hover="true" height="auto">
     <thead>
       <tr>
-        <th class="text-left">日期<v-icon>{{ 'mdi-script-text-outline' }}</v-icon></th>
+        <th class="text-left">日期<v-icon>{{ 'mdi-sack' }}</v-icon></th>
         <th class="text-left">遊戲及類型<v-icon>{{ 'mdi-google-downasaur' }}</v-icon></th>
         <th class="text-left">總額<v-icon>{{ 'mdi-sack' }}</v-icon></th>
         <th class="text-left">狀態<v-icon>{{ 'mdi-pokeball' }}</v-icon></th>
@@ -14,7 +14,8 @@
       </tr>
     </thead>
     <tbody class="bg-brown-lighten-5">
-      <tr v-for="order in results" :key="order.id" height="150px">
+      <tr v-for="order in results" :key="order.orderId" height="150px"
+        v-show="!shownOrder || shownOrder === order.orderId">
         <td>{{ relativeTime(order.createdAt) }}</td>
         <td v-html="combinedGameAndType(order.gameChiName, order.productIsVirtual)"></td>
         <td>{{ order.total }}</td>
@@ -66,7 +67,6 @@ export default {
           const results = [];
           for (const id in data) {
             results.push({
-              id: id,
               orderId: data[id].id,
               gameChiName: data[id].gameChiName,
               productIsVirtual: data[id].productIsVirtual,
