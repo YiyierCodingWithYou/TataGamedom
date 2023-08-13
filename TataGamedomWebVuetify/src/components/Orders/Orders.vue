@@ -6,10 +6,10 @@
   <v-table v-else fixed-header hover="true" height="auto">
     <thead>
       <tr>
-        <th class="text-left">日期</th>
-        <th class="text-left">遊戲及類型</th>
-        <th class="text-left">總額</th>
-        <th class="text-left">狀態</th>
+        <th class="text-left">日期<v-icon>{{ 'mdi-script-text-outline' }}</v-icon></th>
+        <th class="text-left">遊戲及類型<v-icon>{{ 'mdi-google-downasaur' }}</v-icon></th>
+        <th class="text-left">總額<v-icon>{{ 'mdi-sack' }}</v-icon></th>
+        <th class="text-left">狀態<v-icon>{{ 'mdi-pokeball' }}</v-icon></th>
         <th class="text-left"></th>
       </tr>
     </thead>
@@ -20,9 +20,9 @@
         <td>{{ order.total }}</td>
         <td>{{ order.orderStatusCodeName }}</td>
         <td>
-          <v-btn @click="toggleOrderDetail(order.orderId)">
-            {{ shownOrder === order.id ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
-          </v-btn>
+          <v-icon :key="shownOrder" @click="toggleOrderDetail(order.orderId)">
+            {{ shownOrder === order.orderId ? 'mdi-gamepad-round-up' : 'mdi-gamepad-round-down' }}
+          </v-icon>
         </td>
       </tr>
     </tbody>
