@@ -3,35 +3,35 @@
   <p v-else-if="!isLoading && error">{{ error }}</p>
   <p v-else-if="!isLoading && (!results || results.length === 0)">無訂單紀錄</p>
 
-  <v-table v-else fixed-header hover="true" height="800" class="bg-brown-lighten-5">
+  <v-table v-else fixed-header hover="true" height="auto">
     <thead>
       <tr>
         <th class="text-left">日期</th>
         <th class="text-left">遊戲及類型</th>
         <th class="text-left">總額</th>
         <th class="text-left">狀態</th>
-        <th class="text-left">詳細</th>
+        <th class="text-left"></th>
       </tr>
     </thead>
-    <tbody>
-      <tr v-for="order in results" :key="order.id">
+    <tbody class="bg-brown-lighten-5">
+      <tr v-for="order in results" :key="order.id" height="150px">
         <td>{{ relativeTime(order.createdAt) }}</td>
         <td v-html="combinedGameAndType(order.gameChiName, order.productIsVirtual)"></td>
         <td>{{ order.total }}</td>
         <td>{{ order.orderStatusCodeName }}</td>
         <td>
-          <v-btn @click="toggleOrderDetail(order.id)">詳細</v-btn>
-          <v-expansion-panels v-if="shownOrder === order.id">
-            <v-expansion-panel>
-              <v-expansion-panel-content>
-                <OrderDetails :orderId="order.orderId" />
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
+          <v-btn @click="toggleOrderDetail(order.orderId)">
+            {{ shownOrder === order.id ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+          </v-btn>
         </td>
       </tr>
     </tbody>
   </v-table>
+  <transition name="fade-slide">
+    <div v-if="shownOrder != null">
+      <OrderDetails :orderId="shownOrder" />
+    </div>
+  </transition>
 </template>
 
   
@@ -91,31 +91,16 @@ export default {
       }
     },
 
-    toggleShow(order) {
-      if (this.shownItems[order] === undefined) {
-        this.shownItems[order] = true;
-      } else {
-        this.shownItems[order] = !this.shownItems[order];
-      }
-    },
-
     relativeTime(datetime) {
       const date = new Date(datetime);
       return format(date, 'yyyy/MM/dd', { locale: zhTW });
     },
-
 
     combinedGameAndType(gameNames, productIsVirtual) {
       return gameNames.map((name, index) => {
         const type = productIsVirtual[index] ? "序號" : "遊戲片";
         return `${name} (${type})`;
       }).join("<br>");
-    },
-    navigateToOrderDetail(order) {
-      this.$router.push({
-        name: "OrderDetails",
-        params: { id: order.orderId },
-      });
     },
   },
 
@@ -125,4 +110,15 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.fade-slide-enter,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+</style>

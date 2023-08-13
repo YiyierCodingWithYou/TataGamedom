@@ -73,9 +73,10 @@ export default {
               productIsVirtual:
                 data[id].productIsVirtual === true ? "序號" : "遊戲片",
             });
+            this.shownItems[id] = false;
           }
           this.results = results;
-          this.shownItems[id] = false;
+
         })
         .catch((error) => {
           this.isLoading = false;
