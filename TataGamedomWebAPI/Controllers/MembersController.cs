@@ -53,6 +53,10 @@ namespace TataGamedomWebAPI.Controllers
 			}
 			else
 			{
+				if (user.IsConfirmed != true)
+				{
+					return BadRequest("帳號尚未啟用");
+				}
 				//string memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 				//string memberName = HttpContext.User.FindFirstValue("FullName");
 				var claims = new List<Claim>
@@ -207,19 +211,19 @@ namespace TataGamedomWebAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Members
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [EnableCors("AllowCookie")]
-        [HttpPost("Register")]
-        public async Task<ActionResult<Member>> PostMember(RegisterDto registerDto)
+		// POST: api/Members
+		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+		[EnableCors("AllowCookie")]
+		[HttpPost("Register")]
+		public async Task<ActionResult<Member>> Register(RegisterDto registerDto)
 		{
-          if (_context.Members == null)
-          {
-              return Problem("Entity set 'AppDbContext.Members'  is null.");
-          }
+			if (_context.Members == null)
+			{
+				return Problem("Entity set 'AppDbContext.Members'  is null.");
+			}
 
-            if (await _context.Members.AnyAsync(m => m.Account == registerDto.Account))
-            {
+			if (await _context.Members.AnyAsync(m => m.Account == registerDto.Account))
+			{
 				return BadRequest("此帳號已經有人使用過囉");
 			}
 
@@ -228,61 +232,192 @@ namespace TataGamedomWebAPI.Controllers
 				return BadRequest("兩次輸入的密碼不相符，請重新確認。");
 			}
 
+			//if (registerDto.IsConfirmed != true)
+			//{
+			//	return BadRequest("帳號尚未啟用");
+			//}
+
 			var hashOrigPwd = HashUtility.ToSHA256(registerDto.Password, "!@#$$DGTEGYT");
-			//var hashCheckPwd = HashUtility.ToSHA256(registerDto.CheckPassword, "!@#$$DGTEGYT");
+		
 			var pocha = "POCHA.jpg";
 			//驗證用不寫入SQL
 			registerDto.CheckPassword = null;
 
+			//更新紀錄，重給一個confirmCode
+			var confirmCode = Guid.NewGuid().ToString("N");
+
 			Member member = new Member
-			{ 
-                Id = registerDto.Id,
-                Name = registerDto.Name,
-                Account = registerDto.Account,
-                Password = hashOrigPwd,
-			    Birthday = registerDto.Birthday,
+			{
+				Id = registerDto.Id,
+				Name = registerDto.Name,
+				Account = registerDto.Account,
+				Password = hashOrigPwd,
+				Birthday = registerDto.Birthday,
 				Email = !string.IsNullOrEmpty(registerDto.Email) ? registerDto.Email : null,
 				Phone = !string.IsNullOrEmpty(registerDto.Phone) ? registerDto.Phone : null,
 				RegistrationDate = DateTime.Now,
-                IconImg = registerDto.IconImg,
-                IsConfirmed = false,
-                ConfirmCode = registerDto.ConfirmCode,
-                ActiveFlag = true
+				IconImg = registerDto.IconImg,
+				IsConfirmed = false,
+				ConfirmCode = confirmCode,
+				ActiveFlag = true
 			};
-            if (registerDto.IconImg == null)
-            {
-                member.IconImg = pocha;
-            }
+			if (registerDto.IconImg == null)
+			{
+				member.IconImg = pocha;
+			}
 
 			await _context.Members.AddAsync(member);
-            await _context.SaveChangesAsync();
+			await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMember", new { id = member.Id }, member);
-        }
+			try
+			{
+				// 生成email連結
+				var urlTemplate = "https://localhost:3000/Members/ActiveRegister?memberId={0}&confirmCode={1}";
 
-        //// DELETE: api/Members/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteMember(int id)
-        //{
-        //    if (_context.Members == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    var member = await _context.Members.FindAsync(id);
-        //    if (member == null)
-        //    {
-        //        return NotFound();
-        //    }
+				// 若成功，寄送郵件
 
-        //    _context.Members.Remove(member);
-        //    await _context.SaveChangesAsync();
+				// 發email
+				var url = string.Format(urlTemplate, member.Id, confirmCode);
+				new EmailHelper().SendConfirmRegisterEmail(url, member.Name, member.Email);
 
-        //    return NoContent();
-        //}
+				return CreatedAtAction("GetMember", new { id = member.Id }, member);
+			}
+			catch (Exception ex)
+			{
+				// 在這裡處理錯誤，您可以記錄錯誤、通知管理者，或者採取適當的回應措施
+				// 以下是一個簡單的例子，您可以根據實際需求進行調整
+
+				Console.WriteLine("發生錯誤：" + ex.Message);
+				return StatusCode(500, "內部伺服器錯誤，請稍後再試。");
+			}
+		}
+
+		[HttpPost("ActiveRegister")]
+		public async Task<ActionResult<Member>> ActiveRegister(ActiveRegisterDTO dto)
+		{
+			var member = await _context.Members.FindAsync(dto.MemberId);
+
+			if (member == null)
+			{
+				return NotFound();
+			}
+
+			if (member.IsConfirmed)
+
+			{
+				return BadRequest("此帳號已經啟用過囉");
+			}
+
+			if (member.ConfirmCode != dto.ConfirmCode)
+			{
+				return BadRequest("驗證碼錯誤");
+			}
+
+
+			member.IsConfirmed = true;
+			member.ConfirmCode = null;
+			await _context.SaveChangesAsync();
+
+			// 轉跳到首頁
+			return Ok();
+		}
+
+		[HttpPost("ForgetPassword")]
+		public async Task<ActionResult<Member>> ForgetPassword(ForgetPasswordDTO dto)
+		{
+			var member = await _context.Members.FirstOrDefaultAsync(m => m.Account == dto.Account);
+
+			if (member == null)
+			{
+				return NotFound();
+			}
+
+			if (member.IsConfirmed == false)
+
+			{
+				return BadRequest("您還沒有啟用本帳號，請先完成才能重設密碼");
+			}
+
+			try
+			{
+				// 生成email連結
+				var urlTemplate = "https://localhost:3000/Members/ResetPassword?memberId={0}&confirmCode={1}";
+
+				// 若成功，寄送郵件
+
+				var confirmCode = Guid.NewGuid().ToString("N");
+				member.ConfirmCode = confirmCode;
+				await _context.SaveChangesAsync();
+
+				// 發email
+				var url = string.Format(urlTemplate, member.Id, confirmCode);
+				new EmailHelper().SendForgetPasswordEmail(url, member.Account, member.Email);
+
+				return CreatedAtAction("GetMember", new { id = member.Id }, member);
+			}
+			catch (Exception ex)
+			{
+				// 在這裡處理錯誤，您可以記錄錯誤、通知管理者，或者採取適當的回應措施
+				// 以下是一個簡單的例子，您可以根據實際需求進行調整
+
+				Console.WriteLine("發生錯誤：" + ex.Message);
+				return StatusCode(500, "內部伺服器錯誤，請稍後再試。");
+			}
+		}
+
+		[HttpPost("ResetPassword")]
+		public async Task<ActionResult<Member>> ResetPassword(ActiveRegisterDTO dto)
+		{
+			var member = await _context.Members.FindAsync(dto.MemberId);
+
+			if (member == null)
+			{
+				return NotFound();
+			}
+
+			if (member.IsConfirmed)
+
+			{
+				return BadRequest("此帳號已經啟用過囉");
+			}
+
+			if (member.ConfirmCode != dto.ConfirmCode)
+			{
+				return BadRequest("驗證碼錯誤");
+			}
+
+
+			member.IsConfirmed = true;
+			member.ConfirmCode = null;
+			await _context.SaveChangesAsync();
+
+			// 轉跳到首頁
+			return Ok();
+		}
+
+		//// DELETE: api/Members/5
+		//[HttpDelete("{id}")]
+		//public async Task<IActionResult> DeleteMember(int id)
+		//{
+		//    if (_context.Members == null)
+		//    {
+		//        return NotFound();
+		//    }
+		//    var member = await _context.Members.FindAsync(id);
+		//    if (member == null)
+		//    {
+		//        return NotFound();
+		//    }
+
+		//    _context.Members.Remove(member);
+		//    await _context.SaveChangesAsync();
+
+		//    return NoContent();
+		//}
 
 
 
-        private bool MemberExists(int id)
+		private bool MemberExists(int id)
         {
             return (_context.Members?.Any(e => e.Id == id)).GetValueOrDefault();
         }

@@ -1,11 +1,7 @@
 <template>
   <v-card class="mx-auto mt-5" width="400" v-for="item in news" :key="item.id">
     <div class="d-flex">
-      <img
-        style="height: 200px; width: 400px"
-        :src="img + item.coverImg"
-        alt=""
-      />
+      <img style="height: 200px; width: 400px" :src="img + item.coverImg" alt="" />
     </div>
     <v-card-text> {{ item.title }} </v-card-text>
     <v-card-text> {{ item.scheduleDate }} </v-card-text>
@@ -32,17 +28,16 @@ import { onMounted, reactive, ref } from "vue";
 const news = ref([]);
 const img = "https://localhost:7081/Files/NewsImages/";
 
-const loadNews = async () => {
+const loadNewstop5 = async () => {
   const response = await fetch("https://localhost:7081/api/News/HotNews");
   const data = await response.json();
   news.value = data;
-  console.log(data);
+  // console.log(data);
 };
 
 onMounted(() => {
-  loadNews();
+  loadNewstop5();
 });
 </script>
     
-<style>
-</style>
+<style></style>
