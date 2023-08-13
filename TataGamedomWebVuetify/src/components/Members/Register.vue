@@ -1,77 +1,30 @@
 <template>
   <v-card class="mx-auto" color="black" max-width="344" title="使用者註冊">
     <v-container>
-      <v-text-field
-        v-model="account"
-        color="primary"
-        label="帳號"
-        variant="underlined"
-      ></v-text-field>
+      <v-text-field v-model="account" color="primary" label="帳號" variant="underlined"></v-text-field>
 
-      <v-text-field
-        v-model="password"
-        :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary"
-        label="密碼"
-        :type="passwordVisible ? 'text' : 'password'"
-        variant="underlined"
-        @click:append-inner="passwordVisible = !passwordVisible"
-      ></v-text-field>
+      <v-text-field v-model="password" :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'" color="primary"
+        label="密碼" :type="passwordVisible ? 'text' : 'password'" variant="underlined"
+        @click:append-inner="passwordVisible = !passwordVisible"></v-text-field>
 
-      <v-text-field
-        v-model="checkPassword"
-        :append-inner-icon="checkPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary"
-        label="確認密碼"
-        :type="checkPasswordVisible ? 'text' : 'password'"
-        variant="underlined"
-        @click:append-inner="checkPasswordVisible = !checkPasswordVisible"
-      ></v-text-field>
+      <v-text-field v-model="checkPassword" :append-inner-icon="checkPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary" label="確認密碼" :type="checkPasswordVisible ? 'text' : 'password'" variant="underlined"
+        @click:append-inner="checkPasswordVisible = !checkPasswordVisible"></v-text-field>
       <p v-if="password !== checkPassword" class="password-mismatch">
         密碼需與確認密碼相符
       </p>
 
-      <v-text-field
-        v-model="name"
-        color="primary"
-        label="姓名"
-        variant="underlined"
-      ></v-text-field>
+      <v-text-field v-model="name" color="primary" label="姓名" variant="underlined"></v-text-field>
 
-      <v-text-field
-        v-model="birthday"
-        color="primary"
-        type="date"
-        label="生日"
-        variant="underlined"
-      ></v-text-field>
+      <v-text-field v-model="birthday" color="primary" type="date" label="生日" variant="underlined"></v-text-field>
 
-      <v-text-field
-        v-model="email"
-        color="primary"
-        label="Email"
-        variant="underlined"
-      ></v-text-field>
+      <v-text-field v-model="email" color="primary" label="Email" variant="underlined"></v-text-field>
 
-      <v-text-field
-        v-model="phone"
-        color="primary"
-        label="手機"
-        variant="underlined"
-      ></v-text-field>
+      <v-text-field v-model="phone" color="primary" label="手機" variant="underlined"></v-text-field>
 
-      <v-text-field
-        v-model="coverImg"
-        color="primary"
-        label="大頭貼"
-        variant="underlined"
-      ></v-text-field>
+      <v-text-field v-model="coverImg" color="primary" label="大頭貼" variant="underlined"></v-text-field>
 
-      <v-checkbox
-        v-model="terms"
-        color="secondary"
-        label="我同意網站條款和條件"
-      ></v-checkbox>
+      <v-checkbox v-model="terms" color="secondary" label="我同意網站條款和條件"></v-checkbox>
     </v-container>
 
     <v-divider></v-divider>
