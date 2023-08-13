@@ -1,73 +1,111 @@
 <template>
-  <div>
-    <SingleProductCarousel :productData="product"></SingleProductCarousel>
-    <v-container>
-      <v-main class="bg-grey-lighten-2">
-        <v-container>
-          <v-row>
-            <v-col cols="2">
-              <v-sheet rounded="lg">
-                <v-list rounded="lg">
-                  <!-- 放入左側邊攔 -->
-                </v-list>
-              </v-sheet>
-            </v-col>
+    <div>
+        <SingleProductCarousel :productData="product" ref="bookmark"></SingleProductCarousel>
 
-            <v-col>
-              <v-sheet rounded="lg">
-                <ProductDetail
-                  v-if="product !== undefined"
-                  :productData="product"
-                  class="justify-center"
-                  @paginationInput="paginationHandler"
-                ></ProductDetail>
-              </v-sheet>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-main>
-    </v-container>
-  </div>
+        <v-main class="bg-grey-lighten-2">
+            <v-container>
+                <v-row>
+                    <v-col cols="2">
+                        <SideBar @searchInput="inputHandler" @classificationInput="classificationHandler"
+                            @getProductInput="GetSingleProduct"></SideBar>
+                    </v-col>
+
+                    <v-col>
+                        <v-sheet rounded="lg">
+                            <ProductDetail v-if="product !== undefined" :productData="product" class="justify-center"
+                                @commentSucceed="reload" @paginationInput="paginationHandler"></ProductDetail>
+                        </v-sheet>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-main>
+
+    </div>
 </template>
-          
+            
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
-import SingleProductCarousel from "../Product/SingleProductCarousel.vue";
-import ProductDetail from "../Product/ProductDetail.vue";
+import { ref, onMounted, nextTick } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import SingleProductCarousel from "@/components/Product/SingleProductCarousel.vue";
+import ProductDetail from "@/components/Product/ProductDetail.vue";
 import { defineEmits } from "vue";
+import SideBar from "@/components/eCommerce/SideBar.vue";
+import { watch } from "vue";
 
 const route = useRoute();
-const productId = route.params.productId;
+const router = useRouter();
+const bookmark = ref(null);
+const productId = ref(parseInt(route.params.productId, 10));
 const page = ref(1);
 const product = ref({});
 const totalPages = ref(0);
-//const commentsLength = ref();
 
 const loadData = async () => {
-  const response = await fetch(
-    `https://localhost:7081/api/Products/${productId}?page=${page.value}`
-  );
-  const datas = await response.json();
-  product.value = datas;
-  console.log(product.value);
-  ///commentsLength.value = datas.gameComments.length;
-  totalPages.value = datas.totalPages;
+    const response = await fetch(
+        `https://localhost:7081/api/Products/${productId.value}?page=${page.value}`
+    );
+    const datas = await response.json();
+    product.value = datas;
+    totalPages.value = datas.totalPages;
 };
-
-onMounted(() => {
-  loadData();
-});
+loadData();
 
 const paginationHandler = (value) => {
-  page.value = value;
-  loadData();
+    page.value = value;
+    loadData();
 };
-</script>
-
-          
-<style>
-.eCommerceContainer {
-  width: 100%;
+const reload = () => {
+    loadData();
 }
+
+const inputHandler = (value) => {
+    router.push({
+        name: "eCommerce",
+        query: {
+            keywordInput: value
+        }
+    })
+};
+
+//遊戲分類
+const classificationHandler = (value) => {
+    router.push({
+        name: "eCommerce",
+        query: {
+            classificationChosen: value
+        }
+    })
+};
+
+//刷新商品頁面
+const GetSingleProduct = async (value) => {
+    productId.value = parseInt(value, 10);
+    router.push({
+        name: "SingleProduct",
+        params: { productId: productId.value }
+    });
+};
+
+watch(productId, (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+        loadData();
+        nextTick(() => {
+            if (bookmark.value) {
+                const offset = bookmark.value.$el.offsetTop;
+                window.scrollTo({
+                    top: offset,
+                    behavior: "smooth",
+                });
+            }
+        });
+    }
+});
+
+onMounted(() => {
+    loadData();
+});
+</script>
+           
+<style>
+
 </style>
