@@ -165,7 +165,7 @@ namespace TataGamedomWebAPI.Controllers
 								.Where(c => currentTime >= c.Coupon.StartTime && currentTime <= c.Coupon.EndTime)
 								.Select(c => c.Coupon.Description),
 					ProductImg = p.ProductImages.Select(p => p.Image)!,
-					CommentCount = p.Game.GameComments.Count()
+					CommentCount = p.Game.GameComments.Where(c=>c.ActiveFlag==true).Count()
 				}).FirstOrDefaultAsync();
 
 			//做評論的分頁
@@ -203,7 +203,8 @@ namespace TataGamedomWebAPI.Controllers
 
 		// POST: api/Products
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-		[HttpPost("{id}")]
+		[EnableCors("AllowCookie")]
+		[HttpPost]
 		public async Task<ApiResult> PostComment(int productId, CommentsCreateDTO commentsCreateDTO)
 		{
 			if (_context.Products == null)

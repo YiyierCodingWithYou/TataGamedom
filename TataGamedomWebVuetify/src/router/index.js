@@ -1,7 +1,7 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
-import eCommerce from '../views/eCommerceIndex.vue'
-import SingleProduct from '../views/SingleProduct.vue'
+import eCommerce from '@/views/eCommerce.vue'
+import SingleProduct from '@/views/SingleProduct.vue'
 import Members from '../views/Members.vue'
 import News from '../views/NewsIndex.vue'
 import RegisterVue from '@/components/Members/Register.vue'
@@ -28,6 +28,23 @@ const routes = [
           import(/* webpackChunkName: "home" */ "@/views/Home.vue"),
       },
     ],
+  },{
+    path: "/eCommerce",
+    component: () => import("@/layouts/default/Default.vue"),
+    children: [
+      {
+        path: "",
+        name: "eCommerce",
+        component: eCommerce,
+        props:true
+      },
+      {
+        path: '/eCommerce/Product/:productId',
+        name: 'SingleProduct',
+        component: SingleProduct,
+        props: true
+      },
+    ],
   },
   {
     path: "/GameLounge",
@@ -41,24 +58,6 @@ const routes = [
         // which is lazy-loaded when the route is visited.
         component: () =>
           import(/* webpackChunkName: "home" */ "@/views/GameLounge.vue"),
-      },
-      {
-        path: '/eCommerce/',
-        name: 'eCommerce',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: eCommerce,
-        props: true
-      },
-      {
-        path: '/eCommerce/Product/:productId',
-        name: 'SingleProduct',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: SingleProduct,
-        props: true
       },
       {
         path: '/Members',

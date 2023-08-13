@@ -1,7 +1,11 @@
 <template>
-    <Product />
-  </template>
-  
-  <script setup>
-    import Product from '@/components/Product/Product.vue'
-  </script>
+  <SingleProduct/>
+</template>
+
+<script setup>
+import SingleProduct from '@/components/Product/Product.vue';
+</script>
+
+<style>
+
+</style>
