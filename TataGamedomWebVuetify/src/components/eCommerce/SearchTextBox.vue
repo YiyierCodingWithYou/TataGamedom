@@ -1,8 +1,8 @@
 <template>
   <input
-    type="search"
+    type="text"
     v-model="keyword"
-    @input="inputHandler"
+    @keyup.enter="inputHandler"
     class="form-control"
     placeholder="請輸入產品名稱"
   />
