@@ -44,10 +44,37 @@
       <div class="order-DetailsList">
         <OrderDetailsList :orderId="shownOrder" />
       </div>
-      <div class="buttons">
-        <v-btn>SupportHub</v-btn>
-        <v-btn>OrderReturn</v-btn>
-        <v-btn>ShipmentTracking</v-btn>
+      <div>
+        <v-layout column class="buttons">
+          <v-tooltip text="聯繫客服">
+            <template v-slot:activator="{ props }">
+              <v-btn class="ma-2" variant="text" icon="mdi-chat-alert-outline" color="blue-grey-darken-2" size="x-large">
+                <v-icon @click="" v-bind="props" size="x-large">
+                  {{ 'mdi-chat-alert-outline' }}
+                </v-icon>
+              </v-btn>
+            </template>
+          </v-tooltip>
+          <v-tooltip text="貨態追蹤">
+            <template v-slot:activator="{ props }">
+              <v-btn class="ma-2" variant="text" icon="mdi-crosshairs-gps" color="blue-grey-darken-2" size="x-large">
+                <v-icon @click="" v-bind="props" size="x-large">
+                  {{ 'mdi-crosshairs-gps' }}
+                </v-icon>
+              </v-btn>
+            </template>
+          </v-tooltip>
+          <v-tooltip text="退貨">
+            <template v-slot:activator="{ props }">
+              <v-btn class="ma-2" variant="text" icon="mdi-package-variant-closed-remove" color="blue-grey-darken-2"
+                size="x-large">
+                <v-icon @click="" v-bind="props" size="x-large">
+                  {{ 'mdi-package-variant-closed-remove' }}
+                </v-icon>
+              </v-btn>
+            </template>
+          </v-tooltip>
+        </v-layout>
       </div>
     </div>
 
@@ -60,6 +87,7 @@ import { zhTW } from "date-fns/locale";
 import { format } from "date-fns";
 import OrderDetailsCards from './OrderDetailsCards.vue';
 import OrderDetailsList from './OrderDetailsList.vue';
+
 
 export default {
   components: {
@@ -173,7 +201,11 @@ export default {
 .buttons {
   flex: 2;
   display: flex;
+  flex-direction: column;
+  /* 讓按鈕垂直排列 */
+  align-items: center;
+  /* 使按鈕水平居中 */
   justify-content: space-between;
-  /* 確保按鈕之間有間距 */
+  /* 在按鈕之間加入空間 */
 }
 </style>
