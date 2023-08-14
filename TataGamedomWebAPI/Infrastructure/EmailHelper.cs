@@ -6,8 +6,8 @@ namespace TataGamedomWebAPI.Infrastructure
 {
 	public class EmailHelper
 	{
-		private string senderEmail = "10536001@ntub.edu.tw"; // 寄件者
-		//private string senderEmail = "tatagamedom@gmail.com"; // 寄件者
+		//private string senderEmail = "10536001@ntub.edu.tw"; // 寄件者
+		private string senderEmail = "tatagamedomofficial@gmail.com"; // 寄件者
 															 // private readonly IWebHostEnvironment _env;
 
 		// public EmailHelper(IWebHostEnvironment env)
@@ -24,8 +24,8 @@ namespace TataGamedomWebAPI.Infrastructure
 			var smtpAccount = from;
 
 			// TODO 請在這裡填入密碼,或從web.config裡讀取
-			var smtpPassword = "q0w1e2r3";
-			//var smtpPassword = "w84w84j06eji6";
+			//var smtpPassword = "q0w1e2r3";
+			var smtpPassword = "hvfapvcpaucszupt";
 			var smtpServer = "smtp.gmail.com";
 			var SmtpPort = 587;
 
