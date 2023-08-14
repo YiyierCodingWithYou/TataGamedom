@@ -64,8 +64,8 @@ export default {
           },
         ],
         redirectUrls: {
-          confirmUrl: "https://pay-store.line.com/order/payment/authorize",
-          cancelUrl: "https://pay-store.line.com/order/payment/cancel",
+          confirmUrl: "https://localhost:3000/LinePayConfirmPayment",
+          cancelUrl: "",
         },
       };
 

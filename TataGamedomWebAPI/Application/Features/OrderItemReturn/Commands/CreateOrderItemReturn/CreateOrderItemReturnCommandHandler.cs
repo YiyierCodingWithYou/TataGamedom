@@ -44,7 +44,7 @@ public class CreateOrderItemReturnCommandHandler : IRequestHandler<CreateOrderIt
 
     private async Task ValidateRequest(CreateOrderItemReturnCommand request, CancellationToken cancellationToken)
     {
-        var validator = new CreateOrderItemReturnCommandValidator(_orderItemRepository);
+        var validator = new CreateOrderItemReturnCommandValidator(_orderItemRepository, _orderItemReturnRepository);
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
         if (validationResult.Errors.Any())
         {

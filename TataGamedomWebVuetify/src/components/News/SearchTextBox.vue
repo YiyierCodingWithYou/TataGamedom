@@ -1,11 +1,5 @@
 <template>
-  <input
-    type="search"
-    v-model="keyword"
-    @input="inputHandler"
-    class="form-control"
-    placeholder="請輸入關鍵字"
-  />
+  <input type="search" v-model="keyword" @change="inputHandler" class="form-control" placeholder="請輸入關鍵字" />
 </template>
     
 <script setup>
@@ -21,5 +15,4 @@ const inputHandler = () => {
 };
 </script>
     
-<style>
-</style>
+<style></style>

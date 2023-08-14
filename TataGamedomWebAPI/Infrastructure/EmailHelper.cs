@@ -6,13 +6,14 @@ namespace TataGamedomWebAPI.Infrastructure
 {
 	public class EmailHelper
 	{
-		private string senderEmail = "g01.webapp@gmail.com"; // 寄件者
-		private readonly IWebHostEnvironment _env;
+		//private string senderEmail = "10536001@ntub.edu.tw"; // 寄件者
+		private string senderEmail = "tatagamedomofficial@gmail.com"; // 寄件者
+															 // private readonly IWebHostEnvironment _env;
 
-		public EmailHelper(IWebHostEnvironment env)
-		{
-			_env = env;
-		}
+		// public EmailHelper(IWebHostEnvironment env)
+		// {
+		// 	_env = env;
+		// }
 
 		// ... 其他方法
 
@@ -23,8 +24,8 @@ namespace TataGamedomWebAPI.Infrastructure
 			var smtpAccount = from;
 
 			// TODO 請在這裡填入密碼,或從web.config裡讀取
-			var smtpPassword = "";
-
+			//var smtpPassword = "q0w1e2r3";
+			var smtpPassword = "hvfapvcpaucszupt";
 			var smtpServer = "smtp.gmail.com";
 			var SmtpPort = 587;
 
@@ -44,17 +45,44 @@ namespace TataGamedomWebAPI.Infrastructure
 			}
 		}
 
-		private void CreateTextFile(string path, string from, string to, string subject, string body)
+		// 		private void CreateTextFile(string path, string from, string to, string subject, string body)
+		// 		{
+		// 			var fileName = $"{to.Replace("@", "_")} {DateTime.Now.ToString("yyyyMMdd_HHmmss")}.txt";
+		// 			var fullPath = Path.Combine(_env.ContentRootPath, "Files/Mails/", fileName);
+
+		// 			var contents = $@"from:{from}
+		// to:{to}
+		// subject:{subject}
+
+		// {body}";
+		// 			File.WriteAllText(fullPath, contents, Encoding.UTF8);
+		// 		}
+
+
+		public void SendForgetPasswordEmail(string url, string name, string email)
 		{
-			var fileName = $"{to.Replace("@", "_")} {DateTime.Now.ToString("yyyyMMdd_HHmmss")}.txt";
-			var fullPath = Path.Combine(_env.ContentRootPath, "Files/Mails/", fileName);
+			var subject = "[重設密碼通知]";
+			var body = $@"Hi {name},
+<br />
+請點擊此連結 [<a href='{url}' target='_blank'>我要重設密碼</a>], 以進行重設密碼, 如果您沒有提出申請, 請忽略本信, 謝謝";
 
-			var contents = $@"from:{from}
-to:{to}
-subject:{subject}
+			var from = senderEmail;
+			var to = email;
 
-{body}";
-			File.WriteAllText(fullPath, contents, Encoding.UTF8);
+			SendFromGmail(from, to, subject, body);
+		}
+
+		public void SendConfirmRegisterEmail(string url, string name, string email)
+		{
+			var subject = "[新會員確認信]";
+			var body = $@"Hi {name},
+<br />
+請點擊此連結 [<a href='{url}' target='_blank'>開通帳號</a>], 如果您沒有提出申請, 請忽略本信, 謝謝";
+
+			var from = senderEmail;
+			var to = email;
+
+			SendFromGmail(from, to, subject, body);
 		}
 	}
 	//	public class EmailHelper
