@@ -128,42 +128,42 @@ namespace TataGamedomWebAPI.Controllers
 
 		// GET: api/Members/5
 
-		[HttpGet("{id}")]
-        public async Task<ActionResult<MembersDto>> GetMember(int id)
-        {
-            //var userId = HttpContext.User.FindFirstValue("MembersName");
-            //var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
+		[HttpGet]
+		public async Task<ActionResult<MembersDto>> GetMember()
+		{
+			var account = HttpContext.User.FindFirstValue("MembersName");
+			var userId = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
 
 			if (_context.Members == null)
-          {
-              return NotFound();
-          }
-            var member = await _context.Members.FindAsync(id);
+			{
+				return NotFound();
+			}
+			 var member = await _context.Members.FindAsync(userId);
 
-            if (member == null)
-            {
-                return NotFound();
-            }
+			if (member == null)
+			{
+				return NotFound();
+			}
 
-            var memberDto = new MembersDto
-            {
-                Id=member.Id,
-                Name=member.Name,
-               // Account = member.Account,
-                //Password = member.Password,
-                Birthday = member.Birthday,
-                Email = member.Email,
-                Phone = member.Phone,
-                IconImg = member.IconImg,
-                //ActiveFlag = member.ActiveFlag,
-               // LastOnlineTime = member.LastOnlineTime,     
-            };
+			var memberDto = new MembersDto
+			{
+				Id = member.Id,
+				Name = member.Name,
+				// Account = member.Account,
+				//Password = member.Password,
+				Birthday = member.Birthday,
+				Email = member.Email,
+				Phone = member.Phone,
+				IconImg = member.IconImg,
+				//ActiveFlag = member.ActiveFlag,
+				// LastOnlineTime = member.LastOnlineTime,     
+			};
 			return memberDto;
 		}
 
-        // PUT: api/Members/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+		// PUT: api/Members/5
+		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+		[HttpPut("{id}")]
         public async Task<IActionResult> PutMember(int id, MembersDto membersDto)
         {
             if (id != membersDto.Id)
