@@ -51,14 +51,11 @@ public class CreateMultipleOrderItemsCommandHandler : IRequestHandler<CreateMult
         foreach (var createOrderItemCommand in request.CreateOrderItemCommandList)
         {
             await ValidateRequestAsync(createOrderItemCommand);
-
             var orderItem = _mapper.Map<Models.EFModels.OrderItem>(createOrderItemCommand);
 
             await AddInventoryIemIdToOrderItem(soldOutIds, createOrderItemCommand, orderItem);
 
-
             await GenerateIndex(createOrderItemCommand, orderItem);
-
             orderItemToBeCreatedList.Add(orderItem);
         }
 

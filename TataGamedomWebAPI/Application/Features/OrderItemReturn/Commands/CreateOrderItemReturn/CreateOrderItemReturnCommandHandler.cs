@@ -48,7 +48,7 @@ public class CreateOrderItemReturnCommandHandler : IRequestHandler<CreateOrderIt
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
         if (validationResult.Errors.Any())
         {
-            throw new BadRequestException("Invalid orderItemReturn Request");
+            throw new BadRequestException("Invalid orderItemReturn Request", validationResult);
         }
     }
 

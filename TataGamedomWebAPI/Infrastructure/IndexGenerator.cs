@@ -32,9 +32,9 @@ public class IndexGenerator : IIndexGenerator
     /// <summary>
     /// "命名規則: IssuedAt + 對應到的訂單Index + Id"
     /// </summary>
-    public string GetOrderItemReturnIndex(OrderItemReturn orderItemReturn, string orderIndex, int maxOrderId)
+    public string GetOrderItemReturnIndex(OrderItemReturn orderItemReturn, string orderIndex, int maxOrderItemReturnId)
     {
-        return string.Concat(orderItemReturn.IssuedAt.ToString("yyyyMMdd"), orderIndex, maxOrderId + 1);
+        return string.Concat(orderItemReturn.IssuedAt.ToString("yyyyMMdd"),Guid.NewGuid()); //todo
     }
 
 

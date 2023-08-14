@@ -15,5 +15,6 @@ public class OrderItemReturnProfile : Profile
         CreateMap<OrderItemReturn, OrderItemReturnDetailsDto>();
         CreateMap<CreateOrderItemReturnCommand, OrderItemReturn>();
         CreateMap<UpdateOrderItemReturnCommand, OrderItemReturn>();
+        CreateMap<CreateOrderItemReturnCommand, OrderItemReturnDto>();
     }
 }
