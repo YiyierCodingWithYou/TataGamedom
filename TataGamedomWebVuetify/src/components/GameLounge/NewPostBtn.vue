@@ -1,12 +1,16 @@
 <template>
-  <v-dialog v-model="dialog" persistent width="auto">
+  <v-dialog v-model="dialog" v-if="IsLoggedIn" persistent width="auto">
     <template v-slot:activator="{ props }">
       <v-btn color="warning" v-bind="props" class="ma-2"> 發新貼文 </v-btn>
     </template>
     <v-form @submit.prevent="postNewPost">
       <v-card>
         <v-card-title class="text-h6 font-weight-bold">
-          新增貼文<span class="font-weight-thin text-body-2"> @ 版名</span>
+          新增貼文
+          <select-board
+            @selected="handleSelection"
+            class="d-inline-block w-50 d-inline-block"
+          />
         </v-card-title>
         <v-card-text>
           <v-text-field
@@ -41,19 +45,27 @@
   </v-dialog>
 </template>
 
-<script setup lang="ts">
-import { ref, defineProps, defineEmits } from "vue";
+<script setup lang="">
+import { ref, defineProps, defineEmits, computed, onMounted } from "vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import ImageUploader from "quill-image-uploader";
 import axios from "axios";
 import DOMPurify from "dompurify";
+import store from "@/store";
+import selectBoard from "@/components/GameLounge/SelectBoard.vue";
 
 const emit = defineEmits(["postComplete"]);
-
 const title = ref("");
 const editor = ref("");
 const dialog = ref(false);
+const IsLoggedIn = computed(() => store.state.isLoggedIn);
+const boardId = ref(0);
+const boardList = ref([]);
+
+const handleSelection = (selectedBoard) => {
+  boardId.value = selectedBoard;
+};
 
 const toolbarOptions = [
   [{ header: [1, 2, 3, 4, 5, false] }], // custom button values
@@ -107,7 +119,7 @@ const postNewPost = () => {
     return;
   }
   let post = {
-    boardId: 1,
+    boardId: boardId.value,
     title: title.value,
     content: content,
   };
