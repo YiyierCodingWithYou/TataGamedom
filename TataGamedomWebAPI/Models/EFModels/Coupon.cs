@@ -38,6 +38,4 @@ public partial class Coupon
     public virtual DiscountTypeCode DiscountType { get; set; } = null!;
 
     public virtual BackendMember? ModifiedBackendMember { get; set; }
-
-    public virtual ICollection<OrderItemsCoupon> OrderItemsCoupons { get; set; } = new List<OrderItemsCoupon>();
 }

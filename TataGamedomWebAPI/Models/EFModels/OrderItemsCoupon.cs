@@ -11,7 +11,5 @@ public partial class OrderItemsCoupon
 
     public int? CouponId { get; set; }
 
-    public virtual Coupon? Coupon { get; set; }
-
     public virtual OrderItem OrderItem { get; set; } = null!;
 }

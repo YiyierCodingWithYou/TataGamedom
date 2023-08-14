@@ -1,39 +1,19 @@
 <template>
-  <v-carousel
-    height="680px"
-    width="80%"
-    v-model="carouselIndex"
-    show-arrows="hover"
-    progress="grey-darken-1"
-    hide-delimiter-background
-    delimiter-icon="mdi-pac-man"
-  >
+  <v-carousel height="680px" width="80%" v-model="carouselIndex" show-arrows="hover" progress="grey-darken-1"
+    hide-delimiters>
+    <!-- delimiter-icon="mdi-pac-man" -->
     <template v-slot:prev="{ props }">
-      <v-icon
-        icon="mdi-menu-left"
-        size="x-large"
-        variant="text"
-        color="brown-lighten-1"
-        @click="props.onClick"
-      ></v-icon>
+      <v-icon icon="mdi-menu-left" size="x-large" style="font-size: 70px" variant="text" color="brown-lighten-1"
+        @click="props.onClick"></v-icon>
     </template>
     <template v-slot:next="{ props }">
-      <v-icon
-        icon="mdi-menu-right"
-        size="x-large"
-        variant="text"
-        color="brown-lighten-1"
-        @click="props.onClick"
-      ></v-icon>
+      <v-icon icon="mdi-menu-right" size="x-large" style="font-size: 70px" variant="text" color="brown-lighten-1"
+        @click="props.onClick"></v-icon>
     </template>
 
     <v-carousel-item v-for="orderItem in results" :key="orderItem.id">
-      <v-card
-        class="mx-auto mb-1 overflow-auto bg-brown-lighten-5 text-center"
-        max-width="auto"
-        variant="outline"
-        height="auto"
-      >
+      <v-card class="mx-auto mb-1 overflow-auto bg-brown-lighten-5 text-center" max-width="auto" variant="outline"
+        height="auto">
         <v-img :src="orderItem.gameGameCoverImg" height="520px"></v-img>
         <v-card-title>
           {{ orderItem.gameChiName }}
