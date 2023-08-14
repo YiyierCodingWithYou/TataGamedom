@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar class="px-3" color="amber-lighten-5" flat density="comfortable">
+    <v-app-bar class="px-3" color="amber" flat density="comfortable">
       <v-tabs centered color="blue-grey-darken-3">
         <v-tab v-for="link in links" :key="link">
           {{ link }}
