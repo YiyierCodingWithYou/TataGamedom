@@ -1,6 +1,11 @@
 <template>
-  <v-card v-for="orderItem in results" :key="orderItem.id" class="mx-auto mb-1 overflow-auto bg-brown-lighten-4"
-    max-width="auto" variant="outline">
+  <v-card
+    v-for="orderItem in results"
+    :key="orderItem.id"
+    class="mx-auto mb-1 overflow-auto bg-brown-lighten-5"
+    max-width="auto"
+    variant="outline"
+  >
     <v-img :src="orderItem.gameGameCoverImg" height="200px"></v-img>
     <v-card-title>
       {{ orderItem.gameChiName }}
@@ -14,7 +19,10 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn :icon="shownItems[orderItem.id] ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="toggleShow(orderItem.id)">
+      <v-btn
+        :icon="shownItems[orderItem.id] ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+        @click="toggleShow(orderItem.id)"
+      >
       </v-btn>
     </v-card-actions>
 
@@ -22,7 +30,11 @@
       <div v-if="shownItems[orderItem.id]">
         <v-divider></v-divider>
 
-        <v-btn color="orange-lighten-2" variant="text" @click="navigateToOrderItemReturn(orderItem)">
+        <v-btn
+          color="orange-lighten-2"
+          variant="text"
+          @click="navigateToOrderItemReturn(orderItem)"
+        >
           申請退貨
         </v-btn>
 
@@ -36,8 +48,8 @@
 export default {
   props: {
     orderId: {
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -78,7 +90,6 @@ export default {
             this.shownItems[id] = false;
           }
           this.results = results;
-
         })
         .catch((error) => {
           this.isLoading = false;

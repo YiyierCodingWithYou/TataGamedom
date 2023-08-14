@@ -1,98 +1,154 @@
 <template>
-  <p v-if="isLoading">Loading...</p>
-  <p v-else-if="!isLoading && error">{{ error }}</p>
-  <p v-else-if="!isLoading && (!results || results.length === 0)">無訂單紀錄</p>
+  <!-- <v-container class="fill-height"> -->
+  <v-row no-gutters>
+    <v-col cols="12">
+      <p v-if="isLoading">Loading...</p>
+      <p v-else-if="!isLoading && error">{{ error }}</p>
+      <p v-else-if="!isLoading && (!results || results.length === 0)">
+        無訂單紀錄
+      </p>
 
-  <v-table v-else fixed-header hover="true" h-screen>
-    <thead>
-      <tr>
-        <th class="text-left">日期<v-icon>{{ 'mdi-table-clock' }}</v-icon></th>
-        <th class="text-left">遊戲及類型<v-icon>{{ 'mdi-google-downasaur' }}</v-icon></th>
-        <th class="text-left">總額<v-icon>{{ 'mdi-sack' }}</v-icon></th>
-        <th class="text-left">狀態<v-icon>{{ 'mdi-pokeball' }}</v-icon></th>
-        <th class="text-left"></th>
-      </tr>
-    </thead>
-    <tbody class="bg-brown-lighten-5">
-      <transition v-for="order in results" :key="order.orderId" name="fade-slide">
-        <tr v-show="!shownOrder || shownOrder === order.orderId" height="150px">
-          <td>{{ relativeTime(order.createdAt) }}</td>
-          <td v-html="combinedGameAndType(order.gameChiName, order.productIsVirtual)"></td>
-          <td>{{ order.total }}</td>
-          <td>{{ order.orderStatusCodeName }}</td>
-          <td>
-            <v-tooltip text="訂單詳情">
-              <template v-slot:activator="{ props }">
-                <v-btn icon size="large" variant="plain">
-                  <v-icon :key="shownOrder" @click="toggleOrderDetail(order.orderId)" v-bind="props">
-                    {{ shownOrder === order.orderId ? 'mdi-gamepad-round-up' : 'mdi-gamepad-round-down' }}
-                  </v-icon>
-                </v-btn>
-              </template>
-            </v-tooltip>
-          </td>
-        </tr>
+      <v-table v-else fixed-header hover="true">
+        <thead>
+          <tr>
+            <th class="text-left">
+              日期<v-icon>{{ "mdi-table-clock" }}</v-icon>
+            </th>
+            <th class="text-left">
+              遊戲及類型<v-icon>{{ "mdi-google-downasaur" }}</v-icon>
+            </th>
+            <th class="text-left">
+              總額<v-icon>{{ "mdi-sack" }}</v-icon>
+            </th>
+            <th class="text-left">
+              狀態<v-icon>{{ "mdi-pokeball" }}</v-icon>
+            </th>
+            <th class="text-left"></th>
+          </tr>
+        </thead>
+        <tbody class="bg-brown-lighten-5">
+          <transition
+            v-for="order in results"
+            :key="order.orderId"
+            name="fade-slide"
+          >
+            <tr
+              v-show="!shownOrder || shownOrder === order.orderId"
+              height="150px"
+            >
+              <td>{{ relativeTime(order.createdAt) }}</td>
+              <td
+                v-html="
+                  combinedGameAndType(order.gameChiName, order.productIsVirtual)
+                "
+              ></td>
+              <td>{{ order.total }}</td>
+              <td>{{ order.orderStatusCodeName }}</td>
+              <td>
+                <v-tooltip text="訂單詳情">
+                  <template v-slot:activator="{ props }">
+                    <v-btn icon size="large" variant="plain">
+                      <v-icon
+                        :key="shownOrder"
+                        @click="toggleOrderDetail(order.orderId)"
+                        v-bind="props"
+                      >
+                        {{
+                          shownOrder === order.orderId
+                            ? "mdi-gamepad-round-up"
+                            : "mdi-gamepad-round-down"
+                        }}
+                      </v-icon>
+                    </v-btn>
+                  </template>
+                </v-tooltip>
+              </td>
+            </tr>
+          </transition>
+        </tbody>
+      </v-table>
+
+      <transition name="fade-slide">
+        <v-col cols="12">
+          <div
+            v-if="showDetails"
+            class="detail-container bg-brown-lighten-5"
+            style="max-height: 680px; overflow-y: auto"
+          >
+            <div class="order-detailsCardsCardsCards">
+              <OrderDetailsCards :orderId="shownOrder" />
+            </div>
+            <div class="order-DetailsList">
+              <OrderDetailsList :orderId="shownOrder" />
+            </div>
+            <div>
+              <v-layout column class="buttons">
+                <v-tooltip text="聯繫客服">
+                  <template v-slot:activator="{ props }">
+                    <v-btn
+                      class="ma-2"
+                      variant="text"
+                      icon="mdi-chat-alert-outline"
+                      color="blue-grey-darken-2"
+                      size="x-large"
+                    >
+                      <v-icon @click="" v-bind="props" size="x-large">
+                        {{ "mdi-chat-alert-outline" }}
+                      </v-icon>
+                    </v-btn>
+                  </template>
+                </v-tooltip>
+                <v-tooltip text="貨態追蹤">
+                  <template v-slot:activator="{ props }">
+                    <v-btn
+                      class="ma-2"
+                      variant="text"
+                      icon="mdi-crosshairs-gps"
+                      color="blue-grey-darken-2"
+                      size="x-large"
+                    >
+                      <v-icon @click="" v-bind="props" size="x-large">
+                        {{ "mdi-crosshairs-gps" }}
+                      </v-icon>
+                    </v-btn>
+                  </template>
+                </v-tooltip>
+                <v-tooltip text="退貨">
+                  <template v-slot:activator="{ props }">
+                    <v-btn
+                      class="ma-2"
+                      variant="text"
+                      icon="mdi-package-variant-closed-remove"
+                      color="blue-grey-darken-2"
+                      size="x-large"
+                    >
+                      <v-icon @click="" v-bind="props" size="x-large">
+                        {{ "mdi-package-variant-closed-remove" }}
+                      </v-icon>
+                    </v-btn>
+                  </template>
+                </v-tooltip>
+              </v-layout>
+            </div>
+          </div>
+        </v-col>
       </transition>
-    </tbody>
-  </v-table>
-
-  <transition name="fade-slide">
-    <div v-if="showDetails" class="detail-container bg-brown-lighten-5">
-      <div class="order-detailsCardsCardsCards">
-        <OrderDetailsCards :orderId="shownOrder" />
-      </div>
-      <div class="order-DetailsList">
-        <OrderDetailsList :orderId="shownOrder" />
-      </div>
-      <div>
-        <v-layout column class="buttons">
-          <v-tooltip text="聯繫客服">
-            <template v-slot:activator="{ props }">
-              <v-btn class="ma-2" variant="text" icon="mdi-chat-alert-outline" color="blue-grey-darken-2" size="x-large">
-                <v-icon @click="" v-bind="props" size="x-large">
-                  {{ 'mdi-chat-alert-outline' }}
-                </v-icon>
-              </v-btn>
-            </template>
-          </v-tooltip>
-          <v-tooltip text="貨態追蹤">
-            <template v-slot:activator="{ props }">
-              <v-btn class="ma-2" variant="text" icon="mdi-crosshairs-gps" color="blue-grey-darken-2" size="x-large">
-                <v-icon @click="" v-bind="props" size="x-large">
-                  {{ 'mdi-crosshairs-gps' }}
-                </v-icon>
-              </v-btn>
-            </template>
-          </v-tooltip>
-          <v-tooltip text="退貨">
-            <template v-slot:activator="{ props }">
-              <v-btn class="ma-2" variant="text" icon="mdi-package-variant-closed-remove" color="blue-grey-darken-2"
-                size="x-large">
-                <v-icon @click="" v-bind="props" size="x-large">
-                  {{ 'mdi-package-variant-closed-remove' }}
-                </v-icon>
-              </v-btn>
-            </template>
-          </v-tooltip>
-        </v-layout>
-      </div>
-    </div>
-
-  </transition>
+    </v-col>
+  </v-row>
+  <!-- </v-container> -->
 </template>
 
   
 <script>
 import { zhTW } from "date-fns/locale";
 import { format } from "date-fns";
-import OrderDetailsCards from './OrderDetailsCards.vue';
-import OrderDetailsList from './OrderDetailsList.vue';
-
+import OrderDetailsCards from "./OrderDetailsCards.vue";
+import OrderDetailsList from "./OrderDetailsList.vue";
 
 export default {
   components: {
     OrderDetailsCards,
-    OrderDetailsList
+    OrderDetailsList,
   },
   data() {
     return {
@@ -150,14 +206,16 @@ export default {
 
     relativeTime(datetime) {
       const date = new Date(datetime);
-      return format(date, 'yyyy/MM/dd', { locale: zhTW });
+      return format(date, "yyyy/MM/dd", { locale: zhTW });
     },
 
     combinedGameAndType(gameNames, productIsVirtual) {
-      return gameNames.map((name, index) => {
-        const type = productIsVirtual[index] ? "序號" : "遊戲片";
-        return `${name} (${type})`;
-      }).join("<br>");
+      return gameNames
+        .map((name, index) => {
+          const type = productIsVirtual[index] ? "序號" : "遊戲片";
+          return `${name} (${type})`;
+        })
+        .join("<br>");
     },
   },
 
@@ -186,20 +244,22 @@ export default {
 .fade-slide-enter-active,
 .fade-slide-leave-active {
   transition: opacity 1s, transform 0.7s ease-in-out;
-
 }
 
 .detail-container {
   display: flex;
+  overflow-y: auto;
 }
 
-.order-detailsCardsCardsCards,
+.order-detailsCardsCardsCards {
+  flex: 7;
+}
 .order-DetailsList {
-  flex: 5;
+  flex: 4;
 }
 
 .buttons {
-  flex: 2;
+  flex: 1;
   display: flex;
   flex-direction: column;
   /* 讓按鈕垂直排列 */
