@@ -76,7 +76,7 @@
             style="max-height: 680px; overflow-y: auto"
           >
             <div class="order-detailsCards">
-              <OrderDetailsCards :orderId="shownOrder" />
+              <OrderDetailsCards :orderId="shownOrder"/>
             </div>
 
             <div>
