@@ -9,22 +9,22 @@
     delimiter-icon="mdi-pac-man"
   >
     <template v-slot:prev="{ props }">
-      <v-icon
+      <v-btn
         icon="mdi-menu-left"
         size="x-large"
         variant="text"
         color="brown-lighten-1"
         @click="props.onClick"
-      ></v-icon>
+      ></v-btn>
     </template>
     <template v-slot:next="{ props }">
-      <v-icon
+      <v-btn
         icon="mdi-menu-right"
         size="x-large"
         variant="text"
         color="brown-lighten-1"
         @click="props.onClick"
-      ></v-icon>
+      ></v-btn>
     </template>
 
     <v-carousel-item v-for="orderItem in results" :key="orderItem.id">
@@ -48,6 +48,33 @@
         <v-card-subtitle>
           類型: {{ orderItem.productIsVirtual }}
         </v-card-subtitle>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            :icon="
+              shownItems[orderItem.id] ? 'mdi-chevron-up' : 'mdi-chevron-down'
+            "
+            @click="toggleShow(orderItem.id)"
+          >
+          </v-btn>
+        </v-card-actions>
+
+        <v-expand-transition>
+          <div v-if="shownItems[orderItem.id]">
+            <v-divider></v-divider>
+
+            <v-btn
+              color="orange-lighten-2"
+              variant="text"
+              @click="navigateToOrderItemReturn(orderItem)"
+            >
+              申請退貨
+            </v-btn>
+
+            <v-btn color="orange-lighten-2" variant="text"> 聯絡客服 </v-btn>
+          </div>
+        </v-expand-transition>
       </v-card>
     </v-carousel-item>
   </v-carousel>
@@ -106,6 +133,15 @@ export default {
           console.log(error);
           this.error = "Failed to fetch data - please try again later.";
         });
+    },
+    navigateToOrderItemReturn(orderItem) {
+      this.$router.push({
+        name: "OrderItemReturn",
+        params: {
+          id: orderItem.orderItemId,
+          gameChiName: orderItem.gameChiName,
+        },
+      });
     },
   },
   mounted() {

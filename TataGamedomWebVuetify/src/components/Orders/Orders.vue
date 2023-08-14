@@ -75,12 +75,10 @@
             class="detail-container bg-brown-lighten-5"
             style="max-height: 680px; overflow-y: auto"
           >
-            <div class="order-detailsCardsCardsCards">
+            <div class="order-detailsCards">
               <OrderDetailsCards :orderId="shownOrder" />
             </div>
-            <!-- <div class="order-DetailsList">
-              <OrderDetailsList :orderId="shownOrder" />
-            </div> -->
+
             <div>
               <v-layout column class="buttons">
                 <v-tooltip text="聯繫客服">
@@ -122,9 +120,12 @@
                       color="blue-grey-darken-2"
                       size="x-large"
                     >
-                      <v-icon @click="" v-bind="props" size="x-large">
-                        {{ "mdi-package-variant-closed-remove" }}
-                      </v-icon>
+                      <OrderItemReturnDialog
+                        v-model="showDialog"
+                        :orderId="shownOrder"
+                        activator="parent"
+                        width="auto"
+                      />
                     </v-btn>
                   </template>
                 </v-tooltip>
@@ -144,17 +145,23 @@ import { zhTW } from "date-fns/locale";
 import { format } from "date-fns";
 import OrderDetailsCards from "./OrderDetailsCards.vue";
 import OrderDetailsList from "./OrderDetailsList.vue";
+import OrderItemReturnDialog from "./OrderItemReturnDialog.vue";
+import SupportHub from "./SupportHub.vue";
 
 export default {
   components: {
     OrderDetailsCards,
     OrderDetailsList,
+    OrderItemReturnDialog,
+    SupportHub,
   },
   data() {
     return {
       results: [],
       shownOrder: null,
       showDetails: false,
+      showDialog: false,
+      showSupportHub: false,
     };
   },
   methods: {
@@ -203,6 +210,9 @@ export default {
         });
       }
     },
+    openReturnDialog() {
+      this.showDialog = true;
+    },
 
     relativeTime(datetime) {
       const date = new Date(datetime);
@@ -226,21 +236,18 @@ export default {
 </script>
 
 <style scoped>
-/* 指定進入動畫的起始和結束狀態 */
 .fade-slide-enter-from,
 .fade-slide-leave-to {
   opacity: 0;
   transform: translateY(30px);
 }
 
-/* 指定進入動畫的結束狀態 */
 .fade-slide-enter-to,
 .fade-slide-leave-from {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* 指定動畫持續時間和效果 */
 .fade-slide-enter-active,
 .fade-slide-leave-active {
   transition: opacity 1s, transform 0.7s ease-in-out;
@@ -251,7 +258,7 @@ export default {
   overflow-y: auto;
 }
 
-.order-detailsCardsCardsCards {
+.order-detailsCards {
   flex: 7;
 }
 .order-DetailsList {
@@ -262,10 +269,7 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
-  /* 讓按鈕垂直排列 */
   align-items: center;
-  /* 使按鈕水平居中 */
   justify-content: space-between;
-  /* 在按鈕之間加入空間 */
 }
 </style>

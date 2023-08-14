@@ -97,11 +97,11 @@ const routes = [
       //   name: 'OrderDetailsCards',
       //   component: OrderDetailsCards
       // },
-      {
-        path: '/OrderItemReturn/:id/:gameChiName',
-        name: 'OrderItemReturn',
-        component: OrderItemReturn
-      },
+      // {
+      //   path: '/OrderItemReturn/:id/:gameChiName',
+      //   name: 'OrderItemReturn',
+      //   component: OrderItemReturn
+      // },
       {
         path: '/SupportHub',
         name: 'SupportHub',
