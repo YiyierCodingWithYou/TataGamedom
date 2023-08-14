@@ -12,6 +12,8 @@ public class CreateOrderItemReturnCommand : IRequest<int>
 
     public DateTime IssuedAt { get; set; } = DateTime.Now;
 
+    public DateTime? CompletedAt { get; set; }
+
     public bool IsRefunded { get; set; } = false;
 
     public bool IsReturned { get; set; } = false;

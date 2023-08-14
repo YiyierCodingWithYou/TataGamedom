@@ -7,17 +7,26 @@
 
     <v-spacer></v-spacer>
     <div v-if="$store.state.isLoggedIn">
-      <a color="primary">HI {{ name }}</a>
+      <a color="primary" @click="toggleMemberProfile">HI {{ name }}</a>
       <v-btn color="primary" @click="logout">登出</v-btn>
     </div>
     <v-btn v-else color="primary" @click="login">登入</v-btn>
   </v-app-bar>
+  <MemberProfile
+    class="MemberProfile"
+    v-if="showMemberProfile"
+    @close="closeMemberProfile"
+  />
 </template>
 
 <script>
 import axios from "axios";
+import MemberProfile from "@/components/Members/MemberProfile.vue";
 
 export default {
+  components: {
+    MemberProfile,
+  },
   computed: {
     IsLogined() {
       return this.$store.state.isLoggedIn;
@@ -32,6 +41,7 @@ export default {
       account: "",
       returnTo: null,
       forceRerenderKey: 0,
+      showMemberProfile: false,
     };
   },
   methods: {
@@ -55,9 +65,24 @@ export default {
           this.$store.commit("SET_LOGIN", res.data);
         });
     },
+    toggleMemberProfile() {
+      this.showMemberProfile = !this.showMemberProfile;
+    },
+    closeMemberProfile() {
+      this.showMemberProfile = false;
+    },
   },
   beforeMount() {
     this.checkLogin();
   },
 };
 </script>
+
+<style>
+.MemberProfile {
+  position: fixed;
+  z-index: 5;
+  right: 0;
+  margin-top: 64px;
+}
+</style>
