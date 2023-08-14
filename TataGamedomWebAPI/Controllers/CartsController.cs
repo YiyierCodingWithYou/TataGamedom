@@ -56,7 +56,9 @@ namespace TataGamedomWebAPI.Controllers
 			{
 				Id = user.Id,
 				MemberId = user.Id,
-				CartItems = cartItems
+				CartItems = cartItems,
+				distinctCoupons = cartItems.SelectMany(item => item.Product.Coupons).Distinct(),
+				distinctCouponsDescription = cartItems.SelectMany(item => item.Product.CouponDescription).Distinct()
 			};
 			return cart;
 		}
@@ -135,7 +137,7 @@ namespace TataGamedomWebAPI.Controllers
 
 		// POST: api/Carts
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-	
+
 		[HttpPost]
 		[EnableCors("AllowCookie")]
 		public async Task<ApiResult> PostCart(CartItemCreateDTO cartItemCreateDTO)
@@ -195,7 +197,7 @@ namespace TataGamedomWebAPI.Controllers
 		{
 			var account = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
-			var cartItem = await _context.Carts.FirstOrDefaultAsync(c=>c.ProductId == productId && c.MemberId==user.Id);
+			var cartItem = await _context.Carts.FirstOrDefaultAsync(c => c.ProductId == productId && c.MemberId == user.Id);
 			if (cartItem == null)
 			{
 				return NotFound("該商品已不存在購物車！");
