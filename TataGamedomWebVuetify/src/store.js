@@ -11,7 +11,7 @@ const store = createStore({
       state.isLoggedIn = value.isLoggedIn;
       state.name = value.name;
       state.account = value.account;
-      console.log("Updated IsLogined to:", value);
+      // console.log("Updated IsLogined to:", value);
     },
   },
 });
