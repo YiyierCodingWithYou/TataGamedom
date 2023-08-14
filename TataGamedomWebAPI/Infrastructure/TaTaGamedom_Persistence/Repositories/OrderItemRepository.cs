@@ -13,11 +13,6 @@ public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepos
     {
     }
 
-    public async Task<bool> IsOrderItemExist(int orderItemId)
-    {
-        return await _dbContext.OrderItems.AnyAsync(o => o.Id == orderItemId);
-    }
-
     public async Task<List<OrderItemWithDetailsDto>> GetListByAccountWithDetailsAsync(int orderId)
     {
         //Todo DiscountedPrice跟112確定後改用算的，或反正規化直接取值
@@ -27,7 +22,7 @@ public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepos
             .Select(oi => new OrderItemWithDetailsDto
             {
                 Id = oi.Id,
-                GameGameCoverImg = oi.Product.Game!.GameCoverImg,
+                GameGameCoverImg = oi.Product!.Game!.GameCoverImg,
                 GameChiName = oi.Product.Game.ChiName,
                 DiscountedPrice = 0,
                 ProductIsVirtual = oi.Product.IsVirtual
@@ -52,5 +47,11 @@ public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepos
     {
         return await _dbContext.OrderItems.MaxAsync(oi => oi.Id);
     }
+
+    public async Task<bool> IsOrderItemExist(int orderItemId)
+    {
+        return await _dbContext.OrderItems.AnyAsync(o => o.Id == orderItemId);
+    }
+
 }
 
