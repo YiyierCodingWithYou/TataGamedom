@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" persistent width="auto">
+  <v-dialog v-if="isLoggedIn" v-model="dialog" persistent width="auto">
     <template v-slot:activator="{ props }">
       <v-btn v-bind="props">
         <span class="material-symbols-rounded size-20"> edit_square </span>
@@ -52,8 +52,10 @@ import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import ImageUploader from "quill-image-uploader";
 import axios from "axios";
 import DOMPurify from "dompurify";
+import store from "@/store";
 
 const emit = defineEmits(["editComplete"]);
+const isLoggedIn = ref(store.state.isLoggedIn);
 
 const props = defineProps({
   postId: {

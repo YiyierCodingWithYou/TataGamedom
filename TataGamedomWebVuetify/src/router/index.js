@@ -1,7 +1,7 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
-import eCommerce from '../views/eCommerceIndex.vue'
-import SingleProduct from '../views/SingleProduct.vue'
+import eCommerce from '@/views/eCommerce.vue'
+import SingleProduct from '@/views/SingleProduct.vue'
 import Members from '../views/Members.vue'
 import News from '../views/NewsIndex.vue'
 import RegisterVue from '@/components/Members/Register.vue'
@@ -12,6 +12,7 @@ import Orders from '../views/Orders.vue'
 import OrderItemReturn from '../views/OrderItemReturn.vue'
 import SupportHub from '../views/SupportHub.vue'
 import LinePay from '../views/LinePay.vue'
+import ActiveRegister from '@/components/Members/ActiveRegister.vue'
 import LinePayConfirmPayment from '../views/LinePayConfirmPayment.vue'
 
 
@@ -30,6 +31,23 @@ const routes = [
           import(/* webpackChunkName: "home" */ "@/views/Home.vue"),
       },
     ],
+  },{
+    path: "/eCommerce",
+    component: () => import("@/layouts/default/Default.vue"),
+    children: [
+      {
+        path: "",
+        name: "eCommerce",
+        component: eCommerce,
+        props:true
+      },
+      {
+        path: '/eCommerce/Product/:productId',
+        name: 'SingleProduct',
+        component: SingleProduct,
+        props: true
+      },
+    ],
   },
   {
     path: "/GameLounge",
@@ -43,24 +61,6 @@ const routes = [
         // which is lazy-loaded when the route is visited.
         component: () =>
           import(/* webpackChunkName: "home" */ "@/views/GameLounge.vue"),
-      },
-      {
-        path: '/eCommerce/',
-        name: 'eCommerce',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: eCommerce,
-        props: true
-      },
-      {
-        path: '/eCommerce/Product/:productId',
-        name: 'SingleProduct',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: SingleProduct,
-        props: true
       },
       {
         path: '/Members',
@@ -111,6 +111,11 @@ const routes = [
         path: '/LinePay',
         name: 'LinePay',
         component: LinePay
+      },
+      {
+        path: '/Members/ActiveRegister',
+        name: 'ActiveRegister',
+        component: ActiveRegister
       },
       {
         path: '/LinePayConfirmPayment',

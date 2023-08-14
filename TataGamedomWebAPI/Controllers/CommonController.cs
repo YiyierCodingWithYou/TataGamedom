@@ -52,8 +52,8 @@ namespace TataGamedomWebAPI.Controllers
 		}
 
 		[EnableCors("AllowCookie")]
-		[HttpGet("IsLogined")]
-		public async Task<ActionResult> IsLogined()
+		[HttpGet("IsLoggedIn")]
+		public async Task<ActionResult> IsLoggedIn()
 		{
 			var account = HttpContext.User.FindFirstValue("MembersAccount");
 			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
@@ -64,7 +64,7 @@ namespace TataGamedomWebAPI.Controllers
 			}
 			else
 			{
-				return Ok(new { IsLogined = true, Account = user.Account , Name = user.Name });
+				return Ok(new { IsLoggedIn = true, Account = user.Account , Name = user.Name });
 			}
 		}
 
