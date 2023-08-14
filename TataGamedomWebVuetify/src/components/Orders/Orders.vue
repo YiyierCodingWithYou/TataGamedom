@@ -78,9 +78,9 @@
             <div class="order-detailsCardsCardsCards">
               <OrderDetailsCards :orderId="shownOrder" />
             </div>
-            <div class="order-DetailsList">
+            <!-- <div class="order-DetailsList">
               <OrderDetailsList :orderId="shownOrder" />
-            </div>
+            </div> -->
             <div>
               <v-layout column class="buttons">
                 <v-tooltip text="聯繫客服">
