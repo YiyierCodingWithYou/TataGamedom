@@ -99,20 +99,54 @@
             <td>總計：</td>
             <td class="text-end">NT${{ cartData.total }}</td>
           </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><v-btn>結帳</v-btn></td>
-          </tr>
         </tbody>
       </v-table>
     </v-sheet>
     <v-sheet v-else class="text-center"
       >您的購物車為空，<a href="/eCommerce">點我到商城逛逛！</a></v-sheet
     >
+    <v-row>
+      <v-col cols="8">
+        <v-card class="mt-3">
+          <v-card-title class="d-flex"
+            >選擇送貨及付款方式
+            <v-card-subtitle>運費：NT${{}}</v-card-subtitle></v-card-title
+          >
+          <hr />
+          <v-card-subtitle>送貨地點</v-card-subtitle>
+          <v-select
+            v-model="selectLocation"
+            :items="shipLocation"
+            variant="solo"
+          ></v-select>
+          <v-card-subtitle>送貨方式</v-card-subtitle>
+          <v-select
+            v-model="selectShipMethod"
+            :items="shipMethod"
+            variant="solo"
+          ></v-select>
+          <v-card-subtitle>付款方式</v-card-subtitle>
+          <v-select
+            v-model="selectPayment"
+            :items="payment"
+            variant="solo"
+          ></v-select>
+        </v-card>
+      </v-col>
+      <v-col cols="4">
+        <v-card class="mt-3">
+          <v-card-title class="d-flex">訂單資訊</v-card-title>
+          <hr />
+          <v-card-subtitle>小計：</v-card-subtitle>
+          <v-card-subtitle>折扣：</v-card-subtitle>
+          <v-card-subtitle>運費：</v-card-subtitle>
+          <v-card-subtitle>合計：</v-card-subtitle>
+          <div class="d-flex justify-center">
+            <v-btn width="300" color="">前往結帳</v-btn>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
     
@@ -124,6 +158,25 @@ const cartItems = ref([]);
 const imgLink = "https://localhost:7081/Files/Uploads/";
 const limit = ref(0);
 const quantity = ref();
+const selectLocation = ref("台灣");
+const selectShipMethod = ref("7-11超商🏣 - 取貨付款");
+
+const shipLocation = ref(["台灣", "新加坡", "香港", "澳門", "馬來西亞"]);
+const shipMethod = ref([
+  "7-11超商🏣 - 取貨付款",
+  "7-11超商🏣 - 純取貨",
+  "全家超商🏣 - 取貨付款",
+  "全家超商🏣 - 純取貨",
+  "宅配🚛 - 黑貓宅急便",
+  "宅配🚛 - 黑貓宅急便 貨到付款",
+]);
+const payment = ref([
+  "LinePay📱",
+  "信用卡💳(Visa, Master, JCB)",
+  "7-11超商🏣 - 取貨付款",
+  "全家超商🏣 - 取貨付款",
+  "黑貓宅急便💸 - 貨到付款",
+]);
 
 const loadData = async () => {
   const response = await fetch(`https://localhost:7081/api/Carts`, {
