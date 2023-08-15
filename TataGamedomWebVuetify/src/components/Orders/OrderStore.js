@@ -1,20 +1,37 @@
-import { computed, onMounted } from 'vue';
-import { useStore } from 'vuex';
+import { createStore } from 'vuex';
+import axios from 'axios';
 
-export default {
-    setup() {
-        const store = useStore();
+const BASE_URL = 'https://localhost:7081';
 
-        const results = computed(() => store.state.results);
-
-        const loadResults = () => {
-            store.dispatch('loadResults');
+export default createStore({
+    state: {
+        orders: [],
+        orderDetails: {}
+    },
+    mutations: {
+        setOrders(state, orders) {
+            state.orders = orders;
+        },
+        setOrderDetails(state, { orderId, details }) {
+            state.orderDetails[orderId] = details;
         }
-
-        onMounted(loadResults);
-
-        return {
-            results
+    },
+    actions: {
+        async fetchOrders({ commit }) {
+            try {
+                const response = await axios.get(`${BASE_URL}/api/Orders`);
+                commit('setOrders', response.data);
+            } catch (error) {
+                console.error('Failed to fetch orders:', error.message);
+            }
+        },
+        async fetchOrderDetails({ commit }, orderId) {
+            try {
+                const response = await axios.get(`${BASE_URL}/api/OrderItems/order/${orderId}`);
+                commit('setOrderDetails', { orderId, details: response.data });
+            } catch (error) {
+                console.error('Failed to fetch order details:', error.message);
+            }
         }
     }
-}
+});

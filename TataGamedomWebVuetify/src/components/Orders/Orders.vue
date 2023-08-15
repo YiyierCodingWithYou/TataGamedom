@@ -1,12 +1,7 @@
 <template>
-  <!-- <v-container class="fill-height"> -->
   <v-row no-gutters>
     <v-col cols="12">
-      <!-- <p v-if="isLoading">Loading...</p>
-      <p v-else-if="!isLoading && error">{{ error }}</p> -->
-      <!-- <p v-if="!isLoading && (!results || results.length === 0)">無訂單紀錄</p> -->
-      <p v-if="results.length === 0">無訂單紀錄</p>
-
+      <p v-if="orders.length === 0">無訂單紀錄</p>
       <v-table v-else fixed-header hover>
         <thead>
           <tr>
@@ -27,7 +22,7 @@
         </thead>
         <tbody class="bg-brown-lighten-5">
           <transition
-            v-for="order in results"
+            v-for="order in orders"
             :key="order.orderId"
             name="fade-slide"
           >
@@ -154,24 +149,35 @@
       </transition>
     </v-col>
   </v-row>
-  <!-- </v-container> -->
 </template>
 
   
 <script>
 import { zhTW } from "date-fns/locale";
 import { format } from "date-fns";
+import { computed } from "vue";
+import { useStore } from "vuex";
 import OrderDetailsCards from "./OrderDetailsCards.vue";
 import OrderDetailsList from "./OrderDetailsList.vue";
 import OrderItemReturnDialog from "./OrderItemReturnDialog.vue";
 import SupportHub from "./SupportHub.vue";
 
 export default {
+  name: "Orders",
   components: {
     OrderDetailsCards,
     OrderDetailsList,
     OrderItemReturnDialog,
     SupportHub,
+  },
+  setup() {
+    const store = useStore();
+
+    const orders = computed(() => store.state.orders);
+
+    store.dispatch("fetchOrders");
+
+    return { orders };
   },
   data() {
     return {
@@ -183,36 +189,6 @@ export default {
     };
   },
   methods: {
-    loadData() {
-      fetch("https://localhost:7081/api/Orders", {
-        credentials: "include",
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-        })
-        .then((data) => {
-          // this.isLoading = false;
-          const results = [];
-          for (const id in data) {
-            results.push({
-              orderId: data[id].id,
-              gameChiName: data[id].gameChiName,
-              productIsVirtual: data[id].productIsVirtual,
-              createdAt: data[id].createdAt,
-              total: data[id].total,
-              orderStatusCodeName: data[id].orderStatusCodeName,
-            });
-          }
-          this.results = results;
-        })
-        .catch((error) => {
-          // this.isLoading = false;
-          console.log(error);
-          this.error = "Failed to fetch data - please try again later.";
-        });
-    },
     toggleOrderDetail(orderId) {
       if (this.shownOrder === orderId) {
         this.shownOrder = null;
