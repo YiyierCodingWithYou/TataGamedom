@@ -1,4 +1,8 @@
-﻿using System.Text;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Security.Claims;
+using System.Text;
+using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.Payment;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.PaymentConfirm;
@@ -6,6 +10,7 @@ using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Re
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.Payment;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.PaymentConfirm;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.PaymentRefund;
+using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter;
 
@@ -16,12 +21,87 @@ public class LinePayService
     private readonly string linePayBaseApiUrl = "https://sandbox-api-pay.line.me";
     private static HttpClient client;
     private readonly JsonProvider _jsonProvider;
+    private readonly AppDbContext _dbContext;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-
-    public LinePayService()
+    public LinePayService(AppDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
         client = new HttpClient();
         _jsonProvider = new JsonProvider();
+        this._dbContext = dbContext;
+        this._httpContextAccessor = httpContextAccessor;
+    }
+
+    public async Task<PaymentResponseDto> SendPaymentRequest()
+    {
+
+        string? memberId = _httpContextAccessor.HttpContext?.User.Claims.Where(c => c.Type == "Membersid").FirstOrDefault()?.Value;
+
+        //Get Cart Info
+        List<Cart> carts = await _dbContext.Carts.Where(c => c.MemberId.ToString() == memberId).ToListAsync();
+        
+        //Maping LinePayproduct
+        List<LinePayProductDto> productDtos = new List<LinePayProductDto>();
+        
+        foreach (var cart in carts) 
+        {
+            var productDto = new LinePayProductDto
+            {
+                Name = cart.Product.Game!.ChiName,
+                Quantity = 1,
+                Price = cart.Product.Price,   //未處理優惠
+            };
+            productDtos.Add(productDto);
+        }
+
+
+        //Maping PackageDto
+        List<PackageDto> packageDtos = new List<PackageDto>();
+        packageDtos.Add(new PackageDto
+        {
+            Id = Guid.NewGuid().ToString(),
+            Amount = productDtos.Select(p => p.Price).Sum(),
+            Products = productDtos
+        });
+
+
+        //Mapping to paymentRequestDto
+        PaymentRequestDto? paymentRequestDto = carts.Select(c => new PaymentRequestDto
+        {
+            Amount = packageDtos.Select(p => p.Amount).Sum(),
+            Currency = "TWD",
+            OrderId = Guid.NewGuid().ToString(),     //todo => 先建訂單，傳Index到OrderId
+            Packages = packageDtos,
+            RedirectUrls = new RedirectUrlsDto 
+            {
+                ConfirmUrl = "https://localhost:3000/LinePayConfirmPayment",
+                CancelUrl = ""
+            }
+        }).FirstOrDefault();
+
+
+
+        var json = _jsonProvider.Serialize(paymentRequestDto);
+        var nonce = Guid.NewGuid().ToString();
+        var requstUrl = "/v3/payments/request";
+        var signature = SignatureProvider.HMACSHA256(channelSecretKey, channelSecretKey + requstUrl + json + nonce);
+
+        var request = new HttpRequestMessage(HttpMethod.Post, linePayBaseApiUrl + requstUrl)
+        {
+            Content = new StringContent(json, Encoding.UTF8, "application/json")
+        };
+
+        client.DefaultRequestHeaders.Add("X-LINE-ChannelId", channelId);
+        client.DefaultRequestHeaders.Add("X-LINE-Authorization-Nonce", nonce);
+        client.DefaultRequestHeaders.Add("X-LINE-Authorization", signature);
+
+        var response = await client.SendAsync(request);
+        var linePayResponse = _jsonProvider.Deserialize<PaymentResponseDto>(await response.Content.ReadAsStringAsync());
+
+        Console.WriteLine(nonce);
+        Console.WriteLine(signature);
+
+        return linePayResponse;
     }
 
     public async Task<PaymentResponseDto> SendPaymentRequest(PaymentRequestDto dto)

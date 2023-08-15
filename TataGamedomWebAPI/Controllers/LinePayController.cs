@@ -8,6 +8,7 @@ using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter;
 using Microsoft.AspNetCore.Cors;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.PaymentRefund;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.PaymentRefund;
+using TataGamedomWebAPI.Infrastructure.Data;
 
 namespace TataGamedomWebAPI.Controllers;
 
@@ -18,15 +19,26 @@ namespace TataGamedomWebAPI.Controllers;
 public class LinePayController : ControllerBase
 {
     private readonly LinePayService _linePayService;
-    public LinePayController()
+    private readonly AppDbContext _dbContext;
+    private readonly HttpContextAccessor _httpContextAccessor;
+
+    public LinePayController(AppDbContext dbContext, HttpContextAccessor httpContextAccessor)
     {
-        _linePayService = new LinePayService();
+        _linePayService = new LinePayService(_dbContext!, _httpContextAccessor!);
+        this._dbContext = dbContext;
+        this._httpContextAccessor = httpContextAccessor;
     }
 
     [HttpPost("Create")]
     public async Task<PaymentResponseDto> CreatePayment(PaymentRequestDto dto)
     {
         return await _linePayService.SendPaymentRequest(dto);
+    }
+
+    [HttpPost("Create")]
+    public async Task<PaymentResponseDto> CreatePaymentByAccount()
+    {
+        return await _linePayService.SendPaymentRequest();
     }
 
     [HttpPost("Confirm")]
