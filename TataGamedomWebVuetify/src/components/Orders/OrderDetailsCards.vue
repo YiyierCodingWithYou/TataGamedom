@@ -63,6 +63,19 @@ export default {
       required: true,
     },
   },
+  setup(props) {
+    const store = useStore();
+    const results = computed(() => store.state.results);
+
+    // ...其他邏輯...
+
+    return {
+      results,
+      // ...其他返回的屬性或方法...
+    }
+  }
+},
+
   data() {
     return {
       results: [],
