@@ -16,5 +16,8 @@
 		public IEnumerable<string> distinctCoupons { get; set; }
 		public IEnumerable<string> distinctCouponsDescription { get; set; }
 		public bool AllowCheckout => CartItems.Any();
+
+
+
 	}
 }

@@ -16,7 +16,11 @@
         <tbody>
           <tr v-for="item in cartItems" :key="item.product.id">
             <td>
-              <img :src="imgLink + item.product.gameCoverImg" height="150" cover />
+              <img
+                :src="imgLink + item.product.gameCoverImg"
+                height="150"
+                cover
+              />
             </td>
             <td>
               <div>{{ item.product.chiName }}</div>
@@ -27,7 +31,10 @@
                 </v-chip>
               </div>
             </td>
-            <td v-if="item.product.price != item.product.specialPrice" class="text-end">
+            <td
+              v-if="item.product.price != item.product.specialPrice"
+              class="text-end"
+            >
               <div>
                 <s>NT${{ item.product.price }}</s>
               </div>
@@ -37,25 +44,47 @@
             <td>
               <v-row>
                 <v-col class="d-flex" cols="3">
-                  <v-btn @click="decreaseQuantity(item)" :max="limit"><v-icon>mdi-minus</v-icon></v-btn>
+                  <v-btn @click="decreaseQuantity(item)" :max="limit"
+                    ><v-icon>mdi-minus</v-icon></v-btn
+                  >
                 </v-col>
                 <v-col cols="6">
-                  <v-text-field v-model="item.qty" min="0" :max="limit" variant="outlined" readonly></v-text-field>
+                  <v-text-field
+                    v-model="item.qty"
+                    min="0"
+                    :max="limit"
+                    variant="outlined"
+                    readonly
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="3">
-                  <v-btn @click="increaseQuantity(item)" :max="limit"><v-icon>mdi-plus</v-icon></v-btn>
+                  <v-btn @click="increaseQuantity(item)" :max="limit"
+                    ><v-icon>mdi-plus</v-icon></v-btn
+                  >
                 </v-col>
               </v-row>
             </td>
             <td class="text-end" v-text="item.subTotal"></td>
             <td class="text-end">
-              <v-icon @click="removeItem(item.product.id)">mdi-cart-remove</v-icon>
+              <v-icon @click="removeItem(item.product.id)"
+                >mdi-cart-remove</v-icon
+              >
             </td>
           </tr>
           <tr>
             <td>已享用優惠</td>
-            <td >
-             <span class="me-auto" v-for="item in cartData.distinctCoupons" :key="item"> {{ item }}　</span><span v-for="item in cartData.distinctCouponsDescription" :key="item">{{ item }}<br></span>
+            <td>
+              <span
+                class="me-auto"
+                v-for="item in cartData.distinctCoupons"
+                :key="item"
+              >
+                {{ item }}　</span
+              ><span
+                v-for="item in cartData.distinctCouponsDescription"
+                :key="item"
+                >{{ item }}<br
+              /></span>
             </td>
             <td></td>
             <td></td>
@@ -68,7 +97,7 @@
             <td></td>
             <td></td>
             <td>總計：</td>
-            <td class="text-end">NT${{ calculateTotal }}</td>
+            <td class="text-end">NT${{ cartData.total }}</td>
           </tr>
           <tr>
             <td></td>
@@ -81,12 +110,14 @@
         </tbody>
       </v-table>
     </v-sheet>
-    <v-sheet v-else class="text-center">您的購物車為空，<a href="/eCommerce">點我到商城逛逛！</a></v-sheet>
+    <v-sheet v-else class="text-center"
+      >您的購物車為空，<a href="/eCommerce">點我到商城逛逛！</a></v-sheet
+    >
   </v-container>
 </template>
     
 <script setup lang='ts'>
-import { ref, computed, watch } from "vue";
+import { ref, watch } from "vue";
 
 const cartData = ref({});
 const cartItems = ref([]);
@@ -105,10 +136,6 @@ const loadData = async () => {
 
   cartItems.value = datas.cartItems;
 };
-
-const calculateTotal = computed(() => {
-  return cartItems.value.reduce((total, item) => total + item.subTotal, 0);
-});
 
 watch(
   () => cartItems.value,

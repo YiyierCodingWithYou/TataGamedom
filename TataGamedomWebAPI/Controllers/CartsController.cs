@@ -48,7 +48,6 @@ namespace TataGamedomWebAPI.Controllers
 			List<CartItemDTO> cartItems = await GetCartItems(user, currentTime);
 			if (cartItems.Count == 0)
 			{
-				// 購物車沒東西的話
 				return new EmptyCartDTO();
 			}
 
