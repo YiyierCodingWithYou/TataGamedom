@@ -1,8 +1,8 @@
 <template>
   <div class="text-center">
-    <v-icon @click="" v-bind="props" size="x-large">
+    <!-- <v-icon @click="" v-bind="props" size="x-large">
       {{ "mdi-script-text-outline" }}
-    </v-icon>
+    </v-icon> -->
 
     <v-dialog v-model="dialog" activator="parent" width="auto">
       <v-card class="mx-auto" max-width="auto">
@@ -12,14 +12,12 @@
           </v-card-title>
 
           <template v-slot:append>
-            <v-defaults-provider
-              :defaults="{
-                VBtn: {
-                  variant: 'text',
-                  density: 'comfortable',
-                },
-              }"
-            >
+            <v-defaults-provider :defaults="{
+              VBtn: {
+                variant: 'text',
+                density: 'comfortable',
+              },
+            }">
               <v-btn icon="mdi-pencil"></v-btn>
             </v-defaults-provider>
           </template>
@@ -36,17 +34,11 @@
           <v-divider inset></v-divider>
           <v-list-item prepend-icon="mdi-phone" title="收件人"></v-list-item>
           <v-divider inset></v-divider>
-          <v-list-item
-            prepend-icon="mdi-email"
-            title="mcbeal@example.com"
-          ></v-list-item>
+          <v-list-item prepend-icon="mdi-email" title="mcbeal@example.com"></v-list-item>
 
           <v-divider inset></v-divider>
 
-          <v-list-item
-            prepend-icon="mdi-map-marker"
-            title="收件地址"
-          ></v-list-item>
+          <v-list-item prepend-icon="mdi-map-marker" title="收件地址"></v-list-item>
         </v-list>
       </v-card>
     </v-dialog>
