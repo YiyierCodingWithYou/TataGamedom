@@ -60,12 +60,12 @@
         variant="underlined"
       ></v-text-field>
 
-      <v-text-field
+      <!-- <v-text-field
         v-model="coverImg"
         color="primary"
         label="大頭貼"
         variant="underlined"
-      ></v-text-field>
+      ></v-text-field> -->
 
       <v-checkbox
         v-model="terms"

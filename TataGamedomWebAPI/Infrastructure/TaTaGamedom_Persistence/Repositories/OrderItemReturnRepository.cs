@@ -29,5 +29,10 @@ public class OrderItemReturnRepository : GenericRepository<OrderItemReturn>, IOr
     {
         return await _dbContext.OrderItemReturns.MaxAsync(o => o.Id);
     }
+
+    public async Task<bool> IsReturnOrderExist(int orderItemId)
+    {
+        return await _dbContext.OrderItemReturns.AnyAsync(o => o.OrderItemId == orderItemId);
+    }
 }
 

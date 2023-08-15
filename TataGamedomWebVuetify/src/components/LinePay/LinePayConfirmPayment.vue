@@ -74,8 +74,7 @@ export default {
         if (response.ok) {
           paymentStatus.value = "交易狀態 : 成功";
           setTimeout(() => {
-            window.location =
-              "https://cccf-61-63-154-173.jp.ngrok.io/products.html";
+            window.location = "https://localhost:3000/Orders";
           }, 2000);
         } else {
           console.error("Failed to confirm payment");
@@ -92,4 +91,12 @@ export default {
   },
 };
 </script>
-  
+
+<style scoped>
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+</style>

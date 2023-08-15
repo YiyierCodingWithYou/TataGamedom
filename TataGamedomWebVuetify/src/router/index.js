@@ -8,11 +8,14 @@ import RegisterVue from '@/components/Members/Register.vue'
 import Login from '@/components/Members/Login.vue'
 import ForgetPwd from '@/components/Members/ForgetPwd.vue'
 import Orders from '../views/Orders.vue'
-import OrderDetails from '../views/OrderDetails.vue'
+// import OrderDetailsCards from '../views/OrderDetailsCards.vue'
 import OrderItemReturn from '../views/OrderItemReturn.vue'
 import SupportHub from '../views/SupportHub.vue'
 import LinePay from '../views/LinePay.vue'
+import ActiveRegister from '@/components/Members/ActiveRegister.vue'
+import LinePayConfirmPayment from '../views/LinePayConfirmPayment.vue'
 import Cart from '@/views/Cart.vue'
+
 
 const routes = [
   {
@@ -101,16 +104,16 @@ const routes = [
         name: 'Orders',
         component: Orders
       },
-      {
-        path: '/Orders/:id',
-        name: 'OrderDetails',
-        component: OrderDetails
-      },
-      {
-        path: '/OrderItemReturn/:id/:gameChiName',
-        name: 'OrderItemReturn',
-        component: OrderItemReturn
-      },
+      // {
+      //   path: '/Orders/:id',
+      //   name: 'OrderDetailsCards',
+      //   component: OrderDetailsCards
+      // },
+      // {
+      //   path: '/OrderItemReturn/:id/:gameChiName',
+      //   name: 'OrderItemReturn',
+      //   component: OrderItemReturn
+      // },
       {
         path: '/SupportHub',
         name: 'SupportHub',
@@ -120,6 +123,16 @@ const routes = [
         path: '/LinePay',
         name: 'LinePay',
         component: LinePay
+      },
+      {
+        path: '/Members/ActiveRegister',
+        name: 'ActiveRegister',
+        component: ActiveRegister
+      },
+      {
+        path: '/LinePayConfirmPayment',
+        name: 'LinePayConfirmPayment',
+        component: LinePayConfirmPayment
       },
     ],
   },
