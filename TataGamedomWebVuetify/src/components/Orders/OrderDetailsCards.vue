@@ -54,6 +54,9 @@
 
 <script>
 import { da } from "date-fns/locale";
+import { computed } from "vue";
+import { useStore } from "vuex";
+
 export default {
   props: {
     orderId: {
