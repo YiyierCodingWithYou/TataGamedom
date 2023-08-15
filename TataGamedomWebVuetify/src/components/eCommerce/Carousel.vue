@@ -5,6 +5,7 @@
         v-for="product in topFive"
         :src="imgLink + product.gameGameCoverImg"
         :key="product.id"
+        @click="handleProductClick(product.id)"
         cover
       ></v-carousel-item>
     </v-carousel>
@@ -30,6 +31,12 @@ const loadTopFiveCover = async () => {
 onMounted(() => {
   loadTopFiveCover();
 });
+
+const emit = defineEmits(["getProductInput"]);
+
+const handleProductClick = (productId) => {
+  emit("getProductInput", productId);
+};
 </script>
     
 <style>

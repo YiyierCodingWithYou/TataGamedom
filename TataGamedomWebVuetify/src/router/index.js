@@ -14,6 +14,7 @@ import SupportHub from '../views/SupportHub.vue'
 import LinePay from '../views/LinePay.vue'
 import ActiveRegister from '@/components/Members/ActiveRegister.vue'
 import LinePayConfirmPayment from '../views/LinePayConfirmPayment.vue'
+import Cart from '@/views/Cart.vue'
 
 
 const routes = [
@@ -46,6 +47,17 @@ const routes = [
         name: 'SingleProduct',
         component: SingleProduct,
         props: true
+      },
+    ],
+  },{
+    path: "/Cart",
+    component: () => import("@/layouts/default/Default.vue"),
+    children: [
+      {
+        path: "",
+        name: "Cart",
+        component: Cart,
+        props:true
       },
     ],
   },
