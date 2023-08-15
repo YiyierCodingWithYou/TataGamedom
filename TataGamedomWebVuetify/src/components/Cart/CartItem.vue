@@ -101,52 +101,53 @@
           </tr>
         </tbody>
       </v-table>
+      <v-row>
+        <v-col cols="8">
+          <v-card class="mt-3">
+            <v-card-title class="d-flex"
+              >選擇送貨及付款方式
+              <v-card-subtitle>運費：NT${{}}</v-card-subtitle></v-card-title
+            >
+            <hr />
+            <v-card-subtitle>送貨地點</v-card-subtitle>
+            <v-select
+              v-model="selectLocation"
+              :items="shipLocation"
+              variant="solo"
+            ></v-select>
+            <v-card-subtitle>送貨方式</v-card-subtitle>
+            <v-select
+              v-model="selectShipMethod"
+              :items="shipMethod"
+              variant="solo"
+            ></v-select>
+            <v-card-subtitle>付款方式</v-card-subtitle>
+            <v-select
+              v-model="selectPayment"
+              :items="payment"
+              variant="solo"
+            ></v-select>
+          </v-card>
+        </v-col>
+        <v-col cols="4">
+          <v-card class="mt-3">
+            <v-card-title class="d-flex">訂單資訊</v-card-title>
+            <hr />
+            <v-card-subtitle>小計：</v-card-subtitle>
+            <v-card-subtitle>折扣：</v-card-subtitle>
+            <v-card-subtitle>運費：</v-card-subtitle>
+            <v-card-subtitle>合計：</v-card-subtitle>
+            <div class="d-flex justify-center">
+              <v-btn width="300" color="">前往結帳</v-btn>
+            </div>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-sheet>
+
     <v-sheet v-else class="text-center"
       >您的購物車為空，<a href="/eCommerce">點我到商城逛逛！</a></v-sheet
     >
-    <v-row>
-      <v-col cols="8">
-        <v-card class="mt-3">
-          <v-card-title class="d-flex"
-            >選擇送貨及付款方式
-            <v-card-subtitle>運費：NT${{}}</v-card-subtitle></v-card-title
-          >
-          <hr />
-          <v-card-subtitle>送貨地點</v-card-subtitle>
-          <v-select
-            v-model="selectLocation"
-            :items="shipLocation"
-            variant="solo"
-          ></v-select>
-          <v-card-subtitle>送貨方式</v-card-subtitle>
-          <v-select
-            v-model="selectShipMethod"
-            :items="shipMethod"
-            variant="solo"
-          ></v-select>
-          <v-card-subtitle>付款方式</v-card-subtitle>
-          <v-select
-            v-model="selectPayment"
-            :items="payment"
-            variant="solo"
-          ></v-select>
-        </v-card>
-      </v-col>
-      <v-col cols="4">
-        <v-card class="mt-3">
-          <v-card-title class="d-flex">訂單資訊</v-card-title>
-          <hr />
-          <v-card-subtitle>小計：</v-card-subtitle>
-          <v-card-subtitle>折扣：</v-card-subtitle>
-          <v-card-subtitle>運費：</v-card-subtitle>
-          <v-card-subtitle>合計：</v-card-subtitle>
-          <div class="d-flex justify-center">
-            <v-btn width="300" color="">前往結帳</v-btn>
-          </div>
-        </v-card>
-      </v-col>
-    </v-row>
   </v-container>
 </template>
     
