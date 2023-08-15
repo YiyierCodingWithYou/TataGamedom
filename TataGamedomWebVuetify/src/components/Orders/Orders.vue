@@ -80,7 +80,7 @@
 
             <div>
               <v-layout column class="buttons">
-                <v-tooltip text="聯繫客服">
+                <v-tooltip text="明細">
                   <template v-slot:activator="{ props }">
                     <v-btn
                       class="ma-2"
@@ -89,9 +89,12 @@
                       color="blue-grey-darken-2"
                       size="x-large"
                     >
-                      <v-icon @click="" v-bind="props" size="x-large">
-                        {{ "mdi-chat-alert-outline" }}
-                      </v-icon>
+                      <OrderDetailsList
+                        v-model="showDialog"
+                        :orderId="shownOrder"
+                        activator="parent"
+                        width="auto"
+                      />
                     </v-btn>
                   </template>
                 </v-tooltip>
@@ -106,6 +109,22 @@
                     >
                       <v-icon @click="" v-bind="props" size="x-large">
                         {{ "mdi-crosshairs-gps" }}
+                      </v-icon>
+                    </v-btn>
+                  </template>
+                </v-tooltip>
+
+                <v-tooltip text="聯繫客服">
+                  <template v-slot:activator="{ props }">
+                    <v-btn
+                      class="ma-2"
+                      variant="text"
+                      icon="mdi-chat-alert-outline"
+                      color="blue-grey-darken-2"
+                      size="x-large"
+                    >
+                      <v-icon @click="" v-bind="props" size="x-large">
+                        {{ "mdi-chat-alert-outline" }}
                       </v-icon>
                     </v-btn>
                   </template>
