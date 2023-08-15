@@ -1,35 +1,38 @@
 <template>
   <div class="text-center">
-    <v-icon v-bind="props" size="x-large">
+    <v-icon size="x-large">
       {{ "mdi-package-variant-closed-remove" }}
     </v-icon>
 
     <v-dialog v-model="dialog" activator="parent" width="auto">
-
       <v-spacer></v-spacer>
       <v-sheet width="1000" class="mx-auto">
         <v-form validate-on="submit lazy" @submit.prevent="submit">
-
           <v-card>
             <v-card-text>
               <div class="d-flex pa-4">
                 <v-checkbox-btn v-model="enabled" class="pe-2"></v-checkbox-btn>
-                <v-text-field :disabled="!enabled" hide-details label="I only work if you check the box"></v-text-field>
+                <v-text-field
+                  :disabled="!enabled"
+                  hide-details
+                  label="I only work if you check the box"
+                ></v-text-field>
               </div>
             </v-card-text>
           </v-card>
 
           <v-spacer></v-spacer>
           <v-btn block class="mt-2" text="取消" @click="dialog = false"></v-btn>
-          <v-btn :loading="loading" block class="mt-2" text="送出" type="submit" @click="dialog = false"></v-btn>
-
+          <v-btn
+            :loading="loading"
+            block
+            class="mt-2"
+            text="送出"
+            type="submit"
+            @click="dialog = false"
+          ></v-btn>
         </v-form>
-
       </v-sheet>
-
-
-
-
     </v-dialog>
   </div>
 </template>

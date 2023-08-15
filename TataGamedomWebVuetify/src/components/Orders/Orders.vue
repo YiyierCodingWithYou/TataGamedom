@@ -2,13 +2,12 @@
   <!-- <v-container class="fill-height"> -->
   <v-row no-gutters>
     <v-col cols="12">
-      <p v-if="isLoading">Loading...</p>
-      <p v-else-if="!isLoading && error">{{ error }}</p>
-      <p v-else-if="!isLoading && (!results || results.length === 0)">
-        無訂單紀錄
-      </p>
+      <!-- <p v-if="isLoading">Loading...</p>
+      <p v-else-if="!isLoading && error">{{ error }}</p> -->
+      <!-- <p v-if="!isLoading && (!results || results.length === 0)">無訂單紀錄</p> -->
+      <p v-if="results.length === 0">無訂單紀錄</p>
 
-      <v-table v-else fixed-header hover="true">
+      <v-table v-else fixed-header hover>
         <thead>
           <tr>
             <th class="text-left">
@@ -27,22 +26,36 @@
           </tr>
         </thead>
         <tbody class="bg-brown-lighten-5">
-          <transition v-for="order in results" :key="order.orderId" name="fade-slide">
-            <tr v-show="!shownOrder || shownOrder === order.orderId" height="150px">
+          <transition
+            v-for="order in results"
+            :key="order.orderId"
+            name="fade-slide"
+          >
+            <tr
+              v-show="!shownOrder || shownOrder === order.orderId"
+              height="150px"
+            >
               <td>{{ relativeTime(order.createdAt) }}</td>
-              <td v-html="combinedGameAndType(order.gameChiName, order.productIsVirtual)
-                "></td>
+              <td
+                v-html="
+                  combinedGameAndType(order.gameChiName, order.productIsVirtual)
+                "
+              ></td>
               <td>{{ order.total }}</td>
               <td>{{ order.orderStatusCodeName }}</td>
               <td>
                 <v-tooltip text="訂單詳情">
                   <template v-slot:activator="{ props }">
                     <v-btn icon size="large" variant="plain">
-                      <v-icon :key="shownOrder" @click="toggleOrderDetail(order.orderId)" v-bind="props">
+                      <v-icon
+                        :key="shownOrder"
+                        @click="toggleOrderDetail(order.orderId)"
+                        v-bind="props"
+                      >
                         {{
                           shownOrder === order.orderId
-                          ? "mdi-gamepad-round-up"
-                          : "mdi-gamepad-round-down"
+                            ? "mdi-gamepad-round-up"
+                            : "mdi-gamepad-round-down"
                         }}
                       </v-icon>
                     </v-btn>
@@ -56,7 +69,11 @@
 
       <transition name="fade-slide">
         <v-col cols="12">
-          <div v-if="showDetails" class="detail-container bg-brown-lighten-5" style="max-height: 680px; overflow-y: auto">
+          <div
+            v-if="showDetails"
+            class="detail-container bg-brown-lighten-5"
+            style="max-height: 680px; overflow-y: auto"
+          >
             <div class="order-detailsCards">
               <OrderDetailsCards :orderId="shownOrder" />
             </div>
@@ -65,8 +82,13 @@
               <v-layout column class="buttons">
                 <v-tooltip text="聯繫客服">
                   <template v-slot:activator="{ props }">
-                    <v-btn class="ma-2" variant="text" icon="mdi-chat-alert-outline" color="blue-grey-darken-2"
-                      size="x-large">
+                    <v-btn
+                      class="ma-2"
+                      variant="text"
+                      icon="mdi-chat-alert-outline"
+                      color="blue-grey-darken-2"
+                      size="x-large"
+                    >
                       <v-icon @click="" v-bind="props" size="x-large">
                         {{ "mdi-chat-alert-outline" }}
                       </v-icon>
@@ -75,8 +97,13 @@
                 </v-tooltip>
                 <v-tooltip text="貨態追蹤">
                   <template v-slot:activator="{ props }">
-                    <v-btn class="ma-2" variant="text" icon="mdi-crosshairs-gps" color="blue-grey-darken-2"
-                      size="x-large">
+                    <v-btn
+                      class="ma-2"
+                      variant="text"
+                      icon="mdi-crosshairs-gps"
+                      color="blue-grey-darken-2"
+                      size="x-large"
+                    >
                       <v-icon @click="" v-bind="props" size="x-large">
                         {{ "mdi-crosshairs-gps" }}
                       </v-icon>
@@ -85,9 +112,19 @@
                 </v-tooltip>
                 <v-tooltip text="退貨">
                   <template v-slot:activator="{ props }">
-                    <v-btn class="ma-2" variant="text" icon="mdi-package-variant-closed-remove" color="blue-grey-darken-2"
-                      size="x-large">
-                      <OrderItemReturnDialog v-model="showDialog" :orderId="shownOrder" activator="parent" width="auto" />
+                    <v-btn
+                      class="ma-2"
+                      variant="text"
+                      icon="mdi-package-variant-closed-remove"
+                      color="blue-grey-darken-2"
+                      size="x-large"
+                    >
+                      <OrderItemReturnDialog
+                        v-model="showDialog"
+                        :orderId="shownOrder"
+                        activator="parent"
+                        width="auto"
+                      />
                     </v-btn>
                   </template>
                 </v-tooltip>
@@ -137,7 +174,7 @@ export default {
           }
         })
         .then((data) => {
-          this.isLoading = false;
+          // this.isLoading = false;
           const results = [];
           for (const id in data) {
             results.push({
@@ -152,7 +189,7 @@ export default {
           this.results = results;
         })
         .catch((error) => {
-          this.isLoading = false;
+          // this.isLoading = false;
           console.log(error);
           this.error = "Failed to fetch data - please try again later.";
         });
