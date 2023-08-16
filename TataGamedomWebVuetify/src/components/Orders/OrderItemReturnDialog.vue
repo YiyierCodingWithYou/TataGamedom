@@ -3,16 +3,37 @@
     <v-spacer></v-spacer>
     <v-sheet width="1000" class="mx-auto">
       <v-form validate-on="submit lazy" @submit.prevent="submit">
-        <v-card>
+        <div class="d-flex pa-4 justify-center">
+          <v-checkbox v-model="selectAll" label="全選/取消"></v-checkbox>
+        </div>
+        <v-card v-for="orderDetail in orderDetails" :key="orderDetail.id">
           <v-card-text>
             <div class="d-flex pa-4">
-              <v-checkbox-btn v-model="enabled" class="pe-2"></v-checkbox-btn>
+              <v-checkbox-btn
+                v-model="orderDetail.enabled"
+                class="pe-2"
+              ></v-checkbox-btn>
               <v-text-field
-                :disabled="!enabled"
+                readonly
                 hide-details
-                label="I only work if you check the box"
-              ></v-text-field>
+                label=""
+                variant="underlined"
+                class="flex-grow-1"
+              >
+                {{ orderDetail.index }}
+                {{ orderDetail.gameChiName }}
+                {{ orderDetail.productIsVirtual ? "(序號)" : "(遊戲片)" }}
+              </v-text-field>
             </div>
+
+            <v-textarea
+              :disabled="!orderDetail.enabled"
+              clearable
+              counter
+              label="原因"
+              maxlength="200"
+              single-line
+            ></v-textarea>
           </v-card-text>
         </v-card>
 
@@ -33,60 +54,54 @@
 
 
 <script>
-import { ref, watch } from "vue";
-import axios from "axios";
+import { ref, computed, onMounted, watch } from "vue";
+import { useStore } from "vuex";
 
 export default {
+  name: "OrderItemReturn",
   props: {
-    modelValue: {
-      type: Boolean,
-      required: true,
-    },
     orderId: {
-      type: [String, Number],
+      type: Number,
       required: true,
     },
   },
-  setup(props, { emit }) {
+
+  setup(props) {
+    const store = useStore();
+    const order = computed(() => store.getters.getOrderById(props.orderId));
+    const orderDetails = computed(() => {
+      return store.getters.getOrderDetailsById(props.orderId);
+    });
+
     const dialog = ref(false);
-    const enabled = ref(false);
-    const loading = ref(false); // Added for loading state
-    const formData = ref({
-      email: "",
-      //todo
-    });
+    const selectAll = ref(false);
+    const loading = ref(false);
 
-    const saveData = async () => {
-      // Assuming you want to validate enabled state here, otherwise add your condition.
-      if (enabled.value) {
-        try {
-          loading.value = true; // start loading
-          const response = await axios.post(
-            "/your-api-endpoint",
-            formData.value
-          );
-          if (response.status === 200) {
-            dialog.value = false;
-          }
-        } catch (error) {
-          console.error("Error submitting form:", error);
-        } finally {
-          loading.value = false; // end loading
-        }
+    watch(selectAll, (newValue) => {
+      if (orderDetails.value && orderDetails.value.length > 0) {
+        orderDetails.value.forEach((detail) => {
+          detail.enabled = newValue;
+        });
       }
-    };
-
-    watch(dialog, (newValue) => {
-      emit("update:modelValue", newValue);
     });
 
-    return {
-      dialog,
-      enabled,
-      formData,
-      saveData,
-      loading, // return loading to template
-    };
+    const submit = () => {};
+
+    onMounted(() => {
+      if (orderDetails.value && orderDetails.value.length > 0) {
+        orderDetails.value.forEach((detail) => {
+          detail.enabled = false;
+        });
+      }
+
+      console.log("OrderItemReturn Test => order from getter:", order.value);
+      console.log(
+        "OrderItemReturn Test => orderDetails from getter:",
+        orderDetails.value
+      );
+    });
+
+    return { order, orderDetails, dialog, selectAll, loading, submit };
   },
 };
-</script>
+</script> 

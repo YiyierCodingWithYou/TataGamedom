@@ -78,7 +78,7 @@
                         color="blue-grey-darken-2"
                         size="x-large"
                       >
-                        <v-icon @click="" v-bind="props" size="x-large">
+                        <v-icon v-bind="props" size="x-large">
                           {{ "mdi-script-text-outline" }}
                         </v-icon>
 
@@ -205,10 +205,6 @@ export default {
       }
     };
 
-    const openReturnDialog = () => {
-      showDialog.value = true;
-    };
-
     const relativeTime = (datetime) => {
       const date = new Date(datetime);
       return format(date, "yyyy/MM/dd", { locale: zhTW });
@@ -235,7 +231,6 @@ export default {
       showItemReturnDialog,
       showSupportHub,
       toggleOrderDetail,
-      openReturnDialog,
       relativeTime,
       combinedGameAndType,
     };

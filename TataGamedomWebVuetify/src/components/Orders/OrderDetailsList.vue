@@ -65,6 +65,7 @@ import { ref, computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import { zhTW } from "date-fns/locale";
 import { format } from "date-fns";
+
 export default {
   name: "OrderDetailsList",
   props: {
@@ -87,7 +88,7 @@ export default {
     };
 
     onMounted(() => {
-      console.log("order from getter:", order.value);
+      console.log("DetailsList Test => order from getter:", order.value);
       // console.log("orderId prop:", props.orderId);
       // console.log("Direct order from state:", store.state.OrderStore.orders);
     });
