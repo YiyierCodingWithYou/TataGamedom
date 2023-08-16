@@ -37,22 +37,16 @@ public class LinePayService
 
         string? account = _httpContextAccessor.HttpContext?.User.Claims.Where(c => c.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
 
-        //Get Cart Info
-        List<Cart> carts = await _dbContext.Carts.Where(c => c.Member.Account == account).ToListAsync();
-        
         //Maping LinePayproduct
-        List<LinePayProductDto> productDtos = new List<LinePayProductDto>();
-        
-        foreach (var cart in carts) 
-        {
-            var productDto = new LinePayProductDto
+        List<LinePayProductDto> productDtos = await _dbContext.Carts
+            .Where(c => c.Member.Account == account)
+            .Select(c => new LinePayProductDto 
             {
-                Name = cart.Product.Game!.ChiName,
+                Name = c.Product.Game!.ChiName,
                 Quantity = 1,
-                Price = cart.Product.Price,   //未處理優惠
-            };
-            productDtos.Add(productDto);
-        }
+                Price = c.Product.Price,   //未處理優惠
+            })
+            .ToListAsync();
 
 
         //Maping PackageDto
@@ -66,18 +60,18 @@ public class LinePayService
 
 
         //Mapping to paymentRequestDto
-        PaymentRequestDto? paymentRequestDto = carts.Select(c => new PaymentRequestDto
+        PaymentRequestDto? paymentRequestDto = new PaymentRequestDto
         {
             Amount = packageDtos.Select(p => p.Amount).Sum(),
             Currency = "TWD",
             OrderId = Guid.NewGuid().ToString(),     //todo => 先建訂單，傳Index到OrderId
             Packages = packageDtos,
-            RedirectUrls = new RedirectUrlsDto 
+            RedirectUrls = new RedirectUrlsDto
             {
                 ConfirmUrl = "https://localhost:3000/LinePayConfirmPayment",
                 CancelUrl = ""
             }
-        }).FirstOrDefault();
+        };
 
 
 
