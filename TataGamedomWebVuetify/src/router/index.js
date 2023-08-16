@@ -14,6 +14,7 @@ import LinePay from '../views/LinePay.vue'
 import ActiveRegister from '@/components/Members/ActiveRegister.vue'
 import LinePayConfirmPayment from '../views/LinePayConfirmPayment.vue'
 import Cart from '@/views/Cart.vue'
+import MemberDetial from "@/components/Members/MemberDetial.vue"
 
 
 const routes = [
@@ -48,7 +49,7 @@ const routes = [
         props: true
       },
     ],
-  },{
+  }, {
     path: "/Cart",
     component: () => import("@/layouts/default/Default.vue"),
     children: [
@@ -56,7 +57,7 @@ const routes = [
         path: "",
         name: "Cart",
         component: Cart,
-        props:true
+        props: true
       },
     ],
   },
@@ -133,6 +134,11 @@ const routes = [
         name: 'LinePayConfirmPayment',
         component: LinePayConfirmPayment
       },
+      {
+        path: '/Members/MemberDetial',
+        name: 'MemberDetial',
+        component: MemberDetial
+      }
     ],
   },
 ];
