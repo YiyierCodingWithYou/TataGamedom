@@ -29,6 +29,7 @@ const OrderStore = {
             try {
                 const response = await axios.get(`${BASE_URL}/api/OrderItems/order/${orderId}`);
                 commit('setOrderDetails', { orderId, details: response.data });
+                console.log("action: fetchOrderDetails", response)
             } catch (error) {
                 console.error('Failed to fetch order details:', error.message);
             }

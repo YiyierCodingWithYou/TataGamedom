@@ -29,15 +29,15 @@
           prepend-icon="mdi-calendar-today-outline"
           title="成立日期:"
         >
-          {{ order.createdAt }}
+          {{ relativeTime(order.createdAt) }}
         </v-list-item>
         <v-divider inset></v-divider>
         <v-list-item prepend-icon="mdi-calendar-today" title="完成日期:"
-          >{{ order.orderCompletedAt }}
+          >{{ relativeTime(order.orderCompletedAt) }}
         </v-list-item>
         <v-divider inset></v-divider>
         <v-list-item prepend-icon="mdi-cube-send" title="寄送方式:">{{
-          order.createdAt
+          order.orderShipmemtMethod
         }}</v-list-item>
         <v-divider inset></v-divider>
         <v-list-item
@@ -63,6 +63,8 @@
 <script>
 import { ref, computed, onMounted } from "vue";
 import { useStore } from "vuex";
+import { zhTW } from "date-fns/locale";
+import { format } from "date-fns";
 export default {
   name: "OrderDetailsList",
   props: {
@@ -77,6 +79,13 @@ export default {
 
     const dialog = ref(false);
 
+    const relativeTime = (datetime) => {
+      const date = new Date(datetime);
+      return datetime == null
+        ? "未完成"
+        : format(date, "yyyy/MM/dd", { locale: zhTW });
+    };
+
     onMounted(() => {
       console.log("order from getter:", order.value);
       // console.log("orderId prop:", props.orderId);
@@ -86,6 +95,7 @@ export default {
     return {
       order,
       dialog,
+      relativeTime,
     };
   },
 };
