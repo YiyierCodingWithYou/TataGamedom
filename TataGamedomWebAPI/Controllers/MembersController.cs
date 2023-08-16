@@ -127,18 +127,18 @@ namespace TataGamedomWebAPI.Controllers
 		//}
 
 		// GET: api/Members/5
-
+		[EnableCors("AllowCookie")]
 		[HttpGet]
 		public async Task<ActionResult<MembersDto>> GetMember()
 		{
-			var account = HttpContext.User.FindFirstValue("MembersName");
-			var userId = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
+			var account = HttpContext.User.FindFirstValue("MembersAccount");
+			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
 
-			if (_context.Members == null)
+			if (user== null)
 			{
 				return NotFound();
 			}
-			 var member = await _context.Members.FindAsync(userId);
+			 var member = await _context.Members.FindAsync(user.Id);
 
 			if (member == null)
 			{
@@ -158,58 +158,111 @@ namespace TataGamedomWebAPI.Controllers
 				//ActiveFlag = member.ActiveFlag,
 				// LastOnlineTime = member.LastOnlineTime,     
 			};
-			return memberDto;
+			return Ok(memberDto);
 		}
 
 		// PUT: api/Members/5
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+		[EnableCors("AllowCookie")]
 		[HttpPut("{id}")]
-        public async Task<IActionResult> PutMember(int id, MembersDto membersDto)
-        {
-            if (id != membersDto.Id)
-            {
-                return BadRequest();
-            }
+		public async Task<IActionResult> PutMember(int id, MembersDto memberDto)
+		{
+			if (id != memberDto.Id)
+			{
+				return BadRequest();
+			}
 
-			var member = await _context.Members.FindAsync(id);
+			var account = HttpContext.User.FindFirstValue("MembersAccount");
+			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
+
+			if (user == null)
+			{
+				return NotFound();
+			}
+
+			var member = await _context.Members.FindAsync(user.Id);
 
 			if (member == null)
 			{
 				return NotFound();
 			}
 
-            member.Id = membersDto.Id;
-            member.Name = membersDto.Name;
-            //member.Account = membersDto.Account;
-          //  member.Password = membersDto.Password;
-            member.Birthday = membersDto.Birthday;
-            member.Email = membersDto.Email;
-            member.Phone = membersDto.Phone;
-            member.IconImg = membersDto.IconImg;
-            //member.ActiveFlag = membersDto.ActiveFlag;
-			//member.LastOnlineTime = membersDto.LastOnlineTime;
-			
-
-			//_context.Entry(membersDto).State = EntityState.Modified;
+			// 更新 member 物件的屬性
+			member.Name = memberDto.Name;
+			member.Birthday = memberDto.Birthday;
+			member.Email = memberDto.Email;
+			member.Phone = memberDto.Phone;
+			member.IconImg = memberDto.IconImg;
 
 			try
 			{
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MemberExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!MemberExists(id))
+				{
+					return NotFound();
+				}
+				else
+				{
+					throw;
+				}
+			}
 
-            return NoContent();
-        }
+			return NoContent();
+		}
+
+	
+
+		// PUT: api/Members/5
+		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+		//[HttpPut("{id}")]
+		//      public async Task<IActionResult> PutMember(int id, MembersDto membersDto)
+		//      {
+		//          if (id != membersDto.Id)
+		//          {
+		//              return BadRequest();
+		//          }
+
+		//	var member = await _context.Members.FindAsync(id);
+
+		//	if (member == null)
+		//	{
+		//		return NotFound();
+		//	}
+
+		//          member.Id = membersDto.Id;
+		//          member.Name = membersDto.Name;
+		//          //member.Account = membersDto.Account;
+		//        //  member.Password = membersDto.Password;
+		//          member.Birthday = membersDto.Birthday;
+		//          member.Email = membersDto.Email;
+		//          member.Phone = membersDto.Phone;
+		//          member.IconImg = membersDto.IconImg;
+		//          //member.ActiveFlag = membersDto.ActiveFlag;
+		//	//member.LastOnlineTime = membersDto.LastOnlineTime;
+
+
+		//	//_context.Entry(membersDto).State = EntityState.Modified;
+
+		//	try
+		//	{
+		//              await _context.SaveChangesAsync();
+		//          }
+		//          catch (DbUpdateConcurrencyException)
+		//          {
+		//              if (!MemberExists(id))
+		//              {
+		//                  return NotFound();
+		//              }
+		//              else
+		//              {
+		//                  throw;
+		//              }
+		//          }
+
+		//          return NoContent();
+		//      }
 
 		// POST: api/Members
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
