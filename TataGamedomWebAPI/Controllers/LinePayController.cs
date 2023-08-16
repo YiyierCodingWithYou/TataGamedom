@@ -20,28 +20,32 @@ public class LinePayController : ControllerBase
 {
     private readonly LinePayService _linePayService;
     private readonly AppDbContext _dbContext;
-    private readonly HttpContextAccessor _httpContextAccessor;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public LinePayController(AppDbContext dbContext, HttpContextAccessor httpContextAccessor)
+    public LinePayController(AppDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
-        _linePayService = new LinePayService(_dbContext!, _httpContextAccessor!);
         this._dbContext = dbContext;
         this._httpContextAccessor = httpContextAccessor;
+        _linePayService = new LinePayService(_dbContext, _httpContextAccessor);
     }
 
-    [HttpPost("Create")]
+
+    [HttpPost]
+    [EnableCors("AllowCookie")]
     public async Task<PaymentResponseDto> CreatePayment(PaymentRequestDto dto)
     {
         return await _linePayService.SendPaymentRequest(dto);
     }
 
     [HttpPost("Create")]
+    [EnableCors("AllowCookie")]
     public async Task<PaymentResponseDto> CreatePaymentByAccount()
     {
         return await _linePayService.SendPaymentRequest();
     }
 
     [HttpPost("Confirm")]
+    [EnableCors("AllowCookie")]
     public async Task<PaymentConfirmResponseDto> ConfirmPayment([FromQuery] string transactionId, [FromQuery] string orderId, PaymentConfirmDto dto)
     {
         return await _linePayService.ConfirmPayment(transactionId, orderId, dto);
@@ -49,12 +53,14 @@ public class LinePayController : ControllerBase
 
 
     [HttpPost("Refund")]
+    [EnableCors("AllowCookie")]
     public async Task<PaymentRefundResponseDto> RefundPayment([FromQuery] string transactionId, PaymentRefundRequestDto dto)
     {
         return await _linePayService.RefundPayment(transactionId,dto);
     }
 
     [HttpGet("Cancel")]
+    [EnableCors("AllowCookie")]
     public async void CancelTransaction([FromQuery] string transactionId)
     {
         _linePayService.TransactionCancel(transactionId);

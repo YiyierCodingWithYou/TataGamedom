@@ -35,10 +35,10 @@ public class LinePayService
     public async Task<PaymentResponseDto> SendPaymentRequest()
     {
 
-        string? memberId = _httpContextAccessor.HttpContext?.User.Claims.Where(c => c.Type == "Membersid").FirstOrDefault()?.Value;
+        string? account = _httpContextAccessor.HttpContext?.User.Claims.Where(c => c.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
 
         //Get Cart Info
-        List<Cart> carts = await _dbContext.Carts.Where(c => c.MemberId.ToString() == memberId).ToListAsync();
+        List<Cart> carts = await _dbContext.Carts.Where(c => c.Member.Account == account).ToListAsync();
         
         //Maping LinePayproduct
         List<LinePayProductDto> productDtos = new List<LinePayProductDto>();
