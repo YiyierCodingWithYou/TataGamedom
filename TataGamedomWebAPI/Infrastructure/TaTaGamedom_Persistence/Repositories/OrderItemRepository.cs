@@ -22,6 +22,7 @@ public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepos
             .Select(oi => new OrderItemWithDetailsDto
             {
                 Id = oi.Id,
+                Index = oi.Index,
                 GameGameCoverImg = oi.Product!.Game!.GameCoverImg,
                 GameChiName = oi.Product.Game.ChiName,
                 DiscountedPrice = 0,

@@ -1373,6 +1373,10 @@ namespace TataGamedomWebAPI.Migrations
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("datetime");
 
+                    b.Property<string>("ContactEmails")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
 
@@ -1451,7 +1455,7 @@ namespace TataGamedomWebAPI.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("ProductPrice")
@@ -1486,8 +1490,8 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<string>("Index")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsRefunded")
                         .HasColumnType("bit");
@@ -2829,6 +2833,7 @@ namespace TataGamedomWebAPI.Migrations
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Product", "Product")
                         .WithMany("OrderItems")
                         .HasForeignKey("ProductId")
+                        .IsRequired()
                         .HasConstraintName("FK__OrderItem__Produ__4E53A1AA");
 
                     b.Navigation("InventoryItem");
