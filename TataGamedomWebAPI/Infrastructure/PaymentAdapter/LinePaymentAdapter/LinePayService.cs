@@ -95,6 +95,11 @@ public class LinePayService
         Console.WriteLine(nonce);
         Console.WriteLine(signature);
 
+
+
+        // Todo 刪除購物車
+
+
         return linePayResponse;
     }
 
