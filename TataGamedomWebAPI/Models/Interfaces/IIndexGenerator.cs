@@ -6,7 +6,7 @@ public interface IIndexGenerator
 {
     string GetOrderIndex(Order order, int maxOrderId);
 
-    string GetOrderItemIndex(OrderItem orderItem, int maxOrderItemId);
+    string GetOrderItemIndex(string productIndex, OrderItem orderItem, int maxOrderItemId);
 
     string GetOrderItemReturnIndex(OrderItemReturn orderItemReturn, string orderIndex, int maxOrderItemReturnId);
 

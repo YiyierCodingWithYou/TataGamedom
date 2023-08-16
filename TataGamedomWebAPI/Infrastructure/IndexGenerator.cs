@@ -19,14 +19,14 @@ public class IndexGenerator : IIndexGenerator
     }
 
     /// <summary>
-    /// 
+    /// "命名規則: ProductIndex+ InventoryItemId + MemberId + Id"
     /// </summary>
     /// <param name="orderItem"></param>
     /// <param name="maxOrderItemId"></param>
     /// <returns></returns>
-    public string GetOrderItemIndex(OrderItem orderItem, int maxOrderItemId)
+    public string GetOrderItemIndex(string productIndex, OrderItem orderItem, int maxOrderItemId)
     {
-        return string.Concat(orderItem.ProductId, orderItem.InventoryItemId, maxOrderItemId + 1);
+        return string.Concat(productIndex, orderItem.InventoryItemId, maxOrderItemId + 1);
     }
 
     /// <summary>

@@ -11,6 +11,11 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
     }
 
+    public async Task<string> GetIndexById(int productId)
+    {
+        return await _dbContext.Products.Where(p => p.Id == productId).Select(p => p.Index).FirstAsync();
+    }
+
     public async Task<bool> IsProductExist(int productId)
     {
         return await _dbContext.Products.AnyAsync(p => p.Id == productId);
