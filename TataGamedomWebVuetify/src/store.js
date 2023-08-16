@@ -1,6 +1,11 @@
 import { createStore } from "vuex";
+import OrderStore from './components/Orders/OrderStore';
+
 
 const store = createStore({
+  modules: {
+    OrderStore  //類似namespace
+  },
   state: {
     isLoggedIn: false,
     name: "",

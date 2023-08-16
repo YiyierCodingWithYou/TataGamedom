@@ -1,27 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿    using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace TataGamedomWebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class adjustOrderItem : Migration
+    public partial class addContactEmailOrders : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<int>(
-                name: "ProductId",
-                table: "OrderItems",
-                type: "int",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldType: "int");
-        }
+            migrationBuilder.AddColumn<string>(
+                name: "ContactEmails",
+                table: "Orders",
+                type: "nvarchar(50)",
+                maxLength: 50,
+                nullable: true);
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
             migrationBuilder.AlterColumn<int>(
                 name: "ProductId",
                 table: "OrderItems",
@@ -31,6 +26,13 @@ namespace TataGamedomWebAPI.Migrations
                 oldClrType: typeof(int),
                 oldType: "int",
                 oldNullable: true);
+
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleOrderItems;
 using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemDetails;
+using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.CreateMultipleOrderItemReturns;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.CreateOrderItemReturn;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.DeleteOrderItemReturn;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.UpdateOrderItemReturn;
@@ -46,6 +48,18 @@ public class OrderItemReturnsController : ControllerBase
         var response = await _mediator.Send(orderItemReturn);
         return CreatedAtAction(nameof(Get), new { id = response });
     }
+
+
+    [HttpPost("MultipleOrderItemsReturn")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> Post(CreateMultipleItemReturnsCommand orderItemReturnList)
+    {
+        List<OrderItemReturnDto> response = await _mediator.Send(orderItemReturnList);
+        return Ok(response);
+    }
+
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status202Accepted)]

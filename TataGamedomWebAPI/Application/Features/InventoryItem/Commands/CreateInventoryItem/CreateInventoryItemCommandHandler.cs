@@ -3,7 +3,6 @@ using MediatR;
 using TataGamedomWebAPI.Application.Contracts.Logging;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
 using TataGamedomWebAPI.Application.Exceptions;
-using TataGamedomWebAPI.Infrastructure.TaTaGamedom_Persistence.Repositories;
 using TataGamedomWebAPI.Models.Interfaces;
 
 namespace TataGamedomWebAPI.Application.Features.InventoryItem.Commands.CreateInventoryItem;
@@ -56,7 +55,7 @@ public class CreateInventoryItemCommandHandler : IRequestHandler<CreateInventory
         var validationResult = await validator.ValidateAsync(request);
         if (validationResult.Errors.Any())
         {
-            throw new BadRequestException("Invalid InventoryItem request");
+            throw new BadRequestException("Invalid InventoryItem request", validationResult);
         }
     }
 }

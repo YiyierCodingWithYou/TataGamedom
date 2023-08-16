@@ -39,6 +39,12 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
                 CreatedAt = o.CreatedAt,
                 Total = o.OrderItems.Select(oi => oi.ProductPrice).Sum(),
                 OrderStatusCodeName = o.OrderStatus.Name,
+                OrderIndex = o.Index,
+                OrderCompletedAt = o.CompletedAt,
+                OrderShipmemtMethod = o.ShipmemtMethod!.Name,
+                OrderRecipientName = o.RecipientName,
+                ContactEmails = o.ContactEmails,
+                ToAddress = o.ToAddress,
             })
             .ToListAsync();
 
@@ -48,6 +54,15 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
     public async Task<int> GetMaxId()
     {
         return await _dbContext.Orders.MaxAsync(o => o.Id);
+    }
+
+    public async Task<string?> GetOrderIndexById(int orderId)
+    {
+        return await _dbContext.Orders
+            .AsNoTracking()
+            .Where(o => o.Id == orderId)
+            .Select(o => o.Index)
+            .FirstOrDefaultAsync();
     }
 }
 

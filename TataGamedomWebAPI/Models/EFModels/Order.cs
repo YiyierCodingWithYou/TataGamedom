@@ -7,7 +7,7 @@ public partial class Order
 {
     public int Id { get; set; }
 
-    public string? Index { get; set; }
+    public required string Index { get; set; }
 
     public int MemberId { get; set; }
 
@@ -32,6 +32,8 @@ public partial class Order
     public DateTime? DeliveredAt { get; set; }
 
     public string? TrackingNum { get; set; }
+
+    public string? ContactEmails { get; set; }
 
     public virtual Member Member { get; set; } = null!;
 

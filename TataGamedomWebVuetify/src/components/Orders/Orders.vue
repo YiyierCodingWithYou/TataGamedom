@@ -1,14 +1,8 @@
 <template>
-  <!-- <v-container class="fill-height"> -->
   <v-row no-gutters>
     <v-col cols="12">
-      <p v-if="isLoading">Loading...</p>
-      <p v-else-if="!isLoading && error">{{ error }}</p>
-      <p v-else-if="!isLoading && (!results || results.length === 0)">
-        無訂單紀錄
-      </p>
-
-      <v-table v-else fixed-header hover="true">
+      <p v-if="orders.length === 0">無訂單紀錄</p>
+      <v-table v-else fixed-header hover>
         <thead>
           <tr>
             <th class="text-left">
@@ -27,15 +21,8 @@
           </tr>
         </thead>
         <tbody class="bg-brown-lighten-5">
-          <transition
-            v-for="order in results"
-            :key="order.orderId"
-            name="fade-slide"
-          >
-            <tr
-              v-show="!shownOrder || shownOrder === order.orderId"
-              height="150px"
-            >
+          <transition v-for="order in orders" :key="order.id" name="fade-slide">
+            <tr v-show="!shownOrder || shownOrder === order.id" height="150px">
               <td>{{ relativeTime(order.createdAt) }}</td>
               <td
                 v-html="
@@ -50,7 +37,7 @@
                     <v-btn icon size="large" variant="plain">
                       <v-icon
                         :key="shownOrder"
-                        @click="toggleOrderDetail(order.orderId)"
+                        @click="toggleOrderDetail(order.id)"
                         v-bind="props"
                       >
                         {{
@@ -81,54 +68,90 @@
 
             <div>
               <v-layout column class="buttons">
-                <v-tooltip text="聯繫客服">
-                  <template v-slot:activator="{ props }">
-                    <v-btn
-                      class="ma-2"
-                      variant="text"
-                      icon="mdi-chat-alert-outline"
-                      color="blue-grey-darken-2"
-                      size="x-large"
-                    >
-                      <v-icon @click="" v-bind="props" size="x-large">
-                        {{ "mdi-chat-alert-outline" }}
-                      </v-icon>
-                    </v-btn>
-                  </template>
-                </v-tooltip>
-                <v-tooltip text="貨態追蹤">
-                  <template v-slot:activator="{ props }">
-                    <v-btn
-                      class="ma-2"
-                      variant="text"
-                      icon="mdi-crosshairs-gps"
-                      color="blue-grey-darken-2"
-                      size="x-large"
-                    >
-                      <v-icon @click="" v-bind="props" size="x-large">
-                        {{ "mdi-crosshairs-gps" }}
-                      </v-icon>
-                    </v-btn>
-                  </template>
-                </v-tooltip>
-                <v-tooltip text="退貨">
-                  <template v-slot:activator="{ props }">
-                    <v-btn
-                      class="ma-2"
-                      variant="text"
-                      icon="mdi-package-variant-closed-remove"
-                      color="blue-grey-darken-2"
-                      size="x-large"
-                    >
-                      <OrderItemReturnDialog
-                        v-model="showDialog"
-                        :orderId="shownOrder"
-                        activator="parent"
-                        width="auto"
-                      />
-                    </v-btn>
-                  </template>
-                </v-tooltip>
+                <div class="text-center">
+                  <v-tooltip text="明細">
+                    <template v-slot:activator="{ props }">
+                      <v-btn
+                        class="ma-2"
+                        variant="text"
+                        icon="mdi-chat-alert-outline"
+                        color="blue-grey-darken-2"
+                        size="x-large"
+                      >
+                        <v-icon v-bind="props" size="x-large">
+                          {{ "mdi-script-text-outline" }}
+                        </v-icon>
+
+                        <OrderDetailsList
+                          v-model="showDetailsDialog"
+                          :orderId="shownOrder"
+                          activator="parent"
+                          width="auto"
+                        />
+                      </v-btn>
+                    </template>
+                  </v-tooltip>
+                </div>
+
+                <div class="text-center">
+                  <v-tooltip text="貨態追蹤">
+                    <template v-slot:activator="{ props }">
+                      <v-btn
+                        class="ma-2"
+                        variant="text"
+                        icon="mdi-crosshairs-gps"
+                        color="blue-grey-darken-2"
+                        size="x-large"
+                      >
+                        <v-icon @click="" v-bind="props" size="x-large">
+                          {{ "mdi-crosshairs-gps" }}
+                        </v-icon>
+                      </v-btn>
+                    </template>
+                  </v-tooltip>
+                </div>
+
+                <div class="text-center">
+                  <v-tooltip text="聯繫客服">
+                    <template v-slot:activator="{ props }">
+                      <v-btn
+                        class="ma-2"
+                        variant="text"
+                        icon="mdi-chat-alert-outline"
+                        color="blue-grey-darken-2"
+                        size="x-large"
+                      >
+                        <v-icon @click="" v-bind="props" size="x-large">
+                          {{ "mdi-chat-alert-outline" }}
+                        </v-icon>
+                      </v-btn>
+                    </template>
+                  </v-tooltip>
+                </div>
+
+                <div class="text-center">
+                  <v-tooltip text="退貨">
+                    <template v-slot:activator="{ props }">
+                      <v-btn
+                        class="ma-2"
+                        variant="text"
+                        icon="mdi-package-variant-closed-remove"
+                        color="blue-grey-darken-2"
+                        size="x-large"
+                      >
+                        <v-icon v-bind="props" size="x-large">
+                          {{ "mdi-package-variant-closed-remove" }}
+                        </v-icon>
+                        <OrderItemReturnDialog
+                          v-model="showItemReturnDialog"
+                          :orderId="shownOrder"
+                          activator="parent"
+                          width="auto"
+                        />
+                      </v-btn>
+                    </template>
+                  </v-tooltip>
+                </div>
               </v-layout>
             </div>
           </div>
@@ -136,101 +159,81 @@
       </transition>
     </v-col>
   </v-row>
-  <!-- </v-container> -->
 </template>
 
   
 <script>
+import { ref, nextTick, onMounted, computed } from "vue";
 import { zhTW } from "date-fns/locale";
 import { format } from "date-fns";
+import { useStore } from "vuex";
 import OrderDetailsCards from "./OrderDetailsCards.vue";
 import OrderDetailsList from "./OrderDetailsList.vue";
 import OrderItemReturnDialog from "./OrderItemReturnDialog.vue";
 import SupportHub from "./SupportHub.vue";
 
 export default {
+  name: "Orders",
   components: {
     OrderDetailsCards,
     OrderDetailsList,
     OrderItemReturnDialog,
     SupportHub,
   },
-  data() {
-    return {
-      results: [],
-      shownOrder: null,
-      showDetails: false,
-      showDialog: false,
-      showSupportHub: false,
-    };
-  },
-  methods: {
-    loadData() {
-      fetch("https://localhost:7081/api/Orders", {
-        credentials: "include",
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-        })
-        .then((data) => {
-          this.isLoading = false;
-          const results = [];
-          for (const id in data) {
-            results.push({
-              orderId: data[id].id,
-              gameChiName: data[id].gameChiName,
-              productIsVirtual: data[id].productIsVirtual,
-              createdAt: data[id].createdAt,
-              total: data[id].total,
-              orderStatusCodeName: data[id].orderStatusCodeName,
-            });
-          }
-          this.results = results;
-        })
-        .catch((error) => {
-          this.isLoading = false;
-          console.log(error);
-          this.error = "Failed to fetch data - please try again later.";
-        });
-    },
-    toggleOrderDetail(orderId) {
-      if (this.shownOrder === orderId) {
-        this.shownOrder = null;
-        this.showDetails = false;
+  setup() {
+    const store = useStore();
+
+    const shownOrder = ref(null);
+    const showDetails = ref(false);
+    const showDetailsDialog = ref(false);
+    const showItemReturnDialog = ref(false);
+    const showSupportHub = ref(false);
+
+    const orders = computed(() => store.state.OrderStore.orders);
+
+    const toggleOrderDetail = (orderId) => {
+      if (shownOrder.value === orderId) {
+        shownOrder.value = null;
+        showDetails.value = false;
       } else {
-        this.shownOrder = null;
-        this.showDetails = false;
-        this.$nextTick(() => {
-          this.shownOrder = orderId;
+        nextTick(() => {
+          shownOrder.value = orderId;
           setTimeout(() => {
-            this.showDetails = true;
-          }, 1000); // 在n秒後顯示詳細信息
+            showDetails.value = true;
+          }, 1000);
         });
       }
-    },
-    openReturnDialog() {
-      this.showDialog = true;
-    },
+    };
 
-    relativeTime(datetime) {
+    const relativeTime = (datetime) => {
       const date = new Date(datetime);
       return format(date, "yyyy/MM/dd", { locale: zhTW });
-    },
+    };
 
-    combinedGameAndType(gameNames, productIsVirtual) {
+    const combinedGameAndType = (gameNames, productIsVirtual) => {
       return gameNames
         .map((name, index) => {
           const type = productIsVirtual[index] ? "序號" : "遊戲片";
           return `${name} (${type})`;
         })
         .join("<br>");
-    },
-  },
+    };
 
-  mounted() {
-    this.loadData();
+    onMounted(() => {
+      store.dispatch("fetchOrders");
+    });
+
+    return {
+      orders,
+      shownOrder,
+      showDetails,
+      showDetailsDialog,
+      showItemReturnDialog,
+      showSupportHub,
+      toggleOrderDetail,
+      relativeTime,
+      combinedGameAndType,
+    };
   },
 };
 </script>
@@ -261,6 +264,7 @@ export default {
 .order-detailsCards {
   flex: 7;
 }
+
 .order-DetailsList {
   flex: 4;
 }

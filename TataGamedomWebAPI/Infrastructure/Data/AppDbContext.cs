@@ -830,6 +830,7 @@ public partial class AppDbContext : DbContext
             entity.HasIndex(e => e.Index, "UQ__Orders__9A5B62299A9DCB7B").IsUnique();
 
             entity.Property(e => e.CompletedAt).HasColumnType("datetime");
+            entity.Property(e => e.ContactEmails).HasMaxLength(50);
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.DeliveredAt).HasColumnType("datetime");
             entity.Property(e => e.Index).HasMaxLength(20);
@@ -885,6 +886,7 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Product).WithMany(p => p.OrderItems)
                 .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__OrderItem__Produ__4E53A1AA");
         });
 
@@ -897,7 +899,7 @@ public partial class AppDbContext : DbContext
             entity.HasIndex(e => e.Index, "UQ__OrderIte__9A5B6229DB395A7A").IsUnique();
 
             entity.Property(e => e.CompletedAt).HasColumnType("datetime");
-            entity.Property(e => e.Index).HasMaxLength(30);
+            entity.Property(e => e.Index).HasMaxLength(50);
             entity.Property(e => e.IssuedAt).HasColumnType("datetime");
             entity.Property(e => e.Reason).HasMaxLength(500);
 
