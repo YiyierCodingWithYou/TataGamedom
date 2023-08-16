@@ -9,6 +9,7 @@ const OrderStore = {
     }),
     mutations: {
         setOrders(state, orders) {
+            console.log("Orders received for mutation:", orders);
             state.orders = orders;
         },
         setOrderDetails(state, { orderId, details }) {
@@ -19,7 +20,6 @@ const OrderStore = {
         async fetchOrders({ commit }) {
             try {
                 const response = await axios.get(`${BASE_URL}/api/Orders`, { withCredentials: true });
-                console.log(response)
                 commit('setOrders', response.data);
             } catch (error) {
                 console.error('Failed to fetch orders:', error.message);
@@ -28,7 +28,6 @@ const OrderStore = {
         async fetchOrderDetails({ commit }, orderId) {
             try {
                 const response = await axios.get(`${BASE_URL}/api/OrderItems/order/${orderId}`);
-                console.log(response)
                 commit('setOrderDetails', { orderId, details: response.data });
             } catch (error) {
                 console.error('Failed to fetch order details:', error.message);
@@ -38,6 +37,9 @@ const OrderStore = {
     getters: {
         getOrderDetailsById: (state) => (orderId) => {
             return state.orderDetails[orderId];
+        },
+        getOrderById: (state) => (orderId) => {
+            return state.orders.find(order => order.id == orderId);
         }
     }
 };

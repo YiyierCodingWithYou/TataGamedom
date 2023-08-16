@@ -1,17 +1,37 @@
 <template>
-  <v-carousel :model-value="carouselIndex" height="680px" width="80%" show-arrows="hover" progress="grey-darken-1"
-    hide-delimiters>
+  <v-carousel
+    :model-value="carouselIndex"
+    height="680px"
+    width="80%"
+    show-arrows="hover"
+    progress="grey-darken-1"
+    hide-delimiters
+  >
     <template v-slot:prev="{ props }">
-      <v-icon icon="mdi-menu-left" size="x-large" style="font-size: 70px" color="brown-lighten-1"
-        @click="props.onClick"></v-icon>
+      <v-icon
+        icon="mdi-menu-left"
+        size="x-large"
+        style="font-size: 70px"
+        color="brown-lighten-1"
+        @click="props.onClick"
+      ></v-icon>
     </template>
     <template v-slot:next="{ props }">
-      <v-icon icon="mdi-menu-right" size="x-large" style="font-size: 70px" color="brown-lighten-1"
-        @click="props.onClick"></v-icon>
+      <v-icon
+        icon="mdi-menu-right"
+        size="x-large"
+        style="font-size: 70px"
+        color="brown-lighten-1"
+        @click="props.onClick"
+      ></v-icon>
     </template>
 
     <v-carousel-item v-for="orderItem in orderDetails" :key="orderItem.id">
-      <v-card class="mx-auto mb-1 overflow-auto bg-brown-lighten-5 text-center" max-width="auto" height="auto">
+      <v-card
+        class="mx-auto mb-1 overflow-auto bg-brown-lighten-5 text-center"
+        max-width="auto"
+        height="auto"
+      >
         <v-img :src="orderItem.gameGameCoverImg" height="520px"></v-img>
         <v-card-title>
           {{ orderItem.gameChiName }}
@@ -55,7 +75,7 @@ export default {
     };
 
     onMounted(() => {
-      console.log("orderId:" + props.orderId);
+      //console.log("orderId:" + props.orderId);
       fetchDetails();
     });
 
@@ -63,7 +83,7 @@ export default {
 
     return {
       orderDetails,
-      carouselIndex
+      carouselIndex,
     };
   },
 };
