@@ -11,6 +11,7 @@
           <img :src="imgLink + product.gameGameCoverImg" width="150" cover />
           <div class="d-flex flex-column">
             <v-chip class="ma-2 w100 justify-center" color="primary">
+              <v-icon start icon="mdi-gamepad-right"></v-icon>
               {{ product.gamePlatformName }}
             </v-chip>
             {{ product.gameChiName }}
@@ -46,7 +47,7 @@ const handleProductClick = (productId) => {
     
 <style>
 .w100 {
-  width: 50px;
+  width: 85px;
   text-align: center;
 }
 </style>
