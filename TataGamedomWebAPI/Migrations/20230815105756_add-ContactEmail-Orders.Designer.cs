@@ -12,8 +12,8 @@ using TataGamedomWebAPI.Infrastructure.Data;
 namespace TataGamedomWebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230811070734_adjust-OrderItem")]
-    partial class adjustOrderItem
+    [Migration("20230815105756_add-ContactEmail-Orders")]
+    partial class addContactEmailOrders
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1376,6 +1376,10 @@ namespace TataGamedomWebAPI.Migrations
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("datetime");
 
+                    b.Property<string>("ContactEmails")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
 
@@ -1454,7 +1458,7 @@ namespace TataGamedomWebAPI.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("ProductPrice")
@@ -1489,8 +1493,8 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<string>("Index")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsRefunded")
                         .HasColumnType("bit");
@@ -2832,6 +2836,7 @@ namespace TataGamedomWebAPI.Migrations
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Product", "Product")
                         .WithMany("OrderItems")
                         .HasForeignKey("ProductId")
+                        .IsRequired()
                         .HasConstraintName("FK__OrderItem__Produ__4E53A1AA");
 
                     b.Navigation("InventoryItem");
@@ -2846,6 +2851,7 @@ namespace TataGamedomWebAPI.Migrations
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.OrderItem", "OrderItem")
                         .WithOne("OrderItemReturn")
                         .HasForeignKey("TataGamedomWebAPI.Models.EFModels.OrderItemReturn", "OrderItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK__OrderItem__Order__4B7734FF");
 
@@ -2862,6 +2868,7 @@ namespace TataGamedomWebAPI.Migrations
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.OrderItem", "OrderItem")
                         .WithMany("OrderItemsCoupons")
                         .HasForeignKey("OrderItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK__OrderItem__Order__503BEA1C");
 

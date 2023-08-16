@@ -9,7 +9,6 @@ import Login from '@/components/Members/Login.vue'
 import ForgetPwd from '@/components/Members/ForgetPwd.vue'
 import Orders from '../views/Orders.vue'
 // import OrderDetailsCards from '../views/OrderDetailsCards.vue'
-import OrderItemReturn from '../views/OrderItemReturn.vue'
 import SupportHub from '../views/SupportHub.vue'
 import LinePay from '../views/LinePay.vue'
 import ActiveRegister from '@/components/Members/ActiveRegister.vue'
@@ -32,7 +31,7 @@ const routes = [
           import(/* webpackChunkName: "home" */ "@/views/Home.vue"),
       },
     ],
-  },{
+  }, {
     path: "/eCommerce",
     component: () => import("@/layouts/default/Default.vue"),
     children: [
@@ -40,7 +39,7 @@ const routes = [
         path: "",
         name: "eCommerce",
         component: eCommerce,
-        props:true
+        props: true
       },
       {
         path: '/eCommerce/Product/:productId',

@@ -11,7 +11,7 @@ public partial class OrderItem
 
     public int OrderId { get; set; }
 
-    public int? ProductId { get; set; }
+    public int ProductId { get; set; }
 
     public decimal ProductPrice { get; set; }
 
@@ -25,5 +25,5 @@ public partial class OrderItem
 
     public virtual ICollection<OrderItemsCoupon> OrderItemsCoupons { get; set; } = new List<OrderItemsCoupon>();
 
-    public virtual Product? Product { get; set; }
+    public virtual Product Product { get; set; } = null!;
 }

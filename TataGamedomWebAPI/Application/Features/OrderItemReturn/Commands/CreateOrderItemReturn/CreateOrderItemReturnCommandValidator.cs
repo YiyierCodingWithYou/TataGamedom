@@ -24,7 +24,7 @@ public class CreateOrderItemReturnCommandValidator : AbstractValidator<CreateOrd
         RuleFor(p => p.OrderItemId)
             .NotEmpty()
             .MustAsync(OrderItemMustUnique)
-            .WithMessage("此品項已退貨");
+            .WithMessage("此品項已有退貨紀錄");
 
     }
 
