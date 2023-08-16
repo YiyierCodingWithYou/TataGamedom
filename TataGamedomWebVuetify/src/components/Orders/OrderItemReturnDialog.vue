@@ -9,44 +9,22 @@
         <v-card v-for="orderDetail in orderDetails" :key="orderDetail.id">
           <v-card-text>
             <div class="d-flex pa-4">
-              <v-checkbox-btn
-                v-model="orderDetail.enabled"
-                class="pe-2"
-              ></v-checkbox-btn>
-              <v-text-field
-                readonly
-                hide-details
-                label=""
-                variant="underlined"
-                class="flex-grow-1"
-              >
+              <v-checkbox-btn v-model="orderDetail.enabled" class="pe-2"></v-checkbox-btn>
+              <v-text-field readonly hide-details label="" variant="underlined" class="flex-grow-1">
                 {{ orderDetail.index }}
                 {{ orderDetail.gameChiName }}
                 {{ orderDetail.productIsVirtual ? "(序號)" : "(遊戲片)" }}
               </v-text-field>
             </div>
 
-            <v-textarea
-              :disabled="!orderDetail.enabled"
-              clearable
-              counter
-              label="原因"
-              maxlength="200"
-              single-line
-            ></v-textarea>
+            <v-textarea :disabled="!orderDetail.enabled" clearable counter label="原因" maxlength="200"
+              single-line></v-textarea>
           </v-card-text>
         </v-card>
 
         <v-spacer></v-spacer>
-        <v-btn block class="mt-2" text="取消" @click="dialog = false"></v-btn>
-        <v-btn
-          :loading="loading"
-          block
-          class="mt-2"
-          text="送出"
-          type="submit"
-          @click="dialog = false"
-        ></v-btn>
+        <v-btn block class="mt-2" text="取消" @click="closeDialog"></v-btn>
+        <v-btn :loading="loading" block class="mt-2" text="送出" type="submit" @click="closeDialog"></v-btn>
       </v-form>
     </v-sheet>
   </v-dialog>
@@ -85,7 +63,12 @@ export default {
       }
     });
 
-    const submit = () => {};
+    const closeDialog = () => {
+      console.log(dialog.value);
+      dialog.value = false;
+    };
+
+    const submit = () => { };
 
     onMounted(() => {
       if (orderDetails.value && orderDetails.value.length > 0) {
@@ -101,7 +84,7 @@ export default {
       );
     });
 
-    return { order, orderDetails, dialog, selectAll, loading, submit };
+    return { order, orderDetails, dialog, selectAll, loading, submit, closeDialog };
   },
 };
 </script> 
