@@ -34,6 +34,7 @@ public class LinePayController : ControllerBase
     [EnableCors("AllowCookie")]
     public async Task<PaymentResponseDto> CreatePayment(PaymentRequestDto dto)
     {
+
         return await _linePayService.SendPaymentRequest(dto);
     }
 
