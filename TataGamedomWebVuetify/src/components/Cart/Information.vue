@@ -76,8 +76,10 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="text-end">總計：</td>
-                <td class="text-end">NT${{ cartData.total }}</td>
+                <td class="text-end">運費：<br>總計：</td>
+                <td class="text-end">
+                  NT${{ selectedData.freight }}<br>NT${{ selectedData
+.totalAmount }}</td>
               </tr>
             </tbody>
           </v-table>
@@ -151,7 +153,7 @@
 </template>
     
 <script setup>
-import { ref, computed } from "vue";
+import { ref, defineProps, computed, watch } from "vue";
 import Payment from "@/components/Cart/Payment.vue";
 
 const cartData = ref({});
@@ -159,6 +161,15 @@ const cartItems = ref([]);
 const imgLink = "https://localhost:7081/Files/Uploads/";
 const count = ref(0);
 const total = ref(0);
+const props = defineProps({
+  selectedData: Object
+});
+
+watch(props, (newProps) => {
+  if (newProps) {
+    console.log(newProps);
+  }
+});
 
 const productId = ref();
 const loadData = async (type) => {
@@ -169,7 +180,6 @@ const loadData = async (type) => {
   const datas = await response.json();
   cartData.value = datas;
   cartItems.value = datas.cartItems;
-  console.log(cartItems.value);
   total.value = datas.total;
   count.value = datas.cartItems.length;
 };
