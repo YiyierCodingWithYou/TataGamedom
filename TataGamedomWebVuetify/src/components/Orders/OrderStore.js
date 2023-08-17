@@ -33,7 +33,20 @@ const OrderStore = {
             } catch (error) {
                 console.error('Failed to fetch order details:', error.message);
             }
-        }
+        },
+        async postOrderItemReturns({ commit }, createOrderItemReturnCommandList) {
+            try {
+                const response = await axios.post(
+                    `${BASE_URL}/api/OrderItemReturns/MultipleOrderItemsReturn`,
+                    { withCredentials: true }
+                );
+                //todo: 
+                //commit action => fetchOrders  
+                //commit mutation => update order state (since order status will change after post action)
+            } catch (error) {
+                console.log('Failed to post order item returns:', error.message);
+            }
+        },
     },
     getters: {
         getOrderDetailsById: (state) => (orderId) => {

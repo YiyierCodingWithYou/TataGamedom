@@ -76,10 +76,12 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="text-end">運費：<br>總計：</td>
+                <td class="text-end">運費：<br />總計：</td>
                 <td class="text-end">
-                  NT${{ selectedData.freight }}<br>NT${{ selectedData
-.totalAmount }}</td>
+                  NT${{ selectedData.freight }}<br />NT${{
+                    selectedData.totalAmount
+                  }}
+                </td>
               </tr>
             </tbody>
           </v-table>
@@ -146,7 +148,21 @@
 
         <v-col cols="6"> </v-col>
       </v-row>
-      <v-btn @click="checkout">送出訂單</v-btn>
+
+      <form
+        ref="ecpayForm"
+        action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5"
+        method="POST"
+      >
+        <input
+          type="hidden"
+          v-for="(value, key) in ecPayparams"
+          :name="key"
+          :value="value"
+        />
+        <v-btn type="submit">送出訂單</v-btn>
+      </form>
+
       <Payment :paymentData="getLinePayData" />
     </v-container>
   </v-form>
@@ -162,8 +178,11 @@ const imgLink = "https://localhost:7081/Files/Uploads/";
 const count = ref(0);
 const total = ref(0);
 const props = defineProps({
-  selectedData: Object
+  selectedData: Object,
 });
+
+const ecpayForm = ref(null);
+const ecPayparams = ref({});
 
 watch(props, (newProps) => {
   if (newProps) {
@@ -180,23 +199,28 @@ const loadData = async (type) => {
   const datas = await response.json();
   cartData.value = datas;
   cartItems.value = datas.cartItems;
+
   total.value = datas.total;
   count.value = datas.cartItems.length;
 };
 
-const getLinePayData = computed(() => {
-  return {
-    amount: total.value,
-    currency: "TWD",
-    packages: [
-      //object
-    ],
-    redirectUrls: {
-      confirmUrl: "https://localhost:3000/LinePayConfirmPayment",
-      cancelUrl: "",
-    },
-  };
-});
+const checkout = async () => {
+  try {
+    const response = await fetch(
+      `https://localhost:7081/api/ECPay/Create?total=${props.selectedData.totalAmount}`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          total: props.selectedData.totalAmount,
+        }),
+      }
+    );
+
+    ecPayparams.value = await response.json();
+  } catch (error) {
+    console.log("Error:", error);
+  }
+};
 
 loadData();
 </script>
