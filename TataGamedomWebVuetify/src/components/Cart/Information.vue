@@ -2,7 +2,7 @@
   <v-expansion-panels>
     <v-expansion-panel>
       <v-expansion-panel-title
-        >合計：NT${{ cartData.total }}<br />購物車（{{
+        >合計：NT${{ selectedData.totalAmount }}<br />購物車（{{
           count
         }}件）</v-expansion-panel-title
       >
@@ -76,10 +76,12 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="text-end">運費：<br>總計：</td>
+                <td class="text-end">運費：<br />總計：</td>
                 <td class="text-end">
-                  NT${{ selectedData.freight }}<br>NT${{ selectedData
-.totalAmount }}</td>
+                  NT${{ selectedData.freight }}<br />NT${{
+                    selectedData.totalAmount
+                  }}
+                </td>
               </tr>
             </tbody>
           </v-table>
@@ -96,13 +98,13 @@
             <hr />
             <v-card-subtitle>姓名</v-card-subtitle>
             <v-text-field
-              v-model="firstname"
+              v-model="buyerName"
               variant="solo"
               required
             ></v-text-field>
             <v-card-subtitle>電話號碼</v-card-subtitle>
             <v-text-field
-              v-model="firstname"
+              v-model="phoneNumber"
               variant="solo"
               required
             ></v-text-field>
@@ -146,8 +148,7 @@
 
         <v-col cols="6"> </v-col>
       </v-row>
-      <v-btn @click="checkout">送出訂單</v-btn>
-      <Payment :paymentData="getLinePayData" />
+      <v-btn type="submit" @click.prevent="checkout">送出訂單</v-btn>
     </v-container>
   </v-form>
 </template>
@@ -162,7 +163,7 @@ const imgLink = "https://localhost:7081/Files/Uploads/";
 const count = ref(0);
 const total = ref(0);
 const props = defineProps({
-  selectedData: Object
+  selectedData: Object,
 });
 
 watch(props, (newProps) => {
@@ -184,19 +185,27 @@ const loadData = async (type) => {
   count.value = datas.cartItems.length;
 };
 
-const getLinePayData = computed(() => {
-  return {
-    amount: total.value,
-    currency: "TWD",
-    packages: [
-      //object
-    ],
-    redirectUrls: {
-      confirmUrl: "https://localhost:3000/LinePayConfirmPayment",
-      cancelUrl: "",
-    },
-  };
-});
+const checkout = async () => {
+  const response = await fetch(
+    `https://localhost:7081/api/ECPay/Create?total=${props.selectedData.totalAmount}`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        total: props.selectedData.totalAmount,
+      }),
+    }
+  )
+    .then((response) => {
+      response.json();
+      console.log(response);
+    })
+    // .then((result) => {
+    //   console.log(result);
+    // })
+    .catch((err) => {
+      console.error("Error:", error);
+    });
+};
 
 loadData();
 </script>

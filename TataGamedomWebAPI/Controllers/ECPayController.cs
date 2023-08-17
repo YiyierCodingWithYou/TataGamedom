@@ -10,15 +10,46 @@ using System.Security.Cryptography.Xml;
 using System;
 using System.Text;
 using System.Web;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 
 namespace TataGamedomWebAPI.Controllers
 {
+	[EnableCors("AllowAny")]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class ECPayController : ControllerBase
 	{
+		///// <summary>
+		///// 取得付款資訊
+		///// </summary>
+		///// <param name="id"></param>
+		///// <returns></returns>
+		//public ActionResult PayInfo(string id)
+		//{
+		//	var cache = MemoryCache.Default;
+		//	var cacheData = cache.Get(id);
+		//	var dataStr = JsonConvert.SerializeObject(cacheData);
+		//	var data = JsonConvert.DeserializeObject<Dictionary<string, string>>(dataStr);
+		//	return View("EcpayView", data);
+		//}
+
+		///// <summary>
+		///// 取得虛擬帳號 資訊
+		///// </summary>
+		///// <param name="id"></param>
+		///// <returns></returns>
+		//public ActionResult AccountInfo(string id)
+		//{
+		//	var cache = MemoryCache.Default;
+		//	var cacheData = cache.Get(id);
+		//	var dataStr = JsonConvert.SerializeObject(cacheData);
+		//	var data = JsonConvert.DeserializeObject<Dictionary<string, string>>(dataStr);
+		//	return View("EcpayView", data);
+		//}
 		[HttpPost("Create")]
-		public async Task<ActionResult> CreatePayment(int total)
+		public async Task<ActionResult<Dictionary<string, string>>> CreatePayment(int total)
 		{
 			var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
 			//需填入你的網址
@@ -41,7 +72,7 @@ namespace TataGamedomWebAPI.Controllers
 
 			//呼叫綠界API
 
-			return Ok();
+			return Ok(order);
 		}
 		private string GetCheckMacValue(Dictionary<string, string> order)
 		{
