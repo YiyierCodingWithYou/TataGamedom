@@ -4,6 +4,7 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper.Execution;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +45,7 @@ namespace TataGamedomWebAPI.Controllers
 			int? memberId = _simpleHelper.memberIdByAccount(account);
 			//int? memberId = 3; // 王五 wangwu 測試用
 
-			PostReadDto postDto = await _context.Posts.Where(p => p.Id == postId).Select(post => 
+			PostReadDto postDto = await _context.Posts.Where(p => p.Id == postId).Select(post =>
 			new PostReadDto
 			{
 				PostId = post.Id,
@@ -64,18 +65,18 @@ namespace TataGamedomWebAPI.Controllers
 				ActiveFlag = post.ActiveFlag
 			}).FirstOrDefaultAsync();
 
-			if(postDto == null)
+			if (postDto == null)
 			{
 				return null;
-			}	
-			
-			postDto.Comments = GetPostsComments(_context, postDto.PostId, memberId, postDto.BoardId );
+			}
+
+			postDto.Comments = GetPostsComments(_context, postDto.PostId, memberId, postDto.BoardId);
 
 			if (memberId != null)
 			{
-					postDto.IsAuthor = _simpleHelper.PostIsAuthor(postDto.PostId, memberId ?? 0);
-					postDto.IsMod = _simpleHelper.IsBoardMod(postDto.BoardId, memberId ?? 0);
-					postDto.Voted = _simpleHelper.IsPostVoted(postDto.PostId, memberId ?? 0).voteType;
+				postDto.IsAuthor = _simpleHelper.PostIsAuthor(postDto.PostId, memberId ?? 0);
+				postDto.IsMod = _simpleHelper.IsBoardMod(postDto.BoardId, memberId ?? 0);
+				postDto.Voted = _simpleHelper.IsPostVoted(postDto.PostId, memberId ?? 0).voteType;
 			}
 
 			return postDto;
@@ -84,7 +85,7 @@ namespace TataGamedomWebAPI.Controllers
 		// GET: api/Posts
 		[EnableCors("AllowCookie")]
 		[HttpGet]
-		public async Task<IEnumerable<PostReadDto>> GetPosts(string? keyword, int? postId, string? MemberAccount, string? BoardName, int page = 1)
+		public async Task<IEnumerable<PostReadDto>> GetPosts(string? keyword, int? postId, string? MemberAccount, int? boardId, int page = 1)
 		{
 			var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 			int? memberId = _simpleHelper.memberIdByAccount(memberAccount);
@@ -116,9 +117,9 @@ namespace TataGamedomWebAPI.Controllers
 				query = query.Where(p => p.Member.Account == MemberAccount);
 			}
 
-			if (!string.IsNullOrWhiteSpace(BoardName))
+			if (boardId.HasValue)
 			{
-				query = query.Where(p => p.Board.Name == BoardName);
+				query = query.Where(p => p.BoardId == boardId);
 			}
 
 			query = query.OrderByDescending(p => p.Datetime);
@@ -142,7 +143,6 @@ namespace TataGamedomWebAPI.Controllers
 				IsEdited = (p.LastEditDatetime != p.Datetime),
 				LastEditDatetime = p.LastEditDatetime,
 				ActiveFlag = p.ActiveFlag
-
 			}).ToListAsync();
 
 			foreach (var post in posts)
@@ -163,10 +163,10 @@ namespace TataGamedomWebAPI.Controllers
 			return posts;
 		}
 
-		private IEnumerable<CommentReadDto> GetPostsComments(AppDbContext context, int postId, int? memberId,int boardId)
+		private IEnumerable<CommentReadDto> GetPostsComments(AppDbContext context, int postId, int? memberId, int boardId)
 		{
 			var query = context.PostComments.AsQueryable();
-			query = query.Where(p => p.PostId == postId && p.ActiveFlag == true);
+			query = query.Where(p => p.PostId == postId && p.ActiveFlag == true && p.ParentId == null);
 			var comments = query.Select(c => new CommentReadDto
 			{
 				CommentId = c.Id,
@@ -179,17 +179,49 @@ namespace TataGamedomWebAPI.Controllers
 				PostId = c.PostId,
 				ActiveFlag = c.ActiveFlag
 			})
-				.OrderByDescending(c=>c.DateTime)
+				.OrderByDescending(c => c.DateTime)
 				.ToList();
 
-			if (memberId != null)
+			foreach (var comment in comments)
 			{
-				foreach (var comment in comments)
+				if (memberId != null)
 				{
 					comment.IsAuthor = _simpleHelper.CommentIsAuthor(comment.CommentId, memberId ?? 0);
 					comment.IsMod = _simpleHelper.IsBoardMod(boardId, memberId ?? 0);
 					comment.Voted = _simpleHelper.IsCommentVoted(comment.CommentId, memberId ?? 0).voteType;
 				}
+				comment.Comments = GetCommentReply(context, comment.CommentId, memberId, boardId);
+			}
+			return comments;
+		}
+
+		private IEnumerable<CommentReadDto> GetCommentReply(AppDbContext context, int commentId, int? memberId, int boardId)
+		{
+			var query = context.PostComments.AsQueryable();
+			query = query.Where(p => p.ParentId == commentId && p.ActiveFlag == true);
+			var comments = query.Select(c => new CommentReadDto
+			{
+				CommentId = c.Id,
+				CommentContent = c.Content,
+				DateTime = c.Datetime,
+				MemberAccount = c.Member.Account,
+				MemberName = c.Member.Name,
+				VoteUp = c.PostCommentUpDownVotes.Count(v => v.PostCommentId == c.Id && v.Type == true),
+				VoteDown = c.PostCommentUpDownVotes.Count(v => v.PostCommentId == c.Id && v.Type == false),
+				PostId = c.PostId,
+				ActiveFlag = c.ActiveFlag
+			})
+				.OrderByDescending(c => c.DateTime)
+				.ToList();
+			foreach (var comment in comments)
+			{
+				if (memberId != null)
+				{
+					comment.IsAuthor = _simpleHelper.CommentIsAuthor(comment.CommentId, memberId ?? 0);
+					comment.IsMod = _simpleHelper.IsBoardMod(boardId, memberId ?? 0);
+					comment.Voted = _simpleHelper.IsCommentVoted(comment.CommentId, memberId ?? 0).voteType;
+				}
+				comment.Comments = GetCommentReply(context, comment.CommentId, memberId, boardId);
 			}
 			return comments;
 		}
@@ -359,8 +391,8 @@ namespace TataGamedomWebAPI.Controllers
 		}
 
 
-		private bool IsTitleAvailible(string title , string content) 
-		{ 
+		private bool IsTitleAvailible(string title, string content)
+		{
 			if (title.Length > 50)
 			{
 				return false;
@@ -372,14 +404,14 @@ namespace TataGamedomWebAPI.Controllers
 		{
 			if (content.Length > 1500)
 			{
-				return (false,"長度不可超過1500字") ;
+				return (false, "長度不可超過1500字");
 			}
 			if (content.Length == 0)
 			{
 				return (false, "必須有內容");
 			}
-			return (true, string.Empty );
-		}	
+			return (true, string.Empty);
+		}
 
 		// DELETE: api/Posts/5
 		[HttpDelete("{id}")]

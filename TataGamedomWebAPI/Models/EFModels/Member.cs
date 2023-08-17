@@ -31,6 +31,8 @@ public partial class Member
 
     public DateTime? LastOnlineTime { get; set; }
 
+    public string? AboutMe { get; set; }
+
     public virtual ICollection<BoardsModerator> BoardsModerators { get; set; } = new List<BoardsModerator>();
 
     public virtual ICollection<BoardsModeratorsApplication> BoardsModeratorsApplications { get; set; } = new List<BoardsModeratorsApplication>();
@@ -44,6 +46,10 @@ public partial class Member
     public virtual ICollection<GameComment> GameComments { get; set; } = new List<GameComment>();
 
     public virtual ICollection<Issue> Issues { get; set; } = new List<Issue>();
+
+    public virtual ICollection<MemberFollow> MemberFollowFollowedMembers { get; set; } = new List<MemberFollow>();
+
+    public virtual ICollection<MemberFollow> MemberFollowFollowerMembers { get; set; } = new List<MemberFollow>();
 
     public virtual ICollection<MemberProductView> MemberProductViews { get; set; } = new List<MemberProductView>();
 
