@@ -104,10 +104,6 @@ export default {
         });
       }
       console.log("OrderItemReturn Test => order from getter:", order.value);
-      console.log(
-        "OrderItemReturn Test => orderDetails from getter:",
-        orderDetails.value
-      );
     });
 
     return {
