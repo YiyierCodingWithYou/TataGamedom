@@ -148,7 +148,22 @@
 
         <v-col cols="6"> </v-col>
       </v-row>
-      <v-btn type="submit" @click.prevent="checkout">送出訂單</v-btn>
+
+      <form
+        ref="ecpayForm"
+        action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5"
+        method="POST"
+      >
+        <input
+          type="hidden"
+          v-for="(value, key) in ecPayparams"
+          :name="key"
+          :value="value"
+        />
+        <v-btn type="submit">送出訂單</v-btn>
+      </form>
+
+      <Payment :paymentData="getLinePayData" />
     </v-container>
   </v-form>
 </template>
@@ -166,6 +181,9 @@ const props = defineProps({
   selectedData: Object,
 });
 
+const ecpayForm = ref(null);
+const ecPayparams = ref({});
+
 watch(props, (newProps) => {
   if (newProps) {
     console.log(newProps);
@@ -181,30 +199,27 @@ const loadData = async (type) => {
   const datas = await response.json();
   cartData.value = datas;
   cartItems.value = datas.cartItems;
+
   total.value = datas.total;
   count.value = datas.cartItems.length;
 };
 
 const checkout = async () => {
-  const response = await fetch(
-    `https://localhost:7081/api/ECPay/Create?total=${props.selectedData.totalAmount}`,
-    {
-      method: "POST",
-      body: JSON.stringify({
-        total: props.selectedData.totalAmount,
-      }),
-    }
-  )
-    .then((response) => {
-      response.json();
-      console.log(response);
-    })
-    // .then((result) => {
-    //   console.log(result);
-    // })
-    .catch((err) => {
-      console.error("Error:", error);
-    });
+  try {
+    const response = await fetch(
+      `https://localhost:7081/api/ECPay/Create?total=${props.selectedData.totalAmount}`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          total: props.selectedData.totalAmount,
+        }),
+      }
+    );
+
+    ecPayparams.value = await response.json();
+  } catch (error) {
+    console.log("Error:", error);
+  }
 };
 
 loadData();

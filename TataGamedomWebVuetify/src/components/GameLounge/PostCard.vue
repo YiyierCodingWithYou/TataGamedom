@@ -65,47 +65,23 @@
       @click:append-inner="newComment(post.postId)"
       @keyup.enter="newComment(post.postId)"
     ></v-text-field>
-    <v-card
-      v-for="(comment, index) in comments"
-      :key="comment.commentId"
-      class="comment"
-      v-show="showCommentsBool"
-      variant="outlined"
-      :data-comment-id="comment.commentId"
-    >
-      <v-card-item v-if="comment.activeFlag">
-        <v-card-subtitle>{{ comment.memberAccount }}</v-card-subtitle>
-      </v-card-item>
-      <v-card-text> {{ comment.commentContent }} </v-card-text>
-      <v-card-actions>
-        <v-btn
-          @click="vote('comment', comment.commentId, 'Up', comment.postId)"
-          :color="comment.voted === 'Up' ? 'red' : 'blue-grey-lighten-4'"
-          >❤️<span>{{ comment.voteUp }}</span>
-        </v-btn>
-        <v-btn
-          @click="vote('comment', comment.commentId, 'Down', comment.postId)"
-          :color="comment.voted === 'Down' ? 'black' : 'blue-grey-lighten-4'"
-          >💀<span>{{ comment.voteDown }}</span>
-        </v-btn>
-        <v-btn
-          v-show="comment.isAuthor || comment.isMod"
-          @click="deleteContent('comment', comment.commentId, comment.postId)"
-        >
-          <span class="material-symbols-rounded size-20"> delete </span>
-        </v-btn>
-        <span class="ms-auto text-caption">{{
-          relativeTime(comment.dateTime)
-        }}</span>
-      </v-card-actions>
-    </v-card>
+    <div v-if="post.comments && post.comments.length > 0 && showCommentsBool">
+      <PostCommentCard
+        v-for="comment in post.comments"
+        :key="comment.commentId"
+        :comment="comment"
+        @reloadPost="reloadPost(post.postId)"
+      ></PostCommentCard>
+    </div>
   </v-card>
 </template>
+
 <script setup lang="ts">
 import { ref, reactive, computed, watchEffect, onMounted } from "vue";
 import { formatDistanceToNow } from "date-fns";
 import { zhTW } from "date-fns/locale";
 import editPostBtn from "./EditPostBtn.vue";
+import PostCommentCard from "./PostCommentCard.vue";
 
 interface Comment {
   commentContent: string;
@@ -119,6 +95,7 @@ interface Comment {
   isMod: boolean;
   voted: string;
   postId: number;
+  comments: Comment[];
   activeFlag: boolean;
 }
 
@@ -145,6 +122,7 @@ const message = ref("");
 const props = defineProps(["post"]);
 const post = ref<Post>(props.post);
 const comments = ref<Comment[]>([]);
+const hasComments = computed(() => comments.value.length > 0);
 
 watchEffect(() => {
   comments.value = post.value.comments || [];
@@ -215,6 +193,7 @@ const reloadPost = async (id: number): Promise<void> => {
     });
     const data: Post = await response.json();
     post.value = data;
+    console.log("reload!");
   } catch (error) {
     console.error("Error loading posts:", error);
   }

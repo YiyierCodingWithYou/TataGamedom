@@ -7,6 +7,7 @@
       item-value="id"
       v-model="selectedBoard"
       @update:modelValue="sendEmit"
+      variant="underlined"
     ></v-autocomplete>
   </div>
 </template>

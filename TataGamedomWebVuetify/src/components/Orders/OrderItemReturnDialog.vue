@@ -38,14 +38,14 @@
         </v-card>
 
         <v-spacer></v-spacer>
-        <v-btn block class="mt-2" text="取消" @click="dialog = false"></v-btn>
+        <v-btn block class="mt-2" text="取消" @click="closeDialog"></v-btn>
         <v-btn
           :loading="loading"
           block
           class="mt-2"
           text="送出"
           type="submit"
-          @click="dialog = false"
+          @click="closeDialog"
         ></v-btn>
       </v-form>
     </v-sheet>
@@ -85,7 +85,17 @@ export default {
       }
     });
 
-    const submit = () => {};
+    const createOrderItemReturnCommandList = ref([]);
+    const submit = () => {
+      this.store.dispatch(
+        "postOrderItemReturns",
+        createOrderItemReturnCommandList
+      );
+    };
+
+    const closeDialog = () => {
+      dialog.value = false;
+    };
 
     onMounted(() => {
       if (orderDetails.value && orderDetails.value.length > 0) {
@@ -93,7 +103,6 @@ export default {
           detail.enabled = false;
         });
       }
-
       console.log("OrderItemReturn Test => order from getter:", order.value);
       console.log(
         "OrderItemReturn Test => orderDetails from getter:",
@@ -101,7 +110,15 @@ export default {
       );
     });
 
-    return { order, orderDetails, dialog, selectAll, loading, submit };
+    return {
+      order,
+      orderDetails,
+      dialog,
+      selectAll,
+      loading,
+      submit,
+      closeDialog,
+    };
   },
 };
 </script> 

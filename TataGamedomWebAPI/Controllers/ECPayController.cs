@@ -11,15 +11,14 @@ using System;
 using System.Text;
 using System.Web;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json;
 
 namespace TataGamedomWebAPI.Controllers
 {
 	[EnableCors("AllowAny")]
 	[Route("api/[controller]")]
 	[ApiController]
-	public class ECPayController : ControllerBase
+    [EnableCors("AllowAny")]
+    public class ECPayController : ControllerBase
 	{
 		///// <summary>
 		///// 取得付款資訊
@@ -54,7 +53,7 @@ namespace TataGamedomWebAPI.Controllers
 			var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
 			//需填入你的網址
 			var website = $"https://localhost:3000";
-			var order = new Dictionary<string, string>
+            Dictionary<string, string> order = new Dictionary<string, string>
 			{
 				//綠界需要的參數
 				{ "MerchantTradeNo",  orderId},
