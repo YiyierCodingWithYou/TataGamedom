@@ -9,17 +9,12 @@ import Login from "@/components/Members/Login.vue";
 import ForgetPwd from "@/components/Members/ForgetPwd.vue";
 import Orders from "../views/Orders.vue";
 // import OrderDetailsCards from '../views/OrderDetailsCards.vue'
-import OrderItemReturn from "../views/OrderItemReturn.vue";
 import SupportHub from "../views/SupportHub.vue";
 import LinePay from "../views/LinePay.vue";
 import ActiveRegister from "@/components/Members/ActiveRegister.vue";
 import LinePayConfirmPayment from "../views/LinePayConfirmPayment.vue";
-import SupportHub from '../views/SupportHub.vue'
-import LinePay from '../views/LinePay.vue'
-import ActiveRegister from '@/components/Members/ActiveRegister.vue'
-import LinePayConfirmPayment from '../views/LinePayConfirmPayment.vue'
-import Cart from '@/views/Cart.vue'
-import MemberDetial from "@/components/Members/MemberDetial.vue"
+import Cart from "@/views/Cart.vue";
+import MemberDetial from "@/components/Members/MemberDetial.vue";
 
 const routes = [
   {
@@ -59,12 +54,12 @@ const routes = [
         path: "/Members/ForgetPwd",
         name: "ForgetPwd",
         component: ForgetPwd,
-        }, 
-        {
-            path: '/Members/MemberDetial',
-            name: 'MemberDetial',
-            component: MemberDetial
-        },
+      },
+      {
+        path: "/Members/MemberDetial",
+        name: "MemberDetial",
+        component: MemberDetial,
+      },
       {
         path: "/Orders",
         name: "Orders",
@@ -138,7 +133,7 @@ const routes = [
         path: "/GameLounge/:account",
         name: "GameLoungeAccount",
         component: () => import("@/views/GameLounge.vue"),
-      }
+      },
     ],
   },
 ];
