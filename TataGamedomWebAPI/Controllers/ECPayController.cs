@@ -17,43 +17,15 @@ namespace TataGamedomWebAPI.Controllers
 	[EnableCors("AllowAny")]
 	[Route("api/[controller]")]
 	[ApiController]
-    [EnableCors("AllowAny")]
-    public class ECPayController : ControllerBase
+	public class ECPayController : ControllerBase
 	{
-		///// <summary>
-		///// 取得付款資訊
-		///// </summary>
-		///// <param name="id"></param>
-		///// <returns></returns>
-		//public ActionResult PayInfo(string id)
-		//{
-		//	var cache = MemoryCache.Default;
-		//	var cacheData = cache.Get(id);
-		//	var dataStr = JsonConvert.SerializeObject(cacheData);
-		//	var data = JsonConvert.DeserializeObject<Dictionary<string, string>>(dataStr);
-		//	return View("EcpayView", data);
-		//}
-
-		///// <summary>
-		///// 取得虛擬帳號 資訊
-		///// </summary>
-		///// <param name="id"></param>
-		///// <returns></returns>
-		//public ActionResult AccountInfo(string id)
-		//{
-		//	var cache = MemoryCache.Default;
-		//	var cacheData = cache.Get(id);
-		//	var dataStr = JsonConvert.SerializeObject(cacheData);
-		//	var data = JsonConvert.DeserializeObject<Dictionary<string, string>>(dataStr);
-		//	return View("EcpayView", data);
-		//}
 		[HttpPost("Create")]
 		public async Task<ActionResult<Dictionary<string, string>>> CreatePayment(int total)
 		{
 			var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
 			//需填入你的網址
 			var website = $"https://localhost:3000";
-            Dictionary<string, string> order = new Dictionary<string, string>
+			Dictionary<string, string> order = new Dictionary<string, string>
 			{
 				//綠界需要的參數
 				{ "MerchantTradeNo",  orderId},
@@ -61,16 +33,14 @@ namespace TataGamedomWebAPI.Controllers
 				{ "TotalAmount",  total.ToString()},
 				{ "TradeDesc",  "無"},
 				{ "ItemName",  "獺獺玩國商品一批"},
-				{ "ReturnURL",  $"{website}/Cart"},
+				{ "ReturnURL",  $"{website}/Orders"},
+				{"ClientBackURL", $"{website}/Cart" },
 				{ "MerchantID",  "3002607"},
 				{ "PaymentType",  "aio"},
 				{ "ChoosePayment",  "ALL"},
 				{ "EncryptType",  "1"},
 			};
 			order["CheckMacValue"] = GetCheckMacValue(order);
-
-			//呼叫綠界API
-
 			return Ok(order);
 		}
 		private string GetCheckMacValue(Dictionary<string, string> order)

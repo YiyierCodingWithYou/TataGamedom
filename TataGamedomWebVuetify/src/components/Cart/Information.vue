@@ -157,13 +157,12 @@
         <input
           type="hidden"
           v-for="(value, key) in ecPayparams"
+          :key="key"
           :name="key"
           :value="value"
         />
-        <v-btn type="submit">送出訂單</v-btn>
+        <v-btn @click.prevent="handleSubmit">送出訂單</v-btn>
       </form>
-
-      <Payment :paymentData="getLinePayData" />
     </v-container>
   </v-form>
 </template>
@@ -184,11 +183,11 @@ const props = defineProps({
 const ecpayForm = ref(null);
 const ecPayparams = ref({});
 
-watch(props, (newProps) => {
-  if (newProps) {
-    console.log(newProps);
-  }
-});
+// watch(props, (newProps) => {
+//   if (newProps) {
+//     console.log(newProps);
+//   }
+// });
 
 const productId = ref();
 const loadData = async (type) => {
@@ -215,11 +214,15 @@ const checkout = async () => {
         }),
       }
     );
-
     ecPayparams.value = await response.json();
+    console.log(ecPayparams.value);
   } catch (error) {
     console.log("Error:", error);
   }
+};
+const handleSubmit = async () => {
+  await checkout();
+  ecpayForm.value.submit();
 };
 
 loadData();
