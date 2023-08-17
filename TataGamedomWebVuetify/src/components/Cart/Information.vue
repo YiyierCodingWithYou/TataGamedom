@@ -148,8 +148,21 @@
 
         <v-col cols="6"> </v-col>
       </v-row>
-      
-      <v-btn type="submit" @click.prevent="checkout">送出訂單</v-btn>
+
+      <form
+        ref="ecpayForm"
+        action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5"
+        method="POST"
+      >
+        <input
+          type="hidden"
+          v-for="(value, key) in ecPayparams"
+          :name="key"
+          :value="value"
+        />
+        <v-btn type="submit">送出訂單</v-btn>
+      </form>
+
       <Payment :paymentData="getLinePayData" />
     </v-container>
   </v-form>
@@ -168,6 +181,9 @@ const props = defineProps({
   selectedData: Object,
 });
 
+const ecpayForm = ref(null);
+const ecPayparams = ref({});
+
 watch(props, (newProps) => {
   if (newProps) {
     console.log(newProps);
@@ -183,6 +199,7 @@ const loadData = async (type) => {
   const datas = await response.json();
   cartData.value = datas;
   cartItems.value = datas.cartItems;
+
   total.value = datas.total;
   count.value = datas.cartItems.length;
 };
@@ -199,48 +216,11 @@ const checkout = async () => {
       }
     );
 
-    const ecPayparams = await response.json();
-    console.log(JSON.stringify(ecPayparams));
-
-    const responseUrl = await callEcpay(ecPayparams);
-    console.log(responseUrl);
+    ecPayparams.value = await response.json();
   } catch (error) {
     console.log("Error:", error);
   }
 };
-
-const callEcpay = async (ecPayparams) => {
-  const response = await fetch(
-    `https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5`,
-    {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: JSON.stringify(ecPayparams),
-    }
-  );
-  if (response.ok) {
-    const data = await response.json();
-    window.location = data.info.paymentUrl.web;
-  }
-  return response;
-};
-
-const getLinePayData = computed(() => {
-  return {
-    amount: total.value,
-    currency: "TWD",
-    packages: [
-      //object
-    ],
-    redirectUrls: {
-      confirmUrl: "https://localhost:3000/LinePayConfirmPayment",
-      cancelUrl: "",
-    },
-  };
-});
 
 loadData();
 </script>
