@@ -7,7 +7,7 @@ public partial class Order
 {
     public int Id { get; set; }
 
-    public string? Index { get; set; }
+    public string Index { get; set; } = null!;
 
     public int MemberId { get; set; }
 
@@ -25,7 +25,7 @@ public partial class Order
 
     public string? RecipientName { get; set; }
 
-    public string? ToAddress { get; set; }
+    public string ToAddress { get; set; } = null!;
 
     public DateTime? SentAt { get; set; }
 

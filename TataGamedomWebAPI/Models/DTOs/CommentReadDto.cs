@@ -14,5 +14,6 @@
 		public string? Voted { get; set; }
 		public int PostId { get; set; }
 		public bool ActiveFlag { get; set; }
+		public IEnumerable<CommentReadDto> Comments { get; set; }
 	}
 }

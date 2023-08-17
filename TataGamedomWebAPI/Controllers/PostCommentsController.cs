@@ -135,6 +135,44 @@ namespace TataGamedomWebAPI.Controllers
 			return ApiResult.Success("發布成功");
 		}
 
+
+		[HttpPost("CommentReply")]
+		[EnableCors("AllowCookie")]
+		public async Task<ApiResult> CrearteCommentReply (CommentReplyDto dto)
+		{
+			var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			int memberId = _simpleHelper.memberIdByAccount(memberAccount);
+			//int memberId = 3; // 王五 wangwu 測試用
+			if (memberId == 0)
+			{
+				return ApiResult.Fail("沒這個會員");
+			}
+
+			var comment = _context.PostComments.Find(dto.CommentId);
+
+			PostComment newPost = new PostComment
+			{
+				Id = 0,
+				MemberId = memberId,
+				PostId = comment.PostId,
+				Content = dto.Content,
+				Datetime = DateTime.Now,
+				ActiveFlag = true,
+				ParentId = dto.CommentId
+			};
+			try
+			{
+				_context.PostComments.Add(newPost);
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				return ApiResult.Fail("發布失敗");
+			}
+
+			return ApiResult.Success("發布成功");
+		}
+
 		// DELETE: api/PostComments/5
 		[EnableCors("AllowCookie")]
 		[HttpDelete("{id}")]
