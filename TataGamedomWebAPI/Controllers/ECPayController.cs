@@ -10,12 +10,14 @@ using System.Security.Cryptography.Xml;
 using System;
 using System.Text;
 using System.Web;
+using Microsoft.AspNetCore.Cors;
 
 namespace TataGamedomWebAPI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class ECPayController : ControllerBase
+    [EnableCors("AllowAny")]
+    public class ECPayController : ControllerBase
 	{
 		[HttpPost("Create")]
 		public async Task<ActionResult> CreatePayment(int total)
@@ -23,7 +25,7 @@ namespace TataGamedomWebAPI.Controllers
 			var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
 			//需填入你的網址
 			var website = $"https://localhost:3000";
-			var order = new Dictionary<string, string>
+            Dictionary<string, string> order = new Dictionary<string, string>
 			{
 				//綠界需要的參數
 				{ "MerchantTradeNo",  orderId},
@@ -41,7 +43,7 @@ namespace TataGamedomWebAPI.Controllers
 
 			//呼叫綠界API
 
-			return Ok();
+			return Ok(order);
 		}
 		private string GetCheckMacValue(Dictionary<string, string> order)
 		{

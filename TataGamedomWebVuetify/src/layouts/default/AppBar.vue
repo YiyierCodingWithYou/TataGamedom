@@ -4,7 +4,8 @@
       <v-icon icon="mdi-circle-slice-4" />
       TataGamedom
     </v-app-bar-title>
-
+    <a href="/GameLounge" class="me-3">👀</a>
+    <a href="/Cart" class="me-3">Cart</a>
     <v-spacer></v-spacer>
     <div v-if="$store.state.isLoggedIn">
       <a color="primary" @click="toggleMemberProfile">HI {{ name }}</a>
