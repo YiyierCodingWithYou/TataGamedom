@@ -10,13 +10,15 @@ const store = createStore({
     isLoggedIn: false,
     name: "",
     account: "",
+    age: ""
   },
   mutations: {
     SET_LOGIN(state, value) {
       state.isLoggedIn = value.isLoggedIn;
       state.name = value.name;
       state.account = value.account;
-      // console.log("Updated IsLogined to:", value);
+      state.age = value.age;
+      console.log("StoreLogin", value);
     },
   },
 });

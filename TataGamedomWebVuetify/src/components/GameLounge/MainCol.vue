@@ -2,7 +2,7 @@
   <v-col cols="12" sm="8">
     <v-sheet min-height="70vh" rounded="lg">
       <v-container>
-        <ReadPostTotal></ReadPostTotal>
+        <slot name="container"></slot>
       </v-container>
     </v-sheet>
   </v-col>

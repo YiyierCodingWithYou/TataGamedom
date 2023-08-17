@@ -76,8 +76,12 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="text-end">總計：</td>
-                <td class="text-end">NT${{ cartData.total }}</td>
+                <td class="text-end">運費：<br />總計：</td>
+                <td class="text-end">
+                  NT${{ selectedData.freight }}<br />NT${{
+                    selectedData.totalAmount
+                  }}
+                </td>
               </tr>
             </tbody>
           </v-table>
@@ -113,33 +117,7 @@
             ></v-text-field>
           </v-card>
         </v-col>
-        <v-col cols="6">
-          <v-card class="mt-3">
-            <v-card-title class="d-flex"
-              >送貨資料
-              <v-card-subtitle>運費：NT${{}}</v-card-subtitle></v-card-title
-            >
-            <hr />
-            <v-card-subtitle>送貨地點</v-card-subtitle>
-            <v-select
-              v-model="selectLocation"
-              :items="shipLocation"
-              variant="solo"
-            ></v-select>
-            <v-card-subtitle>送貨方式</v-card-subtitle>
-            <v-select
-              v-model="selectShipMethod"
-              :items="shipMethod"
-              variant="solo"
-            ></v-select>
-            <v-card-subtitle>付款方式</v-card-subtitle>
-            <v-select
-              v-model="selectPayment"
-              :items="payment"
-              variant="solo"
-            ></v-select>
-          </v-card>
-        </v-col>
+
         <v-col cols="6"
           ><v-card class="mt-3">
             <v-card-title>收件人資料</v-card-title>
@@ -170,48 +148,78 @@
 
         <v-col cols="6"> </v-col>
       </v-row>
+
+      <form
+        ref="ecpayForm"
+        action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5"
+        method="POST"
+      >
+        <input
+          type="hidden"
+          v-for="(value, key) in ecPayparams"
+          :name="key"
+          :value="value"
+        />
+        <v-btn type="submit">送出訂單</v-btn>
+      </form>
+
+      <Payment :paymentData="getLinePayData" />
     </v-container>
   </v-form>
 </template>
     
 <script setup>
-import { ref } from "vue";
+import { ref, defineProps, computed, watch } from "vue";
+import Payment from "@/components/Cart/Payment.vue";
 
 const cartData = ref({});
 const cartItems = ref([]);
 const imgLink = "https://localhost:7081/Files/Uploads/";
 const count = ref(0);
-const selectLocation = ref("台灣");
-const selectShipMethod = ref("7-11超商🏣 - 取貨付款");
+const total = ref(0);
+const props = defineProps({
+  selectedData: Object,
+});
 
-const shipLocation = ref(["台灣", "新加坡", "香港", "澳門", "馬來西亞"]);
-const shipMethod = ref([
-  "7-11超商🏣 - 取貨付款",
-  "7-11超商🏣 - 純取貨",
-  "全家超商🏣 - 取貨付款",
-  "全家超商🏣 - 純取貨",
-  "宅配🚛 - 黑貓宅急便",
-  "宅配🚛 - 黑貓宅急便 貨到付款",
-]);
-const payment = ref([
-  "LinePay📱",
-  "信用卡💳(Visa, Master, JCB)",
-  "7-11超商🏣 - 取貨付款",
-  "全家超商🏣 - 取貨付款",
-  "黑貓宅急便💸 - 貨到付款",
-]);
+const ecpayForm = ref(null);
+const ecPayparams = ref({});
 
-const loadData = async () => {
+watch(props, (newProps) => {
+  if (newProps) {
+    console.log(newProps);
+  }
+});
+
+const productId = ref();
+const loadData = async (type) => {
   const response = await fetch(`https://localhost:7081/api/Carts`, {
     method: "GET",
     credentials: "include",
   });
   const datas = await response.json();
   cartData.value = datas;
-  console.log(cartData.value);
-
   cartItems.value = datas.cartItems;
+
+  total.value = datas.total;
   count.value = datas.cartItems.length;
+};
+
+const checkout = async () => {
+  try {
+    const response = await fetch(
+      `https://localhost:7081/api/ECPay/Create?total=${props.selectedData.totalAmount}`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          total: props.selectedData.totalAmount,
+        }),
+      }
+    );
+
+    ecPayparams.value = await response.json();
+  } catch (error) {
+    console.log("Error:", error);
+  }
 };
 
 loadData();
