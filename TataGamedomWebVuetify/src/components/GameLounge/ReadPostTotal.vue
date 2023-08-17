@@ -32,6 +32,7 @@ interface Comment {
   voteUp: number;
   voteDown: number;
   voted: string;
+  comments: Comment[];
 }
 
 interface Post {

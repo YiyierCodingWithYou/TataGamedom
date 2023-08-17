@@ -8,17 +8,10 @@
           <v-sheet min-height="100" rounded="lg">
             <v-card-item style="">
               <div class="d-flex">
-                <img
-                  style="height: 225px; width: 400px"
-                  :src="img + item.coverImg"
-                  alt=""
-                />
+                <img style="height: 225px; width: 400px" :src="img + item.coverImg" alt="" />
                 <div class="ms-5">
                   <div class="text-h4 mb-2">{{ item.title }}</div>
-                  <div
-                    v-html="truncateAndEllipsis(item.content, 50)"
-                    class=""
-                  ></div>
+                  <div v-html="truncateAndEllipsis(item.content, 50)" class=""></div>
                   <!-- <div class="">{{ item.content }}</div> -->
 
                   <div>{{ item.name }}</div>
@@ -26,8 +19,7 @@
                     {{ item.scheduleDate }}
                   </div>
 
-                  <v-btn style="position: absolute" variant="outlined"
-                    >詳細
+                  <v-btn style="position: absolute" variant="outlined">詳細
                   </v-btn>
                 </div>
               </div>
@@ -38,20 +30,14 @@
         <v-col cols="4" style="position: absolute; left: 71%; max-width: 550px">
           <v-sheet rounded="lg" min-height="100">
             <h1>關鍵字搜尋</h1>
-            <SearchTextBox
-              class="mt-2"
-              @searchInput="inputHandler"
-            ></SearchTextBox>
+            <SearchTextBox class="mt-2" @searchInput="inputHandler"></SearchTextBox>
           </v-sheet>
         </v-col>
 
         <v-col cols="4" class="gameclass">
           <v-sheet rounded="lg" min-height="400">
             <h1>遊戲類別</h1>
-            <NewsGameClass
-              @classificationInput="classificationHandler"
-              class="mt-10"
-            ></NewsGameClass>
+            <NewsGameClass @classificationInput="classificationHandler" class="mt-10"></NewsGameClass>
           </v-sheet>
         </v-col>
 
@@ -64,12 +50,8 @@
       </v-row>
     </v-container>
     <div class="text-center">
-      <v-pagination
-        v-model="thePage"
-        :length="totalPages"
-        :total-visible="5"
-        @update:model-value="clickHandler"
-      ></v-pagination>
+      <v-pagination v-model="thePage" :length="totalPages" :total-visible="5"
+        @update:model-value="clickHandler"></v-pagination>
     </div>
   </v-main>
 </template>
@@ -100,7 +82,6 @@ const loadNews = async () => {
   const datas = await response.json();
   news.value = datas.news;
   totalPages.value = datas.totalPage;
-  news.value = datas.news;
   console.log("123132", datas);
   console.log("456456", news.value);
 };

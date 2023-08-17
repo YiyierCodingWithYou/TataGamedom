@@ -4,7 +4,7 @@
   <br />
   <RouterLink to="/Members/Register">註冊</RouterLink>
   <br />
-  <RouterLink to="/Members/ActiveRegister">註冊</RouterLink>
+  <RouterLink to="/Members/ActiveRegister">會員驗證</RouterLink>
 
   <!-- <Login />
     <Register /> -->
