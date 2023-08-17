@@ -15,7 +15,7 @@ import ActiveRegister from '@/components/Members/ActiveRegister.vue'
 import LinePayConfirmPayment from '../views/LinePayConfirmPayment.vue'
 import Cart from '@/views/Cart.vue'
 import MemberDetial from "@/components/Members/MemberDetial.vue"
-
+import ResetPassword from "@/components/Members/ResetPassword.vue"
 
 const routes = [
   {
@@ -138,6 +138,15 @@ const routes = [
         path: '/Members/MemberDetial',
         name: 'MemberDetial',
         component: MemberDetial
+      },
+      {
+        path: '/Members/ResetPassword',
+        name: 'ResetPassword',
+        component: ResetPassword,
+        props: (route) => ({
+          memberId: parseInt(route.query.memberId),
+          confirmCode: route.query.confirmCode,
+        }),
       }
     ],
   },

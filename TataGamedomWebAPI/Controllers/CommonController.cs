@@ -57,6 +57,7 @@ namespace TataGamedomWebAPI.Controllers
 		{
 			var account = HttpContext.User.FindFirstValue("MembersAccount");
 			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
+			
 
 			if (user == null)
 			{
@@ -64,7 +65,13 @@ namespace TataGamedomWebAPI.Controllers
 			}
 			else
 			{
-				return Ok(new { IsLoggedIn = true, Account = user.Account , Name = user.Name });
+				var currentDate = DateTime.Now;
+				var age = currentDate.Year - user.Birthday.Year;
+				if (currentDate.Month < user.Birthday.Month || (currentDate.Month == user.Birthday.Month && currentDate.Day < user.Birthday.Day))
+				{
+					age--; // 如果生日尚未到來，則減少一歲
+				}
+				return Ok(new { IsLoggedIn = true, Account = user.Account , Name = user.Name ,Age = age});
 			}
 		}
 
