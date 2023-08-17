@@ -15,9 +15,5 @@ const barRef = ref(null);
 
 const reload = () => {
   console.log("defaultOk");
-
-  if (barRef.value && barRef.value.reload2) {
-    console.log("gooooo"); // 注意修正這裡，應該是 console.log 而不是 console
-  }
 };
 </script>

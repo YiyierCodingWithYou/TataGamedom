@@ -87,5 +87,60 @@ namespace TataGamedomWebAPI.Controllers
 
 			return dto;
 		}
+
+		// GET: api/Boards/5
+		[HttpGet("{id}")]
+		[EnableCors("AllowCookie")]
+		public async Task<ActionResult<BoardReadDto>> GetBoard(int id)
+		{
+			string loggedInAccount = HttpContext.User.FindFirstValue("MembersAccount");
+			int loggedInMemberId = _simpleHelper.memberIdByAccount(loggedInAccount);
+			DateTime currentTime = DateTime.Now;
+			DateTime twoDaysAgo = currentTime.AddHours(-48);
+
+			if (_context.Boards == null)
+			{
+				return NotFound();
+			}
+
+			var dto = await _context.Boards
+			.Select(b => new BoardReadDto
+			{
+				Id = b.Id,
+				Name = b.Name,
+				BoardAbout = b.BoardAbout,
+				BoardHeaderCoverImgUrl = b.BoardHeaderCoverImg,
+				BoardUrl = $"https://localhost:3000/GameLounge/Board/{b.Id}",
+				GameId = b.GameId,
+				GameName = b.Game.ChiName,
+				PostCurrentCount = b.Posts.Count(p => p.Datetime >= twoDaysAgo && p.Datetime <= currentTime && p.ActiveFlag),
+				PostTotalCount = b.Posts.Count(p => p.ActiveFlag),
+				MemberFollowCount = b.MembersBoards.Count(),
+				IsFollowed = b.MembersBoards.Any(m => m.MemberId == loggedInMemberId),
+				IsFavorite = b.MembersBoards.Any(m => m.MemberId == loggedInMemberId && m.IsFavorite),
+				IsMod = b.BoardsModerators.Any(m => m.ModeratorMember.Account == loggedInAccount),
+				Mods = b.BoardsModerators.Select(m => new ModReadDto
+				{
+					Id = m.ModeratorMemberId,
+					Account = m.ModeratorMember.Account,
+					Name = m.ModeratorMember.Name,
+				}),
+				ProductLinks = b.Game.Products.Select(p => new ProducLinkDto
+				{
+					Id = p.Id,
+					PlatformName = p.GamePlatform.Name,
+					Url = $"https://localhost:3000/eCommerce/Product/{p.Id}",
+				})
+			})
+			.FirstOrDefaultAsync(b => b.Id == id);
+
+			if(dto == null)
+			{
+				return NotFound();
+			}
+
+			return dto;
+		}
+
 	}
 }
