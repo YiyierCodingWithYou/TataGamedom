@@ -143,6 +143,7 @@ export default {
           });
           console.log(res);
           console.log("註冊成功");
+          alert("註冊成功，請到信箱收取確認信!");
         })
         .catch((err) => {
           console.log(err);
