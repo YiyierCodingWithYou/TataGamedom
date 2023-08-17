@@ -69,6 +69,7 @@ public class CreateOrderItemCommandHandler : IRequestHandler<CreateOrderItemComm
     private async Task GenerateIndex(CreateOrderItemCommand request, Models.EFModels.OrderItem orderItemTobeCreated)
     {
         int maxOrderItemId = await _orderItemRepository.GetMaxId();
-        orderItemTobeCreated.Index = _indexGenerator.GetOrderItemIndex(orderItemTobeCreated, maxOrderItemId);
+        string productIndex = await _productRepository.GetIndexById(request.ProductId);
+        orderItemTobeCreated.Index = _indexGenerator.GetOrderItemIndex(productIndex, orderItemTobeCreated, maxOrderItemId);
     }
 }

@@ -1,18 +1,17 @@
 <template>
   <v-carousel
+    :model-value="carouselIndex"
     height="680px"
     width="80%"
-    v-model="carouselIndex"
     show-arrows="hover"
     progress="grey-darken-1"
-    hide-delimiter-background
-    delimiter-icon="mdi-pac-man"
+    hide-delimiters
   >
     <template v-slot:prev="{ props }">
       <v-icon
         icon="mdi-menu-left"
         size="x-large"
-        variant="text"
+        style="font-size: 70px"
         color="brown-lighten-1"
         @click="props.onClick"
       ></v-icon>
@@ -21,17 +20,16 @@
       <v-icon
         icon="mdi-menu-right"
         size="x-large"
-        variant="text"
+        style="font-size: 70px"
         color="brown-lighten-1"
         @click="props.onClick"
       ></v-icon>
     </template>
 
-    <v-carousel-item v-for="orderItem in results" :key="orderItem.id">
+    <v-carousel-item v-for="orderItem in orderDetails" :key="orderItem.id">
       <v-card
         class="mx-auto mb-1 overflow-auto bg-brown-lighten-5 text-center"
         max-width="auto"
-        variant="outline"
         height="auto"
       >
         <v-img :src="orderItem.gameGameCoverImg" height="520px"></v-img>
@@ -46,7 +44,7 @@
         <v-card-subtitle> 優惠: //Todo </v-card-subtitle>
 
         <v-card-subtitle>
-          類型: {{ orderItem.productIsVirtual }}
+          類型: {{ orderItem.productIsVirtual === true ? "序號" : "遊戲片" }}
         </v-card-subtitle>
       </v-card>
     </v-carousel-item>
@@ -54,64 +52,42 @@
 </template>
 
 <script>
+import { ref, onMounted, computed } from "vue";
+import { useStore } from "vuex";
+
 export default {
+  name: "OrderDetailsCard",
   props: {
     orderId: {
+      type: Number,
       required: true,
     },
   },
-  data() {
-    return {
-      results: [],
-      shownItems: {},
-      carouselIndex: 0,
-    };
-  },
-  methods: {
-    toggleShow(orderItemId) {
-      if (this.shownItems[orderItemId] === undefined) {
-        this.shownItems[orderItemId] = true;
-      } else {
-        this.shownItems[orderItemId] = !this.shownItems[orderItemId];
-      }
-    },
-    loadData() {
-      const orderId = this.$route.params.id;
+  setup(props) {
+    const store = useStore();
 
-      fetch(`https://localhost:7081/api/OrderItems/order/${this.orderId}`)
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-        })
-        .then((data) => {
-          this.isLoading = false;
-          const results = [];
-          for (const id in data) {
-            results.push({
-              id: id,
-              orderItemId: data[id].id,
-              gameChiName: data[id].gameChiName,
-              gameGameCoverImg: data[id].gameGameCoverImg,
-              discountedPrice: data[id].discountedPrice,
-              productIsVirtual:
-                data[id].productIsVirtual === true ? "序號" : "遊戲片",
-            });
-            this.shownItems[id] = false;
-          }
-          this.results = results;
-        })
-        .catch((error) => {
-          this.isLoading = false;
-          console.log(error);
-          this.error = "Failed to fetch data - please try again later.";
-        });
-    },
-  },
-  mounted() {
-    this.loadData();
+    const orderDetails = computed(() => {
+      return store.getters.getOrderDetailsById(props.orderId);
+    });
+
+    const fetchDetails = () => {
+      store.dispatch("fetchOrderDetails", props.orderId);
+    };
+
+    onMounted(() => {
+      //console.log("orderId:" + props.orderId);
+      fetchDetails();
+    });
+
+    const carouselIndex = ref(0);
+
+    return {
+      orderDetails,
+      carouselIndex,
+    };
   },
 };
 </script>
+
 
 <style></style>

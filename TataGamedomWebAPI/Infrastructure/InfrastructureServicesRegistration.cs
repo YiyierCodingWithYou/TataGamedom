@@ -22,7 +22,6 @@ public static class InfrastructureServicesRegistration
                         .AllowCredentials();
                 });
         });
-
         return services;
     }
 }

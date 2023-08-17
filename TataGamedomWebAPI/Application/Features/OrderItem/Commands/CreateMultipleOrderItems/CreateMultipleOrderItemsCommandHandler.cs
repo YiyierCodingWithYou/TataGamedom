@@ -51,14 +51,11 @@ public class CreateMultipleOrderItemsCommandHandler : IRequestHandler<CreateMult
         foreach (var createOrderItemCommand in request.CreateOrderItemCommandList)
         {
             await ValidateRequestAsync(createOrderItemCommand);
-
             var orderItem = _mapper.Map<Models.EFModels.OrderItem>(createOrderItemCommand);
 
             await AddInventoryIemIdToOrderItem(soldOutIds, createOrderItemCommand, orderItem);
 
-
             await GenerateIndex(createOrderItemCommand, orderItem);
-
             orderItemToBeCreatedList.Add(orderItem);
         }
 
@@ -94,6 +91,7 @@ public class CreateMultipleOrderItemsCommandHandler : IRequestHandler<CreateMult
     private async Task GenerateIndex(CreateOrderItemCommand request, Models.EFModels.OrderItem orderItemTobeCreated)
     {
         int maxOrderItemId = await _orderItemRepository.GetMaxId();
-        orderItemTobeCreated.Index = _indexGenerator.GetOrderItemIndex(orderItemTobeCreated, maxOrderItemId);
+        string productIndex = await _productRepository.GetIndexById(request.ProductId);
+        orderItemTobeCreated.Index = _indexGenerator.GetOrderItemIndex(productIndex, orderItemTobeCreated, maxOrderItemId);
     }
 }

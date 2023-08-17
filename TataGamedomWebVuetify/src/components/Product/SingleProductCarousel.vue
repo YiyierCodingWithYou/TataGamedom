@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-carousel v-model="model" hide-delimiters :show-arrows="false" cycle>
+    <v-carousel v-model="currentIndex" hide-delimiters :show-arrows="false" cycle>
       <v-carousel-item
         v-for="image in productData.productImg"
         :key="image"
@@ -11,7 +11,7 @@
     </v-carousel>
     <v-sheet class="me-auto">
       <v-slide-group
-        v-model="model"
+        v-model="currentIndex"
         class="pa-4 d-flex justify-center align-center"
         center-active
         show-arrows
@@ -36,7 +36,6 @@ import { ref } from "vue";
 const currentIndex = ref(0);
 const props = defineProps(["productData"]);
 const imgLink = "https://localhost:7081/Files/Uploads/";
-const model = ref(0);
 </script>
 
 <style>

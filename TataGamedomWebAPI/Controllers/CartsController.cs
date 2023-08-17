@@ -31,8 +31,9 @@ namespace TataGamedomWebAPI.Controllers
 		}
 
 		// GET: api/Carts
+		[EnableCors("AllowCookie")]
 		[HttpGet]
-		public async Task<ActionResult<CartDTO>> GetCart()
+		public async Task<ActionResult<Object>> GetCart()
 		{
 			var account = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
@@ -47,15 +48,16 @@ namespace TataGamedomWebAPI.Controllers
 			List<CartItemDTO> cartItems = await GetCartItems(user, currentTime);
 			if (cartItems.Count == 0)
 			{
-				// 購物車沒東西的話
-				return NotFound("您的購物車是空的");
+				return new EmptyCartDTO();
 			}
 
 			var cart = new CartDTO
 			{
 				Id = user.Id,
 				MemberId = user.Id,
-				CartItems = cartItems
+				CartItems = cartItems,
+				distinctCoupons = cartItems.SelectMany(item => item.Product.Coupons).Distinct(),
+				distinctCouponsDescription = cartItems.SelectMany(item => item.Product.CouponDescription).Distinct()
 			};
 			return cart;
 		}
@@ -100,6 +102,7 @@ namespace TataGamedomWebAPI.Controllers
 
 		// PUT: api/Carts/5
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+		[EnableCors("AllowCookie")]
 		[HttpPut]
 		public async Task<IActionResult> UpdateItem(int productId, int newQty)
 		{
@@ -111,9 +114,7 @@ namespace TataGamedomWebAPI.Controllers
 
 		private async Task<ActionResult<CartDTO>> UpdateItemQty(int productId, int newQty)
 		{
-			// 取得目前購物車主檔
 			var account = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-			//var account = "zhangsan";
 			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
 
 			List<CartItemDTO> cartItems = await GetCartItems(user, DateTime.Now);
@@ -135,7 +136,7 @@ namespace TataGamedomWebAPI.Controllers
 
 		// POST: api/Carts
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-	
+
 		[HttpPost]
 		[EnableCors("AllowCookie")]
 		public async Task<ApiResult> PostCart(CartItemCreateDTO cartItemCreateDTO)
@@ -144,9 +145,7 @@ namespace TataGamedomWebAPI.Controllers
 			{
 				return ApiResult.Fail("Entity set 'AppDbContext.Carts'  is null.");
 			}
-			var account = HttpContext.User.FindFirstValue("MembersAccount");
-			//var account = "lisi";
-			//string? identity =  _httpContextAccessor.HttpContext.User.Identity.Name;
+			var account = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
 
 			if (user == null)
@@ -191,20 +190,19 @@ namespace TataGamedomWebAPI.Controllers
 		}
 
 		// DELETE: api/Carts/5
-		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteCart(int id)
+		[EnableCors("AllowCookie")]
+		[HttpDelete]
+		public async Task<IActionResult> DeleteCart(int productId)
 		{
-			if (_context.Carts == null)
+			var account = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
+			var cartItem = await _context.Carts.FirstOrDefaultAsync(c => c.ProductId == productId && c.MemberId == user.Id);
+			if (cartItem == null)
 			{
-				return NotFound();
-			}
-			var cart = await _context.Carts.FindAsync(id);
-			if (cart == null)
-			{
-				return NotFound();
+				return NotFound("該商品已不存在購物車！");
 			}
 
-			_context.Carts.Remove(cart);
+			_context.Carts.Remove(cartItem);
 			await _context.SaveChangesAsync();
 
 			return NoContent();

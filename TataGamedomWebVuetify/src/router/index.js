@@ -14,6 +14,12 @@ import SupportHub from "../views/SupportHub.vue";
 import LinePay from "../views/LinePay.vue";
 import ActiveRegister from "@/components/Members/ActiveRegister.vue";
 import LinePayConfirmPayment from "../views/LinePayConfirmPayment.vue";
+import SupportHub from '../views/SupportHub.vue'
+import LinePay from '../views/LinePay.vue'
+import ActiveRegister from '@/components/Members/ActiveRegister.vue'
+import LinePayConfirmPayment from '../views/LinePayConfirmPayment.vue'
+import Cart from '@/views/Cart.vue'
+import MemberDetial from "@/components/Members/MemberDetial.vue"
 
 const routes = [
   {
@@ -53,7 +59,12 @@ const routes = [
         path: "/Members/ForgetPwd",
         name: "ForgetPwd",
         component: ForgetPwd,
-      },
+        }, 
+        {
+            path: '/Members/MemberDetial',
+            name: 'MemberDetial',
+            component: MemberDetial
+        },
       {
         path: "/Orders",
         name: "Orders",
@@ -127,7 +138,7 @@ const routes = [
         path: "/GameLounge/:account",
         name: "GameLoungeAccount",
         component: () => import("@/views/GameLounge.vue"),
-      },
+      }
     ],
   },
 ];
