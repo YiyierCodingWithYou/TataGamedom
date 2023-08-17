@@ -116,6 +116,18 @@ const routes = [
     ],
   },
   {
+    path: "/Cart",
+    component: () => import("@/layouts/default/Default.vue"),
+    children: [
+      {
+        path: "",
+        name: "Cart",
+        component: Cart,
+        props: true,
+      },
+    ],
+  },
+  {
     path: "/GameLounge",
     component: () => import("@/layouts/default/Default.vue"),
     children: [
