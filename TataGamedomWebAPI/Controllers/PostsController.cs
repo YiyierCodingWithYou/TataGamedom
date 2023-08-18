@@ -163,6 +163,88 @@ namespace TataGamedomWebAPI.Controllers
 			return posts;
 		}
 
+
+		// GET: api/Posts
+		[EnableCors("AllowCookie")]
+		[HttpGet("personalized")]
+		public async Task<IEnumerable<PostReadDto>> GetPersonalizedPosts(string? keyword, int? postId, string? MemberAccount, int? boardId, int page = 1)
+		{
+			var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			int? memberId = _simpleHelper.memberIdByAccount(memberAccount);
+
+			int pageSize = 5;
+			int skipCount = (page - 1) * pageSize;
+
+			var query = _context.Posts.AsQueryable();
+			query = query.Where(p => p.ActiveFlag == true);
+			query = query.Where(p => p.Board.MembersBoards.Any(bm => bm.MemberId == memberId) || p.Member.MemberFollowFollowerMembers.Any(m=>m.FollowedMemberId == memberId));
+
+			if (query == null)
+			{
+				return null;
+			}
+
+			if (!string.IsNullOrWhiteSpace(keyword))
+			{
+				query = query.Where(p => p.Content.Contains(keyword));
+			}
+
+			if (postId.HasValue)
+			{
+				query = query.Where(p => p.Id == postId);
+			}
+
+			if (!string.IsNullOrWhiteSpace(MemberAccount))
+			{
+				query = query.Where(p => p.Member.Account == MemberAccount);
+			}
+
+			if (boardId.HasValue)
+			{
+				query = query.Where(p => p.BoardId == boardId);
+			}
+
+			query = query.OrderByDescending(p => p.Datetime);
+
+			query = query.Skip(skipCount).Take(pageSize);
+
+			var posts = await query.Select(p => new PostReadDto
+			{
+				PostId = p.Id,
+				Title = p.Title,
+				PostContent = p.Content,
+				DateTime = p.Datetime,
+				BoardId = p.BoardId ?? 0,
+				BoardName = p.Board.Name ?? string.Empty,
+				MemberAccount = p.Member.Account,
+				MemberId = p.Member.Id,
+				MemberName = p.Member.Name,
+				VoteUp = p.PostUpDownVotes.Count(v => v.PostId == p.Id && v.Type == true),
+				VoteDown = p.PostUpDownVotes.Count(v => v.PostId == p.Id && v.Type == false),
+				CommentCount = p.PostComments.Count(c => c.PostId == p.Id && c.ActiveFlag == true),
+				IsEdited = (p.LastEditDatetime != p.Datetime),
+				LastEditDatetime = p.LastEditDatetime,
+				ActiveFlag = p.ActiveFlag
+			}).ToListAsync();
+
+			foreach (var post in posts)
+			{
+				post.Comments = GetPostsComments(_context, post.PostId, memberId, post.BoardId);
+			}
+
+			if (memberId != null)
+			{
+				foreach (var post in posts)
+				{
+					post.IsAuthor = _simpleHelper.PostIsAuthor(post.PostId, memberId ?? 0);
+					post.IsMod = _simpleHelper.IsBoardMod(post.BoardId, memberId ?? 0);
+					post.Voted = _simpleHelper.IsPostVoted(post.PostId, memberId ?? 0).voteType;
+				}
+			}
+
+			return posts;
+		}
+
 		private IEnumerable<CommentReadDto> GetPostsComments(AppDbContext context, int postId, int? memberId, int boardId)
 		{
 			var query = context.PostComments.AsQueryable();
@@ -227,27 +309,6 @@ namespace TataGamedomWebAPI.Controllers
 		}
 
 
-		// GET: aci/Posts/5
-		//[HttpGet("{id}")]
-		//public async Task<ActionResult<Post>> GetPost(int id)
-		//{
-		//	if (_context.Posts == null)
-		//	{
-		//		return NotFound();
-		//	}
-		//	var post = await _context.Posts.FindAsync(id);
-
-		//	if (post == null)
-		//	{
-		//		return NotFound();
-		//	}
-
-		//	return post;
-		//}
-
-
-		// PUT: api/Posts/5
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 
 		[EnableCors("AllowCookie")]
 		[HttpPut("{id}")]

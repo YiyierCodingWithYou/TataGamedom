@@ -18,12 +18,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, defineProps } from "vue";
+import { ref, onMounted } from "vue";
 import NewPostBtn from "./NewPostBtn.vue";
 import PostCard from "./PostCard.vue";
 import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css"; //required if you're not going to override default slots
-import { useRoute } from "vue-router";
 
 interface Comment {
   commentContent: string;
@@ -55,22 +54,10 @@ interface Post {
 const page = ref<number>(1);
 const baseaddress = "https://localhost:7081/api/";
 const posts = ref<Post[]>([]);
-const route = useRoute();
-const props = defineProps({
-  keyword: {
-    type: Number,
-    default: "",
-  },
-});
-
 const loadPosts = async ($state: any) => {
   try {
     const response = await fetch(
-      `${baseaddress}Posts?page=${page.value}&keyword=${
-        props.keyword
-      }&memberAccount=${route.params.account ?? ""}&boardId=${
-        route.params.boardId ?? ""
-      }`,
+      `${baseaddress}Posts/personalized?page=${page.value}`,
       {
         credentials: "include",
       }
