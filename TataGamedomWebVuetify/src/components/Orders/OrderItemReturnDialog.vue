@@ -73,6 +73,12 @@ export default {
       () => orderDetails.value && orderDetails.value.length > 0
     );
 
+    const initializeCheckBox = () => {
+      orderDetails.value.forEach((detail) => {
+        detail.enabled = false;
+      });
+    }
+
     const isOrderCompleted = computed(() => {
       return order.value && (order.value.orderStatusCodeName === "已完成" || order.value.orderStatusCodeName === "退貨程序處理中");
     });
@@ -85,11 +91,7 @@ export default {
     };
 
     onMounted(() => {
-      if (hasOrderDetails.value) {
-        orderDetails.value.forEach((detail) => {
-          detail.enabled = false;
-        });
-      }
+      if (hasOrderDetails.value) { initializeCheckBox() }
       store.dispatch("fetchOrderItemIdReturnList", props.orderId);
       console.log("OrderItemReturn Test => order from getter:", order.value);
     });
@@ -117,9 +119,10 @@ export default {
           reason: detail.reason,
         }));
 
-      const requestData = {
-        createOrderItemReturnCommandList: createOrderItemReturnCommandList.value,
-        orderId: props.orderId,
+      const requestData = { createOrderItemReturnCommandList: createOrderItemReturnCommandList.value };
+      const payload = {
+        requestData: requestData,
+        orderId: props.orderId
       };
 
       const timeoutPromise = new Promise((resolve) =>
@@ -127,8 +130,9 @@ export default {
       );
 
       try {
+        console.log(requestData)
         await Promise.all([
-          store.dispatch("postOrderItemReturns", requestData),
+          store.dispatch("postOrderItemReturns", payload),
           timeoutPromise,
         ]);
       } catch (error) {
@@ -136,6 +140,7 @@ export default {
       } finally {
         loading.value = false;
         dialog.value = false;
+        initializeCheckBox();
       }
     };
 
@@ -150,6 +155,7 @@ export default {
       submit,
       closeDialog,
       isIdInReturnList,
+      initializeCheckBox
     };
   },
 };
