@@ -66,7 +66,6 @@
           text="送出"
           type="submit"
         ></v-btn>
-        <!-- click -->
       </v-form>
     </v-sheet>
   </v-dialog>
@@ -103,7 +102,6 @@ export default {
     //dialog
     const closeDialog = () => {
       dialog.value = false;
-      console.log(dialog.value);
     };
 
     //Checkbox
