@@ -9,5 +9,6 @@ public interface IOrderItemRepository : IGenericRepository<OrderItem>
     Task<int> GetMaxId();
     Task<string> GetOrderIndexById(int orderItemId);
     Task<bool> IsOrderItemExist(int orderItemId);
+
 }
 
