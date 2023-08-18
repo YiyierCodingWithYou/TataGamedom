@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
-using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnListByOrderId;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.EFModels;
 
@@ -43,6 +42,14 @@ public class OrderItemReturnRepository : GenericRepository<OrderItemReturn>, IOr
             .Where(r => r.OrderItem.OrderId == orderId)
             .Select(r => r.OrderItemId)
             .ToListAsync();
+    }
+
+    public async Task<bool> IsStatusCompletedOrReturned(int orderItemId)
+    {
+        int orderStatusCode =  await _dbContext.OrderItems.Where(oi => oi.Id == orderItemId).Select(oi => oi.Order.OrderStatusId).FirstOrDefaultAsync();
+        
+        return orderStatusCode == (int)OrderStatus.Completed || 
+            orderStatusCode == (int)OrderStatus.ReturnProcessing;
     }
 }
 

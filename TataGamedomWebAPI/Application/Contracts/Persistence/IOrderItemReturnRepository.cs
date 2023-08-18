@@ -11,5 +11,6 @@ public interface IOrderItemReturnRepository : IGenericRepository<OrderItemReturn
     Task<IReadOnlyList<OrderItemReturn>> GetListIncludeOrderItemAsync();
     Task<int> GetMaxId();
     Task<List<int>> GetOrderItemIdList(int orderId);
+    Task<bool> IsStatusCompletedOrReturned(int orderItemId);
 }
 

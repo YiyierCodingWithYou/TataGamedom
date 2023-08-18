@@ -26,6 +26,16 @@ public class CreateOrderItemReturnCommandValidator : AbstractValidator<CreateOrd
             .MustAsync(OrderItemMustUnique)
             .WithMessage("此品項已有退貨紀錄");
 
+        RuleFor(p => p.OrderItemId)
+            .NotEmpty()
+            .MustAsync(OrderStatusIsCompletedOrReturned)
+            .WithMessage("訂單狀態須為'已完成'或'退貨程序處理中'才能退貨");
+
+    }
+
+    private async Task<bool> OrderStatusIsCompletedOrReturned(int orderItemId, CancellationToken token)
+    {
+        return await _orderItemReturnRepository.IsStatusCompletedOrReturned(orderItemId);
     }
 
     private async Task<bool> OrderItemMustUnique(int orderItemId, CancellationToken token)
