@@ -123,7 +123,7 @@ const routes = [
         path: "",
         name: "Cart",
         component: Cart,
-        props: true,
+        props: (route) => ({ paymentSuccess: route.query.paymentSuccess === 'true' })
       },
     ],
   },

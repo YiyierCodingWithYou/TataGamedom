@@ -34,7 +34,7 @@ namespace TataGamedomWebAPI.Controllers
 				{ "TradeDesc",  "無"},
 				{ "ItemName",  "獺獺玩國商品一批"},
 				{ "ReturnURL",  $"{website}/Orders"},
-				{"ClientBackURL", $"{website}/Cart" },
+				{"ClientBackURL", $"{website}/Cart?paymentSuccess=true" },
 				{ "MerchantID",  "3002607"},
 				{ "PaymentType",  "aio"},
 				{ "ChoosePayment",  "ALL"},
@@ -70,5 +70,4 @@ namespace TataGamedomWebAPI.Controllers
 			return result.ToString();
 		}
 	}
-
 }

@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panels>
+  <v-expansion-panels v-if="cartData.allowCheckout">
     <v-expansion-panel>
       <v-expansion-panel-title
         >合計：NT${{ selectedData.totalAmount }}<br />購物車（{{
@@ -53,7 +53,7 @@
                 <td class="text-end" v-text="item.subTotal"></td>
               </tr>
               <tr>
-                <td>已享用優惠༼ つ ◕_◕ ༽つ</td>
+                <td>已享用優惠</td>
                 <td>
                   <span
                     class="me-auto"
@@ -89,64 +89,130 @@
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
-  <v-form v-model="valid">
+  <v-form v-model="order" v-if="cartData.allowCheckout">
     <v-container>
       <v-row>
         <v-col cols="6">
           <v-card class="mt-3">
-            <v-card-title>顧客資料</v-card-title>
-            <hr />
-            <v-card-subtitle>姓名</v-card-subtitle>
+            <v-card-title>✨顧客資料</v-card-title>
+            <v-divider></v-divider>
+            <v-card-title>姓名</v-card-title>
             <v-text-field
-              v-model="buyerName"
+              v-model="name"
               variant="solo"
               required
+              density="compact"
             ></v-text-field>
-            <v-card-subtitle>電話號碼</v-card-subtitle>
+            <v-card-title>電話號碼</v-card-title>
             <v-text-field
+              density="compact"
               v-model="phoneNumber"
               variant="solo"
               required
             ></v-text-field>
-            <v-card-subtitle>E-mail</v-card-subtitle>
+            <v-card-title>E-mail</v-card-title>
             <v-text-field
+              density="compact"
               v-model="email"
-              :rules="emailRules"
               variant="solo"
-              required
+              readonly
+              class="mb-5"
             ></v-text-field>
           </v-card>
         </v-col>
 
         <v-col cols="6"
           ><v-card class="mt-3">
-            <v-card-title>收件人資料</v-card-title>
-            <!-- 加個btn可以一鍵帶入顧客資料 -->
-            <hr />
+            <v-card-title>✨收件人資料</v-card-title>
+            <v-divider></v-divider>
+            <p>已選擇的送貨方式：{{ selectedData.shipMethod.label }}</p>
+            <v-checkbox
+              v-model="fillRecipient"
+              @input="handleFillRecipient"
+              label="收件人資料與顧客資料相同"
+            ></v-checkbox>
             <v-card-subtitle>收件人名稱</v-card-subtitle>
             <v-text-field
-              v-model="firstname"
+              density="compact"
+              v-model="buyerName"
+              hide-details="auto"
               variant="solo"
               required
             ></v-text-field>
+            <v-card-subtitle class="mb-5"
+              >請填入收件人真實姓名，以確保順利收件</v-card-subtitle
+            >
             <v-card-subtitle>收件人電話號碼</v-card-subtitle>
             <v-text-field
-              v-model="firstname"
+              density="compact"
+              v-model="buyerPhone"
+              :rules="[rules.required]"
+              hide-details="auto"
               variant="solo"
               required
+              class="mb-5"
             ></v-text-field>
             <v-card-subtitle>E-mail</v-card-subtitle>
             <v-text-field
-              v-model="email"
-              :rules="emailRules"
+              density="compact"
+              v-model="buyerEmail"
+              :rules="[rules.required, rules.email]"
+              hide-details="auto"
               variant="solo"
               required
             ></v-text-field>
+            <v-divider></v-divider>
+            <div
+              v-if="
+                selectedData.shipMethod.id == 1 ||
+                selectedData.shipMethod.id == 2
+              "
+            >
+              <p>
+                <img
+                  src="https://localhost:7081/Files/Uploads/seven-eleven.png"
+                  width="30"
+                />
+                選擇門市
+              </p>
+              <div class="d-flex justify-center">
+                <v-btn width="300" color="primary" @click="chooseShop"
+                  >搜尋門市</v-btn
+                >
+              </div>
+            </div>
+            <div
+              v-else-if="
+                selectedData.shipMethod.id == 3 ||
+                selectedData.shipMethod.id == 4
+              "
+            >
+              <p>
+                <img
+                  src="https://localhost:7081/Files/Uploads/family_mart.jpg"
+                  width="30"
+                />
+                選擇門市
+              </p>
+              <div class="d-flex justify-center">
+                <v-btn width="300" color="primary" @click="chooseShop"
+                  >搜尋門市</v-btn
+                >
+              </div>
+            </div>
+
+            <p v-else>
+              <v-card-title>地址</v-card-title>
+              <v-text-field
+                density="compact"
+                :rules="[rules.required]"
+                hide-details="auto"
+                variant="solo"
+                required
+              ></v-text-field>
+            </p>
           </v-card>
         </v-col>
-        <v-col cols="6"> </v-col>
-
-        <v-col cols="6"> </v-col>
       </v-row>
 
       <form
@@ -176,20 +242,38 @@ const cartItems = ref([]);
 const imgLink = "https://localhost:7081/Files/Uploads/";
 const count = ref(0);
 const total = ref(0);
+const member = ref({});
+const name = ref("");
+const email = ref("");
+const phoneNumber = ref("");
 const props = defineProps({
   selectedData: Object,
 });
-
 const ecpayForm = ref(null);
 const ecPayparams = ref({});
-
-// watch(props, (newProps) => {
-//   if (newProps) {
-//     console.log(newProps);
-//   }
-// });
-
 const productId = ref();
+const fillRecipient = ref(false);
+const buyerName = ref("");
+const buyerPhone = ref("");
+const buyerEmail = ref("");
+const rules = {
+  required: (value) => !!value || "此欄位必填",
+  email: (value) => {
+    const pattern =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return pattern.test(value) || "E-mail格式不正確";
+  },
+};
+
+const handleFillRecipient = () => {
+  console.log(fillRecipient.value);
+  if (fillRecipient.value) {
+    buyerName.value = name.value;
+    buyerPhone.value = phoneNumber.value;
+    buyerEmail.value = email.value;
+  }
+};
+
 const loadData = async (type) => {
   const response = await fetch(`https://localhost:7081/api/Carts`, {
     method: "GET",
@@ -198,10 +282,46 @@ const loadData = async (type) => {
   const datas = await response.json();
   cartData.value = datas;
   cartItems.value = datas.cartItems;
-
   total.value = datas.total;
   count.value = datas.cartItems.length;
 };
+
+const getMember = async () => {
+  const response = await fetch("https://localhost:7081/api/Members", {
+    credentials: "include",
+  });
+  const datas = await response.json();
+  member.value = datas;
+  phoneNumber.value = datas.phone;
+  name.value = datas.name;
+  email.value = datas.email;
+  console.log(member.value);
+};
+
+const chooseShop = async () => {
+  const response = await fetch("https://emap.pcsc.com.tw/ecmap/default.aspx", {
+    method: "POST",
+    mode: "no-cors",
+    body: {
+      esshopid: "112",
+      servicetype: "1",
+      url: "https://localhost:3000/",
+    },
+  });
+};
+
+// const createOrder = async () => {
+//   const response = await fetch(`https://localhost:7081/api/Orders`, {
+//     method: "POST",
+//     credentials: "include",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: {
+//
+//     },
+//   });
+// };
 
 const checkout = async () => {
   try {
@@ -215,17 +335,17 @@ const checkout = async () => {
       }
     );
     ecPayparams.value = await response.json();
-    console.log(ecPayparams.value);
   } catch (error) {
     console.log("Error:", error);
   }
 };
 const handleSubmit = async () => {
+  //await createOrder();
   await checkout();
   ecpayForm.value.submit();
 };
-
 loadData();
+getMember();
 </script>
     
 <style>
