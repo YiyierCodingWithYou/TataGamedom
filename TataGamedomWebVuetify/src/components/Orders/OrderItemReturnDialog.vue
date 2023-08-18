@@ -26,6 +26,12 @@
                 :indeterminate="!isOrderCompleted"
               >
               </v-checkbox-btn>
+              <v-chip
+                class="ma-5"
+                color="pink"
+                v-show="isIdInReturnList(orderDetail.id)"
+                ><v-icon start icon="mdi-tag-off"></v-icon>已退貨</v-chip
+              >
               <v-text-field
                 readonly
                 hide-details
