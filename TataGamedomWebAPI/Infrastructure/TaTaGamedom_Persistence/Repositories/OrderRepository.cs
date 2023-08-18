@@ -4,6 +4,7 @@ using TataGamedomWebAPI.Application.Contracts.Persistence;
 using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderListByAccount;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.EFModels;
+using static Dapper.SqlMapper;
 
 namespace TataGamedomWebAPI.Infrastructure.TaTaGamedom_Persistence.Repositories;
 
@@ -63,6 +64,15 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
             .Where(o => o.Id == orderId)
             .Select(o => o.Index)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task UpdateOrderStatusAfterReturn(int orderItemId)
+    {
+        var order = await _dbContext.OrderItems.Where(oi => oi.Id == orderItemId).Select(oi => oi.Order).FirstOrDefaultAsync();
+        order!.OrderStatusId = (int)OrderStatus.ReturnProcessing;
+
+        _dbContext.Entry(order).State = EntityState.Modified;
+        await _dbContext.SaveChangesAsync();
     }
 }
 

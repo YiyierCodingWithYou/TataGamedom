@@ -52,6 +52,8 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
         }
 
         await _orderItemReturnRepository.CreateAsync(orderItemReturnToBeCreatedList);
+        await _orderRepository.UpdateOrderStatusAfterReturn(request.CreateOrderItemReturnCommandList.FirstOrDefault()!.OrderItemId);
+
         _logger.LogInformation("Created multiple items to return successfully");
 
         return _mapper.Map<List<OrderItemReturnDto>>(orderItemReturnToBeCreatedList);        
