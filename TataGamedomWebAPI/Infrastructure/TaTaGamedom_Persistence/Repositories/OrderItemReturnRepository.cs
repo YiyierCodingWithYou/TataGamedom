@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
+using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnListByOrderId;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.EFModels;
 
@@ -18,7 +19,7 @@ public class OrderItemReturnRepository : GenericRepository<OrderItemReturn>, IOr
         return orderItemReturnList;
     }
 
-    public async Task<OrderItemReturn?> GetDetailInckudeOrderItemAsync(int orderItemId)
+    public async Task<OrderItemReturn?> GetDetailIncludeOrderItemAsync(int orderItemId)
     {
         OrderItemReturn? orderItemReturn = await _dbContext.OrderItemReturns.Include(o => o.OrderItem).FirstOrDefaultAsync(o => o.Id == orderItemId);
 
@@ -33,6 +34,15 @@ public class OrderItemReturnRepository : GenericRepository<OrderItemReturn>, IOr
     public async Task<bool> IsReturnOrderExist(int orderItemId)
     {
         return await _dbContext.OrderItemReturns.AnyAsync(o => o.OrderItemId == orderItemId);
+    }
+
+    public async Task<List<int>> GetOrderItemIdList(int orderId)
+    {
+        return await _dbContext.OrderItemReturns
+            .AsNoTracking()
+            .Where(r => r.OrderItem.OrderId == orderId)
+            .Select(r => r.OrderItemId)
+            .ToListAsync();
     }
 }
 
