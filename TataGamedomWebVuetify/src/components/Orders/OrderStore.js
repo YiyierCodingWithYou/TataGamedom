@@ -73,6 +73,7 @@ const OrderStore = {
                 );
                 if (response.status === 200) {
                     await dispatch('fetchOrderItemIdReturnList', orderId);
+                    await dispatch('fetchOrders');
                 }
             } catch (error) {
                 console.log('Failed to post order item returns:', error.message);
