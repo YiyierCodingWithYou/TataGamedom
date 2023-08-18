@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-sheet v-if="cartData.allowCheckout == true">
+    <v-sheet v-if="cartData.allowCheckout">
       <v-table>
         <thead class="text-center">
           <tr>
@@ -16,7 +16,11 @@
         <tbody>
           <tr v-for="item in cartItems" :key="item.product.id">
             <td>
-              <img :src="imgLink + item.product.gameCoverImg" height="150" cover />
+              <img
+                :src="imgLink + item.product.gameCoverImg"
+                height="150"
+                cover
+              />
             </td>
             <td>
               <div>{{ item.product.chiName }}</div>
@@ -27,7 +31,10 @@
                 </v-chip>
               </div>
             </td>
-            <td v-if="item.product.price != item.product.specialPrice" class="text-end">
+            <td
+              v-if="item.product.price != item.product.specialPrice"
+              class="text-end"
+            >
               <div>
                 <s>NT${{ item.product.price }}</s>
               </div>
@@ -37,27 +44,47 @@
             <td>
               <v-row>
                 <v-col class="d-flex" cols="3">
-                  <v-btn @click="decreaseQuantity(item)" :max="limit"><v-icon>mdi-minus</v-icon></v-btn>
+                  <v-btn @click="decreaseQuantity(item)" :max="limit"
+                    ><v-icon>mdi-minus</v-icon></v-btn
+                  >
                 </v-col>
                 <v-col cols="6">
-                  <v-text-field v-model="item.qty" min="0" :max="limit" variant="outlined" readonly></v-text-field>
+                  <v-text-field
+                    v-model="item.qty"
+                    min="0"
+                    :max="limit"
+                    variant="outlined"
+                    readonly
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="3">
-                  <v-btn @click="increaseQuantity(item)" :max="limit"><v-icon>mdi-plus</v-icon></v-btn>
+                  <v-btn @click="increaseQuantity(item)" :max="limit"
+                    ><v-icon>mdi-plus</v-icon></v-btn
+                  >
                 </v-col>
               </v-row>
             </td>
             <td class="text-end" v-text="item.subTotal"></td>
             <td class="text-end">
-              <v-icon @click="removeItem(item.product.id)">mdi-cart-remove</v-icon>
+              <v-icon @click="removeItem(item.product.id)"
+                >mdi-cart-remove</v-icon
+              >
             </td>
           </tr>
           <tr>
             <td>已享用優惠</td>
             <td>
-              <span class="me-auto" v-for="item in cartData.distinctCoupons" :key="item">
-                {{ item }}　</span><span v-for="item in cartData.distinctCouponsDescription" :key="item">{{ item
-                }}<br /></span>
+              <span
+                class="me-auto"
+                v-for="item in cartData.distinctCoupons"
+                :key="item"
+              >
+                {{ item }}　</span
+              ><span
+                v-for="item in cartData.distinctCouponsDescription"
+                :key="item"
+                >{{ item }}<br
+              /></span>
             </td>
             <td></td>
             <td></td>
@@ -72,14 +99,35 @@
             <v-card-title class="d-flex">選擇送貨及付款方式</v-card-title>
             <hr />
             <v-card-subtitle>送貨地點</v-card-subtitle>
-            <v-select v-model="selectLocation" :items="shipLocation" item-title="label" item-value="item" return-object
-              single-line variant="solo"></v-select>
+            <v-select
+              v-model="selectLocation"
+              :items="shipLocation"
+              item-title="label"
+              item-value="item"
+              return-object
+              single-line
+              variant="solo"
+            ></v-select>
             <v-card-subtitle>送貨方式</v-card-subtitle>
-            <v-select v-model="selectShipMethod" :items="shipMethod" item-title="label" item-value="item" return-object
-              single-line variant="solo"></v-select>
+            <v-select
+              v-model="selectShipMethod"
+              :items="shipMethod"
+              item-title="label"
+              item-value="item"
+              return-object
+              single-line
+              variant="solo"
+            ></v-select>
             <v-card-subtitle>付款方式</v-card-subtitle>
-            <v-select v-model="selectPayment" :items="payment" item-title="label" item-value="item" return-object
-              single-line variant="solo"></v-select>
+            <v-select
+              v-model="selectPayment"
+              :items="payment"
+              item-title="label"
+              item-value="item"
+              return-object
+              single-line
+              variant="solo"
+            ></v-select>
           </v-card>
         </v-col>
         <v-col cols="4">
@@ -88,19 +136,25 @@
             <hr />
             <v-card-subtitle>小計：{{ cartData.total }}</v-card-subtitle>
             <v-card-subtitle>運費：{{ freight }}</v-card-subtitle>
-            <v-card-subtitle>合計：{{ cartData.total + freight }}</v-card-subtitle>
-            <br>
-            <hr>
-            <br>
+            <v-card-subtitle
+              >合計：{{ cartData.total + freight }}</v-card-subtitle
+            >
+            <br />
+            <hr />
+            <br />
             <div class="d-flex justify-center">
-              <v-btn width="300" color="primary" @click="returnSelectedHandler">前往結帳</v-btn>
+              <v-btn width="300" color="primary" @click="returnSelectedHandler"
+                >前往結帳</v-btn
+              >
             </div>
           </v-card>
         </v-col>
       </v-row>
     </v-sheet>
 
-    <v-sheet v-else class="text-center">您的購物車為空，<a href="/eCommerce">點我到商城逛逛！</a></v-sheet>
+    <v-sheet v-else class="text-center"
+      >您的購物車為空，<a href="/eCommerce">點我到商城逛逛！</a></v-sheet
+    >
   </v-container>
 </template>
     
@@ -115,21 +169,28 @@ const quantity = ref();
 const total = ref(0);
 const freight = ref(0);
 const selectLocation = ref({ loc: "taiwan", label: "台灣" });
-const selectShipMethod = ref({ method: "payAt711", label: "7-11超商🏣 - 取貨付款" });
-const selectPayment = ref({ method: "cash711", label: "7-11超商 - 貨到付款💌" });
+const selectShipMethod = ref({
+  id: "1",
+  method: "payAt711",
+  label: "7-11超商🏣 - 取貨付款",
+});
+const selectPayment = ref({
+  id: "1",
+  method: "cash711",
+  label: "7-11超商 - 貨到付款💌",
+});
 
 const emit = defineEmits(["getreturnSelected"]);
 
 const returnSelectedHandler = () => {
-  // 組裝所選擇的資料
   const selectedData = {
     location: selectLocation.value,
     shipMethod: selectShipMethod.value,
     payment: selectPayment.value,
-    freight:freight.value,
-    totalAmount: total.value + freight.value
+    freight: freight.value,
+    totalAmount: total.value + freight.value,
   };
-  
+
   emit("getreturnSelected", selectedData);
 };
 
@@ -141,20 +202,20 @@ const shipLocation = ref([
   { loc: "mal", label: "馬來西亞" },
 ]);
 const shipMethod = ref([
-  { method: "payAt711", label: "7-11超商🏣 - 取貨付款" },
-  { method: "payFirstAt711", label: "7-11超商🏣 - 純取貨" },
-  { method: "payAtFam", label: "全家超商🏣 - 取貨付款" },
-  { method: "payFirstAtFam", label: "全家超商🏣 - 純取貨" },
-  { method: "payFirstAtHome", label: "宅配🚛 - 黑貓宅急便" },
-  { method: "payAtHome", label: "宅配🚛 - 黑貓宅急便 貨到付款" },
-  { method: "oversea", label: "海外 - 運費到付" }
+  { id: "1", method: "payAt711", label: "7-11超商🏣 - 取貨付款" },
+  { id: "2", method: "payFirstAt711", label: "7-11超商🏣 - 純取貨" },
+  { id: "3", method: "payAtFam", label: "全家超商🏣 - 取貨付款" },
+  { id: "4", method: "payFirstAtFam", label: "全家超商🏣 - 純取貨" },
+  { id: "5", method: "payFirstAtHome", label: "宅配🚛 - 黑貓宅急便" },
+  { id: "6", method: "payAtHome", label: "宅配🚛 - 黑貓宅急便 貨到付款" },
+  { id: "7", method: "oversea", label: "海外 - 運費到付" },
 ]);
 const payment = ref([
-  { method: "linePay", label: "LinePay📱" },
-  { method: "creditCard", label: "信用卡💳(Visa, Master, JCB)" },
-  { method: "cash711", label: "7-11超商 - 貨到付款💌" },
-  { method: "cashFam", label: "全家超商 - 貨到付款💌" },
-  { method: "cashBlackCat", label: "黑貓宅急便 - 貨到付款💸" },
+  { id: "1", method: "linePay", label: "LinePay📱" },
+  { id: "2", method: "creditCard", label: "信用卡💳(Visa, Master, JCB)" },
+  { id: "3", method: "cash711", label: "7-11超商 - 貨到付款💌" },
+  { id: "4", method: "cashFam", label: "全家超商 - 貨到付款💌" },
+  { id: "5", method: "cashBlackCat", label: "黑貓宅急便 - 貨到付款💸" },
 ]);
 
 const loadData = async () => {
@@ -194,52 +255,108 @@ watch([() => selectShipMethod.value, () => selectPayment.value], () => {
 
 const updateShipmentOptions = () => {
   if (selectLocation.value.loc !== "taiwan") {
-    shipMethod.value = [{ method: "oversea", label: "海外 - 運費到付" }]
-    payment.value = [{ method: "creditCard", label: "信用卡💳(Visa, Master, JCB)" }]
-    selectShipMethod.value = { method: "oversea", label: "海外 - 運費到付" }
-    selectPayment.value = { method: "creditCard", label: "信用卡💳(Visa, Master, JCB)" }
-  }
-  else {
-    shipMethod.value = [{ method: "payAt711", label: "7-11超商🏣 - 取貨付款" },
-    { method: "payFirstAt711", label: "7-11超商🏣 - 純取貨" },
-    { method: "payAtFam", label: "全家超商🏣 - 取貨付款" },
-    { method: "payFirstAtFam", label: "全家超商🏣 - 純取貨" },
-    { method: "payFirstAtHome", label: "宅配🚛 - 黑貓宅急便" },
-    { method: "payAtHome", label: "宅配🚛 - 黑貓宅急便 貨到付款" },]
+    shipMethod.value = [
+      { id: "7", method: "oversea", label: "海外 - 運費到付" },
+    ];
+    payment.value = [
+      { id: "2", method: "creditCard", label: "信用卡💳(Visa, Master, JCB)" },
+    ];
+    selectShipMethod.value = {
+      id: "7",
+      method: "oversea",
+      label: "海外 - 運費到付",
+    };
+    selectPayment.value = {
+      id: "2",
+      method: "creditCard",
+      label: "信用卡💳(Visa, Master, JCB)",
+    };
+  } else {
+    shipMethod.value = [
+      { id: "1", method: "payAt711", label: "7-11超商🏣 - 取貨付款" },
+      { id: "2", method: "payFirstAt711", label: "7-11超商🏣 - 純取貨" },
+      { id: "3", method: "payAtFam", label: "全家超商🏣 - 取貨付款" },
+      { id: "4", method: "payFirstAtFam", label: "全家超商🏣 - 純取貨" },
+      { id: "5", method: "payFirstAtHome", label: "宅配🚛 - 黑貓宅急便" },
+      { id: "6", method: "payAtHome", label: "宅配🚛 - 黑貓宅急便 貨到付款" },
+    ];
 
-    if (!shipMethod.value.some(method => method.method === selectShipMethod.value.method)) {
-      selectShipMethod.value = { method: "payAt711", label: "7-11超商🏣 - 取貨付款" };
+    if (
+      !shipMethod.value.some(
+        (method) => method.method === selectShipMethod.value.method
+      )
+    ) {
+      selectShipMethod.value = {
+        id: "1",
+        method: "payAt711",
+        label: "7-11超商🏣 - 取貨付款",
+      };
     }
   }
-}
+};
 
 const calculatePaymentOption = () => {
   if (selectLocation.value.loc === "taiwan") {
-    if (selectShipMethod.value.method === "payFirstAt711" || selectShipMethod.value.method === "payFirstAtFam" || selectShipMethod.value.method === "payFirstAtHome") {
-      payment.value = [{ method: "linePay", label: "LinePay📱" }, { method: "creditCard", label: "信用卡💳(Visa, Master, JCB)" }]
-      selectPayment.value = { method: "linePay", label: "LinePay📱" }
-    }
-    else if (selectShipMethod.value.method === "payAt711") {
-      payment.value = [{ method: "cash711", label: "7-11超商 - 貨到付款💌" }]
-      selectPayment.value = { method: "cash711", label: "7-11超商 - 貨到付款💌" }
-    }
-    else if (selectShipMethod.value.method === "payAtFam") {
-      payment.value = [{ method: "cashFam", label: "全家超商 - 貨到付款💌" }]
-      selectPayment.value = { method: "cashFam", label: "全家超商 - 貨到付款💌" }
-    }
-    else {
-      payment.value = [{ method: "cashBlackCat", label: "黑貓宅急便 - 貨到付款💸" }]
-      selectPayment.value = { method: "cashBlackCat", label: "黑貓宅急便 - 貨到付款💸" }
+    if (
+      selectShipMethod.value.method === "payFirstAt711" ||
+      selectShipMethod.value.method === "payFirstAtFam" ||
+      selectShipMethod.value.method === "payFirstAtHome"
+    ) {
+      payment.value = [
+        { id: "1", method: "linePay", label: "LinePay📱" },
+        { id: "2", method: "creditCard", label: "信用卡💳(Visa, Master, JCB)" },
+      ];
+
+      if (
+        !payment.value.some(
+          (method) => method.method === selectPayment.value.method
+        )
+      ) {
+        selectPayment.value = {
+          id: "1",
+          method: "linePay",
+          label: "LinePay📱",
+        };
+      }
+    } else if (selectShipMethod.value.method === "payAt711") {
+      payment.value = [
+        { id: "3", method: "cash711", label: "7-11超商 - 貨到付款💌" },
+      ];
+      selectPayment.value = {
+        id: "3",
+        method: "cash711",
+        label: "7-11超商 - 貨到付款💌",
+      };
+    } else if (selectShipMethod.value.method === "payAtFam") {
+      payment.value = [
+        { id: "4", method: "cashFam", label: "全家超商 - 貨到付款💌" },
+      ];
+      selectPayment.value = {
+        id: "4",
+        method: "cashFam",
+        label: "全家超商 - 貨到付款💌",
+      };
+    } else {
+      payment.value = [
+        { id: "5", method: "cashBlackCat", label: "黑貓宅急便 - 貨到付款💸" },
+      ];
+      selectPayment.value = {
+        id: "5",
+        method: "cashBlackCat",
+        label: "黑貓宅急便 - 貨到付款💸",
+      };
     }
   }
-}
+};
 
 const calculateShippingFee = () => {
-
   if (total.value >= 3000 || selectShipMethod.value.method === "oversea") {
     freight.value = 0;
   } else if (total.value < 3000) {
-    if (selectShipMethod.value.method !== "payFirstAtHome" && selectShipMethod.value.method !== "payAtHome") {
+    if (
+      selectShipMethod.value.method !== "payFirstAtHome" &&
+      selectShipMethod.value.method !== "payAtHome"
+    ) {
       freight.value = 60;
     } else {
       freight.value = 80;
@@ -304,7 +421,7 @@ const removeItem = async (productId) => {
       },
     }
   )
-    .then((response) => {
+    .then(() => {
       loadData();
     })
     .catch((error) => {
