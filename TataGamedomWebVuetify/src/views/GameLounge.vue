@@ -12,7 +12,21 @@
     </transition>
   </v-tabs>
   <v-window v-model="tab">
-    <v-window-item :value="1"> </v-window-item>
+    <v-window-item :value="1">
+      <v-container>
+        <v-row>
+          <LeftCol>
+            <template #container>
+              <BoardList></BoardList>
+            </template>
+          </LeftCol>
+          <MainCol>
+            <template #container> 這裡放熱門ㄉ貼文啦 </template>
+          </MainCol>
+          <RightCol></RightCol>
+        </v-row>
+      </v-container>
+    </v-window-item>
     <v-window-item :value="2">
       <v-container>
         <v-row>
@@ -51,6 +65,7 @@ import MainCol from "@/components/GameLounge/MainCol.vue";
 import SearchBar from "@/components/GameLounge/SearchBar.vue";
 import ReadPostTotal from "@/components/GameLounge/ReadPostTotal.vue";
 import ReadPostPersonalize from "@/components/GameLounge/ReadPostPersonalize.vue";
+import BoardList from "@/components/GameLounge/LeftBoardList/BoardList.vue";
 import { useRoute } from "vue-router";
 
 const tab = ref(1);

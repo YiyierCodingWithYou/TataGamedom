@@ -58,7 +58,7 @@ namespace TataGamedomWebAPI.Controllers
 				Id = b.Id,
 				Name = b.Name,
 				BoardAbout = b.BoardAbout,
-				BoardHeaderCoverImgUrl = b.BoardHeaderCoverImg,
+				BoardHeaderCoverImgUrl = $"https://localhost:7081/Files/Uploads/{b.BoardHeaderCoverImg}",
 				BoardUrl = $"https://localhost:3000/GameLounge/Board/{b.Id}",
 				GameId = b.GameId,
 				GameName = b.Game.ChiName,
