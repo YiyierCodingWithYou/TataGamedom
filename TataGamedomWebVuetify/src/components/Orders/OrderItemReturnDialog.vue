@@ -153,6 +153,7 @@ export default {
       const requestData = {
         createOrderItemReturnCommandList:
           createOrderItemReturnCommandList.value,
+        orderId: props.orderId,
       };
 
       const timeoutPromise = new Promise((resolve) =>
