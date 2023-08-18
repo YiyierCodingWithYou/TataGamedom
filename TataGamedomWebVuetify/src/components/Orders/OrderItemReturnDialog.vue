@@ -58,15 +58,15 @@
         </v-card>
 
         <v-spacer></v-spacer>
-        <v-btn block class="mt-2" text="取消" @click="closeDialog"></v-btn>
+        <v-btn block class="mt-2" text="取消" @click.stop="closeDialog"></v-btn>
         <v-btn
           :loading="loading"
           block
           class="mt-2"
           text="送出"
           type="submit"
-          @click="closeDialog"
         ></v-btn>
+        <!-- click -->
       </v-form>
     </v-sheet>
   </v-dialog>
@@ -99,6 +99,12 @@ export default {
     const dialog = ref(false);
     const selectAll = ref(false);
     const loading = ref(false);
+
+    //dialog
+    const closeDialog = () => {
+      dialog.value = false;
+      console.log(dialog.value);
+    };
 
     //Checkbox
     const hasOrderDetails = computed(
@@ -150,10 +156,6 @@ export default {
       };
 
       store.dispatch("postOrderItemReturns", requestData);
-    };
-
-    const closeDialog = () => {
-      dialog.value = false;
     };
 
     //
