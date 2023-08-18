@@ -38,7 +38,12 @@ const OrderStore = {
             try {
                 const response = await axios.post(
                     `${BASE_URL}/api/OrderItemReturns/MultipleOrderItemsReturn`,
-                    { withCredentials: true }
+                    createOrderItemReturnCommandList,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
                 );
                 //todo: 
                 //commit action => fetchOrders  
