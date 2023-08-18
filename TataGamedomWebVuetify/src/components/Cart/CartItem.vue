@@ -194,6 +194,21 @@ const returnSelectedHandler = () => {
   emit("getreturnSelected", selectedData);
 };
 
+watch(() => {
+  return {
+    location: selectLocation.value,
+    shipMethod: selectShipMethod.value,
+    payment: selectPayment.value,
+    freight: freight.value,
+    totalAmount: total.value,
+  };
+}, (newValue, oldValue) => {
+  // 當 selectedData 發生變化時觸發
+  // 這裡可以添加相關邏輯，例如檢查 selectedData 的不同並觸發 loadData
+  console.log("selectedData changed:", newValue);
+  loadData();
+});
+
 const shipLocation = ref([
   { loc: "taiwan", label: "台灣" },
   { loc: "singapore", label: "新加坡" },

@@ -1,11 +1,9 @@
 <template>
   <v-expansion-panels v-if="cartData.allowCheckout">
     <v-expansion-panel>
-      <v-expansion-panel-title
-        >合計：NT${{ selectedData.totalAmount }}<br />購物車（{{
-          count
-        }}件）</v-expansion-panel-title
-      >
+      <v-expansion-panel-title>合計：NT${{ selectedData.totalAmount }}<br />購物車（{{
+        count
+      }}件）</v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-sheet v-if="cartData.allowCheckout == true">
           <v-table>
@@ -22,11 +20,7 @@
             <tbody>
               <tr v-for="item in cartItems" :key="item.product.id">
                 <td>
-                  <img
-                    :src="imgLink + item.product.gameCoverImg"
-                    height="150"
-                    cover
-                  />
+                  <img :src="imgLink + item.product.gameCoverImg" height="150" cover />
                 </td>
                 <td>
                   <div>{{ item.product.chiName }}</div>
@@ -37,10 +31,7 @@
                     </v-chip>
                   </div>
                 </td>
-                <td
-                  v-if="item.product.price != item.product.specialPrice"
-                  class="text-end"
-                >
+                <td v-if="item.product.price != item.product.specialPrice" class="text-end">
                   <div>
                     <s>NT${{ item.product.price }}</s>
                   </div>
@@ -55,17 +46,9 @@
               <tr>
                 <td>已享用優惠</td>
                 <td>
-                  <span
-                    class="me-auto"
-                    v-for="item in cartData.distinctCoupons"
-                    :key="item"
-                  >
-                    {{ item }}　</span
-                  ><span
-                    v-for="item in cartData.distinctCouponsDescription"
-                    :key="item"
-                    >{{ item }}<br
-                  /></span>
+                  <span class="me-auto" v-for="item in cartData.distinctCoupons" :key="item">
+                    {{ item }}　</span><span v-for="item in cartData.distinctCouponsDescription" :key="item">{{ item
+                    }}<br /></span>
                 </td>
                 <td></td>
                 <td></td>
@@ -97,138 +80,109 @@
             <v-card-title>✨顧客資料</v-card-title>
             <v-divider></v-divider>
             <v-card-title>姓名</v-card-title>
-            <v-text-field
-              v-model="name"
-              variant="solo"
-              required
-              density="compact"
-            ></v-text-field>
+            <v-text-field v-model="name" variant="solo" required density="compact"></v-text-field>
             <v-card-title>電話號碼</v-card-title>
-            <v-text-field
-              density="compact"
-              v-model="phoneNumber"
-              variant="solo"
-              required
-            ></v-text-field>
+            <v-text-field density="compact" v-model="phoneNumber" variant="solo" required></v-text-field>
             <v-card-title>E-mail</v-card-title>
-            <v-text-field
-              density="compact"
-              v-model="email"
-              variant="solo"
-              readonly
-              class="mb-5"
-            ></v-text-field>
+            <v-text-field density="compact" v-model="email" variant="solo" readonly class="mb-5"></v-text-field>
           </v-card>
         </v-col>
 
-        <v-col cols="6"
-          ><v-card class="mt-3">
+        <v-col cols="6"><v-card class="mt-3">
             <v-card-title>✨收件人資料</v-card-title>
             <v-divider></v-divider>
             <p>已選擇的送貨方式：{{ selectedData.shipMethod.label }}</p>
-            <v-checkbox
-              v-model="fillRecipient"
-              @input="handleFillRecipient"
-              label="收件人資料與顧客資料相同"
-            ></v-checkbox>
+            <v-checkbox v-model="fillRecipient" @input="handleFillRecipient" label="收件人資料與顧客資料相同"></v-checkbox>
             <v-card-subtitle>收件人名稱</v-card-subtitle>
-            <v-text-field
-              density="compact"
-              v-model="buyerName"
-              hide-details="auto"
-              variant="solo"
-              required
-            ></v-text-field>
-            <v-card-subtitle class="mb-5"
-              >請填入收件人真實姓名，以確保順利收件</v-card-subtitle
-            >
+            <v-text-field density="compact" v-model="buyerName" hide-details="auto" variant="solo"
+              required></v-text-field>
+            <v-card-subtitle class="mb-5">請填入收件人真實姓名，以確保順利收件</v-card-subtitle>
             <v-card-subtitle>收件人電話號碼</v-card-subtitle>
-            <v-text-field
-              density="compact"
-              v-model="buyerPhone"
-              :rules="[rules.required]"
-              hide-details="auto"
-              variant="solo"
-              required
-              class="mb-5"
-            ></v-text-field>
+            <v-text-field density="compact" v-model="buyerPhone" :rules="[rules.required]" hide-details="auto"
+              variant="solo" required class="mb-5"></v-text-field>
             <v-card-subtitle>E-mail</v-card-subtitle>
-            <v-text-field
-              density="compact"
-              v-model="buyerEmail"
-              :rules="[rules.required, rules.email]"
-              hide-details="auto"
-              variant="solo"
-              required
-            ></v-text-field>
+            <v-text-field density="compact" v-model="buyerEmail" :rules="[rules.required, rules.email]"
+              hide-details="auto" variant="solo" required></v-text-field>
             <v-divider></v-divider>
-            <div
-              v-if="
-                selectedData.shipMethod.id == 1 ||
-                selectedData.shipMethod.id == 2
-              "
-            >
-              <p>
-                <img
-                  src="https://localhost:7081/Files/Uploads/seven-eleven.png"
-                  width="30"
-                />
+            <div v-if="selectedData.shipMethod.id == 1 ||
+              selectedData.shipMethod.id == 2
+              ">
+              <p class="mb-5">
+                <img src="https://localhost:7081/Files/Uploads/seven-eleven.png" width="30" />
                 選擇門市
               </p>
-              <div class="d-flex justify-center">
-                <v-btn width="300" color="primary" @click="chooseShop"
-                  >搜尋門市</v-btn
-                >
-              </div>
+              <v-row justify="center" class="mb-3">
+                <v-dialog v-model="dialog" persistent width="auto">
+                  <template v-slot:activator="{ props }">
+                    <v-btn color="primary" v-bind="props">
+                      搜尋門市
+                    </v-btn>
+                  </template>
+                  <v-card width="850" height="500">
+                    <v-row class="d-flex">
+                      <v-col cols="8" class="d-flex">
+                        <v-card-title>路名查詢：</v-card-title>
+                        <v-text-field single-line variant="solo" label="請輸入道路名稱"></v-text-field>
+                      </v-col>
+                      <v-col cols="2">
+                        <v-btn>搜尋</v-btn></v-col>
+                      <v-col cols="6" class="d-flex">
+                        <v-card-title>請選擇縣市：</v-card-title>
+                        <v-select v-model="country" :items="country" item-value="item" return-object single-line
+                          variant="solo" label="---"></v-select>
+                      </v-col>
+                      <v-col cols="6" class="d-flex">
+                        <v-card-title>請選擇區域：</v-card-title>
+                        <v-select v-model="town" :items="town" item-value="item" return-object single-line variant="solo"
+                          label="---"></v-select>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-card-title>請選擇門市：</v-card-title>
+                        <v-select v-model="spot" :items="spot" item-value="item" return-object single-line variant="solo"
+                          label="---"></v-select>
+                      </v-col>
+                    </v-row>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="green-darken-1" variant="text" @click="dialog = false">
+                        取消
+                      </v-btn>
+                      <v-btn color="green-darken-1" variant="text" @click="dialog = false">
+                        確認
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-row>
             </div>
-            <div
-              v-else-if="
-                selectedData.shipMethod.id == 3 ||
-                selectedData.shipMethod.id == 4
-              "
-            >
+
+            <div v-else-if="selectedData.shipMethod.id == 3 ||
+              selectedData.shipMethod.id == 4
+              ">
               <p>
-                <img
-                  src="https://localhost:7081/Files/Uploads/family_mart.jpg"
-                  width="30"
-                />
+                <img src="https://localhost:7081/Files/Uploads/family_mart.jpg" width="30" />
                 選擇門市
               </p>
               <div class="d-flex justify-center">
-                <v-btn width="300" color="primary" @click="chooseShop"
-                  >搜尋門市</v-btn
-                >
+
               </div>
             </div>
 
             <p v-else>
               <v-card-title>地址</v-card-title>
-              <v-text-field
-                density="compact"
-                :rules="[rules.required]"
-                hide-details="auto"
-                variant="solo"
-                required
-              ></v-text-field>
+              <v-text-field density="compact" :rules="[rules.required]" hide-details="auto" variant="solo"
+                required></v-text-field>
             </p>
           </v-card>
         </v-col>
       </v-row>
-
-      <form
-        ref="ecpayForm"
-        action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5"
-        method="POST"
-      >
-        <input
-          type="hidden"
-          v-for="(value, key) in ecPayparams"
-          :key="key"
-          :name="key"
-          :value="value"
-        />
-        <v-btn @click.prevent="handleSubmit">送出訂單</v-btn>
-      </form>
+      <div class="d-flex mt-5">
+        <v-btn class="me-auto">繼續購物</v-btn>
+        <form ref="ecpayForm" action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" method="POST">
+          <input type="hidden" v-for="(value, key) in ecPayparams" :key="key" :name="key" :value="value" />
+          <v-btn @click.prevent="handleSubmit">送出訂單</v-btn>
+        </form>
+      </div>
     </v-container>
   </v-form>
 </template>
@@ -236,7 +190,7 @@
 <script setup>
 import { ref, defineProps, computed, watch } from "vue";
 import Payment from "@/components/Cart/Payment.vue";
-
+const dialog = ref(false);
 const cartData = ref({});
 const cartItems = ref([]);
 const imgLink = "https://localhost:7081/Files/Uploads/";
@@ -283,6 +237,7 @@ const loadData = async (type) => {
   cartData.value = datas;
   cartItems.value = datas.cartItems;
   total.value = datas.total;
+  console.log(cartItems.value);
   count.value = datas.cartItems.length;
 };
 
@@ -344,9 +299,11 @@ const handleSubmit = async () => {
   await checkout();
   ecpayForm.value.submit();
 };
+
+
 loadData();
 getMember();
+
 </script>
     
-<style>
-</style>
+<style></style>
