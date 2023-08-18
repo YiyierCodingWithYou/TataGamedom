@@ -71,16 +71,3 @@ namespace TataGamedomWebAPI.Controllers
 		}
 	}
 }
-
-
-		[HttpPost("paymentResult")]
-		public IActionResult ReceivePaymentResult([FromForm] PayMemtResultDto paymentResult) 
-		{
-            return Ok();
-        }
-
-    }
-
-
-
-}
