@@ -33,9 +33,8 @@ namespace TataGamedomWebAPI.Controllers
 				{ "TotalAmount",  total.ToString()},
 				{ "TradeDesc",  "無"},
 				{ "ItemName",  "獺獺玩國商品一批"},
-				{ "ReturnURL",  $"https://localhost:7081/api/ECPay/paymentResult"},
-				//{ "OrderResultURL", $"{website}/OrderItems"},
-				{ "ClientBackURL", $"{website}/Cart"},
+				{ "ReturnURL",  $"{website}/Orders"},
+				{"ClientBackURL", $"{website}/Cart?paymentSuccess=true" },
 				{ "MerchantID",  "3002607"},
 				{ "PaymentType",  "aio"},
 				{ "ChoosePayment",  "ALL"},
@@ -70,6 +69,8 @@ namespace TataGamedomWebAPI.Controllers
 			}
 			return result.ToString();
 		}
+	}
+}
 
 
 		[HttpPost("paymentResult")]
