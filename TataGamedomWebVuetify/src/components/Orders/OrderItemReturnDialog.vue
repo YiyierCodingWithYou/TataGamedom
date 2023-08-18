@@ -4,7 +4,15 @@
     <v-sheet width="1000" class="mx-auto">
       <v-form validate-on="submit lazy" @submit.prevent="submit">
         <div class="d-flex pa-4 justify-center">
-          <v-checkbox v-model="selectAll" label="全選/取消"></v-checkbox>
+          <v-checkbox
+            v-model="selectAll"
+            label="全選/取消"
+            :disabled="!isOrderCompleted"
+            :indeterminate="!isOrderCompleted"
+          ></v-checkbox>
+          <p v-show="!isOrderCompleted" class="font-weight-medium">
+            *訂單未完成，無法執行退貨操作
+          </p>
         </div>
         <v-card v-for="orderDetail in orderDetails" :key="orderDetail.id">
           <v-card-text>
@@ -12,7 +20,18 @@
               <v-checkbox-btn
                 v-model="orderDetail.enabled"
                 class="pe-2"
-              ></v-checkbox-btn>
+                :disabled="
+                  !isOrderCompleted || isIdInReturnList(orderDetail.id)
+                "
+                :indeterminate="!isOrderCompleted"
+              >
+              </v-checkbox-btn>
+              <v-chip
+                class="ma-5"
+                color="pink"
+                v-show="isIdInReturnList(orderDetail.id)"
+                ><v-icon start icon="mdi-tag-off"></v-icon>已退貨</v-chip
+              >
               <v-text-field
                 readonly
                 hide-details
@@ -27,6 +46,7 @@
             </div>
 
             <v-textarea
+              v-model="orderDetail.reason"
               :disabled="!orderDetail.enabled"
               clearable
               counter
@@ -72,52 +92,82 @@ export default {
     const orderDetails = computed(() => {
       return store.getters.getOrderDetailsById(props.orderId);
     });
+    const orderItemIdReturnList = computed(() => {
+      return store.getters.getOrderItemIdReturnList(props.orderId);
+    });
 
     const dialog = ref(false);
     const selectAll = ref(false);
     const loading = ref(false);
 
-    watch(selectAll, (newValue) => {
-      if (orderDetails.value && orderDetails.value.length > 0) {
+    //Checkbox
+    const hasOrderDetails = computed(
+      () => orderDetails.value && orderDetails.value.length > 0
+    );
+
+    const isOrderCompleted = computed(() => {
+      return order.value && order.value.orderStatusCodeName === "已完成";
+    });
+
+    const isIdInReturnList = (orderItemId) => {
+      if (orderItemIdReturnList.value) {
+        return orderItemIdReturnList.value.includes(orderItemId);
+      }
+      return false;
+    };
+
+    onMounted(() => {
+      if (hasOrderDetails.value) {
         orderDetails.value.forEach((detail) => {
-          detail.enabled = newValue;
+          detail.enabled = false;
+        });
+      }
+      store.dispatch("fetchOrderItemIdReturnList", props.orderId);
+      console.log("OrderItemReturn Test => order from getter:", order.value);
+    });
+
+    watch(selectAll, (newValue) => {
+      if (hasOrderDetails.value) {
+        orderDetails.value.forEach((detail) => {
+          if (!isIdInReturnList(detail.id)) detail.enabled = newValue;
         });
       }
     });
 
+    //HttpPost
     const createOrderItemReturnCommandList = ref([]);
     const submit = () => {
-      this.store.dispatch(
-        "postOrderItemReturns",
-        createOrderItemReturnCommandList
-      );
+      createOrderItemReturnCommandList.value = orderDetails.value
+        .filter((detail) => detail.enabled)
+        .map((detail) => ({
+          orderItemId: detail.id,
+          reason: detail.reason,
+        }));
+
+      const requestData = {
+        createOrderItemReturnCommandList:
+          createOrderItemReturnCommandList.value,
+      };
+
+      store.dispatch("postOrderItemReturns", requestData);
     };
 
     const closeDialog = () => {
       dialog.value = false;
     };
 
-    onMounted(() => {
-      if (orderDetails.value && orderDetails.value.length > 0) {
-        orderDetails.value.forEach((detail) => {
-          detail.enabled = false;
-        });
-      }
-      console.log("OrderItemReturn Test => order from getter:", order.value);
-      console.log(
-        "OrderItemReturn Test => orderDetails from getter:",
-        orderDetails.value
-      );
-    });
-
+    //
     return {
       order,
       orderDetails,
+      orderItemIdReturnList,
       dialog,
       selectAll,
       loading,
+      isOrderCompleted,
       submit,
       closeDialog,
+      isIdInReturnList,
     };
   },
 };

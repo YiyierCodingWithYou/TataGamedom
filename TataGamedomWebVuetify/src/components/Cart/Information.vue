@@ -225,6 +225,11 @@ const handleSubmit = async () => {
   ecpayForm.value.submit();
 };
 
+const handleSubmit = async () => {
+  await checkout();
+  ecpayForm.value.submit();
+};
+
 loadData();
 </script>
     

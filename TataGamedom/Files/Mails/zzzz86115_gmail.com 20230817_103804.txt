@@ -1,0 +1,7 @@
+﻿from:g01.webapp@gmail.com
+to:zzzz86115@gmail.com
+subject:[重設密碼通知]
+
+Hi asd7a9874,
+<br />
+請點擊此連結 [<a href='https://localhost:44398/Members/ResetPassword?memberId=45&confirmCode=3cf27371e2a648638ffb0c1616575e11' target='_blank'>我要重設密碼</a>], 以進行重設密碼, 如果您沒有提出申請, 請忽略本信, 謝謝

@@ -9,12 +9,13 @@ import Login from "@/components/Members/Login.vue";
 import ForgetPwd from "@/components/Members/ForgetPwd.vue";
 import Orders from "../views/Orders.vue";
 // import OrderDetailsCards from '../views/OrderDetailsCards.vue'
-import SupportHub from "../views/SupportHub.vue";
-import LinePay from "../views/LinePay.vue";
-import ActiveRegister from "@/components/Members/ActiveRegister.vue";
-import LinePayConfirmPayment from "../views/LinePayConfirmPayment.vue";
-import Cart from "@/views/Cart.vue";
-import MemberDetial from "@/components/Members/MemberDetial.vue";
+import SupportHub from '../views/SupportHub.vue'
+import LinePay from '../views/LinePay.vue'
+import ActiveRegister from '@/components/Members/ActiveRegister.vue'
+import LinePayConfirmPayment from '../views/LinePayConfirmPayment.vue'
+import Cart from '@/views/Cart.vue'
+import MemberDetial from "@/components/Members/MemberDetial.vue"
+import ResetPassword from "@/components/Members/ResetPassword.vue"
 
 const routes = [
   {
@@ -94,7 +95,21 @@ const routes = [
         path: "/LinePayConfirmPayment",
         name: "LinePayConfirmPayment",
         component: LinePayConfirmPayment,
-      },
+        },
+        {
+            path: '/Members/MemberDetial',
+            name: 'MemberDetial',
+            component: MemberDetial
+        },
+        {
+            path: '/Members/ResetPassword',
+            name: 'ResetPassword',
+            component: ResetPassword,
+            props: (route) => ({
+                memberId: parseInt(route.query.memberId),
+                confirmCode: route.query.confirmCode,
+            }),
+        }
     ],
   },
   {
@@ -145,7 +160,8 @@ const routes = [
         path: "/GameLounge/:account",
         name: "GameLoungeAccount",
         component: () => import("@/views/GameLounge.vue"),
-      },
+        }
+      
     ],
   },
 ];
