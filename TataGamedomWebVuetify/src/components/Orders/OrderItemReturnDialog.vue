@@ -95,11 +95,8 @@ export default {
       return store.getters.getOrderItemIdReturnList(props.orderId);
     });
 
-    const dialog = ref(false);
-    const selectAll = ref(false);
-    const loading = ref(false);
-
     //dialog
+    const dialog = ref(false);
     const closeDialog = () => {
       dialog.value = false;
     };
@@ -130,6 +127,7 @@ export default {
       console.log("OrderItemReturn Test => order from getter:", order.value);
     });
 
+    const selectAll = ref(false);
     watch(selectAll, (newValue) => {
       if (hasOrderDetails.value) {
         orderDetails.value.forEach((detail) => {
@@ -138,9 +136,13 @@ export default {
       }
     });
 
-    //HttpPost
+    //HttpPost + lazy loading
+    const loading = ref(false);
+
     const createOrderItemReturnCommandList = ref([]);
-    const submit = () => {
+    const submit = async () => {
+      loading.value = true;
+
       createOrderItemReturnCommandList.value = orderDetails.value
         .filter((detail) => detail.enabled)
         .map((detail) => ({
@@ -153,10 +155,23 @@ export default {
           createOrderItemReturnCommandList.value,
       };
 
-      store.dispatch("postOrderItemReturns", requestData);
+      const timeoutPromise = new Promise((resolve) =>
+        setTimeout(resolve, 1000)
+      );
+
+      try {
+        await Promise.all([
+          store.dispatch("postOrderItemReturns", requestData),
+          timeoutPromise,
+        ]);
+      } catch (error) {
+        console.error("錯誤:", error);
+      } finally {
+        loading.value = false;
+        dialog.value = false;
+      }
     };
 
-    //
     return {
       order,
       orderDetails,
