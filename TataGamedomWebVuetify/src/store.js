@@ -20,6 +20,9 @@ const store = createStore({
       state.age = value.age;
       console.log("StoreLogin", value);
     },
+    SET_UPDATENAME(state, value) {
+      state.name = value
+    }
   },
 });
 
