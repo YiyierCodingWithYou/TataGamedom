@@ -160,7 +160,7 @@
           :name="key"
           :value="value"
         />
-        <v-btn type="submit">送出訂單</v-btn>
+        <v-btn @click="handleSubmit">送出訂單</v-btn>
       </form>
 
       <Payment :paymentData="getLinePayData" />
@@ -217,9 +217,15 @@ const checkout = async () => {
     );
 
     ecPayparams.value = await response.json();
+    console.log(ecPayparams.value);
   } catch (error) {
     console.log("Error:", error);
   }
+};
+
+const handleSubmit = async () => {
+  await checkout();
+  ecpayForm.value.submit();
 };
 
 loadData();
