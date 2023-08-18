@@ -146,45 +146,35 @@ namespace TataGamedomWebAPI.Controllers
 			{
 				return NotFound();
 			}
-			 var member = await _context.Members.FindAsync(user.Id);
 
-			if (member == null)
-			{
-				return NotFound();
-			}
 			var currentDate = DateTime.Now;
-			var age = currentDate.Year - member.Birthday.Year;
-			if (currentDate.Month < member.Birthday.Month || (currentDate.Month == member.Birthday.Month && currentDate.Day < member.Birthday.Day))
+			var age = currentDate.Year - user.Birthday.Year;
+			if (currentDate.Month < user.Birthday.Month || (currentDate.Month == user.Birthday.Month && currentDate.Day < user.Birthday.Day))
 			{
 				age--; // 如果生日尚未到來，則減少一歲
 			}
 
 			var memberDto = new MembersDto
 			{
-				Id = member.Id,
-				Name = member.Name,
+				Id = user.Id,
+				Name = user.Name,
 				Age = age,
-				// Account = member.Account,
-				//Password = member.Password,
-				Birthday = member.Birthday,
-				Email = member.Email,
-				Phone = member.Phone,
-				IconImg = member.IconImg,
-				//ActiveFlag = member.ActiveFlag,
-				// LastOnlineTime = member.LastOnlineTime,     
+				Account = user.Account,
+				Birthday = user.Birthday,
+				Email = user.Email,
+				Phone = user.Phone,
+				IconImg = user.IconImg,
+				ActiveFlag = user.ActiveFlag,
+				LastOnlineTime = DateTime.Now 
 			};
 			return Ok(memberDto);
 		}
 
 		// PUT: api/Members/5
 		[EnableCors("AllowCookie")]
-		[HttpPut("{id}")]
-		public async Task<IActionResult> PutMember(int id, MembersDto memberDto)
+		[HttpPut]
+		public async Task<IActionResult> PutMember(MembersDto memberDto)
 		{
-			if (id != memberDto.Id)
-			{
-				return BadRequest();
-			}
 
 			var account = HttpContext.User.FindFirstValue("MembersAccount");
 			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
@@ -194,36 +184,13 @@ namespace TataGamedomWebAPI.Controllers
 				return NotFound();
 			}
 
-			var member = await _context.Members.FindAsync(user.Id);
-
-			if (member == null)
-			{
-				return NotFound();
-			}
-
 			// 更新 member 物件的屬性
-			member.Name = memberDto.Name;
-			member.Birthday = memberDto.Birthday;
-			member.Email = memberDto.Email;
-			member.Phone = memberDto.Phone;
-			member.IconImg = memberDto.IconImg;
+			user.Name = memberDto.Name;
+			user.Phone = memberDto.Phone;
+			user.IconImg = memberDto.IconImg;
 
-			try
-			{
-				await _context.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!MemberExists(id))
-				{
-					return NotFound();
-				}
-				else
-				{
-					throw;
-				}
-			}
-
+			await _context.SaveChangesAsync();
+	
 			return NoContent();
 		}
 
@@ -241,6 +208,11 @@ namespace TataGamedomWebAPI.Controllers
 			if (await _context.Members.AnyAsync(m => m.Account == registerDto.Account))
 			{
 				return BadRequest("此帳號已經有人使用過囉");
+			}
+
+			if (await _context.Members.AnyAsync(m => m.Email == registerDto.Email))
+			{
+				return BadRequest("此信箱已經有人使用過囉");
 			}
 
 			if (registerDto.Password != registerDto.CheckPassword)
@@ -410,22 +382,24 @@ namespace TataGamedomWebAPI.Controllers
 		[HttpPost("ChangePassword")]
 		public async Task<ActionResult<string>> ChangePassword(ChangePasswordDTO dto)
 		{
+			var account = HttpContext.User.FindFirstValue("MembersAccount");
+			var hashOrigPwd = HashUtility.ToSHA256(dto.OriginalPassword, "!@#$$DGTEGYT");
 			var member = await _context.Members
-				.SingleOrDefaultAsync(m => m.Account == dto.Account);
+				.SingleOrDefaultAsync(m => m.Account == account && m.Password == hashOrigPwd);
 
 			if (member == null)
 			{
 				return BadRequest("找不到對應的會員紀錄");
 			}
 
-			var hashOrigPwd = HashUtility.ToSHA256(dto.CreatePassword, "!@#$$DGTEGYT");
+			var hashPwd = HashUtility.ToSHA256(dto.CreatePassword, "!@#$$DGTEGYT");
 
 			if (dto.CreatePassword != dto.ConfirmPassword)
 			{
 				return BadRequest("兩次輸入的密碼不相符，請重新確認。");
 			}
 
-			member.Password = hashOrigPwd;
+			member.Password = hashPwd;
 			await _context.SaveChangesAsync();
 
 			return Ok();

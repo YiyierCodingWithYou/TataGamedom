@@ -44,7 +44,7 @@ const member = ref([]);
 const name = ref("");
 const iconImg = ref("");
 const email = ref("");
-let img = "https://localhost:7081/Files/NewsImages/";
+let img = "https://localhost:7081/Files/Icons/";
 
 const loadMember = async () => {
   const response = await fetch("https://localhost:7081/api/Members", {
