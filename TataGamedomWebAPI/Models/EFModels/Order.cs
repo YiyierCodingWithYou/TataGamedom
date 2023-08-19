@@ -7,7 +7,7 @@ public partial class Order
 {
     public int Id { get; set; }
 
-    public required string Index { get; set; }
+    public string Index { get; set; } = null!;
 
     public int MemberId { get; set; }
 

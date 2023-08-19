@@ -8,7 +8,10 @@
     <a href="/Cart" class="me-3">Cart</a>
     <v-spacer></v-spacer>
     <div v-if="$store.state.isLoggedIn">
-      <a color="primary" @click="toggleMemberProfile">HI {{ name }}</a>
+      <!-- <a color="primary" @click="toggleMemberProfile">HI {{ name }}</a> -->
+      <a color="primary" @mouseover="showMemberProfile = true">
+        HI {{ name }}
+      </a>
       <v-btn color="primary" @click="logout">登出</v-btn>
     </div>
     <v-btn v-else color="primary" @click="login">登入</v-btn>
@@ -17,6 +20,7 @@
     class="MemberProfile"
     v-if="showMemberProfile"
     @close="closeMemberProfile"
+    @mouseleave="showMemberProfile = false"
   />
 </template>
 
@@ -54,7 +58,7 @@ export default {
       axios.delete("https://localhost:7081/api/members/Logout", {
         withCredentials: true,
       });
-      this.$router.go(0);
+      this.$store.commit("SET_LOGIN", false); // 將登入狀態重置為未登入
     },
     checkLogin() {
       axios
