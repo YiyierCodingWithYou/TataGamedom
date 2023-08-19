@@ -1,16 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text;
 using TataGamedomWebAPI.Infrastructure.Data;
-using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.Payment;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.PaymentConfirm;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.PaymentRefund;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.Payment;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.PaymentConfirm;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.PaymentRefund;
-using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter;
 

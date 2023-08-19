@@ -1,13 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.Payment;
-using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.Payment;
-using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter;
-using TataGamedomWebAPI.Models.DTOs.Cart;
-using TataGamedomWebAPI.Infrastructure;
-using static System.Net.WebRequestMethods;
-using System.Security.Cryptography.Xml;
-using System;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Web;
 using Microsoft.AspNetCore.Cors;
@@ -69,5 +60,7 @@ namespace TataGamedomWebAPI.Controllers
 			}
 			return result.ToString();
 		}
-	}
+
+    }
+
 }
