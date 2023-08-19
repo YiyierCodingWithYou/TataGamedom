@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Specialized;
 using System.Text;
 using System.Web;
 using TataGamedomWebAPI.Application.Exceptions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos;
 
 namespace TataGamedomWebAPI.Infrastructure.ShipmentAdapter.ECPayShipmentAdapter;
 
@@ -10,13 +10,8 @@ public class ECPayShipmentService
 {
     private readonly string HashKey = "5294y06JbISpM5x9";
     private readonly string HashIV = "v77hoKGq4kWxNNIS";
-    private readonly string MerchantID = "2000132";
-    private readonly string MerchantTradeNo = "TataGamedomWeb";
-    private readonly string LogisticsType = "CVS";
-    private readonly string SenderName = "TataGamedomWeb";
-    private readonly string SenderCellPhone = "0916224867";
-    private readonly string ReceiverCellPhone = "0916224867";
-    private readonly string ReceiverEmail = "tatagamedom@gmail.com";
+    private readonly string RequstUrl = "https://logistics-stage.ecpay.com.tw/Express/Create";
+
 
     private static readonly HttpClient _httpClient;
     static ECPayShipmentService()
@@ -28,60 +23,75 @@ public class ECPayShipmentService
     /// 綠界傳回值格式:URL query string  
     /// 成功: 1| Response參數
     /// 失敗: 0| ErrorMessage
+    /// 交易訊息代碼 105000___ 自訂錯誤代碼
     /// </summary>
     /// <param name="order"></param>
     /// <returns></returns>
-    public async Task<Dictionary<string, string>> CreateLogisticsOrderForPickUpRequest(Dictionary<string, string> order) 
+    public async Task<Dictionary<string, string>> SendLogisticsOrderForPickUpRequest(LogisticsOrderRequestDto order)
     {
-        string requstUrl = "https://logistics-stage.ecpay.com.tw/Express/Create";
         using FormUrlEncodedContent content = new FormUrlEncodedContent(ComputeRequestData(order));
-        HttpResponseMessage response = await _httpClient.PostAsync(requstUrl, content);
-        
+        HttpResponseMessage response = await _httpClient.PostAsync(RequstUrl, content);
         string responseBody = await response.Content.ReadAsStringAsync();
-        if (response.IsSuccessStatusCode == false || responseBody.StartsWith("0|"))
+
+        ThrowExceptionIfBadRequest(response, responseBody);
+
+        NameValueCollection responseValues = HttpUtility.ParseQueryString(responseBody.Split('|')[1]);
+        Dictionary<string, string> data = responseValues.AllKeys.ToDictionary(k => k!, k => responseValues[k]!);
+
+        //ThrowExceptionIfCheckMacValueNotMatch(responseValues, data);    //加入OrderId後再打開
+        
+        return data;
+    }
+
+
+    private static void ThrowExceptionIfBadRequest(HttpResponseMessage response, string responseBody)
+    {
+        if (response.IsSuccessStatusCode == false || responseBody.StartsWith("0|") || responseBody.StartsWith("105000"))
         {
             throw new BadRequestException(responseBody);
         };
+    }
 
-
-        var tokens = responseBody.Split('|');
-        var responseValues = HttpUtility.ParseQueryString(tokens[1]);
-        var data = responseValues.AllKeys.ToDictionary(k => k!, k => responseValues[k]!);
+    private void ThrowExceptionIfCheckMacValueNotMatch(NameValueCollection responseValues, Dictionary<string, string> data)
+    {
         if (responseValues["CheckMacValue"] != GetCheckMacValue(data))
         {
-            throw new BadRequestException("綠界回傳參數與傳入參數不符，請檢查此筆物流訂單及檢查碼[CheckMacValue]");
+            throw new BadRequestException($@"
+綠界回傳參數與傳入參數不符:
+檢查碼[CheckMacValue]:{GetCheckMacValue(data)}
+傳回值: {responseValues}");
         }
-        return data;
     }
+
 
     /// <summary>
     /// 測試介接資訊: B2C及宅配
     /// </summary>
     /// <param name="order"></param>
     /// <returns></returns>
-    private Dictionary<string, string> ComputeRequestData(Dictionary<string, string> order)
+    private Dictionary<string, string> ComputeRequestData(LogisticsOrderRequestDto order)
     {
-        order = new Dictionary<string, string>
+        var orderDict = new Dictionary<string, string>
         {
-            { "MerchantID", MerchantID },
-            { "MerchantTradeNo", MerchantTradeNo },
-            { "MerchantTradeDate", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") },
-            { "LogisticsType", LogisticsType},
-            { "LogisticsSubType", "FAMI"},  //申請類型為B2C，只能串參數為FAMI、UNIMART、HILIFE、UNIMARTFREEZE
-            { "GoodsAmount", "100" },  // todo 跟11確定總額&運費算法
-            { "SenderName", SenderName},
-            { "SenderCellPhone ", SenderCellPhone},
-            { "ReceiverName", "lisi" },  //todo 從購物車取memberInfo
-            { "ReceiverCellPhone", ReceiverCellPhone },   //todo 從購物車取memberInfo
-            { "ReceiverEmail", ReceiverEmail }, // todo?
-            { "ServerReplyURL", "https://localhost:3000/Orders" }, //todo ngrok
-            { "ReceiverStoreID", order["store_id"] },  //todo 收件人門市代號，看能不能從11弄的db取
+            { "MerchantID", order.MerchantID },
+            { "MerchantTradeNo", order.MerchantTradeNo },   //可為null，不可重複，但有給的話demo蠻好辨識的
+            { "MerchantTradeDate", order.MerchantTradeDate},
+            { "LogisticsType", order.LogisticsType},
+            { "LogisticsSubType", order.LogisticsSubType},  //B2C接受參數: FAMI、UNIMART、HILIFE、UNIMARTFREEZE
+            { "GoodsAmount", order.GoodsAmount.ToString() },  // todo 跟11確定總額&運費算法
+            { "SenderName", order.SenderName},
+            { "SenderCellPhone ", order.SenderCellPhone},
+            { "ReceiverName", order.ReceiverName },  //todo 從購物車取memberInfo
+            { "ReceiverCellPhone", order.ReceiverCellPhone },   //todo 從購物車取memberInfo
+            { "ReceiverEmail", order.ReceiverEmail }, // todo?
+            { "ServerReplyURL", order.ServerReplyURL},//localhost:3000/Orders" }, //todo ngrok
+            { "ReceiverStoreID", order.ReceiverStoreID },  //todo 收件人門市代號，看能不能從11弄的db取  / 7-ELEVEN 超商：131386 7-ELEVEN 超商冷凍店取：896539 全家：006598 OK：1328
             //{ "ClientReplyURL", ""},  可以導覽前端頁面，目前採幕後建物流訂單，先不填。 todo => 寫一個有值得給LinePay用，目前LinePay沒物流
         };
 
-        order["CheckMacValue"] = GetCheckMacValue(order);
+        orderDict["CheckMacValue"] = GetCheckMacValue(orderDict);
 
-        return order;
+        return orderDict;
     }
 
     /// <summary>

@@ -2,15 +2,23 @@
 using System.Text;
 using System.Web;
 using Microsoft.AspNetCore.Cors;
+using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.ECPayShipmentAdapter;
+using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos;
 
 namespace TataGamedomWebAPI.Controllers
 {
-	[EnableCors("AllowAny")]
+    [EnableCors("AllowAny")]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class ECPayController : ControllerBase
 	{
-		[HttpPost("Create")]
+		private readonly ECPayShipmentService _shipmentService;
+        public ECPayController()
+        {
+            _shipmentService = new ECPayShipmentService();
+        }
+
+        [HttpPost("Create")]
 		public async Task<ActionResult<Dictionary<string, string>>> CreatePayment(int total)
 		{
 			var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
@@ -61,6 +69,14 @@ namespace TataGamedomWebAPI.Controllers
 			return result.ToString();
 		}
 
+
+		[HttpPost("LogisticsOrder")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> CreateLogisticsOrderForPickUp(LogisticsOrderRequestDto order) 
+		{
+			return Ok(await _shipmentService.SendLogisticsOrderForPickUpRequest(order));
+		}
     }
 
 }
