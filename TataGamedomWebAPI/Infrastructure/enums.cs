@@ -8,8 +8,7 @@
 
     enum OrderStatus
     {
-        Completed = 3,
-        ReturnProcessing = 4,
-
+        ReturnProcessing = 3,
+        Completed = 4,
     }
 }
