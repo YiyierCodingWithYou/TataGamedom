@@ -29,7 +29,7 @@ public class LinePayService
         this._httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<PaymentResponseDto> SendPaymentRequest()
+    public async Task<PaymentResponseDto> SendPaymentRequestWithCartInfo()
     {
 
         string? account = _httpContextAccessor.HttpContext?.User.Claims.Where(c => c.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
