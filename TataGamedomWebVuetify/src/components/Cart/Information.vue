@@ -120,26 +120,25 @@
                   </template>
                   <v-card width="850" height="500">
                     <v-row class="d-flex">
-                      <v-col cols="8" class="d-flex">
-                        <v-card-title>路名查詢：</v-card-title>
-                        <v-text-field single-line variant="solo" label="請輸入道路名稱"></v-text-field>
+                      <v-col cols="10" class="d-flex">
+                        <v-card-title>以路名查詢：</v-card-title>
+                        <v-text-field v-model="keyword" single-line variant="solo" label="請輸入道路名稱"></v-text-field>
                       </v-col>
-                      <v-col cols="2">
-                        <v-btn>搜尋</v-btn></v-col>
+                      <v-col cols="10" class="d-flex">
+                        <v-card-title>以門市查詢：</v-card-title>
+                        <v-text-field v-model="branch" single-line variant="solo" label="請輸入門市名稱"></v-text-field>
+                      </v-col>
                       <v-col cols="6" class="d-flex">
-                        <v-card-title>請選擇縣市：</v-card-title>
-                        <v-select v-model="country" :items="country" item-value="item" return-object single-line
+                        <v-card-title>以縣市查詢：</v-card-title>
+                        <v-select v-model="city" :items="cityList" item-value="item" return-object single-line
                           variant="solo" label="---"></v-select>
-                      </v-col>
-                      <v-col cols="6" class="d-flex">
-                        <v-card-title>請選擇區域：</v-card-title>
-                        <v-select v-model="town" :items="town" item-value="item" return-object single-line variant="solo"
-                          label="---"></v-select>
+                        <v-col cols="2" @click="spotSearch"><v-btn>搜尋</v-btn></v-col>
                       </v-col>
                       <v-col cols="12">
                         <v-card-title>請選擇門市：</v-card-title>
-                        <v-select v-model="spot" :items="spot" item-value="item" return-object single-line variant="solo"
-                          label="---"></v-select>
+                        <v-select v-if="spotList && spotList.length" v-model="spot" :items="spotList"
+                          :item-title="displayItem" item-value="id" single-line variant="solo"></v-select>
+
                       </v-col>
                     </v-row>
                     <v-card-actions>
@@ -200,6 +199,12 @@ const member = ref({});
 const name = ref("");
 const email = ref("");
 const phoneNumber = ref("");
+const keyword = ref("");
+const branch = ref("");
+const city = ref("");
+const cityList = ref([]);
+const spot = ref("");
+const spotList = ref([]);
 const props = defineProps({
   selectedData: Object,
 });
@@ -217,6 +222,29 @@ const rules = {
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return pattern.test(value) || "E-mail格式不正確";
   },
+};
+
+const getCity = async () => {
+  const response = await fetch(`https://localhost:7081/api/Carts/Shop/City`)
+  const datas = await response.json();
+  cityList.value = datas;
+}
+
+const spotSearch = async () => {
+  if (city.value) {
+    keyword.value = city.value
+  }
+  const response = await fetch(`https://localhost:7081/api/Carts/Shop?keyword=${keyword.value}&branch=${branch.value}`)
+  const datas = await response.json();
+  spotList.value = datas;
+}
+
+const displayItem = (item) => {
+  if (item && item.storeName && item.address) {
+    return `${item.storeName}門市 - ${item.address}`;
+  } else {
+    return '---'; // 或其他的預設文字
+  }
 };
 
 const handleFillRecipient = () => {
@@ -250,33 +278,7 @@ const getMember = async () => {
   phoneNumber.value = datas.phone;
   name.value = datas.name;
   email.value = datas.email;
-  console.log(member.value);
 };
-
-const chooseShop = async () => {
-  const response = await fetch("https://emap.pcsc.com.tw/ecmap/default.aspx", {
-    method: "POST",
-    mode: "no-cors",
-    body: {
-      esshopid: "112",
-      servicetype: "1",
-      url: "https://localhost:3000/",
-    },
-  });
-};
-
-// const createOrder = async () => {
-//   const response = await fetch(`https://localhost:7081/api/Orders`, {
-//     method: "POST",
-//     credentials: "include",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: {
-//
-//     },
-//   });
-// };
 
 const checkout = async () => {
   try {
@@ -303,7 +305,7 @@ const handleSubmit = async () => {
 
 loadData();
 getMember();
-
+getCity();
 </script>
     
 <style></style>

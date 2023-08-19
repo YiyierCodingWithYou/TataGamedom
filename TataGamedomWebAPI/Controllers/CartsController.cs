@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -206,6 +207,27 @@ namespace TataGamedomWebAPI.Controllers
 			await _context.SaveChangesAsync();
 
 			return NoContent();
+		}
+
+		[HttpGet("Shop/City")]
+		public async Task<ActionResult> GetCity()
+		{
+			var city = await _context.BranchesOfSevens
+		.Select(s => s.City)
+		.Distinct()
+		.OrderBy(country => country)
+		.ToListAsync();
+
+		return Ok(city);
+		}
+
+		[HttpGet("Shop")]
+		public async Task<ActionResult> GetShop(string? keyword, string? branch)
+		{
+			var spot = await _context.BranchesOfSevens
+				.Where(s => s.StoreName.Contains(branch) || s.Address.Contains(keyword)).ToListAsync();
+
+			return Ok(spot);
 		}
 
 		private bool CartExists(int id)
