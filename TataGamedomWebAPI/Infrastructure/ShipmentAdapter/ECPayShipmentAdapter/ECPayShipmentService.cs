@@ -1,105 +1,67 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using System.Web;
 
 namespace TataGamedomWebAPI.Infrastructure.ShipmentAdapter.ECPayShipmentAdapter;
 
 public class ECPayShipmentService
 {
-    private readonly Dictionary<string, string> _config;
-    private static readonly HttpClient httpClient = new();
+    private readonly string HashKey = "5294y06JbISpM5x9";
+    private readonly string HashIV = "v77hoKGq4kWxNNIS";
 
-    public ECPayShipmentService(Dictionary<string, string> config)
+    private readonly string MerchantID = "2000132";
+    private readonly string MerchantTradeNo = "TataGamedomWeb";
+    private readonly string LogisticsType = "CVS";
+    private readonly string SenderName = "TataGamedomWeb";
+    private readonly string SenderCellPhone = "0916224867";
+    private readonly string ReceiverCellPhone = "0916224867";
+    private readonly string ReceiverEmail = "tatagamedom@gmail.com";
+
+    /// <summary>
+    /// 測試介接資訊: B2C及宅配
+    /// </summary>
+    /// <param name="order"></param>
+    /// <returns></returns>
+    private Dictionary<string, string> CreateLogisticsOrderForPickUp(Dictionary<string, string> order)
     {
-        _config = config ?? throw new ArgumentNullException(nameof(config));
-    }
-
-    public async Task<Dictionary<string, string>> CreateOrderAsync(Dictionary<string, string> order)
-    {
-        var data = CreateOrderData(order);
-        var result = await RequestAsync("Create", data);
-
-        if (result != null)
+        order = new Dictionary<string, string>
         {
-            order["cvs_shipping_code"] = result["RtnCode"];
-            order["cvs_shipping_msg"] = result["RtnMsg"];
-        }
+            { "MerchantID", MerchantID },
+            { "MerchantTradeNo", MerchantTradeNo },
+            { "MerchantTradeDate", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") },
+            { "LogisticsType", LogisticsType},
+            { "LogisticsSubType", "FAMI"},  //申請類型為B2C，只能串參數為FAMI、UNIMART、HILIFE、UNIMARTFREEZE
+            { "GoodsAmount", "100" },  // todo 跟11確定總額&運費算法
+            { "SenderName", SenderName},
+            { "SenderCellPhone ", SenderCellPhone},
+            { "ReceiverName", "lisi" },  //todo 從購物車取memberInfo
+            { "ReceiverCellPhone", ReceiverCellPhone },   //todo 從購物車取memberInfo
+            { "ReceiverEmail", ReceiverEmail }, // todo?
+            { "ServerReplyURL", "https://localhost:3000/Orders" }, //todo ngrok
+            { "ReceiverStoreID", order["store_id"] },  //todo 收件人門市代號，看能不能從11弄的db取
+            //{ "ClientReplyURL", ""},  可以導覽前端頁面，目前採幕後建物流訂單，先不填。 todo => 寫一個有值得給LinePay用，目前LinePay沒物流
+        };
+
+        order["CheckMacValue"] = GetCheckMacValue(order);  //https://developers.ecpay.com.tw/?p=7424  綠界加密規則
+
         return order;
     }
 
-    private Dictionary<string, string> CreateOrderData(Dictionary<string, string> order)
+    private string GetCheckMacValue(Dictionary<string, string> order)
     {
-        return new Dictionary<string, string>
-        {
-            { "MerchantID", _config["MerchantID"] },
-            { "MerchantTradeNo", order["order_no"] },
-            { "MerchantTradeDate", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") },
-            { "LogisticsType", "CVS" },
-            { "LogisticsSubType", order["shipment"] },
-            { "GoodsAmount", (decimal.Parse(order["amount"]) + decimal.Parse(order["shipping"])).ToString() },
-            { "SenderName", _config["SenderName"] },
-            { "SenderPhone", _config["SenderPhone"] },
-            { "ReceiverName", order["name"] },
-            { "ReceiverCellPhone", order["phone"] },
-            { "ServerReplyURL", "your_call_back_url" },
-            { "ReceiverStoreID", order["store_id"] }
-        };
-    }
+        var param = order.Keys.OrderBy(x => x).Select(key => key + "=" + order[key]).ToList();
+        var checkValue = string.Join("&", param);
 
-    private async Task<Dictionary<string, string>> RequestAsync(string api, Dictionary<string, string> data)
-    {
-        data["CheckMacValue"] = Checksum(data);
+        checkValue = $"HashKey={HashKey}" + "&" + checkValue + $"&HashIV={HashIV}";
+        checkValue = HttpUtility.UrlEncode(checkValue).ToLower();
 
-        using var content = new FormUrlEncodedContent(data);
-        var response = await httpClient.PostAsync($"{_config["url"]}{api}", content);
-        var responseBody = await response.Content.ReadAsStringAsync();
-
-        if (response.IsSuccessStatusCode && responseBody.StartsWith("1|"))
-        {
-            var tokens = responseBody.Split('|');
-            var values = HttpUtility.ParseQueryString(tokens[1]);
-            var valuesDict = values.AllKeys.ToDictionary(k => k, k => values[k]);
-
-            if (values["CheckMacValue"] == Checksum(valuesDict))
-            {
-                return valuesDict;
-            }
-        }
-
-        return null;
-    }
-
-    private string Checksum(Dictionary<string, string> data)
-    {
-        data.Remove("CheckMacValue");
-        var sortedData = new SortedDictionary<string, string>(data);
-        var sign = "HashKey=" + _config["HashKey"];
-        foreach (var item in sortedData)
-        {
-            sign += $"&{item.Key}={item.Value}";
-        }
-        sign = Uri.EscapeDataString(sign + "&HashIV=" + _config["HashIV"]);
-        sign = ApplyCustomUrlDecoding(sign);
-        return CalculateMD5Hash(sign);
-    }
-
-    private string ApplyCustomUrlDecoding(string value)
-    {
-        return value
-            .Replace("%20", "+")
-            .Replace("%21", "!")
-            .Replace("%28", "(")
-            .Replace("%29", ")")
-            .Replace("%2a", "*")
-            .Replace("%2d", "-")
-            .Replace("%2e", ".")
-            .Replace("%5f", "_");
+        return CalculateMD5Hash(checkValue).ToUpper();
     }
 
     private string CalculateMD5Hash(string input)
     {
-        var md5 = System.Security.Cryptography.MD5.Create();
-        var inputBytes = Encoding.ASCII.GetBytes(input);
-        var hashBytes = md5.ComputeHash(inputBytes);
-        return BitConverter.ToString(hashBytes).Replace("-", "").ToUpper();
+        byte[] inputBytes = Encoding.ASCII.GetBytes(input);
+        byte[] hashBytes = System.Security.Cryptography.MD5.HashData(inputBytes);
+        return BitConverter.ToString(hashBytes).Replace("-", "");
     }
 }
