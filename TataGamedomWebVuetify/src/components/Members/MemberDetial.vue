@@ -4,12 +4,7 @@
     <v-container>
       <v-row>
         <v-col cols="12" md="6">
-          <v-text-field
-            v-model="name"
-            :rules="nameRules"
-            label="姓名"
-            required
-          ></v-text-field>
+          <v-text-field v-model="name" :rules="nameRules" label="姓名" required></v-text-field>
         </v-col>
         <!-- 
         <v-col cols="12" md="4">
@@ -22,39 +17,19 @@
         </v-col> -->
 
         <v-col cols="12" md="6">
-          <v-text-field
-            v-model="email"
-            label="E-mail"
-            required
-            readonly
-          ></v-text-field>
+          <v-text-field v-model="email" label="E-mail" required readonly></v-text-field>
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-text-field
-            v-model="birthday"
-            label="生日"
-            required
-            readonly
-          ></v-text-field>
+          <v-text-field v-model="birthday" label="生日" required readonly></v-text-field>
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-text-field
-            v-model="phone"
-            :rules="phoneRules"
-            :counter="10"
-            label="手機"
-            required
-          ></v-text-field>
+          <v-text-field v-model="phone" :rules="phoneRules" :counter="10" label="手機" required></v-text-field>
         </v-col>
 
         <v-col cols="12" md="12">
-          <v-file-input
-            label="上傳頭像"
-            variant="filled"
-            prepend-icon="mdi-camera"
-          ></v-file-input>
+          <v-file-input label="上傳頭像" variant="filled" prepend-icon="mdi-camera" @change="uploadImage"></v-file-input>
         </v-col>
 
         <img style="height: 300px; width: 300px" :src="img + iconImg" alt="" />
@@ -75,35 +50,17 @@
 
   <v-card class="mx-auto mt-16" color="white" max-width="600" title="更改密碼">
     <v-container>
-      <v-text-field
-        v-model="originalPassword"
-        :append-inner-icon="originalPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary"
-        label="舊密碼"
-        :type="originalPasswordVisible ? 'text' : 'password'"
-        variant="underlined"
-        @click:append-inner="originalPasswordVisible = !originalPasswordVisible"
-      ></v-text-field>
+      <v-text-field v-model="originalPassword" :append-inner-icon="originalPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary" label="舊密碼" :type="originalPasswordVisible ? 'text' : 'password'" variant="underlined"
+        @click:append-inner="originalPasswordVisible = !originalPasswordVisible"></v-text-field>
 
-      <v-text-field
-        v-model="createPassword"
-        :append-inner-icon="createPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary"
-        label="新密碼"
-        :type="createPasswordVisible ? 'text' : 'password'"
-        variant="underlined"
-        @click:append-inner="createPasswordVisible = !createPasswordVisible"
-      ></v-text-field>
+      <v-text-field v-model="createPassword" :append-inner-icon="createPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary" label="新密碼" :type="createPasswordVisible ? 'text' : 'password'" variant="underlined"
+        @click:append-inner="createPasswordVisible = !createPasswordVisible"></v-text-field>
 
-      <v-text-field
-        v-model="confirmPassword"
-        :append-inner-icon="confirmPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary"
-        label="確認密碼"
-        :type="confirmPasswordVisible ? 'text' : 'password'"
-        variant="underlined"
-        @click:append-inner="confirmPasswordVisible = !confirmPasswordVisible"
-      ></v-text-field>
+      <v-text-field v-model="confirmPassword" :append-inner-icon="confirmPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary" label="確認密碼" :type="confirmPasswordVisible ? 'text' : 'password'" variant="underlined"
+        @click:append-inner="confirmPasswordVisible = !confirmPasswordVisible"></v-text-field>
       <p v-if="createPassword !== confirmPassword" class="password-mismatch">
         新密碼需與確認密碼相符
       </p>
@@ -141,7 +98,7 @@ const createPasswordVisible = ref(false);
 const confirmPasswordVisible = ref(false);
 const passwordsMatch = ref(true);
 const router = useRouter();
-let img = "https://localhost:7081/Files/Icons/";
+let img = "https://localhost:7081/Files/Uploads/Icons/";
 
 watch([createPassword, confirmPassword], () => {
   passwordsMatch.value = createPassword === confirmPassword;
@@ -160,6 +117,7 @@ const loadMember = async () => {
   birthday.value = relativeTime(datas.birthday);
   phone.value = datas.phone;
   iconImg.value = datas.iconImg;
+  //iconImg.value = imageUrl;
   console.log("123132", datas);
 };
 
@@ -167,6 +125,38 @@ onMounted(() => {
   loadMember();
 });
 
+//上傳圖片
+async function uploadImage(event) {
+  const file = event.target.files[0];
+  if (!file) {
+    return;
+  }
+
+  const folderName = "Icons";
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const response = await axios.post(`https://localhost:7081/api/Common/uploadImage/${folderName}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    //用來/分割上傳的連結(只取最後的XXXX.JPG)
+    const parts = response.data.split("/");
+    iconImg.value = parts[parts.length - 1];
+    console.log("上傳成功", iconImg.value);
+
+    // 可以将图片URL存储在组件的数据中，以后在页面上显示
+    // this.imageUrl = imageUrl;
+  } catch (error) {
+    console.error("上傳失敗", error);
+    // 在这里处理上传失败的情况
+  }
+}
+
+//確認修改
 const onClick = async () => {
   axios
     .put(
@@ -237,6 +227,10 @@ const relativeTime = (datetime) => {
   return format(date, "yyyy/MM/dd", { locale: zhTW });
 };
 
+
+
+
+
 const nameRules = [
   (value) => {
     if (value) return true;
@@ -262,5 +256,4 @@ const phoneRules = [
 ];
 </script>
     
-<style>
-</style>
+<style></style>
