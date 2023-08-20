@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Collections.Specialized;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -37,7 +38,17 @@ public class ECPayShipmentService
             Content = new StringContent(requestJson, Encoding.UTF8, "application/json")
         };
 
-        var response = await _httpClient.SendAsync(request);  // Todo 解碼response data
+        var response = await _httpClient.SendAsync(request);
+
+
+        #region Todo 測試Aes解密，目前遇到responseJson是html頁面，FromBase64String會出問題
+        //string responseJson = await response.Content.ReadAsStringAsync();
+        //byte[] key = Encoding.UTF8.GetBytes(HashKey);
+        //byte[] iv = Encoding.UTF8.GetBytes(HashIV);
+        //string decodedAesResponse = DecryptStringFromBytes_Aes(Convert.FromBase64String(responseJson), key, iv);
+        //string decodedData = HttpUtility.UrlDecode(decodedAesResponse);
+        //Console.WriteLine(decodedData);
+        #endregion
 
         return await response.Content.ReadAsStringAsync();
     }
