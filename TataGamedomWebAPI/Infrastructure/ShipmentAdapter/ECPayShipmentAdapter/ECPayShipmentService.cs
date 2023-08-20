@@ -22,11 +22,8 @@ public class ECPayShipmentService
         _httpClient = new HttpClient();
     }
 
-    /// <summary>
-    /// 開啟物流選擇頁
-    /// </summary>
-    /// <param name="logisticsSelection"></param>
-    /// <returns></returns>
+
+    #region 開啟物流選擇頁
     public async Task<string?> SendLogisticsSelectionRequest(LogisticsSelectionRawDataDto logisticsSelection)
     {
         var requestJson = JsonSerializer.Serialize(new LogisticsSelectionRequestDto
@@ -40,19 +37,31 @@ public class ECPayShipmentService
             Content = new StringContent(requestJson, Encoding.UTF8, "application/json")
         };
 
-        var responseJson = await _httpClient.SendAsync(request);
+        var response = await _httpClient.SendAsync(request);  // Todo 解碼response data
 
-        return await responseJson.Content.ReadAsStringAsync();          // Todo 解碼response data
+        return await response.Content.ReadAsStringAsync();          
     }
 
-    /// <summary>
-    /// 綠界傳回值格式:URL query string  
-    /// 成功: 1| Response參數
-    /// 失敗: 0| ErrorMessage
-    /// 交易訊息代碼 105000___ 自訂錯誤代碼
-    /// </summary>
-    /// <param name="order"></param>
-    /// <returns></returns>
+
+    // 綠界新版物流 加密規定: https://developers.ecpay.com.tw/?p=10205
+    private string ComputeEncodedLogisticsSelectionData(LogisticsSelectionRawDataDto logisticsSelection)
+    {
+        var encodedData = HttpUtility.UrlEncode(JsonSerializer.Serialize(logisticsSelection));
+        byte[] key = Encoding.UTF8.GetBytes(HashKey);
+        byte[] iv = Encoding.UTF8.GetBytes(HashIV);
+        byte[] encrypted = EncryptStringToBytes_Aes(encodedData, key, iv);
+        return Convert.ToBase64String(encrypted);
+    }
+
+    #endregion
+
+    #region 建立物流訂單-B2C及宅配
+
+
+    // 綠界傳回值格式:URL query string  
+    // 成功: 1| Response參數
+    // 失敗: 0| ErrorMessage
+    // 交易訊息代碼 105000___ 自訂錯誤代碼
     public async Task<Dictionary<string, string>> SendLogisticsOrderForPickUpRequest(LogisticsOrderRequestDto order)
     {
         using FormUrlEncodedContent content = new FormUrlEncodedContent(ComputeOrderRequestData(order));
@@ -65,49 +74,10 @@ public class ECPayShipmentService
         Dictionary<string, string> data = responseValues.AllKeys.ToDictionary(k => k!, k => responseValues[k]!);
 
         //ThrowExceptionIfCheckMacValueNotMatch(responseValues, data);    //加入OrderId後再打開
-        
+
         return data;
     }
 
-    private string ComputeEncodedLogisticsSelectionData(LogisticsSelectionRawDataDto logisticsSelection)
-    {
-        var encodedData = HttpUtility.UrlEncode(JsonSerializer.Serialize(logisticsSelection));
-        byte[] key = Encoding.UTF8.GetBytes(HashKey);
-        byte[] iv = Encoding.UTF8.GetBytes(HashIV);
-        byte[] encrypted = AESEncryptStringToBytes(encodedData, key, iv);
-        return Convert.ToBase64String(encrypted);
-    }
-
-    static byte[] AESEncryptStringToBytes(string plainText, byte[] Key, byte[] IV)
-    {
-        if (plainText == null || plainText.Length <= 0)
-            throw new ArgumentNullException(nameof(plainText));
-        if (Key == null || Key.Length <= 0)
-            throw new ArgumentNullException(nameof(Key));
-        if (IV == null || IV.Length <= 0)
-            throw new ArgumentNullException(nameof(IV));
-
-        byte[] encrypted;
-
-        using (Aes aesAlg = Aes.Create())
-        {
-            aesAlg.Key = Key;
-            aesAlg.IV = IV;
-            aesAlg.Mode = CipherMode.CBC;
-            aesAlg.Padding = PaddingMode.PKCS7;
-
-            var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-            encrypted = encryptor.TransformFinalBlock(Encoding.UTF8.GetBytes(plainText), 0, plainText.Length);
-        }
-
-        return encrypted;
-    }
-
-    /// <summary>
-    /// 建立物流訂單-B2C及宅配
-    /// </summary>
-    /// <param name="order"></param>
-    /// <returns></returns>
     private Dictionary<string, string> ComputeOrderRequestData(LogisticsOrderRequestDto order)
     {
         var orderDict = new Dictionary<string, string>
@@ -133,11 +103,8 @@ public class ECPayShipmentService
         return orderDict;
     }
 
-    /// <summary>
-    /// 綠界加密規定: https://developers.ecpay.com.tw/?p=7424  
-    /// </summary>
-    /// <param name="order"></param>
-    /// <returns></returns>
+
+    // 綠界舊版物流 雜湊規定: https://developers.ecpay.com.tw/?p=7424  
     private string GetCheckMacValue(Dictionary<string, string> order)
     {
         var param = order.Keys.OrderBy(x => x).Select(key => key + "=" + order[key]).ToList();
@@ -147,13 +114,6 @@ public class ECPayShipmentService
         checkValue = HttpUtility.UrlEncode(checkValue).ToLower();
 
         return CalculateMD5Hash(checkValue).ToUpper();
-    }
-
-    private string CalculateMD5Hash(string input)
-    {
-        byte[] inputBytes = Encoding.ASCII.GetBytes(input);
-        byte[] hashBytes = System.Security.Cryptography.MD5.HashData(inputBytes);
-        return BitConverter.ToString(hashBytes).Replace("-", "");
     }
 
     #region Exception
@@ -176,4 +136,92 @@ public class ECPayShipmentService
         }
     }
     #endregion
+
+    #endregion
+
+    #region Aes 加密/解密
+    static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
+    {
+        if (plainText == null || plainText.Length <= 0)
+            throw new ArgumentNullException(nameof(plainText));
+        if (Key == null || Key.Length <= 0)
+            throw new ArgumentNullException(nameof(Key));
+        if (IV == null || IV.Length <= 0)
+            throw new ArgumentNullException(nameof(IV));
+
+        byte[] encrypted;
+
+        using (Aes aesAlg = Aes.Create())
+        {
+            aesAlg.Key = Key;
+            aesAlg.IV = IV;
+            aesAlg.Mode = CipherMode.CBC;
+            aesAlg.Padding = PaddingMode.PKCS7;
+
+            ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+            using (MemoryStream msEncrypt = new MemoryStream())
+            {
+                using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                {
+                    using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                    {
+                        swEncrypt.Write(plainText);
+                    }
+                    encrypted = msEncrypt.ToArray();
+                }
+            }
+        }
+
+        return encrypted;
+    }
+
+    static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV)
+    {
+        if (cipherText == null || cipherText.Length <= 0)
+            throw new ArgumentNullException(nameof(cipherText));
+        if (Key == null || Key.Length <= 0)
+            throw new ArgumentNullException(nameof(Key));
+        if (IV == null || IV.Length <= 0)
+            throw new ArgumentNullException(nameof(IV));
+
+        string? plaintext = null;
+
+        using (Aes aesAlg = Aes.Create())
+        {
+            aesAlg.Key = Key;
+            aesAlg.IV = IV;
+            aesAlg.Mode = CipherMode.CBC;
+            aesAlg.Padding = PaddingMode.PKCS7;
+
+            ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+            using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+            {
+                using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                {
+                    using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                    {
+                        plaintext = srDecrypt.ReadToEnd();
+                    }
+                }
+            }
+        }
+
+        return plaintext;
+    }
+    #endregion
+
+    #region MD5 雜湊
+    private string CalculateMD5Hash(string input)
+    {
+        byte[] inputBytes = Encoding.ASCII.GetBytes(input);
+        byte[] hashBytes = System.Security.Cryptography.MD5.HashData(inputBytes);
+        return BitConverter.ToString(hashBytes).Replace("-", "");
+    }
+
+    #endregion
+
+
+
 }
