@@ -3,23 +3,13 @@
     <v-layout>
       <v-navigation-drawer permanent absolute>
         <v-list>
-          <v-list-item
-            :prepend-avatar="iconImg"
-            :title="name"
-            :subtitle="email"
-          >
+          <v-list-item :prepend-avatar="iconImg" :title="name" :subtitle="email">
           </v-list-item>
         </v-list>
         <v-divider></v-divider>
 
         <v-list :lines="false" density="compact" nav>
-          <v-list-item
-            v-for="(item, i) in items"
-            :key="i"
-            :value="item"
-            color="primary"
-            @click="handleItemClick(item)"
-          >
+          <v-list-item v-for="(item, i) in items" :key="i" :value="item" color="primary" @click="handleItemClick(item)">
             <template v-slot:prepend>
               <v-icon :icon="item.icon"></v-icon>
             </template>
@@ -44,7 +34,7 @@ const member = ref([]);
 const name = ref("");
 const iconImg = ref("");
 const email = ref("");
-let img = "https://localhost:7081/Files/Icons/";
+let img = "https://localhost:7081/Files/Uploads/Icons/";
 
 const loadMember = async () => {
   const response = await fetch("https://localhost:7081/api/Members", {
