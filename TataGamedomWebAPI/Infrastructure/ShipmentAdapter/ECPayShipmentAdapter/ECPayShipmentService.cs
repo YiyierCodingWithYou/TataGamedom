@@ -39,7 +39,7 @@ public class ECPayShipmentService
 
         var response = await _httpClient.SendAsync(request);  // Todo 解碼response data
 
-        return await response.Content.ReadAsStringAsync();          
+        return await response.Content.ReadAsStringAsync();
     }
 
 
