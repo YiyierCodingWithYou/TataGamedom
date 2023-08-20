@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Cors;
 using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.ECPayShipmentAdapter;
 using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request;
 using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request.LogisticsSelection;
+using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request.QueryLogisticsTradeInfo;
 
 namespace TataGamedomWebAPI.Controllers
 {
@@ -86,6 +87,14 @@ namespace TataGamedomWebAPI.Controllers
 		{
 			return Ok(await _shipmentService.SendLogisticsOrderForPickUpRequest(order));
 		}
+
+        [HttpPost("LogisticsTradeInfo")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> QueryLogisticsTradeInfo(QueryLogisticsTradeInfoDto tradeInfo)
+        {
+            return Ok(await _shipmentService.SendLogisticsTradeInfoQueryRequest(tradeInfo));
+        }
     }
 
 }

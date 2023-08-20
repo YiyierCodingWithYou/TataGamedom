@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -7,6 +6,7 @@ using System.Web;
 using TataGamedomWebAPI.Application.Exceptions;
 using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request;
 using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request.LogisticsSelection;
+using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request.QueryLogisticsTradeInfo;
 using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Response;
 
 namespace TataGamedomWebAPI.Infrastructure.ShipmentAdapter.ECPayShipmentAdapter;
@@ -30,7 +30,7 @@ public class ECPayShipmentService
         var requestJson = JsonSerializer.Serialize(new LogisticsSelectionRequestDto
         {
             RqHeader = new(),
-            Data = ComputeEncodedLogisticsSelectionData(logisticsSelection)
+            Data = ComputeEncodedData(logisticsSelection)
         });
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"{BaseAPIUrl}/v2/RedirectToLogisticsSelection")
@@ -55,9 +55,9 @@ public class ECPayShipmentService
 
 
     // 綠界新版物流 加密規定: https://developers.ecpay.com.tw/?p=10205
-    private string ComputeEncodedLogisticsSelectionData(LogisticsSelectionRawDataDto logisticsSelection)
+    private string ComputeEncodedData<T>(T data)
     {
-        var encodedData = HttpUtility.UrlEncode(JsonSerializer.Serialize(logisticsSelection));
+        var encodedData = HttpUtility.UrlEncode(JsonSerializer.Serialize(data));
         byte[] key = Encoding.UTF8.GetBytes(HashKey);
         byte[] iv = Encoding.UTF8.GetBytes(HashIV);
         byte[] encrypted = EncryptStringToBytes_Aes(encodedData, key, iv);
@@ -148,6 +148,41 @@ public class ECPayShipmentService
     }
     #endregion
 
+    #endregion
+
+    #region 查詢物流訂單
+    public async Task<QueryLogisticsTradeInfoResponseDto?> SendLogisticsTradeInfoQueryRequest(QueryLogisticsTradeInfoDto tradeInfoDto)
+    {
+        var requestJson = JsonSerializer.Serialize(new
+        {
+            PlatformID = string.Empty,
+            MerchantID = "2000132",
+            RqHeader = new RqHeader(),
+            Data = ComputeEncodedData(tradeInfoDto)
+        });
+
+        var request = new HttpRequestMessage(HttpMethod.Post, $"{BaseAPIUrl}/v2/QueryLogisticsTradeInfo")
+        {
+            Content = new StringContent(requestJson, Encoding.UTF8, "application/json")
+        };
+
+        var response = await _httpClient.SendAsync(request);
+
+        using var responseStream = await response.Content.ReadAsStreamAsync();
+        QueryLogisticsTradeInfoResponseDto? tradeInfo = await JsonSerializer.DeserializeAsync<QueryLogisticsTradeInfoResponseDto>(responseStream);
+        tradeInfo!.Data = DecodeAes(tradeInfo);
+
+        return tradeInfo;
+    }
+
+    private string DecodeAes(QueryLogisticsTradeInfoResponseDto? tradeInfo)
+    {
+        byte[] key = Encoding.UTF8.GetBytes(HashKey);
+        byte[] iv = Encoding.UTF8.GetBytes(HashIV);
+        string decodedAesResponse = DecryptStringFromBytes_Aes(Convert.FromBase64String(tradeInfo.Data), key, iv);
+        string decodedData = HttpUtility.UrlDecode(decodedAesResponse);
+        return decodedData;
+    }
     #endregion
 
     #region Aes 加密/解密
