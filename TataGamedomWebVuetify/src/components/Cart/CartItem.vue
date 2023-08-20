@@ -16,11 +16,7 @@
         <tbody>
           <tr v-for="item in cartItems" :key="item.product.id">
             <td>
-              <img
-                :src="imgLink + item.product.gameCoverImg"
-                height="150"
-                cover
-              />
+              <img :src="imgLink + item.product.gameCoverImg" height="150" cover />
             </td>
             <td>
               <div>{{ item.product.chiName }}</div>
@@ -31,10 +27,7 @@
                 </v-chip>
               </div>
             </td>
-            <td
-              v-if="item.product.price != item.product.specialPrice"
-              class="text-end"
-            >
+            <td v-if="item.product.price != item.product.specialPrice" class="text-end">
               <div>
                 <s>NT${{ item.product.price }}</s>
               </div>
@@ -44,47 +37,27 @@
             <td>
               <v-row>
                 <v-col class="d-flex" cols="3">
-                  <v-btn @click="decreaseQuantity(item)" :max="limit"
-                    ><v-icon>mdi-minus</v-icon></v-btn
-                  >
+                  <v-btn @click="decreaseQuantity(item)" :max="limit"><v-icon>mdi-minus</v-icon></v-btn>
                 </v-col>
                 <v-col cols="6">
-                  <v-text-field
-                    v-model="item.qty"
-                    min="0"
-                    :max="limit"
-                    variant="outlined"
-                    readonly
-                  ></v-text-field>
+                  <v-text-field v-model="item.qty" min="0" :max="limit" variant="outlined" readonly></v-text-field>
                 </v-col>
                 <v-col cols="3">
-                  <v-btn @click="increaseQuantity(item)" :max="limit"
-                    ><v-icon>mdi-plus</v-icon></v-btn
-                  >
+                  <v-btn @click="increaseQuantity(item)" :max="limit"><v-icon>mdi-plus</v-icon></v-btn>
                 </v-col>
               </v-row>
             </td>
             <td class="text-end" v-text="item.subTotal"></td>
             <td class="text-end">
-              <v-icon @click="removeItem(item.product.id)"
-                >mdi-cart-remove</v-icon
-              >
+              <v-icon @click="removeItem(item.product.id)">mdi-cart-remove</v-icon>
             </td>
           </tr>
           <tr>
-            <td>已享用優惠</td>
+            <td>優惠活動</td>
             <td>
-              <span
-                class="me-auto"
-                v-for="item in cartData.distinctCoupons"
-                :key="item"
-              >
-                {{ item }}　</span
-              ><span
-                v-for="item in cartData.distinctCouponsDescription"
-                :key="item"
-                >{{ item }}<br
-              /></span>
+              <span class="me-auto" v-for="(item, index) in cartData.distinctCoupons" :key="index">
+                {{ item }} {{ cartData.distinctCouponsDescription[index] }}<br />
+              </span>
             </td>
             <td></td>
             <td></td>
@@ -99,62 +72,35 @@
             <v-card-title class="d-flex">選擇送貨及付款方式</v-card-title>
             <hr />
             <v-card-subtitle>送貨地點</v-card-subtitle>
-            <v-select
-              v-model="selectLocation"
-              :items="shipLocation"
-              item-title="label"
-              item-value="item"
-              return-object
-              single-line
-              variant="solo"
-            ></v-select>
+            <v-select v-model="selectLocation" :items="shipLocation" item-title="label" item-value="item" return-object
+              single-line variant="solo"></v-select>
             <v-card-subtitle>送貨方式</v-card-subtitle>
-            <v-select
-              v-model="selectShipMethod"
-              :items="shipMethod"
-              item-title="label"
-              item-value="item"
-              return-object
-              single-line
-              variant="solo"
-            ></v-select>
+            <v-select v-model="selectShipMethod" :items="shipMethod" item-title="label" item-value="item" return-object
+              single-line variant="solo"></v-select>
             <v-card-subtitle>付款方式</v-card-subtitle>
-            <v-select
-              v-model="selectPayment"
-              :items="payment"
-              item-title="label"
-              item-value="item"
-              return-object
-              single-line
-              variant="solo"
-            ></v-select>
+            <v-select v-model="selectPayment" :items="payment" item-title="label" item-value="item" return-object
+              single-line variant="solo"></v-select>
           </v-card>
         </v-col>
         <v-col cols="4">
           <v-card class="mt-3">
             <v-card-title class="d-flex">訂單資訊</v-card-title>
             <hr />
-            <v-card-subtitle>小計：{{ cartData.total }}</v-card-subtitle>
+            <v-card-subtitle>小計：{{ cartData.subTotal }}</v-card-subtitle>
             <v-card-subtitle>運費：{{ freight }}</v-card-subtitle>
-            <v-card-subtitle
-              >合計：{{ cartData.total + freight }}</v-card-subtitle
-            >
+            <v-card-subtitle>合計：{{ cartData.total + freight }}</v-card-subtitle>
             <br />
             <hr />
             <br />
             <div class="d-flex justify-center">
-              <v-btn width="300" color="primary" @click="returnSelectedHandler"
-                >前往結帳</v-btn
-              >
+              <v-btn width="300" color="primary" @click="returnSelectedHandler">前往結帳</v-btn>
             </div>
           </v-card>
         </v-col>
       </v-row>
     </v-sheet>
 
-    <v-sheet v-else class="text-center"
-      >您的購物車為空，<a href="/eCommerce">點我到商城逛逛！</a></v-sheet
-    >
+    <v-sheet v-else class="text-center">您的購物車為空，<a href="/eCommerce">點我到商城逛逛！</a></v-sheet>
   </v-container>
 </template>
     

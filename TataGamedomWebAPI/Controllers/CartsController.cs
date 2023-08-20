@@ -230,6 +230,19 @@ namespace TataGamedomWebAPI.Controllers
 			return Ok(spot);
 		}
 
+		[HttpGet("SingleShop")]
+		public async Task<ActionResult> GetSingleShop(int id)
+		{
+			var result = _context.BranchesOfSevens.FirstOrDefault(s => s.Id == id);
+
+			if (result == null)
+			{
+				return NotFound();
+			}
+
+			return Ok(result);
+		}
+
 		private bool CartExists(int id)
 		{
 			return (_context.Carts?.Any(e => e.Id == id)).GetValueOrDefault();

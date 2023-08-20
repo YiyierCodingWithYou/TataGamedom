@@ -44,11 +44,11 @@
                 <td class="text-end" v-text="item.subTotal"></td>
               </tr>
               <tr>
-                <td>已享用優惠</td>
+                <td>優惠活動</td>
                 <td>
-                  <span class="me-auto" v-for="item in cartData.distinctCoupons" :key="item">
-                    {{ item }}　</span><span v-for="item in cartData.distinctCouponsDescription" :key="item">{{ item
-                    }}<br /></span>
+                  <span class="me-auto" v-for="(item, index) in cartData.distinctCoupons" :key="index">
+                    {{ item }} {{ cartData.distinctCouponsDescription[index] }}<br />
+                  </span>
                 </td>
                 <td></td>
                 <td></td>
@@ -72,7 +72,7 @@
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
-  <v-form v-model="order" v-if="cartData.allowCheckout">
+  <v-form v-model="valid" v-if="cartData.allowCheckout">
     <v-container>
       <v-row>
         <v-col cols="6">
@@ -94,8 +94,8 @@
             <p>已選擇的送貨方式：{{ selectedData.shipMethod.label }}</p>
             <v-checkbox v-model="fillRecipient" @input="handleFillRecipient" label="收件人資料與顧客資料相同"></v-checkbox>
             <v-card-subtitle>收件人名稱</v-card-subtitle>
-            <v-text-field density="compact" v-model="buyerName" hide-details="auto" variant="solo"
-              required></v-text-field>
+            <v-text-field density="compact" v-model="buyerName" :rules="[rules.required]" hide-details="auto"
+              variant="solo" required></v-text-field>
             <v-card-subtitle class="mb-5">請填入收件人真實姓名，以確保順利收件</v-card-subtitle>
             <v-card-subtitle>收件人電話號碼</v-card-subtitle>
             <v-text-field density="compact" v-model="buyerPhone" :rules="[rules.required]" hide-details="auto"
@@ -111,6 +111,11 @@
                 <img src="https://localhost:7081/Files/Uploads/seven-eleven.png" width="30" />
                 選擇門市
               </p>
+              <div v-if="singleSpot && singleSpot.storeNumber" class="mb-5">
+                <p>門市編號：{{ singleSpot.storeNumber }}</p>
+                <p>門市名稱：{{ singleSpot.storeName }}</p>
+                <p>門市地址：{{ singleSpot.address }}</p>
+              </div>
               <v-row justify="center" class="mb-3">
                 <v-dialog v-model="dialog" persistent width="auto">
                   <template v-slot:activator="{ props }">
@@ -146,7 +151,7 @@
                       <v-btn color="green-darken-1" variant="text" @click="dialog = false">
                         取消
                       </v-btn>
-                      <v-btn color="green-darken-1" variant="text" @click="dialog = false">
+                      <v-btn color="green-darken-1" variant="text" @click="spotHandler(spot)">
                         確認
                       </v-btn>
                     </v-card-actions>
@@ -204,6 +209,7 @@ const branch = ref("");
 const city = ref("");
 const cityList = ref([]);
 const spot = ref("");
+const singleSpot = ref({});
 const spotList = ref([]);
 const props = defineProps({
   selectedData: Object,
@@ -223,6 +229,8 @@ const rules = {
     return pattern.test(value) || "E-mail格式不正確";
   },
 };
+const createOrderCommand = { memberId: member.value.id,toAddress: singleSpot.value.address };
+const createOrderItemCommandList = [];
 
 const getCity = async () => {
   const response = await fetch(`https://localhost:7081/api/Carts/Shop/City`)
@@ -243,12 +251,21 @@ const displayItem = (item) => {
   if (item && item.storeName && item.address) {
     return `${item.storeName}門市 - ${item.address}`;
   } else {
-    return '---'; // 或其他的預設文字
+    return '---';
   }
 };
 
+const spotHandler = async (value) => {
+  const response = await fetch(`https://localhost:7081/api/Carts/SingleShop?id=${value}`)
+  const datas = await response.json();
+  singleSpot.value = datas;
+  dialog.value = false;
+  keyword.value = "";
+  branch.value = "";
+  spotList.value = [];
+}
+
 const handleFillRecipient = () => {
-  console.log(fillRecipient.value);
   if (fillRecipient.value) {
     buyerName.value = name.value;
     buyerPhone.value = phoneNumber.value;
@@ -267,7 +284,26 @@ const loadData = async (type) => {
   total.value = datas.total;
   console.log(cartItems.value);
   count.value = datas.cartItems.length;
-};
+
+  let totalItemsCount = cartItems.value.reduce((accumulator, item) => accumulator + item.qty, 0);
+  console.log(totalItemsCount);
+
+  let discountPerItem = 0;
+  if (total.value > 3000) {
+    discountPerItem = 300 / totalItemsCount;
+  }
+
+  cartItems.value.forEach(item => {
+    let productPrice = item.product.specialPrice - discountPerItem;
+
+    for (let i = 0; i < item.qty; i++) {
+      createOrderItemCommandList.push({
+        productPrice: productPrice,
+        productId: item.product.id
+      });
+    }
+  });
+}
 
 const getMember = async () => {
   const response = await fetch("https://localhost:7081/api/Members", {
@@ -280,7 +316,7 @@ const getMember = async () => {
   email.value = datas.email;
 };
 
-const checkout = async () => {
+const checkoutECPay = async () => {
   try {
     const response = await fetch(
       `https://localhost:7081/api/ECPay/Create?total=${props.selectedData.totalAmount}`,
@@ -296,12 +332,38 @@ const checkout = async () => {
     console.log("Error:", error);
   }
 };
-const handleSubmit = async () => {
-  //await createOrder();
-  await checkout();
-  ecpayForm.value.submit();
-};
 
+const checkoutLinePay = () => {
+
+}
+//console.log(createOrderItemCommandList);
+
+const createOrder =async () => {
+  const response = await fetch(`https://localhost:7081/api/Orders/OrderWithMultipleItems`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      createOrderCommand: createOrderCommand,
+      createOrderItemCommandList: createOrderItemCommandList
+    })
+  }).then().catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
+
+const handleSubmit = async () => {
+  createOrder();
+  if (props.selectedData.payment.id == 2) {
+    await checkoutECPay();
+    ecpayForm.value.submit();
+  }
+  else if (props.selectedData.payment.id == 1) {
+    await checkoutLinePay();
+  }
+};
 
 loadData();
 getMember();
