@@ -93,8 +93,9 @@ namespace TataGamedomWebAPI.Controllers
         }
 
 
-        // GET: api/News/5
-        [HttpGet("{id}")]
+		// GET: api/News/5
+		[EnableCors("AllowAny")]
+		[HttpGet("{id}")]
         public async Task<ActionResult<NewsDto>> GetSingleNews(int id)
         {
             if (_context.News == null)

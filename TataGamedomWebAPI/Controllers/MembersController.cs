@@ -173,7 +173,7 @@ namespace TataGamedomWebAPI.Controllers
 		// PUT: api/Members/5
 		[EnableCors("AllowCookie")]
 		[HttpPut]
-		public async Task<IActionResult> PutMember(MembersDto memberDto)
+		public async Task<IActionResult> PutMember(MembersDto memberDto, string iconImgFileName)
 		{
 
 			var account = HttpContext.User.FindFirstValue("MembersAccount");
@@ -187,8 +187,10 @@ namespace TataGamedomWebAPI.Controllers
 			// 更新 member 物件的屬性
 			user.Name = memberDto.Name;
 			user.Phone = memberDto.Phone;
-			user.IconImg = memberDto.IconImg;
-
+			if (!string.IsNullOrEmpty(iconImgFileName))
+			{
+				user.IconImg = iconImgFileName;
+			}
 			await _context.SaveChangesAsync();
 	
 			return NoContent();
@@ -227,7 +229,7 @@ namespace TataGamedomWebAPI.Controllers
 
 			var hashOrigPwd = HashUtility.ToSHA256(registerDto.Password, "!@#$$DGTEGYT");
 		
-			var pocha = "POCHA.jpg";
+			var tataicon = "tataUserIcon.jpg";
 			//驗證用不寫入SQL
 			registerDto.CheckPassword = null;
 
@@ -251,7 +253,7 @@ namespace TataGamedomWebAPI.Controllers
 			};
 			if (registerDto.IconImg == null)
 			{
-				member.IconImg = pocha;
+				member.IconImg = tataicon;
 			}
 
 			await _context.Members.AddAsync(member);
