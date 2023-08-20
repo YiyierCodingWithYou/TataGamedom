@@ -1,8 +1,12 @@
 ﻿using System.Collections.Specialized;
+using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Web;
 using TataGamedomWebAPI.Application.Exceptions;
-using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos;
+using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request;
+using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request.LogisticsSelection;
+using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Response;
 
 namespace TataGamedomWebAPI.Infrastructure.ShipmentAdapter.ECPayShipmentAdapter;
 
@@ -10,13 +14,35 @@ public class ECPayShipmentService
 {
     private readonly string HashKey = "5294y06JbISpM5x9";
     private readonly string HashIV = "v77hoKGq4kWxNNIS";
-    private readonly string RequstUrl = "https://logistics-stage.ecpay.com.tw/Express/Create";
-
+    private readonly string BaseAPIUrl = "https://logistics-stage.ecpay.com.tw/Express";
 
     private static readonly HttpClient _httpClient;
     static ECPayShipmentService()
     {
         _httpClient = new HttpClient();
+    }
+
+    /// <summary>
+    /// 開啟物流選擇頁
+    /// </summary>
+    /// <param name="logisticsSelection"></param>
+    /// <returns></returns>
+    public async Task<string?> SendLogisticsSelectionRequest(LogisticsSelectionRawDataDto logisticsSelection)
+    {
+        var requestJson = JsonSerializer.Serialize(new LogisticsSelectionRequestDto
+        {
+            RqHeader = new(),
+            Data = ComputeEncodedLogisticsSelectionData(logisticsSelection)
+        });
+
+        var request = new HttpRequestMessage(HttpMethod.Post, $"{BaseAPIUrl}/v2/RedirectToLogisticsSelection")
+        {
+            Content = new StringContent(requestJson, Encoding.UTF8, "application/json")
+        };
+
+        var responseJson = await _httpClient.SendAsync(request);
+
+        return await responseJson.Content.ReadAsStringAsync();          // Todo 解碼response data
     }
 
     /// <summary>
@@ -29,8 +55,8 @@ public class ECPayShipmentService
     /// <returns></returns>
     public async Task<Dictionary<string, string>> SendLogisticsOrderForPickUpRequest(LogisticsOrderRequestDto order)
     {
-        using FormUrlEncodedContent content = new FormUrlEncodedContent(ComputeRequestData(order));
-        HttpResponseMessage response = await _httpClient.PostAsync(RequstUrl, content);
+        using FormUrlEncodedContent content = new FormUrlEncodedContent(ComputeOrderRequestData(order));
+        HttpResponseMessage response = await _httpClient.PostAsync($"{BaseAPIUrl}/Create", content);
         string responseBody = await response.Content.ReadAsStringAsync();
 
         ThrowExceptionIfBadRequest(response, responseBody);
@@ -43,33 +69,46 @@ public class ECPayShipmentService
         return data;
     }
 
-
-    private static void ThrowExceptionIfBadRequest(HttpResponseMessage response, string responseBody)
+    private string ComputeEncodedLogisticsSelectionData(LogisticsSelectionRawDataDto logisticsSelection)
     {
-        if (response.IsSuccessStatusCode == false || responseBody.StartsWith("0|") || responseBody.StartsWith("105000"))
-        {
-            throw new BadRequestException(responseBody);
-        };
+        var encodedData = HttpUtility.UrlEncode(JsonSerializer.Serialize(logisticsSelection));
+        byte[] key = Encoding.UTF8.GetBytes(HashKey);
+        byte[] iv = Encoding.UTF8.GetBytes(HashIV);
+        byte[] encrypted = AESEncryptStringToBytes(encodedData, key, iv);
+        return Convert.ToBase64String(encrypted);
     }
 
-    private void ThrowExceptionIfCheckMacValueNotMatch(NameValueCollection responseValues, Dictionary<string, string> data)
+    static byte[] AESEncryptStringToBytes(string plainText, byte[] Key, byte[] IV)
     {
-        if (responseValues["CheckMacValue"] != GetCheckMacValue(data))
+        if (plainText == null || plainText.Length <= 0)
+            throw new ArgumentNullException(nameof(plainText));
+        if (Key == null || Key.Length <= 0)
+            throw new ArgumentNullException(nameof(Key));
+        if (IV == null || IV.Length <= 0)
+            throw new ArgumentNullException(nameof(IV));
+
+        byte[] encrypted;
+
+        using (Aes aesAlg = Aes.Create())
         {
-            throw new BadRequestException($@"
-綠界回傳參數與傳入參數不符:
-檢查碼[CheckMacValue]:{GetCheckMacValue(data)}
-傳回值: {responseValues}");
+            aesAlg.Key = Key;
+            aesAlg.IV = IV;
+            aesAlg.Mode = CipherMode.CBC;
+            aesAlg.Padding = PaddingMode.PKCS7;
+
+            var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+            encrypted = encryptor.TransformFinalBlock(Encoding.UTF8.GetBytes(plainText), 0, plainText.Length);
         }
-    }
 
+        return encrypted;
+    }
 
     /// <summary>
-    /// 測試介接資訊: B2C及宅配
+    /// 建立物流訂單-B2C及宅配
     /// </summary>
     /// <param name="order"></param>
     /// <returns></returns>
-    private Dictionary<string, string> ComputeRequestData(LogisticsOrderRequestDto order)
+    private Dictionary<string, string> ComputeOrderRequestData(LogisticsOrderRequestDto order)
     {
         var orderDict = new Dictionary<string, string>
         {
@@ -116,4 +155,25 @@ public class ECPayShipmentService
         byte[] hashBytes = System.Security.Cryptography.MD5.HashData(inputBytes);
         return BitConverter.ToString(hashBytes).Replace("-", "");
     }
+
+    #region Exception
+    private static void ThrowExceptionIfBadRequest(HttpResponseMessage response, string responseBody)
+    {
+        if (response.IsSuccessStatusCode == false || responseBody.StartsWith("0|") || responseBody.StartsWith("105000"))
+        {
+            throw new BadRequestException(responseBody);
+        };
+    }
+
+    private void ThrowExceptionIfCheckMacValueNotMatch(NameValueCollection responseValues, Dictionary<string, string> data)
+    {
+        if (responseValues["CheckMacValue"] != GetCheckMacValue(data))
+        {
+            throw new BadRequestException($@"
+綠界回傳參數與傳入參數不符:
+檢查碼[CheckMacValue]:{GetCheckMacValue(data)}
+傳回值: {responseValues}");
+        }
+    }
+    #endregion
 }

@@ -1,4 +1,4 @@
-﻿namespace TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos;
+﻿namespace TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request;
 
 public class LogisticsOrderRequestDto
 {

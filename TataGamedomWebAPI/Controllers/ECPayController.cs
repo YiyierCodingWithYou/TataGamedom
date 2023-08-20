@@ -3,7 +3,8 @@ using System.Text;
 using System.Web;
 using Microsoft.AspNetCore.Cors;
 using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.ECPayShipmentAdapter;
-using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos;
+using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request;
+using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request.LogisticsSelection;
 
 namespace TataGamedomWebAPI.Controllers
 {
@@ -70,7 +71,15 @@ namespace TataGamedomWebAPI.Controllers
 		}
 
 
-		[HttpPost("LogisticsOrder")]
+        [HttpPost("LogisticsSelection")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> RedirectToLogisticsSelection(LogisticsSelectionRawDataDto logisticsSelection)
+        {
+            return Ok(await _shipmentService.SendLogisticsSelectionRequest(logisticsSelection));
+        }
+
+        [HttpPost("LogisticsOrder")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
         public async Task<ActionResult> CreateLogisticsOrderForPickUp(LogisticsOrderRequestDto order) 
