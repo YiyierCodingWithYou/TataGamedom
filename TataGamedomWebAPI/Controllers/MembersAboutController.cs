@@ -93,12 +93,12 @@ namespace TataGamedomWebAPI.Controllers
 
 			if (loginId == 0)
 			{
-				return NotFound();
+				return BadRequest("登入怪怪的"+loginAccount+loginId);
 			}
 
 			if (loginId == memberId)
 			{
-				return NotFound();
+				return BadRequest("不行對自己做操作");
 			}
 
 

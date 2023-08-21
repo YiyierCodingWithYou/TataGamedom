@@ -49,7 +49,12 @@
               <ReadPostTotal></ReadPostTotal>
             </template>
           </MainCol>
-          <RightCol></RightCol>
+          <RightCol>
+            <template #container>
+              <AboutAccount></AboutAccount>
+              <AboutBoard></AboutBoard>
+            </template>
+          </RightCol>
         </v-row>
       </v-container>
     </v-window-item>
@@ -66,6 +71,8 @@ import SearchBar from "@/components/GameLounge/SearchBar.vue";
 import ReadPostTotal from "@/components/GameLounge/ReadPostTotal.vue";
 import ReadPostPersonalize from "@/components/GameLounge/ReadPostPersonalize.vue";
 import BoardList from "@/components/GameLounge/LeftBoardList/BoardList.vue";
+import AboutAccount from "@/components/GameLounge/RightBoardList/AboutAccount.vue";
+import AboutBoard from "@/components/GameLounge/RightBoardList/AboutBoard.vue";
 import { useRoute } from "vue-router";
 
 const tab = ref(1);
