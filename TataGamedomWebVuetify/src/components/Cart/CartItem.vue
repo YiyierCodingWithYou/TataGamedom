@@ -16,7 +16,11 @@
         <tbody>
           <tr v-for="item in cartItems" :key="item.product.id">
             <td>
-              <img :src="imgLink + item.product.gameCoverImg" height="150" cover />
+              <img
+                :src="imgLink + item.product.gameCoverImg"
+                height="150"
+                cover
+              />
             </td>
             <td>
               <div>{{ item.product.chiName }}</div>
@@ -27,7 +31,10 @@
                 </v-chip>
               </div>
             </td>
-            <td v-if="item.product.price != item.product.specialPrice" class="text-end">
+            <td
+              v-if="item.product.price != item.product.specialPrice"
+              class="text-end"
+            >
               <div>
                 <s>NT${{ item.product.price }}</s>
               </div>
@@ -37,26 +44,43 @@
             <td>
               <v-row>
                 <v-col class="d-flex" cols="3">
-                  <v-btn @click="decreaseQuantity(item)" :max="limit"><v-icon>mdi-minus</v-icon></v-btn>
+                  <v-btn @click="decreaseQuantity(item)" :max="limit"
+                    ><v-icon>mdi-minus</v-icon></v-btn
+                  >
                 </v-col>
                 <v-col cols="6">
-                  <v-text-field v-model="item.qty" min="0" :max="limit" variant="outlined" readonly></v-text-field>
+                  <v-text-field
+                    v-model="item.qty"
+                    min="0"
+                    :max="limit"
+                    variant="outlined"
+                    readonly
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="3">
-                  <v-btn @click="increaseQuantity(item)" :max="limit"><v-icon>mdi-plus</v-icon></v-btn>
+                  <v-btn @click="increaseQuantity(item)" :max="limit"
+                    ><v-icon>mdi-plus</v-icon></v-btn
+                  >
                 </v-col>
               </v-row>
             </td>
             <td class="text-end" v-text="item.subTotal"></td>
             <td class="text-end">
-              <v-icon @click="removeItem(item.product.id)">mdi-cart-remove</v-icon>
+              <v-icon @click="removeItem(item.product.id)"
+                >mdi-cart-remove</v-icon
+              >
             </td>
           </tr>
           <tr>
             <td>優惠活動</td>
             <td>
-              <span class="me-auto" v-for="(item, index) in cartData.distinctCoupons" :key="index">
-                {{ item }} {{ cartData.distinctCouponsDescription[index] }}<br />
+              <span
+                class="me-auto"
+                v-for="(item, index) in cartData.distinctCoupons"
+                :key="index"
+              >
+                {{ item }} {{ cartData.distinctCouponsDescription[index]
+                }}<br />
               </span>
             </td>
             <td></td>
@@ -72,14 +96,35 @@
             <v-card-title class="d-flex">選擇送貨及付款方式</v-card-title>
             <hr />
             <v-card-subtitle>送貨地點</v-card-subtitle>
-            <v-select v-model="selectLocation" :items="shipLocation" item-title="label" item-value="item" return-object
-              single-line variant="solo"></v-select>
+            <v-select
+              v-model="selectLocation"
+              :items="shipLocation"
+              item-title="label"
+              item-value="item"
+              return-object
+              single-line
+              variant="solo"
+            ></v-select>
             <v-card-subtitle>送貨方式</v-card-subtitle>
-            <v-select v-model="selectShipMethod" :items="shipMethod" item-title="label" item-value="item" return-object
-              single-line variant="solo"></v-select>
+            <v-select
+              v-model="selectShipMethod"
+              :items="shipMethod"
+              item-title="label"
+              item-value="item"
+              return-object
+              single-line
+              variant="solo"
+            ></v-select>
             <v-card-subtitle>付款方式</v-card-subtitle>
-            <v-select v-model="selectPayment" :items="payment" item-title="label" item-value="item" return-object
-              single-line variant="solo"></v-select>
+            <v-select
+              v-model="selectPayment"
+              :items="payment"
+              item-title="label"
+              item-value="item"
+              return-object
+              single-line
+              variant="solo"
+            ></v-select>
           </v-card>
         </v-col>
         <v-col cols="4">
@@ -88,19 +133,25 @@
             <hr />
             <v-card-subtitle>小計：{{ cartData.subTotal }}</v-card-subtitle>
             <v-card-subtitle>運費：{{ freight }}</v-card-subtitle>
-            <v-card-subtitle>合計：{{ cartData.total + freight }}</v-card-subtitle>
+            <v-card-subtitle
+              >合計：{{ cartData.total + freight }}</v-card-subtitle
+            >
             <br />
             <hr />
             <br />
             <div class="d-flex justify-center">
-              <v-btn width="300" color="primary" @click="returnSelectedHandler">前往結帳</v-btn>
+              <v-btn width="300" color="primary" @click="returnSelectedHandler"
+                >前往結帳</v-btn
+              >
             </div>
           </v-card>
         </v-col>
       </v-row>
     </v-sheet>
 
-    <v-sheet v-else class="text-center">您的購物車為空，<a href="/eCommerce">點我到商城逛逛！</a></v-sheet>
+    <v-sheet v-else class="text-center"
+      >您的購物車為空，<a href="/eCommerce">點我到商城逛逛！</a></v-sheet
+    >
   </v-container>
 </template>
     
@@ -140,20 +191,23 @@ const returnSelectedHandler = () => {
   emit("getreturnSelected", selectedData);
 };
 
-watch(() => {
-  return {
-    location: selectLocation.value,
-    shipMethod: selectShipMethod.value,
-    payment: selectPayment.value,
-    freight: freight.value,
-    totalAmount: total.value,
-  };
-}, (newValue, oldValue) => {
-  // 當 selectedData 發生變化時觸發
-  // 這裡可以添加相關邏輯，例如檢查 selectedData 的不同並觸發 loadData
-  console.log("selectedData changed:", newValue);
-  loadData();
-});
+watch(
+  () => {
+    return {
+      location: selectLocation.value,
+      shipMethod: selectShipMethod.value,
+      payment: selectPayment.value,
+      freight: freight.value,
+      totalAmount: total.value,
+    };
+  },
+  (newValue, oldValue) => {
+    // 當 selectedData 發生變化時觸發
+    // 這裡可以添加相關邏輯，例如檢查 selectedData 的不同並觸發 loadData
+    console.log("selectedData changed:", newValue);
+    loadData();
+  }
+);
 
 const shipLocation = ref([
   { loc: "taiwan", label: "台灣" },
@@ -186,7 +240,6 @@ const loadData = async () => {
   });
   const datas = await response.json();
   cartData.value = datas;
-  //console.log(cartData.value);
   cartItems.value = datas.cartItems;
   total.value = datas.total;
 };
@@ -311,9 +364,9 @@ const calculatePaymentOption = () => {
 };
 
 const calculateShippingFee = () => {
-  if (total.value >= 3000 || selectShipMethod.value.method === "oversea") {
+  if (total.value >= 2000 || selectShipMethod.value.method === "oversea") {
     freight.value = 0;
-  } else if (total.value < 3000) {
+  } else if (total.value < 2000) {
     if (
       selectShipMethod.value.method !== "payFirstAtHome" &&
       selectShipMethod.value.method !== "payAtHome"
