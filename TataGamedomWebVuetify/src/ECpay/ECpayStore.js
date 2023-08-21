@@ -2,84 +2,51 @@ import axios from 'axios';
 
 const BASE_URL = 'https://localhost:7081';
 
-const OrderStore = {
+const ECpayStore = {
     state: () => ({
-        orders: [],
-        orderDetails: {},
-        orderItemIdReturnList: {},
+       MerchantTradeNo: '',
+       logisticsStatus: ''
     }),
     getters: {
-        getOrderById: (state) => (orderId) => {
-            return state.orders.find(order => order.id == orderId);
-        },
-        getOrderDetailsById: (state) => (orderId) => {
-            return state.orderDetails[orderId];
-        },
-        getOrderItemIdReturnList: (state) => (orderId) => {
-            return state.orderItemIdReturnList[orderId];
-        },
+        getMerchantTradeNo: state => state.MerchantTradeNo,
+        getLogisticsStatus: state => state.logisticsStatus
     },
     mutations: {
-        setOrders(state, orders) {
-            console.log("Orders received for mutation:", orders);
-            state.orders = orders;
+        setMerchantTradeNo: (state, tradeNo) => {
+            state.MerchantTradeNo = tradeNo;
         },
-        setOrderDetails(state, { orderId, details }) {
-            state.orderDetails[orderId] = details;
-        },
-        setorderItemIdReturnList(state, { orderId, orderItemIdReturnList }) {
-            state.orderItemIdReturnList[orderId] = orderItemIdReturnList;
-        },
+        setLogisticsStatus: (state, status) => {
+            state.logisticsStatus = status;
+        }
     },
     actions: {
-        async fetchOrders({ commit }) {
+        async createLogisticsOrder({ commit }, payload) {
             try {
-                const response = await axios.get(`${BASE_URL}/api/Orders`, { withCredentials: true });
-                commit('setOrders', response.data);
+                const response = await axios.post(`${BASE_URL}/api/ECPay/LogisticsOrder`, payload);
+                commit('setMerchantTradeNo', response.data.MerchantTradeNo);
+                return response.data;
             } catch (error) {
-                console.error('Failed to fetch orders:', error.message);
+                throw error;
             }
         },
-        async fetchOrderDetails({ commit }, orderId) {
+        async navigateToLogisticsSelection(_, payload) {
             try {
-                const response = await axios.get(`${BASE_URL}/api/OrderItems/order/${orderId}`);
-                commit('setOrderDetails', { orderId, details: response.data });
-                console.log("action: fetchOrderDetails", response)
+                const response = await axios.post(`${BASE_URL}/api/ECPay/LogisticsSelection`, payload);
+                return response.data;
             } catch (error) {
-                console.error('Failed to fetch order details:', error.message);
+                throw error;
             }
         },
-        async fetchOrderItemIdReturnList({ commit }, orderId) {
+        async getLogisticsTradeInfo({ commit }, payload) {
             try {
-                const response = await axios.get(`${BASE_URL}/api/OrderItemReturns/ItemIdList/${orderId}`);
-                commit('setorderItemIdReturnList', { orderId, orderItemIdReturnList: response.data });
-                console.log("action: fetchOrderItemIdReturnList", response)
+                const response = await axios.post(`${BASE_URL}/api/ECPay/LogisticsTradeInfo`, payload);
+                commit('setLogisticsStatus', response.data.decodedData.logisticsStatus);
+                return response.data;
             } catch (error) {
-                console.error('Failed to fetch OrderItemIdReturnList :', error.message);
+                throw error;
             }
-        },
-        async postOrderItemReturns({ commit, dispatch }, payload) {
-            const { requestData, orderId } = payload;
-            try {
-                console.log(requestData, orderId)
-                const response = await axios.post(
-                    `${BASE_URL}/api/OrderItemReturns/MultipleOrderItemsReturn`,
-                    requestData,
-                    {
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
-                if (response.status === 200) {
-                    await dispatch('fetchOrderItemIdReturnList', orderId);
-                    await dispatch('fetchOrders');
-                }
-            } catch (error) {
-                console.log('Failed to post order item returns:', error.message);
-            }
-        },
+        }
     }
 };
 
-export default OrderStore;
+export default ECpayStore;
