@@ -1,8 +1,7 @@
 <template>
   <v-app>
-    <default-bar ref="barRef"></default-bar>
-    <Button-Nav />
-    <default-view style="margin-top: 64px"></default-view>
+    <default-bar></default-bar>
+    <default-view></default-view>
   </v-app>
 </template>
 

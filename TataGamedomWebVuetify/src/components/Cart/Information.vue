@@ -53,19 +53,16 @@
                 <td class="text-end" v-text="item.subTotal"></td>
               </tr>
               <tr>
-                <td>已享用優惠</td>
+                <td>優惠活動</td>
                 <td>
                   <span
                     class="me-auto"
-                    v-for="item in cartData.distinctCoupons"
-                    :key="item"
+                    v-for="(item, index) in cartData.distinctCoupons"
+                    :key="index"
                   >
-                    {{ item }}　</span
-                  ><span
-                    v-for="item in cartData.distinctCouponsDescription"
-                    :key="item"
-                    >{{ item }}<br
-                  /></span>
+                    {{ item }} {{ cartData.distinctCouponsDescription[index]
+                    }}<br />
+                  </span>
                 </td>
                 <td></td>
                 <td></td>
@@ -89,7 +86,7 @@
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
-  <v-form v-model="order" v-if="cartData.allowCheckout">
+  <v-form v-model="valid" v-if="cartData.allowCheckout">
     <v-container>
       <v-row>
         <v-col cols="6">
@@ -135,6 +132,7 @@
             <v-text-field
               density="compact"
               v-model="buyerName"
+              :rules="[rules.required]"
               hide-details="auto"
               variant="solo"
               required
@@ -168,19 +166,93 @@
                 selectedData.shipMethod.id == 2
               "
             >
-              <p>
+              <p class="mb-5">
                 <img
                   src="https://localhost:7081/Files/Uploads/seven-eleven.png"
                   width="30"
                 />
                 選擇門市
               </p>
-              <div class="d-flex justify-center">
-                <v-btn width="300" color="primary" @click="chooseShop"
-                  >搜尋門市</v-btn
-                >
+              <div v-if="singleSpot && singleSpot.storeNumber" class="mb-5">
+                <p>門市編號：{{ singleSpot.storeNumber }}</p>
+                <p>門市名稱：{{ singleSpot.storeName }}</p>
+                <p>門市地址：{{ singleSpot.address }}</p>
               </div>
+              <v-row justify="center" class="mb-3">
+                <v-dialog v-model="dialog" persistent width="auto">
+                  <template v-slot:activator="{ props }">
+                    <v-btn color="primary" v-bind="props"> 搜尋門市 </v-btn>
+                  </template>
+                  <v-card width="850" height="500">
+                    <v-row class="d-flex">
+                      <v-col cols="10" class="d-flex">
+                        <v-card-title>以路名查詢：</v-card-title>
+                        <v-text-field
+                          v-model="keyword"
+                          single-line
+                          variant="solo"
+                          label="請輸入道路名稱"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="10" class="d-flex">
+                        <v-card-title>以門市查詢：</v-card-title>
+                        <v-text-field
+                          v-model="branch"
+                          single-line
+                          variant="solo"
+                          label="請輸入門市名稱"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="6" class="d-flex">
+                        <v-card-title>以縣市查詢：</v-card-title>
+                        <v-select
+                          v-model="city"
+                          :items="cityList"
+                          item-value="item"
+                          return-object
+                          single-line
+                          variant="solo"
+                          label="---"
+                        ></v-select>
+                        <v-col cols="2" @click="spotSearch"
+                          ><v-btn>搜尋</v-btn></v-col
+                        >
+                      </v-col>
+                      <v-col cols="12">
+                        <v-card-title>請選擇門市：</v-card-title>
+                        <v-select
+                          v-if="spotList && spotList.length"
+                          v-model="spot"
+                          :items="spotList"
+                          :item-title="displayItem"
+                          item-value="id"
+                          single-line
+                          variant="solo"
+                        ></v-select>
+                      </v-col>
+                    </v-row>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="green-darken-1"
+                        variant="text"
+                        @click="dialog = false"
+                      >
+                        取消
+                      </v-btn>
+                      <v-btn
+                        color="green-darken-1"
+                        variant="text"
+                        @click="spotHandler(spot)"
+                      >
+                        確認
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-row>
             </div>
+
             <div
               v-else-if="
                 selectedData.shipMethod.id == 3 ||
@@ -194,11 +266,7 @@
                 />
                 選擇門市
               </p>
-              <div class="d-flex justify-center">
-                <v-btn width="300" color="primary" @click="chooseShop"
-                  >搜尋門市</v-btn
-                >
-              </div>
+              <div class="d-flex justify-center"></div>
             </div>
 
             <p v-else>
@@ -214,21 +282,23 @@
           </v-card>
         </v-col>
       </v-row>
-
-      <form
-        ref="ecpayForm"
-        action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5"
-        method="POST"
-      >
-        <input
-          type="hidden"
-          v-for="(value, key) in ecPayparams"
-          :key="key"
-          :name="key"
-          :value="value"
-        />
-        <v-btn @click.prevent="handleSubmit">送出訂單</v-btn>
-      </form>
+      <div class="d-flex mt-5">
+        <v-btn class="me-auto">繼續購物</v-btn>
+        <form
+          ref="ecpayForm"
+          action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5"
+          method="POST"
+        >
+          <input
+            type="hidden"
+            v-for="(value, key) in ecPayparams"
+            :key="key"
+            :name="key"
+            :value="value"
+          />
+          <v-btn @click.prevent="handleSubmit">送出訂單</v-btn>
+        </form>
+      </div>
     </v-container>
   </v-form>
 </template>
@@ -236,7 +306,7 @@
 <script setup>
 import { ref, defineProps, computed, watch } from "vue";
 import Payment from "@/components/Cart/Payment.vue";
-
+const dialog = ref(false);
 const cartData = ref({});
 const cartItems = ref([]);
 const imgLink = "https://localhost:7081/Files/Uploads/";
@@ -246,6 +316,13 @@ const member = ref({});
 const name = ref("");
 const email = ref("");
 const phoneNumber = ref("");
+const keyword = ref("");
+const branch = ref("");
+const city = ref("");
+const cityList = ref([]);
+const spot = ref("");
+const singleSpot = ref({});
+const spotList = ref([]);
 const props = defineProps({
   selectedData: Object,
 });
@@ -256,6 +333,8 @@ const fillRecipient = ref(false);
 const buyerName = ref("");
 const buyerPhone = ref("");
 const buyerEmail = ref("");
+const createOrderCommand = ref({});
+const createOrderItemCommandList = [];
 const rules = {
   required: (value) => !!value || "此欄位必填",
   email: (value) => {
@@ -265,8 +344,47 @@ const rules = {
   },
 };
 
+const getCity = async () => {
+  const response = await fetch(`https://localhost:7081/api/Carts/Shop/City`);
+  const datas = await response.json();
+  cityList.value = datas;
+};
+
+const spotSearch = async () => {
+  if (city.value) {
+    keyword.value = city.value;
+  }
+  const response = await fetch(
+    `https://localhost:7081/api/Carts/Shop?keyword=${keyword.value}&branch=${branch.value}`
+  );
+  const datas = await response.json();
+  spotList.value = datas;
+};
+
+const displayItem = (item) => {
+  if (item && item.storeName && item.address) {
+    return `${item.storeName}門市 - ${item.address}`;
+  } else {
+    return "---";
+  }
+};
+
+const spotHandler = async (value) => {
+  const response = await fetch(
+    `https://localhost:7081/api/Carts/SingleShop?id=${value}`
+  );
+  const datas = await response.json();
+  singleSpot.value = datas;
+  dialog.value = false;
+  keyword.value = "";
+  branch.value = "";
+  spotList.value = [];
+  createOrderCommand.value.toAddress = datas.address;
+  createOrderCommand.value.shipmentMethodId = props.selectedData.shipMethod.id;
+  createOrderCommand.value.recipientName = buyerName;
+};
+
 const handleFillRecipient = () => {
-  console.log(fillRecipient.value);
   if (fillRecipient.value) {
     buyerName.value = name.value;
     buyerPhone.value = phoneNumber.value;
@@ -283,9 +401,40 @@ const loadData = async (type) => {
   cartData.value = datas;
   cartItems.value = datas.cartItems;
   total.value = datas.total;
+  console.log(cartItems.value);
   count.value = datas.cartItems.length;
 };
 
+const load = async () => {
+  await loadData();
+  await getMember();
+  await getCity();
+
+  let totalItemsCount = cartItems.value.reduce(
+    (accumulator, item) => accumulator + item.qty,
+    0
+  );
+  console.log(totalItemsCount);
+
+  let discountPerItem = 0;
+  if (total.value > 3000) {
+    discountPerItem = 300 / totalItemsCount;
+  }
+
+  cartItems.value.forEach((item) => {
+    let productPrice = item.product.specialPrice - discountPerItem;
+
+    for (let i = 0; i < item.qty; i++) {
+      createOrderItemCommandList.push({
+        productPrice: productPrice,
+        productId: item.product.id,
+      });
+    }
+  });
+
+  console.log(createOrderCommand.value);
+  console.log(createOrderItemCommandList);
+};
 const getMember = async () => {
   const response = await fetch("https://localhost:7081/api/Members", {
     credentials: "include",
@@ -295,35 +444,10 @@ const getMember = async () => {
   phoneNumber.value = datas.phone;
   name.value = datas.name;
   email.value = datas.email;
-  console.log(member.value);
+  createOrderCommand.value.memberId = datas.id;
 };
 
-const chooseShop = async () => {
-  const response = await fetch("https://emap.pcsc.com.tw/ecmap/default.aspx", {
-    method: "POST",
-    mode: "no-cors",
-    body: {
-      esshopid: "112",
-      servicetype: "1",
-      url: "https://localhost:3000/",
-    },
-  });
-};
-
-// const createOrder = async () => {
-//   const response = await fetch(`https://localhost:7081/api/Orders`, {
-//     method: "POST",
-//     credentials: "include",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: {
-//
-//     },
-//   });
-// };
-
-const checkout = async () => {
+const checkoutECPay = async () => {
   try {
     const response = await fetch(
       `https://localhost:7081/api/ECPay/Create?total=${props.selectedData.totalAmount}`,
@@ -339,14 +463,54 @@ const checkout = async () => {
     console.log("Error:", error);
   }
 };
-const handleSubmit = async () => {
-  //await createOrder();
-  await checkout();
-  ecpayForm.value.submit();
+
+const checkoutLinePay = async () => {
+  const response = await fetch(`https://localhost:7081/api/LinePay/Create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
+  })
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 };
-loadData();
-getMember();
+
+const createOrder = async () => {
+  const response = await fetch(
+    `https://localhost:7081/api/Orders/OrderWithMultipleItems`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        createOrderCommand: createOrderCommand.value,
+        createOrderItemCommandList: createOrderItemCommandList,
+      }),
+    }
+  )
+    .then()
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+};
+
+const handleSubmit = async () => {
+  createOrder();
+  if (props.selectedData.payment.id == 2) {
+    await checkoutECPay();
+    ecpayForm.value.submit();
+  } else if (props.selectedData.payment.id == 1) {
+    await checkoutLinePay();
+  }
+};
+
+load();
 </script>
     
-<style>
-</style>
+<style></style>
