@@ -58,7 +58,8 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPost("OrderWithMultipleItems")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+	[EnableCors("AllowCookie")]
+	[ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Post(CreateMultipleItemsWithOrderIdCommand orderItemListWithId)
