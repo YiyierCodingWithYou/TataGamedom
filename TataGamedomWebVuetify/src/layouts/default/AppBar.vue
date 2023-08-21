@@ -17,8 +17,12 @@
     </div>
     <v-btn v-else color="primary" @click="login">登入</v-btn>
   </v-app-bar>
-  <MemberProfile class="MemberProfile" v-if="showMemberProfile" @close="closeMemberProfile"
-    @mouseleave="showMemberProfile = false" />
+  <MemberProfile
+    class="MemberProfile"
+    v-if="showMemberProfile"
+    @close="closeMemberProfile"
+    @mouseleave="showMemberProfile = false"
+  />
 </template>
 
 <script>
@@ -56,7 +60,7 @@ export default {
         withCredentials: true,
       });
       //this.$store.commit("SET_LOGIN", false); // 將登入狀態重置為未登入
-      this.$router.go(0)
+      this.$router.go(0);
     },
     checkLogin() {
       axios

@@ -1,9 +1,11 @@
 <template>
   <v-expansion-panels v-if="cartData.allowCheckout">
     <v-expansion-panel>
-      <v-expansion-panel-title>合計：NT${{ selectedData.totalAmount }}<br />購物車（{{
-        count
-      }}件）</v-expansion-panel-title>
+      <v-expansion-panel-title
+        >合計：NT${{ selectedData.totalAmount }}<br />購物車（{{
+          count
+        }}件）</v-expansion-panel-title
+      >
       <v-expansion-panel-text>
         <v-sheet v-if="cartData.allowCheckout == true">
           <v-table>
@@ -20,7 +22,11 @@
             <tbody>
               <tr v-for="item in cartItems" :key="item.product.id">
                 <td>
-                  <img :src="imgLink + item.product.gameCoverImg" height="150" cover />
+                  <img
+                    :src="imgLink + item.product.gameCoverImg"
+                    height="150"
+                    cover
+                  />
                 </td>
                 <td>
                   <div>{{ item.product.chiName }}</div>
@@ -31,7 +37,10 @@
                     </v-chip>
                   </div>
                 </td>
-                <td v-if="item.product.price != item.product.specialPrice" class="text-end">
+                <td
+                  v-if="item.product.price != item.product.specialPrice"
+                  class="text-end"
+                >
                   <div>
                     <s>NT${{ item.product.price }}</s>
                   </div>
@@ -46,8 +55,13 @@
               <tr>
                 <td>優惠活動</td>
                 <td>
-                  <span class="me-auto" v-for="(item, index) in cartData.distinctCoupons" :key="index">
-                    {{ item }} {{ cartData.distinctCouponsDescription[index] }}<br />
+                  <span
+                    class="me-auto"
+                    v-for="(item, index) in cartData.distinctCoupons"
+                    :key="index"
+                  >
+                    {{ item }} {{ cartData.distinctCouponsDescription[index]
+                    }}<br />
                   </span>
                 </td>
                 <td></td>
@@ -80,35 +94,83 @@
             <v-card-title>✨顧客資料</v-card-title>
             <v-divider></v-divider>
             <v-card-title>姓名</v-card-title>
-            <v-text-field v-model="name" variant="solo" required density="compact"></v-text-field>
+            <v-text-field
+              v-model="name"
+              variant="solo"
+              required
+              density="compact"
+            ></v-text-field>
             <v-card-title>電話號碼</v-card-title>
-            <v-text-field density="compact" v-model="phoneNumber" variant="solo" required></v-text-field>
+            <v-text-field
+              density="compact"
+              v-model="phoneNumber"
+              variant="solo"
+              required
+            ></v-text-field>
             <v-card-title>E-mail</v-card-title>
-            <v-text-field density="compact" v-model="email" variant="solo" readonly class="mb-5"></v-text-field>
+            <v-text-field
+              density="compact"
+              v-model="email"
+              variant="solo"
+              readonly
+              class="mb-5"
+            ></v-text-field>
           </v-card>
         </v-col>
 
-        <v-col cols="6"><v-card class="mt-3">
+        <v-col cols="6"
+          ><v-card class="mt-3">
             <v-card-title>✨收件人資料</v-card-title>
             <v-divider></v-divider>
             <p>已選擇的送貨方式：{{ selectedData.shipMethod.label }}</p>
-            <v-checkbox v-model="fillRecipient" @input="handleFillRecipient" label="收件人資料與顧客資料相同"></v-checkbox>
+            <v-checkbox
+              v-model="fillRecipient"
+              @input="handleFillRecipient"
+              label="收件人資料與顧客資料相同"
+            ></v-checkbox>
             <v-card-subtitle>收件人名稱</v-card-subtitle>
-            <v-text-field density="compact" v-model="buyerName" :rules="[rules.required]" hide-details="auto"
-              variant="solo" required></v-text-field>
-            <v-card-subtitle class="mb-5">請填入收件人真實姓名，以確保順利收件</v-card-subtitle>
+            <v-text-field
+              density="compact"
+              v-model="buyerName"
+              :rules="[rules.required]"
+              hide-details="auto"
+              variant="solo"
+              required
+            ></v-text-field>
+            <v-card-subtitle class="mb-5"
+              >請填入收件人真實姓名，以確保順利收件</v-card-subtitle
+            >
             <v-card-subtitle>收件人電話號碼</v-card-subtitle>
-            <v-text-field density="compact" v-model="buyerPhone" :rules="[rules.required]" hide-details="auto"
-              variant="solo" required class="mb-5"></v-text-field>
+            <v-text-field
+              density="compact"
+              v-model="buyerPhone"
+              :rules="[rules.required]"
+              hide-details="auto"
+              variant="solo"
+              required
+              class="mb-5"
+            ></v-text-field>
             <v-card-subtitle>E-mail</v-card-subtitle>
-            <v-text-field density="compact" v-model="buyerEmail" :rules="[rules.required, rules.email]"
-              hide-details="auto" variant="solo" required></v-text-field>
+            <v-text-field
+              density="compact"
+              v-model="buyerEmail"
+              :rules="[rules.required, rules.email]"
+              hide-details="auto"
+              variant="solo"
+              required
+            ></v-text-field>
             <v-divider></v-divider>
-            <div v-if="selectedData.shipMethod.id == 1 ||
-              selectedData.shipMethod.id == 2
-              ">
+            <div
+              v-if="
+                selectedData.shipMethod.id == 1 ||
+                selectedData.shipMethod.id == 2
+              "
+            >
               <p class="mb-5">
-                <img src="https://localhost:7081/Files/Uploads/seven-eleven.png" width="30" />
+                <img
+                  src="https://localhost:7081/Files/Uploads/seven-eleven.png"
+                  width="30"
+                />
                 選擇門市
               </p>
               <div v-if="singleSpot && singleSpot.storeNumber" class="mb-5">
@@ -119,39 +181,70 @@
               <v-row justify="center" class="mb-3">
                 <v-dialog v-model="dialog" persistent width="auto">
                   <template v-slot:activator="{ props }">
-                    <v-btn color="primary" v-bind="props">
-                      搜尋門市
-                    </v-btn>
+                    <v-btn color="primary" v-bind="props"> 搜尋門市 </v-btn>
                   </template>
                   <v-card width="850" height="500">
                     <v-row class="d-flex">
                       <v-col cols="10" class="d-flex">
                         <v-card-title>以路名查詢：</v-card-title>
-                        <v-text-field v-model="keyword" single-line variant="solo" label="請輸入道路名稱"></v-text-field>
+                        <v-text-field
+                          v-model="keyword"
+                          single-line
+                          variant="solo"
+                          label="請輸入道路名稱"
+                        ></v-text-field>
                       </v-col>
                       <v-col cols="10" class="d-flex">
                         <v-card-title>以門市查詢：</v-card-title>
-                        <v-text-field v-model="branch" single-line variant="solo" label="請輸入門市名稱"></v-text-field>
+                        <v-text-field
+                          v-model="branch"
+                          single-line
+                          variant="solo"
+                          label="請輸入門市名稱"
+                        ></v-text-field>
                       </v-col>
                       <v-col cols="6" class="d-flex">
                         <v-card-title>以縣市查詢：</v-card-title>
-                        <v-select v-model="city" :items="cityList" item-value="item" return-object single-line
-                          variant="solo" label="---"></v-select>
-                        <v-col cols="2" @click="spotSearch"><v-btn>搜尋</v-btn></v-col>
+                        <v-select
+                          v-model="city"
+                          :items="cityList"
+                          item-value="item"
+                          return-object
+                          single-line
+                          variant="solo"
+                          label="---"
+                        ></v-select>
+                        <v-col cols="2" @click="spotSearch"
+                          ><v-btn>搜尋</v-btn></v-col
+                        >
                       </v-col>
                       <v-col cols="12">
                         <v-card-title>請選擇門市：</v-card-title>
-                        <v-select v-if="spotList && spotList.length" v-model="spot" :items="spotList"
-                          :item-title="displayItem" item-value="id" single-line variant="solo"></v-select>
-
+                        <v-select
+                          v-if="spotList && spotList.length"
+                          v-model="spot"
+                          :items="spotList"
+                          :item-title="displayItem"
+                          item-value="id"
+                          single-line
+                          variant="solo"
+                        ></v-select>
                       </v-col>
                     </v-row>
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn color="green-darken-1" variant="text" @click="dialog = false">
+                      <v-btn
+                        color="green-darken-1"
+                        variant="text"
+                        @click="dialog = false"
+                      >
                         取消
                       </v-btn>
-                      <v-btn color="green-darken-1" variant="text" @click="spotHandler(spot)">
+                      <v-btn
+                        color="green-darken-1"
+                        variant="text"
+                        @click="spotHandler(spot)"
+                      >
                         確認
                       </v-btn>
                     </v-card-actions>
@@ -160,30 +253,49 @@
               </v-row>
             </div>
 
-            <div v-else-if="selectedData.shipMethod.id == 3 ||
-              selectedData.shipMethod.id == 4
-              ">
+            <div
+              v-else-if="
+                selectedData.shipMethod.id == 3 ||
+                selectedData.shipMethod.id == 4
+              "
+            >
               <p>
-                <img src="https://localhost:7081/Files/Uploads/family_mart.jpg" width="30" />
+                <img
+                  src="https://localhost:7081/Files/Uploads/family_mart.jpg"
+                  width="30"
+                />
                 選擇門市
               </p>
-              <div class="d-flex justify-center">
-
-              </div>
+              <div class="d-flex justify-center"></div>
             </div>
 
             <p v-else>
               <v-card-title>地址</v-card-title>
-              <v-text-field density="compact" :rules="[rules.required]" hide-details="auto" variant="solo"
-                required></v-text-field>
+              <v-text-field
+                density="compact"
+                :rules="[rules.required]"
+                hide-details="auto"
+                variant="solo"
+                required
+              ></v-text-field>
             </p>
           </v-card>
         </v-col>
       </v-row>
       <div class="d-flex mt-5">
         <v-btn class="me-auto">繼續購物</v-btn>
-        <form ref="ecpayForm" action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" method="POST">
-          <input type="hidden" v-for="(value, key) in ecPayparams" :key="key" :name="key" :value="value" />
+        <form
+          ref="ecpayForm"
+          action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5"
+          method="POST"
+        >
+          <input
+            type="hidden"
+            v-for="(value, key) in ecPayparams"
+            :key="key"
+            :name="key"
+            :value="value"
+          />
           <v-btn @click.prevent="handleSubmit">送出訂單</v-btn>
         </form>
       </div>
@@ -221,6 +333,8 @@ const fillRecipient = ref(false);
 const buyerName = ref("");
 const buyerPhone = ref("");
 const buyerEmail = ref("");
+const createOrderCommand = ref({});
+const createOrderItemCommandList = [];
 const rules = {
   required: (value) => !!value || "此欄位必填",
   email: (value) => {
@@ -229,41 +343,46 @@ const rules = {
     return pattern.test(value) || "E-mail格式不正確";
   },
 };
-const createOrderCommand = { memberId: member.value.id,toAddress: singleSpot.value.address };
-const createOrderItemCommandList = [];
 
 const getCity = async () => {
-  const response = await fetch(`https://localhost:7081/api/Carts/Shop/City`)
+  const response = await fetch(`https://localhost:7081/api/Carts/Shop/City`);
   const datas = await response.json();
   cityList.value = datas;
-}
+};
 
 const spotSearch = async () => {
   if (city.value) {
-    keyword.value = city.value
+    keyword.value = city.value;
   }
-  const response = await fetch(`https://localhost:7081/api/Carts/Shop?keyword=${keyword.value}&branch=${branch.value}`)
+  const response = await fetch(
+    `https://localhost:7081/api/Carts/Shop?keyword=${keyword.value}&branch=${branch.value}`
+  );
   const datas = await response.json();
   spotList.value = datas;
-}
+};
 
 const displayItem = (item) => {
   if (item && item.storeName && item.address) {
     return `${item.storeName}門市 - ${item.address}`;
   } else {
-    return '---';
+    return "---";
   }
 };
 
 const spotHandler = async (value) => {
-  const response = await fetch(`https://localhost:7081/api/Carts/SingleShop?id=${value}`)
+  const response = await fetch(
+    `https://localhost:7081/api/Carts/SingleShop?id=${value}`
+  );
   const datas = await response.json();
   singleSpot.value = datas;
   dialog.value = false;
   keyword.value = "";
   branch.value = "";
   spotList.value = [];
-}
+  createOrderCommand.value.toAddress = datas.address;
+  createOrderCommand.value.shipmentMethodId = props.selectedData.shipMethod.id;
+  createOrderCommand.value.recipientName = buyerName;
+};
 
 const handleFillRecipient = () => {
   if (fillRecipient.value) {
@@ -284,8 +403,17 @@ const loadData = async (type) => {
   total.value = datas.total;
   console.log(cartItems.value);
   count.value = datas.cartItems.length;
+};
 
-  let totalItemsCount = cartItems.value.reduce((accumulator, item) => accumulator + item.qty, 0);
+const load = async () => {
+  await loadData();
+  await getMember();
+  await getCity();
+
+  let totalItemsCount = cartItems.value.reduce(
+    (accumulator, item) => accumulator + item.qty,
+    0
+  );
   console.log(totalItemsCount);
 
   let discountPerItem = 0;
@@ -293,18 +421,20 @@ const loadData = async (type) => {
     discountPerItem = 300 / totalItemsCount;
   }
 
-  cartItems.value.forEach(item => {
+  cartItems.value.forEach((item) => {
     let productPrice = item.product.specialPrice - discountPerItem;
 
     for (let i = 0; i < item.qty; i++) {
       createOrderItemCommandList.push({
         productPrice: productPrice,
-        productId: item.product.id
+        productId: item.product.id,
       });
     }
   });
-}
 
+  console.log(createOrderCommand.value);
+  console.log(createOrderItemCommandList);
+};
 const getMember = async () => {
   const response = await fetch("https://localhost:7081/api/Members", {
     credentials: "include",
@@ -314,6 +444,7 @@ const getMember = async () => {
   phoneNumber.value = datas.phone;
   name.value = datas.name;
   email.value = datas.email;
+  createOrderCommand.value.memberId = datas.id;
 };
 
 const checkoutECPay = async () => {
@@ -333,41 +464,53 @@ const checkoutECPay = async () => {
   }
 };
 
-const checkoutLinePay = () => {
-
-}
-//console.log(createOrderItemCommandList);
-
-const createOrder =async () => {
-  const response = await fetch(`https://localhost:7081/api/Orders/OrderWithMultipleItems`, {
+const checkoutLinePay = async () => {
+  const response = await fetch(`https://localhost:7081/api/LinePay/Create`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      createOrderCommand: createOrderCommand,
-      createOrderItemCommandList: createOrderItemCommandList
+    body: JSON.stringify({}),
+  })
+    .then((response) => {
+      console.log(response);
     })
-  }).then().catch((error) => {
+    .catch((error) => {
       console.error("Error:", error);
     });
-}
+};
 
+const createOrder = async () => {
+  const response = await fetch(
+    `https://localhost:7081/api/Orders/OrderWithMultipleItems`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        createOrderCommand: createOrderCommand.value,
+        createOrderItemCommandList: createOrderItemCommandList,
+      }),
+    }
+  )
+    .then()
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+};
 
 const handleSubmit = async () => {
   createOrder();
   if (props.selectedData.payment.id == 2) {
     await checkoutECPay();
     ecpayForm.value.submit();
-  }
-  else if (props.selectedData.payment.id == 1) {
+  } else if (props.selectedData.payment.id == 1) {
     await checkoutLinePay();
   }
 };
 
-loadData();
-getMember();
-getCity();
+load();
 </script>
     
 <style></style>
