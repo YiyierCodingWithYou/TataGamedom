@@ -134,7 +134,7 @@ namespace TataGamedomWebAPI.Controllers
 		//    return await _context.Members.ToListAsync();
 		//}
 
-		// GET: api/Members/5
+		// GET: api/Members/
 		[EnableCors("AllowCookie")]
 		[HttpGet]
 		public async Task<ActionResult<MembersDto>> GetMember()
@@ -170,7 +170,7 @@ namespace TataGamedomWebAPI.Controllers
 			return Ok(memberDto);
 		}
 
-		// PUT: api/Members/5
+		// PUT: api/Members/
 		[EnableCors("AllowCookie")]
 		[HttpPut]
 		public async Task<IActionResult> PutMember(MembersDto memberDto, string iconImgFileName)
