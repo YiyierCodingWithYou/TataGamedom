@@ -170,19 +170,22 @@ public class ECPayShipmentService
 
         using var responseStream = await response.Content.ReadAsStreamAsync();
         QueryLogisticsTradeInfoResponseDto? tradeInfo = await JsonSerializer.DeserializeAsync<QueryLogisticsTradeInfoResponseDto>(responseStream);
-        tradeInfo!.Data = DecodeAes(tradeInfo);
+        tradeInfo.DecodedData = DecodeAes(tradeInfo);
 
         return tradeInfo;
     }
 
-    private string DecodeAes(QueryLogisticsTradeInfoResponseDto? tradeInfo)
+    private TradeInfoResponseData DecodeAes(QueryLogisticsTradeInfoResponseDto? tradeInfo)
     {
         byte[] key = Encoding.UTF8.GetBytes(HashKey);
         byte[] iv = Encoding.UTF8.GetBytes(HashIV);
         string decodedAesResponse = DecryptStringFromBytes_Aes(Convert.FromBase64String(tradeInfo.Data), key, iv);
         string decodedData = HttpUtility.UrlDecode(decodedAesResponse);
-        return decodedData;
-    }
+        
+        Console.WriteLine(decodedData);
+        var dataObject = JsonSerializer.Deserialize<TradeInfoResponseData>(decodedData);
+        return dataObject;
+    }   
     #endregion
 
     #region Aes 加密/解密
