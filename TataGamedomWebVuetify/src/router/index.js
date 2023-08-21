@@ -16,6 +16,8 @@ import LinePayConfirmPayment from '../views/LinePayConfirmPayment.vue'
 import Cart from '@/views/Cart.vue'
 import MemberDetial from "@/components/Members/MemberDetial.vue"
 import ResetPassword from "@/components/Members/ResetPassword.vue"
+import RedirectToLogisticsSelection_Test from "@/components/ECPay/RedirectToLogisticsSelection_Test"
+
 
 const routes = [
   {
@@ -95,21 +97,21 @@ const routes = [
         path: "/LinePayConfirmPayment",
         name: "LinePayConfirmPayment",
         component: LinePayConfirmPayment,
-        },
-        {
-            path: '/Members/MemberDetial',
-            name: 'MemberDetial',
-            component: MemberDetial
-        },
-        {
-            path: '/Members/ResetPassword',
-            name: 'ResetPassword',
-            component: ResetPassword,
-            props: (route) => ({
-                memberId: parseInt(route.query.memberId),
-                confirmCode: route.query.confirmCode,
-            }),
-        }
+      },
+      {
+        path: '/Members/MemberDetial',
+        name: 'MemberDetial',
+        component: MemberDetial
+      },
+      {
+        path: '/Members/ResetPassword',
+        name: 'ResetPassword',
+        component: ResetPassword,
+        props: (route) => ({
+          memberId: parseInt(route.query.memberId),
+          confirmCode: route.query.confirmCode,
+        }),
+      }
     ],
   },
   {
@@ -160,9 +162,14 @@ const routes = [
         path: "/GameLounge/:account",
         name: "GameLoungeAccount",
         component: () => import("@/views/GameLounge.vue"),
-        }
-      
+      }
+
     ],
+  },
+  {
+    path: "/RedirectToLogisticsSelection_Test",
+    name: "RedirectToLogisticsSelection_Test",
+    component: RedirectToLogisticsSelection_Test,
   },
 ];
 

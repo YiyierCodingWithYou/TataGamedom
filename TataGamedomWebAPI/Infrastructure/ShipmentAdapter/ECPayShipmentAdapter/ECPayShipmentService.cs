@@ -1,4 +1,6 @@
-﻿using System.Collections.Specialized;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Specialized;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -25,7 +27,7 @@ public class ECPayShipmentService
 
 
     #region 開啟物流選擇頁
-    public async Task<string?> SendLogisticsSelectionRequest(LogisticsSelectionRawDataDto logisticsSelection)
+    public async Task<IActionResult> SendLogisticsSelectionRequest(LogisticsSelectionRawDataDto logisticsSelection)
     {
         var requestJson = JsonSerializer.Serialize(new LogisticsSelectionRequestDto
         {
@@ -50,7 +52,13 @@ public class ECPayShipmentService
         //Console.WriteLine(decodedData);
         #endregion
 
-        return await response.Content.ReadAsStringAsync();
+        var htmlContent = await response.Content.ReadAsStringAsync();
+        return new ContentResult
+        {
+            ContentType = "text/html",
+            StatusCode = (int?)HttpStatusCode.OK,
+            Content = htmlContent
+        };
     }
 
 

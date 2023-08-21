@@ -4,8 +4,8 @@ const BASE_URL = 'https://localhost:7081';
 
 const ECpayStore = {
     state: () => ({
-       MerchantTradeNo: '',
-       logisticsStatus: ''
+        MerchantTradeNo: '',
+        logisticsStatus: ''
     }),
     getters: {
         getMerchantTradeNo: state => state.MerchantTradeNo,
@@ -32,7 +32,7 @@ const ECpayStore = {
         async navigateToLogisticsSelection(_, payload) {
             try {
                 const response = await axios.post(`${BASE_URL}/api/ECPay/LogisticsSelection`, payload);
-                return response.data;
+                return response;
             } catch (error) {
                 throw error;
             }
