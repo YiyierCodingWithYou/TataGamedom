@@ -158,15 +158,6 @@ const loadProducts = async () => {
   const datas = await response.json();
   products.value = datas.products;
   totalPages.value = datas.totalPages;
-  // nextTick(() => {
-  //   if (bookmark.value) {
-  //     const offset = bookmark.value.offsetTop;
-  //     window.scrollTo({
-  //       top: offset,
-  //       behavior: "smooth",
-  //     });
-  //   }
-  // });
 };
 
 const once = (func) => {
