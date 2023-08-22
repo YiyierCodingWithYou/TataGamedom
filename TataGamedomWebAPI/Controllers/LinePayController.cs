@@ -42,7 +42,7 @@ public class LinePayController : ControllerBase
     [EnableCors("AllowCookie")]
     public async Task<PaymentResponseDto> CreatePaymentByAccount()
     {
-        return await _linePayService.SendPaymentRequest();
+        return await _linePayService.SendPaymentRequestWithCartInfo();
     }
 
     [HttpPost("Confirm")]

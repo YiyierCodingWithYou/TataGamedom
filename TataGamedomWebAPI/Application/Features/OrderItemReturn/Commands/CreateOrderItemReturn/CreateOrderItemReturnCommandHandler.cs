@@ -12,6 +12,7 @@ public class CreateOrderItemReturnCommandHandler : IRequestHandler<CreateOrderIt
     private readonly IMapper _mapper;
     private readonly IOrderItemReturnRepository _orderItemReturnRepository;
     private readonly IOrderItemRepository _orderItemRepository;
+    private readonly IOrderRepository _orderRepository;
     private readonly IAppLogger<CreateOrderItemReturnCommandHandler> _logger;
     private readonly IIndexGenerator _indexGenerator;
 
@@ -19,12 +20,14 @@ public class CreateOrderItemReturnCommandHandler : IRequestHandler<CreateOrderIt
         IMapper mapper,
         IOrderItemReturnRepository orderItemReturnRepository,
         IOrderItemRepository orderItemRepository,
+        IOrderRepository orderRepository,
         IAppLogger<CreateOrderItemReturnCommandHandler> logger,
         IIndexGenerator indexGenerator)
     {
         this._mapper = mapper;
         this._orderItemReturnRepository = orderItemReturnRepository;
         this._orderItemRepository = orderItemRepository;
+        this._orderRepository = orderRepository;
         this._logger = logger;
         this._indexGenerator = indexGenerator;
     }
@@ -38,6 +41,8 @@ public class CreateOrderItemReturnCommandHandler : IRequestHandler<CreateOrderIt
         await GenerateIndex(request, orderItemReturnToBeCreated);
 
         await _orderItemReturnRepository.CreateAsync(orderItemReturnToBeCreated);
+
+        await _orderRepository.UpdateOrderStatusAfterReturn(request.OrderItemId);
 
         return orderItemReturnToBeCreated.Id;
     }
