@@ -1,25 +1,26 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.Payment;
-using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.Payment;
-using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter;
-using TataGamedomWebAPI.Models.DTOs.Cart;
-using TataGamedomWebAPI.Infrastructure;
-using static System.Net.WebRequestMethods;
-using System.Security.Cryptography.Xml;
-using System;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Web;
 using Microsoft.AspNetCore.Cors;
+using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.ECPayShipmentAdapter;
+using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request;
+using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request.LogisticsSelection;
+using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request.QueryLogisticsTradeInfo;
 
 namespace TataGamedomWebAPI.Controllers
 {
-	[EnableCors("AllowAny")]
+    [EnableCors("AllowAny")]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class ECPayController : ControllerBase
 	{
-		[HttpPost("Create")]
+		private readonly ECPayShipmentService _shipmentService;
+        public ECPayController()
+        {
+            _shipmentService = new ECPayShipmentService();
+        }
+
+        [HttpPost("Create")]
 		public async Task<ActionResult<Dictionary<string, string>>> CreatePayment(int total)
 		{
 			var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
@@ -34,7 +35,7 @@ namespace TataGamedomWebAPI.Controllers
 				{ "TradeDesc",  "無"},
 				{ "ItemName",  "獺獺玩國商品一批"},
 				{ "ReturnURL",  $"{website}/Orders"},
-				{"ClientBackURL", $"{website}/Cart?paymentSuccess=true" },
+				{ "ClientBackURL", $"{website}/Cart?paymentSuccess=true" },
 				{ "MerchantID",  "3002607"},
 				{ "PaymentType",  "aio"},
 				{ "ChoosePayment",  "ALL"},
@@ -69,5 +70,31 @@ namespace TataGamedomWebAPI.Controllers
 			}
 			return result.ToString();
 		}
-	}
+
+
+        [HttpPost("LogisticsSelection")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> RedirectToLogisticsSelection(LogisticsSelectionRawDataDto logisticsSelection)
+        {
+            return Ok(await _shipmentService.SendLogisticsSelectionRequest(logisticsSelection));
+        }
+
+        [HttpPost("LogisticsOrder")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> CreateLogisticsOrderForPickUp(LogisticsOrderRequestDto order) 
+		{
+			return Ok(await _shipmentService.SendLogisticsOrderForPickUpRequest(order));
+		}
+
+        [HttpPost("LogisticsTradeInfo")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> QueryLogisticsTradeInfo(QueryLogisticsTradeInfoDto tradeInfo)
+        {
+            return Ok(await _shipmentService.SendLogisticsTradeInfoQueryRequest(tradeInfo));
+        }
+    }
+
 }

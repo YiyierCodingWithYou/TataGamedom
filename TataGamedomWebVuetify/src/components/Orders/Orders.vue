@@ -66,8 +66,7 @@
                           {{ "mdi-script-text-outline" }}
                         </v-icon>
 
-                        <OrderDetailsList v-model="showDetailsDialog" :orderId="shownOrder" activator="parent"
-                          width="auto" />
+                        <OrderDetailsList :orderId="shownOrder" activator="parent" width="auto" />
                       </v-btn>
                     </template>
                   </v-tooltip>
@@ -78,9 +77,10 @@
                     <template v-slot:activator="{ props }">
                       <v-btn class="ma-2" variant="text" icon="mdi-crosshairs-gps" color="blue-grey-darken-2"
                         size="x-large">
-                        <v-icon @click="" v-bind="props" size="x-large">
+                        <v-icon v-bind="props" size="x-large">
                           {{ "mdi-crosshairs-gps" }}
                         </v-icon>
+                        <LogisticsStatusTimeLine :orderId="shownOrder" activator="parent" width="auto" />
                       </v-btn>
                     </template>
                   </v-tooltip>
@@ -107,8 +107,7 @@
                         <v-icon v-bind="props" size="x-large">
                           {{ "mdi-package-variant-closed-remove" }}
                         </v-icon>
-                        <OrderItemReturnDialog v-model="showItemReturnDialog" :orderId="shownOrder" activator="parent"
-                          width="auto" />
+                        <OrderItemReturnDialog :orderId="shownOrder" activator="parent" width="auto" />
                       </v-btn>
                     </template>
                   </v-tooltip>
@@ -131,6 +130,7 @@ import { useStore } from "vuex";
 import OrderDetailsCards from "./OrderDetailsCards.vue";
 import OrderDetailsList from "./OrderDetailsList.vue";
 import OrderItemReturnDialog from "./OrderItemReturnDialog.vue";
+import LogisticsStatusTimeLine from "./LogisticsStatusTimeLine.vue"
 import SupportHub from "./SupportHub.vue";
 
 export default {
@@ -139,17 +139,13 @@ export default {
     OrderDetailsCards,
     OrderDetailsList,
     OrderItemReturnDialog,
+    LogisticsStatusTimeLine,
     SupportHub,
   },
   setup() {
     const store = useStore();
-
     const shownOrder = ref(null);
     const showDetails = ref(false);
-    const showDetailsDialog = ref(false);
-    const showItemReturnDialog = ref(false);
-    const showSupportHub = ref(false);
-
     const orders = computed(() => store.state.OrderStore.orders);
 
     const toggleOrderDetail = (orderId) => {
@@ -188,9 +184,6 @@ export default {
       orders,
       shownOrder,
       showDetails,
-      showDetailsDialog,
-      showItemReturnDialog,
-      showSupportHub,
       toggleOrderDetail,
       relativeTime,
       combinedGameAndType,

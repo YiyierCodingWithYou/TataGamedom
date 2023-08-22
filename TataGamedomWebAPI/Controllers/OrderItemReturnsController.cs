@@ -7,6 +7,7 @@ using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.CreateMult
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.CreateOrderItemReturn;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.DeleteOrderItemReturn;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.UpdateOrderItemReturn;
+using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnDetails;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnList;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnListByOrderId;
 
@@ -35,7 +36,7 @@ public class OrderItemReturnsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<OrderItemReturnDto>> Get(int id)
     {
-        var orderItemReturns = await _mediator.Send(new GetOrderItemDetailsQuery(id));
+        var orderItemReturns = await _mediator.Send(new GetOrderItemReturnDetailsQuery(id));
         return Ok(orderItemReturns);
     }
 
