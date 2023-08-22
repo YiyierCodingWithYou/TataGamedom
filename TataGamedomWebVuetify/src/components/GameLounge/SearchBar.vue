@@ -20,13 +20,13 @@
       </template>
 
       <template v-slot:item="{ props, item }">
-        <v-list-item
-          v-bind="props"
-          :prepend-avatar="item?.raw?.iconUrl"
-          :title="item?.raw?.name"
-          :subtitle="item?.raw?.type"
-        ></v-list-item>
-      </template>
+  <v-list-item
+    v-bind="props"
+    :prepend-avatar="item?.raw?.iconUrl"
+    :title="item?.raw?.name"
+    :subtitle="item?.raw?.type"
+  ></v-list-item>
+</template>
     </v-autocomplete>
   </v-col>
   <v-col cols="6"> <v-text-field label="Keyword"></v-text-field> </v-col>
