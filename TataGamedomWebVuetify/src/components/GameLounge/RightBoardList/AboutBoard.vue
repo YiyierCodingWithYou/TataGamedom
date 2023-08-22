@@ -1,6 +1,6 @@
 <template>
-  <v-card class="mx-auto my-12" max-width="250">
-    <v-img cover max-height="200" :src="iconUrl"></v-img>
+  <v-card class="w-100 my-5">
+    <v-img cover max-height="250" :src="iconUrl"></v-img>
     <v-card-item>
       <v-card-title>{{ boardData?.name }}</v-card-title>
     </v-card-item>
@@ -36,7 +36,7 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, defineProps } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 
@@ -56,9 +56,16 @@ interface BoardData {
 const boardData = ref<BoardData>();
 const iconUrl = ref("");
 
+const props = defineProps({
+  boardId: {
+    type: Number,
+    required: true,
+  },
+});
+
 const getBoardData = async () => {
   const res = await axios
-    .get("https://localhost:7081/api/Boards/1", {
+    .get(`https://localhost:7081/api/Boards/${props.boardId}`, {
       withCredentials: true,
     })
     .then((res) => {
@@ -76,7 +83,7 @@ const getBoardData = async () => {
 const followAction = async () => {
   const res = await axios
     .put(
-      "https://localhost:7081/api/MembersBoards/1/Follow",
+      `https://localhost:7081/api/MembersBoards/${props.boardId}/Follow`,
       {},
       {
         withCredentials: true,
@@ -93,7 +100,7 @@ const followAction = async () => {
 const favoriteAction = async () => {
   const res = await axios
     .put(
-      "https://localhost:7081/api/MembersBoards/1/Favorite",
+      `https://localhost:7081/api/MembersBoards/${props.boardId}/Favorite`,
       {},
       {
         withCredentials: true,

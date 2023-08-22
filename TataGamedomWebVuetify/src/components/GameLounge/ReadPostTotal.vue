@@ -58,19 +58,22 @@ const posts = ref<Post[]>([]);
 const route = useRoute();
 const props = defineProps({
   keyword: {
+    type: String,
+    default: "",
+  },
+  memberAcount: {
+    type: String,
+    default: "",
+  },
+  boardId: {
     type: Number,
     default: "",
   },
 });
-
 const loadPosts = async ($state: any) => {
   try {
     const response = await fetch(
-      `${baseaddress}Posts?page=${page.value}&keyword=${
-        props.keyword
-      }&memberAccount=${route.params.account ?? ""}&boardId=${
-        route.params.boardId ?? ""
-      }`,
+      `${baseaddress}Posts?page=${page.value}&keyword=${props.keyword}&memberAccount=${props.memberAcount}&boardId=${props.boardId}`,
       {
         credentials: "include",
       }

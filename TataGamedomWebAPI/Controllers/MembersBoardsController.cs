@@ -36,9 +36,8 @@ namespace TataGamedomWebAPI.Controllers
 			{
 				return null;
 			}
-			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
-			int memberId = 3; // 王五 wangwu 測試用
+			var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			int memberId = _simpleHelper.memberIdByAccount(memberAccount);
 
 			return await _context.MembersBoards.Where(b => b.MemberId == memberId)
 				.Select(b => new MemberFollowBoardListDto
@@ -61,9 +60,8 @@ namespace TataGamedomWebAPI.Controllers
 			{
 				return new IsMemberFollowDto(false, false);
 			}
-			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
-			int memberId = 3; // 王五 wangwu 測試用
+			var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			int memberId = _simpleHelper.memberIdByAccount(memberAccount);
 
 			var isFollow = await _context.MembersBoards.AnyAsync(b => b.BoardId == boardId && b.MemberId == memberId);
 			var isFavorite = await _context.MembersBoards.AnyAsync(b => b.BoardId == boardId && b.MemberId == memberId && b.IsFavorite == true);
@@ -178,21 +176,6 @@ namespace TataGamedomWebAPI.Controllers
 				return ApiResult.Success("移除最愛成功");
 			}
 		}
-
-		// POST: api/MembersBoards
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-		//[HttpPost]
-		//public async Task<ActionResult<MembersBoard>> PostMembersBoard(MembersBoard membersBoard)
-		//{
-		//	if (_context.MembersBoards == null)
-		//	{
-		//		return Problem("Entity set 'AppDbContext.MembersBoards'  is null.");
-		//	}
-		//	_context.MembersBoards.Add(membersBoard);
-		//	await _context.SaveChangesAsync();
-
-		//	return CreatedAtAction("GetMembersBoard", new { id = membersBoard.Id }, membersBoard);
-		//}
 
 
 		private bool MembersBoardExists(int id)

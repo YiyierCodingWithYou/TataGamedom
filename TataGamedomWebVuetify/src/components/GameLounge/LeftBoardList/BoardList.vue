@@ -54,7 +54,9 @@ const searchItem: item = {
 
 const fetchData = () => {
   axios
-    .get(`https://localhost:7081/api/Boards`)
+    .get(`https://localhost:7081/api/Boards`, {
+      withCredentials: true,
+    })
     .then((res) => {
       data.value = res.data.sort((a, b) => {
         return a.name.localeCompare(b.name, "zh-TW");
@@ -65,6 +67,7 @@ const fetchData = () => {
           title: data.name,
           value: data.id,
           rounded: "shaped",
+          appendIcon: data.isFavorite ? "mdi-cards-heart" : "",
         };
       });
 
