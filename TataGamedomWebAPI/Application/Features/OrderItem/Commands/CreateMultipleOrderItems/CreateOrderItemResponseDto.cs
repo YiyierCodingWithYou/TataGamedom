@@ -6,6 +6,8 @@ public class CreateOrderItemResponseDto
 
     public string? Index { get; set; }
 
+    public required string OrderIndex { get; set; }
+    
     public int OrderId { get; set; }
 
     public int? ProductId { get; set; }

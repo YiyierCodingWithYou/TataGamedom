@@ -18,6 +18,8 @@ import Cart from '@/views/Cart.vue'
 import MemberDetial from "@/components/Members/MemberDetial.vue"
 import ResetPassword from "@/components/Members/ResetPassword.vue"
 import store from '@/store'
+import RedirectToLogisticsSelection_Test from "@/components/ECPay/RedirectToLogisticsSelection_Test"
+
 
 const routes = [
   {
@@ -209,6 +211,11 @@ const routes = [
     children: [
       { path: "", name: "Test", component: () => import("@/views/Test.vue") },
     ],
+  },
+  {
+    path: "/RedirectToLogisticsSelection_Test",
+    name: "RedirectToLogisticsSelection_Test",
+    component: RedirectToLogisticsSelection_Test,
   },
 ];
 
