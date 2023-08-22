@@ -61,19 +61,19 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  memberAcount: {
+  memberAccount: {
     type: String,
     default: "",
   },
   boardId: {
-    type: Number,
+    type: String,
     default: "",
   },
 });
 const loadPosts = async ($state: any) => {
   try {
     const response = await fetch(
-      `${baseaddress}Posts?page=${page.value}&keyword=${props.keyword}&memberAccount=${props.memberAcount}&boardId=${props.boardId}`,
+      `${baseaddress}Posts?page=${page.value}&keyword=${props.keyword}&memberAccount=${props.memberAccount}&boardId=${props.boardId}`,
       {
         credentials: "include",
       }

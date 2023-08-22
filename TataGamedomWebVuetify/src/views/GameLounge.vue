@@ -4,11 +4,11 @@
     <v-tab :value="2" v-if="isLogin">🦦</v-tab>
     <v-tab :value="3">🔍</v-tab>
     <transition name="slide-fade">
-      <t-tab v-if="tab === 3" class="w-50">
+      <div v-if="tab === 3" class="w-50">
         <v-row>
           <search-bar></search-bar>
         </v-row>
-      </t-tab>
+      </div>
     </transition>
   </v-tabs>
   <v-window v-model="tab">
@@ -72,7 +72,7 @@
             <template #container>
               <ReadPostTotal
                 v-if="isSearch"
-                :memberAccount="memberAccount"
+                :memberAccount="account"
                 :boardId="boardId"
                 :keyword="keyword"
               ></ReadPostTotal>
@@ -118,11 +118,9 @@ const isSearchAccount = ref(false);
 const isSearchBoard = ref(false);
 const account = ref("");
 const boardId = ref("");
+const keyword = ref("");
 const isLogin = computed(() => store.state.isLoggedIn);
 const loginMemberAccount = computed(() => store.state.account);
-
-console.log(isLogin.value);
-console.log(loginMemberAccount.value);
 
 account.value = route.params.account;
 boardId.value = route.params.boardId;
@@ -136,9 +134,6 @@ if (account.value !== undefined) {
 if (boardId.value !== undefined) {
   isSearchBoard.value = true;
 }
-
-console.log(account.value);
-console.log(isSearch.value);
 </script>
 
 <style scoped>

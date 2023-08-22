@@ -1,12 +1,21 @@
 <template>
   <div>
-    <v-list item-props :items="items"> </v-list>
+    <v-list
+      item-props
+      :items="items"
+      lines="two"
+      @click:select="openLink"
+      select-strategy="single-leaf"
+    >
+    </v-list>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, defineProps } from "vue";
+import { ref, onMounted, defineProps, watch, computed } from "vue";
 import axios from "axios";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 const items = ref<item>([]);
 const allItems = ref<item>([]);
@@ -14,6 +23,7 @@ const topFiveItems = ref<item>([]);
 const noFavo = ref<item>([]);
 const noFollow = ref<item>([]);
 const data = ref<boardData>([]);
+const router = useRouter();
 const props = defineProps({
   memberAccount: {
     type: String,
@@ -66,6 +76,9 @@ const fetchData = () => {
       }
     )
     .then((res) => {
+      items.value = [];
+      noFavo.value = [];
+      noFollow.value = [];
       data.value = res.data;
       allItems.value = data.value.map((data) => {
         return {
@@ -106,9 +119,6 @@ const fetchData = () => {
           height: "100px",
         };
       }
-
-      console.log(data.value);
-      console.log(topFiveItems.value.length);
       items.value = items.value
         .concat(headerItem("header", "🕹️熱門最愛"))
         .concat(topFiveItems.value)
@@ -116,7 +126,8 @@ const fetchData = () => {
         .concat(divider)
         .concat(headerItem("subheader", "所有追蹤"))
         .concat(allItems.value)
-        .concat(noFollow.value);
+        .concat(noFollow.value)
+        .concat(divider);
     })
     .catch((err) => {
       console.log(err);
@@ -126,4 +137,22 @@ const fetchData = () => {
 onMounted(() => {
   fetchData();
 });
+
+const store = useStore();
+const count = computed(() => store.state.GameLoungeStore.count);
+
+watch(count, (newValue, oldValue) => {
+  fetchData();
+});
+
+const openLink = (e) => {
+  console.log(e.id);
+
+  if (e.id !== undefined) {
+    router.push({
+      name: "GameLoungeBoard",
+      params: { boardId: e.id },
+    });
+  }
+};
 </script>

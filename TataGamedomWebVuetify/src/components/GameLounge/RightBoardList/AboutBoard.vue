@@ -39,6 +39,7 @@
 import { ref, reactive, onMounted, defineProps } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 interface BoardData {
   id: number;
@@ -58,10 +59,15 @@ const iconUrl = ref("");
 
 const props = defineProps({
   boardId: {
-    type: Number,
+    type: String,
     required: true,
   },
 });
+
+const store = useStore();
+const incrememtCount = () => {
+  store.commit("increment");
+};
 
 const getBoardData = async () => {
   const res = await axios
@@ -69,7 +75,6 @@ const getBoardData = async () => {
       withCredentials: true,
     })
     .then((res) => {
-      console.log(res.data);
       boardData.value = res.data;
       iconUrl.value =
         boardData.value?.boardHeaderCoverImgUrl ??
@@ -90,8 +95,8 @@ const followAction = async () => {
       }
     )
     .then((res) => {
-      console.log(res.data);
       getBoardData();
+      incrememtCount();
     })
     .catch((err) => {
       console.log(err);
@@ -107,8 +112,8 @@ const favoriteAction = async () => {
       }
     )
     .then((res) => {
-      console.log(res.data);
       getBoardData();
+      incrememtCount();
     })
     .catch((err) => {
       console.log(err);

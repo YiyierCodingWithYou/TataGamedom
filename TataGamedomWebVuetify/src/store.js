@@ -1,16 +1,17 @@
 import { createStore } from "vuex";
-import OrderStore from './components/Orders/OrderStore';
-
+import OrderStore from "./components/Orders/OrderStore";
+import GameLoungeStore from "./components/GameLounge/GameLoungeStore";
 
 const store = createStore({
   modules: {
-    OrderStore  //類似namespace
+    OrderStore, //類似namespace
+    GameLoungeStore,
   },
   state: {
     isLoggedIn: false,
     name: "",
     account: "",
-    age: ""
+    age: "",
   },
   mutations: {
     SET_LOGIN(state, value) {
@@ -21,8 +22,8 @@ const store = createStore({
       console.log("StoreLogin", value);
     },
     SET_UPDATENAME(state, value) {
-      state.name = value
-    }
+      state.name = value;
+    },
   },
 });
 
