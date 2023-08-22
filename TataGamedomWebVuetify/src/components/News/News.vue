@@ -8,9 +8,9 @@
           <v-sheet min-height="100" rounded="lg">
             <v-card-item style="">
               <div class="d-flex">
-                <img style="height: 225px; width: 400px" :src="img + item.coverImg" alt="" />
+                <img style="height: 225px; width: 400px" :src="img + item.coverImg" @click="GotoNewsPage(item.id)" />
                 <div class="ms-5">
-                  <div class="text-h4 mb-2">{{ item.title }}</div>
+                  <div class="text-h4 mb-2" @click="GotoNewsPage(item.id)">{{ item.title }}</div>
                   <div v-html="truncateAndEllipsis(item.content, 50)" class=""></div>
                   <!-- <div class="">{{ item.content }}</div> -->
 
@@ -18,8 +18,7 @@
                   <div class="text-caption mt-7">
                     {{ item.scheduleDate }}
                   </div>
-
-                  <v-btn style="position: absolute" variant="outlined">詳細
+                  <v-btn style="position: absolute" variant="outlined" @click="GotoNewsPage(item.id)">詳細
                   </v-btn>
                 </div>
               </div>
@@ -62,6 +61,7 @@ import NewsCarousel from "../News/NewsCarousel.vue";
 import SearchTextBox from "../News/SearchTextBox.vue";
 import NewsGameClass from "./NewsGameClass.vue";
 import HotNews from "../News/HotNews.vue";
+import { useRouter } from 'vue-router';
 
 const keyword = ref("");
 const news = ref([]);
@@ -69,11 +69,11 @@ const name = ref("");
 const title = ref("");
 const content = ref("");
 const scheduleDate = ref("");
-//const thePage = ref(1);
-
 const totalPages = ref(1); //共幾頁
 const thePage = ref(1); //第幾頁
+const router = useRouter();
 const API = "https://localhost:7081/api/";
+let img = "https://localhost:7081/Files/NewsImages/";
 
 const loadNews = async () => {
   const response = await fetch(
@@ -133,7 +133,14 @@ const truncateAndEllipsis = (value, limit) => {
   }
 };
 
-let img = "https://localhost:7081/Files/NewsImages/";
+//跳到新聞內頁
+const GotoNewsPage = async (newsId) => {
+  router.push({
+    name: "NewsPage",
+    params: { newsId: newsId }
+  })
+}
+
 </script>
 
 

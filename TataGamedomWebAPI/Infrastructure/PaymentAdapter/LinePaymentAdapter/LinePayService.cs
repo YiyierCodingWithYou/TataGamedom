@@ -62,8 +62,8 @@ public class LinePayService
         //Mapping to paymentRequestDto
         PaymentRequestDto? paymentRequestDto = new PaymentRequestDto
         {
-            Amount = packageDtos.Select(p => p.Amount).Sum(),
-            Currency = "TWD",
+			Amount = packageDtos.Select(p => p.Amount).Sum(),  //todo
+			Currency = "TWD",
             OrderId = Guid.NewGuid().ToString(),     //todo => 先建訂單，傳Index到OrderId
             Packages = packageDtos,
             RedirectUrls = new RedirectUrlsDto

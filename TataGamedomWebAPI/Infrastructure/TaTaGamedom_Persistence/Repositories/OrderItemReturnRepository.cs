@@ -18,7 +18,7 @@ public class OrderItemReturnRepository : GenericRepository<OrderItemReturn>, IOr
         return orderItemReturnList;
     }
 
-    public async Task<OrderItemReturn?> GetDetailInckudeOrderItemAsync(int orderItemId)
+    public async Task<OrderItemReturn?> GetDetailIncludeOrderItemAsync(int orderItemId)
     {
         OrderItemReturn? orderItemReturn = await _dbContext.OrderItemReturns.Include(o => o.OrderItem).FirstOrDefaultAsync(o => o.Id == orderItemId);
 
@@ -33,6 +33,23 @@ public class OrderItemReturnRepository : GenericRepository<OrderItemReturn>, IOr
     public async Task<bool> IsReturnOrderExist(int orderItemId)
     {
         return await _dbContext.OrderItemReturns.AnyAsync(o => o.OrderItemId == orderItemId);
+    }
+
+    public async Task<List<int>> GetOrderItemIdList(int orderId)
+    {
+        return await _dbContext.OrderItemReturns
+            .AsNoTracking()
+            .Where(r => r.OrderItem.OrderId == orderId)
+            .Select(r => r.OrderItemId)
+            .ToListAsync();
+    }
+
+    public async Task<bool> IsStatusCompletedOrReturned(int orderItemId)
+    {
+        int orderStatusCode =  await _dbContext.OrderItems.Where(oi => oi.Id == orderItemId).Select(oi => oi.Order.OrderStatusId).FirstOrDefaultAsync();
+        
+        return orderStatusCode == (int)OrderStatus.Completed || 
+            orderStatusCode == (int)OrderStatus.ReturnProcessing;
     }
 }
 

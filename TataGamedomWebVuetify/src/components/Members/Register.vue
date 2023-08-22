@@ -7,6 +7,7 @@
         label="帳號"
         variant="underlined"
       ></v-text-field>
+      <div style="color: red">{{ errorMsg }}</div>
 
       <v-text-field
         v-model="password"
@@ -41,8 +42,8 @@
       <v-text-field
         v-model="birthday"
         color="primary"
-        type="date"
         label="生日"
+        type="date"
         variant="underlined"
       ></v-text-field>
 
@@ -101,6 +102,7 @@ export default {
     email: "",
     phone: "",
     coverImg: "",
+    errmsg: "",
     terms: false,
     // visible: false,
     passwordVisible: false,
@@ -143,6 +145,7 @@ export default {
           });
           console.log(res);
           console.log("註冊成功");
+          alert("註冊成功，請到信箱收取確認信!");
         })
         .catch((err) => {
           console.log(err);
