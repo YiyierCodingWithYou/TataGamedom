@@ -307,7 +307,8 @@
 import { ref, defineProps, computed, watch } from "vue";
 import Payment from "@/components/Cart/Payment.vue";
 import { useRoute, useRouter } from "vue-router";
-
+import { useStore } from "vuex";
+const store = useStore();
 const router = useRouter();
 const route = useRoute();
 const dialog = ref(false);
@@ -337,6 +338,7 @@ const fillRecipient = ref(false);
 const buyerName = ref("");
 const buyerPhone = ref("");
 const buyerEmail = ref("");
+const payload = ref({});
 const createOrderCommand = ref({});
 const createOrderItemCommandList = [];
 
@@ -470,30 +472,16 @@ const checkoutECPay = async () => {
   }
 };
 
-import { useStore } from "vuex";
-const payload = ref({});
-
-const createLogisticsOrder = () => {
+const createLogisticsOrder = async (payload) => {
   {
-    const store = useStore();
-
-    const createLogisticsOrderResponse = async () => {
-      const payload = {
-        goodsAmount: "100",
-        receiverName: "lisi",
-        MerchantTradeNo: "SW739845811464", //todo 放CreateOrder傳回的Index
-      };
-
-      try {
-        const result = await store.dispatch("createLogisticsOrder", payload);
-        console.log(result);
-      } catch (error) {
-        console.error("Error creating logistics order:", error);
-      }
-    };
-
+    try {
+      const result = await store.dispatch("createLogisticsOrder", payload);
+      console.log(result);
+    } catch (error) {
+      console.error("Error creating logistics order:", error);
+    }
     return {
-      createLogisticsOrderResponse,
+      createLogisticsOrder,
     };
   }
 };
@@ -547,7 +535,7 @@ const handleSubmit = async () => {
     payload.value.receiverName = buyerName.value;
     payload.value.MerchantTradeNo = orderResult[0].orderIndex;
     console.log(payload.value);
-    //createLogisticsOrder(payload);
+    createLogisticsOrder(payload.value);
     // if (props.selectedData.payment.id == 2) {
     //   await checkoutECPay();
     //   ecpayForm.value.submit();
