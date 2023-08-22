@@ -7,13 +7,18 @@
                         Opposite content
                     </template>
                     <div>
-                        <div class="text-h6">MerchantTradeNo: {{ logisticsTradeInfoData.merchantTradeNo }}</div>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                            labore
-                            et
-                            dolore magna aliqua.
-                        </p>
+                        <div class="text-h6">交易編號: {{ logisticsTradeInfoData.merchantTradeNo }}</div>
+                        <div class="text-h6">狀態: {{ logisticsTradeInfoData.logisticsStatus }}</div>
+                        <div class="text-h6">方式: {{ logisticsTradeInfoData.logisticsType }}</div>
+                        <div class="text-h6">物流費用: {{ logisticsTradeInfoData.handlingCharge }}</div>
+                        <div class="text-h6">物流訂單成立日期: {{ logisticsTradeInfoData.tradeDate }}</div>
+                        <div class="text-h6">配送編號(B2C): {{ logisticsTradeInfoData.shipmentNo }}</div>
+                        <div class="text-h6">託運單號(宅配): {{ logisticsTradeInfoData.bookingNote }}</div>
+                        <div class="text-h6">寄貨編號(C2C): {{ logisticsTradeInfoData.cvsPaymentNo }}</div>
+                        <div class="text-h6">7-11驗證碼(C2C): {{ logisticsTradeInfoData.cvsValidationNo }}</div>
+                        <div class="text-h6">7-11交貨便代碼(C2C): {{ logisticsTradeInfoData.cvsPaymentNo
+                        }}{{ logisticsTradeInfoData.cvsValidationNo }}</div>
+
                     </div>
                 </v-timeline-item>
 
