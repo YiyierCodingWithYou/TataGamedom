@@ -536,14 +536,14 @@ const handleSubmit = async () => {
     payload.value.MerchantTradeNo = orderResult[0].orderIndex;
     console.log(payload.value);
     createLogisticsOrder(payload.value);
-    // if (props.selectedData.payment.id == 2) {
-    //   await checkoutECPay();
-    //   ecpayForm.value.submit();
-    // } else if (props.selectedData.payment.id == 1) {
-    //   await checkoutLinePay();
-    // } else {
-    //   router.push({ name: "Cart", query: { paymentSuccess: "true" } });
-    // }
+    if (props.selectedData.payment.id == 2) {
+      await checkoutECPay();
+      ecpayForm.value.submit();
+    } else if (props.selectedData.payment.id == 1) {
+      await checkoutLinePay();
+    } else {
+      router.push({ name: "Cart", query: { paymentSuccess: "true" } });
+    }
   } catch (error) {
     console.error("Error:", error);
   }

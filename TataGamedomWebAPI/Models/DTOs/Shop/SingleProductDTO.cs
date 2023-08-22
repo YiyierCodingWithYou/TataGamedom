@@ -26,7 +26,9 @@ namespace TataGamedomWebAPI.Models.DTOs.Shop
         public string SystemRequire { get; set; }
         public bool IsRestrict { get; set; }
 
-		public string GameCoverImg { get; set; } = null!;
+        public int? BoardId { get; set; }
+
+        public string GameCoverImg { get; set; } = null!;
         public IEnumerable<string>? Coupons { get; set; }
         public IEnumerable<string>? CouponDescription { get; set; }
         public IEnumerable<string>? ProductImg { get; set; }
