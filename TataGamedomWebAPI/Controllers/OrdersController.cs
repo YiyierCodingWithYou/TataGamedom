@@ -7,6 +7,8 @@ using TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder;
 using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderDetails;
 using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderList;
 using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderListByAccount;
+using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleItemsWithOrderId;
+using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleOrderItems;
 
 namespace TataGamedomWebAPI.Controllers;
 
@@ -54,6 +56,18 @@ public class OrdersController : ControllerBase
         var response = await _mediator.Send(order);
         return CreatedAtAction(nameof(Get), new { id = response });
     }
+
+    [HttpPost("OrderWithMultipleItems")]
+	[EnableCors("AllowCookie")]
+	[ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> Post(CreateMultipleItemsWithOrderIdCommand orderItemListWithId)
+    {
+        List<CreateOrderItemResponseDto> response = await _mediator.Send(orderItemListWithId);
+        return Ok(response);
+    }
+
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status202Accepted)]

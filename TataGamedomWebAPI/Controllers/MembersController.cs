@@ -38,7 +38,7 @@ namespace TataGamedomWebAPI.Controllers
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		//public string Login(LoginDTO dto)
-		public async Task<ActionResult<string?>> Login(LoginDTO dto)
+		public async Task<ActionResult> Login(LoginDTO dto)
 		{
             var hashOrigPwd = HashUtility.ToSHA256(dto.Password, "!@#$$DGTEGYT");
 
@@ -51,12 +51,26 @@ namespace TataGamedomWebAPI.Controllers
 			{
 				return BadRequest("帳號密碼錯誤");
 			}
+			if (user.ActiveFlag == false)
+			{
+				return BadRequest("此帳號已被停權，請聯繫管理員");
+			}
 			else
 			{
 				if (user.IsConfirmed != true)
 				{
-					return BadRequest("帳號尚未啟用");
+					return BadRequest("帳號尚未啟用，請先啟用帳號");
 				}
+
+				var currentDate = DateTime.Now;
+				var age = currentDate.Year - user.Birthday.Year;
+				if (currentDate.Month < user.Birthday.Month || (currentDate.Month == user.Birthday.Month && currentDate.Day < user.Birthday.Day))
+				{
+					age--; // 如果生日尚未到來，則減少一歲
+				}
+
+				user.LastOnlineTime = DateTime.Now;
+				_context.SaveChanges();
 				//string memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 				//string memberName = HttpContext.User.FindFirstValue("FullName");
 				var claims = new List<Claim>
@@ -70,16 +84,10 @@ namespace TataGamedomWebAPI.Controllers
                 };
 
 
-				//var authenticationProperties = new AuthenticationProperties();
-				//authenticationProperties.IsPersistent = true;
-				//authenticationProperties.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30);
-				//authenticationProperties.AllowRefresh = true;
-
 				var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 				HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-				//HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authenticationProperties);
 
-				return Ok( user.Name );
+				return Ok(new { Name = user.Name, Age = age });
 
             }
 
@@ -126,7 +134,7 @@ namespace TataGamedomWebAPI.Controllers
 		//    return await _context.Members.ToListAsync();
 		//}
 
-		// GET: api/Members/5
+		// GET: api/Members/
 		[EnableCors("AllowCookie")]
 		[HttpGet]
 		public async Task<ActionResult<MembersDto>> GetMember()
@@ -138,38 +146,35 @@ namespace TataGamedomWebAPI.Controllers
 			{
 				return NotFound();
 			}
-			 var member = await _context.Members.FindAsync(user.Id);
 
-			if (member == null)
+			var currentDate = DateTime.Now;
+			var age = currentDate.Year - user.Birthday.Year;
+			if (currentDate.Month < user.Birthday.Month || (currentDate.Month == user.Birthday.Month && currentDate.Day < user.Birthday.Day))
 			{
-				return NotFound();
+				age--; // 如果生日尚未到來，則減少一歲
 			}
 
 			var memberDto = new MembersDto
 			{
-				Id = member.Id,
-				Name = member.Name,
-				// Account = member.Account,
-				//Password = member.Password,
-				Birthday = member.Birthday,
-				Email = member.Email,
-				Phone = member.Phone,
-				IconImg = member.IconImg,
-				//ActiveFlag = member.ActiveFlag,
-				// LastOnlineTime = member.LastOnlineTime,     
+				Id = user.Id,
+				Name = user.Name,
+				Age = age,
+				Account = user.Account,
+				Birthday = user.Birthday,
+				Email = user.Email,
+				Phone = user.Phone,
+				IconImg = user.IconImg,
+				ActiveFlag = user.ActiveFlag,
+				LastOnlineTime = DateTime.Now 
 			};
 			return Ok(memberDto);
 		}
 
-		// PUT: api/Members/5
+		// PUT: api/Members/
 		[EnableCors("AllowCookie")]
-		[HttpPut("{id}")]
-		public async Task<IActionResult> PutMember(int id, MembersDto memberDto)
+		[HttpPut]
+		public async Task<IActionResult> PutMember(MembersDto memberDto, string iconImgFileName)
 		{
-			if (id != memberDto.Id)
-			{
-				return BadRequest();
-			}
 
 			var account = HttpContext.User.FindFirstValue("MembersAccount");
 			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
@@ -179,90 +184,17 @@ namespace TataGamedomWebAPI.Controllers
 				return NotFound();
 			}
 
-			var member = await _context.Members.FindAsync(user.Id);
-
-			if (member == null)
-			{
-				return NotFound();
-			}
-
 			// 更新 member 物件的屬性
-			member.Name = memberDto.Name;
-			member.Birthday = memberDto.Birthday;
-			member.Email = memberDto.Email;
-			member.Phone = memberDto.Phone;
-			member.IconImg = memberDto.IconImg;
-
-			try
+			user.Name = memberDto.Name;
+			user.Phone = memberDto.Phone;
+			if (!string.IsNullOrEmpty(iconImgFileName))
 			{
-				await _context.SaveChangesAsync();
+				user.IconImg = iconImgFileName;
 			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!MemberExists(id))
-				{
-					return NotFound();
-				}
-				else
-				{
-					throw;
-				}
-			}
-
+			await _context.SaveChangesAsync();
+	
 			return NoContent();
 		}
-
-	
-
-		// PUT: api/Members/5
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-		//[HttpPut("{id}")]
-		//      public async Task<IActionResult> PutMember(int id, MembersDto membersDto)
-		//      {
-		//          if (id != membersDto.Id)
-		//          {
-		//              return BadRequest();
-		//          }
-
-		//	var member = await _context.Members.FindAsync(id);
-
-		//	if (member == null)
-		//	{
-		//		return NotFound();
-		//	}
-
-		//          member.Id = membersDto.Id;
-		//          member.Name = membersDto.Name;
-		//          //member.Account = membersDto.Account;
-		//        //  member.Password = membersDto.Password;
-		//          member.Birthday = membersDto.Birthday;
-		//          member.Email = membersDto.Email;
-		//          member.Phone = membersDto.Phone;
-		//          member.IconImg = membersDto.IconImg;
-		//          //member.ActiveFlag = membersDto.ActiveFlag;
-		//	//member.LastOnlineTime = membersDto.LastOnlineTime;
-
-
-		//	//_context.Entry(membersDto).State = EntityState.Modified;
-
-		//	try
-		//	{
-		//              await _context.SaveChangesAsync();
-		//          }
-		//          catch (DbUpdateConcurrencyException)
-		//          {
-		//              if (!MemberExists(id))
-		//              {
-		//                  return NotFound();
-		//              }
-		//              else
-		//              {
-		//                  throw;
-		//              }
-		//          }
-
-		//          return NoContent();
-		//      }
 
 		// POST: api/Members
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -280,6 +212,11 @@ namespace TataGamedomWebAPI.Controllers
 				return BadRequest("此帳號已經有人使用過囉");
 			}
 
+			if (await _context.Members.AnyAsync(m => m.Email == registerDto.Email))
+			{
+				return BadRequest("此信箱已經有人使用過囉");
+			}
+
 			if (registerDto.Password != registerDto.CheckPassword)
 			{
 				return BadRequest("兩次輸入的密碼不相符，請重新確認。");
@@ -292,7 +229,7 @@ namespace TataGamedomWebAPI.Controllers
 
 			var hashOrigPwd = HashUtility.ToSHA256(registerDto.Password, "!@#$$DGTEGYT");
 		
-			var pocha = "POCHA.jpg";
+			var tataicon = "tataUserIcon.jpg";
 			//驗證用不寫入SQL
 			registerDto.CheckPassword = null;
 
@@ -316,7 +253,7 @@ namespace TataGamedomWebAPI.Controllers
 			};
 			if (registerDto.IconImg == null)
 			{
-				member.IconImg = pocha;
+				member.IconImg = tataicon;
 			}
 
 			await _context.Members.AddAsync(member);
@@ -346,7 +283,7 @@ namespace TataGamedomWebAPI.Controllers
 		}
 
 		[HttpPost("ActiveRegister")]
-		public async Task<ActionResult<Member>> ActiveRegister(ActiveRegisterDTO dto)
+		public async Task<ActionResult<string>> ActiveRegister(ActiveRegisterDTO dto)
 		{
 			var member = await _context.Members.FindAsync(dto.MemberId);
 
@@ -376,7 +313,7 @@ namespace TataGamedomWebAPI.Controllers
 		}
 
 		[HttpPost("ForgetPassword")]
-		public async Task<ActionResult<Member>> ForgetPassword(ForgetPasswordDTO dto)
+		public async Task<ActionResult<string>> ForgetPassword(ForgetPasswordDTO dto)
 		{
 			var member = await _context.Members.FirstOrDefaultAsync(m => m.Account == dto.Account);
 
@@ -419,55 +356,56 @@ namespace TataGamedomWebAPI.Controllers
 		}
 
 		[HttpPost("ResetPassword")]
-		public async Task<ActionResult<Member>> ResetPassword(ActiveRegisterDTO dto)
+		public async Task<ActionResult<string>> ResetPassword(ResetPasswordDTO dto)
 		{
-			var member = await _context.Members.FindAsync(dto.MemberId);
+			var member = await _context.Members
+				.SingleOrDefaultAsync(m => m.Id == dto.MemberId && m.ConfirmCode == dto.ConfirmCode);
 
 			if (member == null)
 			{
-				return NotFound();
+				return BadRequest("找不到對應的會員紀錄");
 			}
 
-			if (member.IsConfirmed)
+			var hashOrigPwd = HashUtility.ToSHA256(dto.CreatePassword, "!@#$$DGTEGYT");
 
+			if (dto.CreatePassword != dto.ConfirmPassword)
 			{
-				return BadRequest("此帳號已經啟用過囉");
+				return BadRequest("兩次輸入的密碼不相符，請重新確認。");
 			}
 
-			if (member.ConfirmCode != dto.ConfirmCode)
-			{
-				return BadRequest("驗證碼錯誤");
-			}
-
-
-			member.IsConfirmed = true;
+			member.Password = hashOrigPwd;
 			member.ConfirmCode = null;
 			await _context.SaveChangesAsync();
 
-			// 轉跳到首頁
 			return Ok();
 		}
 
-		//// DELETE: api/Members/5
-		//[HttpDelete("{id}")]
-		//public async Task<IActionResult> DeleteMember(int id)
-		//{
-		//    if (_context.Members == null)
-		//    {
-		//        return NotFound();
-		//    }
-		//    var member = await _context.Members.FindAsync(id);
-		//    if (member == null)
-		//    {
-		//        return NotFound();
-		//    }
 
-		//    _context.Members.Remove(member);
-		//    await _context.SaveChangesAsync();
+		[HttpPost("ChangePassword")]
+		public async Task<ActionResult<string>> ChangePassword(ChangePasswordDTO dto)
+		{
+			var account = HttpContext.User.FindFirstValue("MembersAccount");
+			var hashOrigPwd = HashUtility.ToSHA256(dto.OriginalPassword, "!@#$$DGTEGYT");
+			var member = await _context.Members
+				.SingleOrDefaultAsync(m => m.Account == account && m.Password == hashOrigPwd);
 
-		//    return NoContent();
-		//}
+			if (member == null)
+			{
+				return BadRequest("找不到對應的會員紀錄");
+			}
 
+			var hashPwd = HashUtility.ToSHA256(dto.CreatePassword, "!@#$$DGTEGYT");
+
+			if (dto.CreatePassword != dto.ConfirmPassword)
+			{
+				return BadRequest("兩次輸入的密碼不相符，請重新確認。");
+			}
+
+			member.Password = hashPwd;
+			await _context.SaveChangesAsync();
+
+			return Ok();
+		}
 
 
 		private bool MemberExists(int id)

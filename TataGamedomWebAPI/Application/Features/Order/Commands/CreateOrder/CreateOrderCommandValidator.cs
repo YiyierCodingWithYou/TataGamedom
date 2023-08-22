@@ -19,9 +19,6 @@ namespace TataGamedomWebAPI.Application.Features.Order.Commands.CreateOrder
             RuleFor(p => p.CreatedAt)
             .NotEmpty().WithMessage("{PropertyName} 必填");
 
-            RuleFor(p => p.ToAddress)
-            .NotEmpty().WithMessage("{PropertyName} 必填")
-            .Length(0, 50);
         }
 
         private async Task<bool> MemberMustExist(int memberId, CancellationToken token)

@@ -23,7 +23,7 @@ public class GetOrderItemReturnDetailsQueryHandler : IRequestHandler<GetOrderIte
 
     public async Task<OrderItemReturnDetailsDto> Handle(GetOrderItemReturnDetailsQuery request, CancellationToken cancellationToken)
     {
-        Models.EFModels.OrderItemReturn? orderItemReturn = await _orderItemReturnRepository.GetDetailInckudeOrderItemAsync(request.Id);
+        Models.EFModels.OrderItemReturn? orderItemReturn = await _orderItemReturnRepository.GetDetailIncludeOrderItemAsync(request.Id);
 
         OrderItemReturnDetailsDto response = _mapper.Map<OrderItemReturnDetailsDto>(orderItemReturn);
 

@@ -5,8 +5,20 @@ const BASE_URL = 'https://localhost:7081';
 const OrderStore = {
     state: () => ({
         orders: [],
-        orderDetails: {}
+        orderDetails: {},
+        orderItemIdReturnList: {},
     }),
+    getters: {
+        getOrderById: (state) => (orderId) => {
+            return state.orders.find(order => order.id == orderId);
+        },
+        getOrderDetailsById: (state) => (orderId) => {
+            return state.orderDetails[orderId];
+        },
+        getOrderItemIdReturnList: (state) => (orderId) => {
+            return state.orderItemIdReturnList[orderId];
+        },
+    },
     mutations: {
         setOrders(state, orders) {
             console.log("Orders received for mutation:", orders);
@@ -14,7 +26,10 @@ const OrderStore = {
         },
         setOrderDetails(state, { orderId, details }) {
             state.orderDetails[orderId] = details;
-        }
+        },
+        setorderItemIdReturnList(state, { orderId, orderItemIdReturnList }) {
+            state.orderItemIdReturnList[orderId] = orderItemIdReturnList;
+        },
     },
     actions: {
         async fetchOrders({ commit }) {
@@ -33,15 +48,34 @@ const OrderStore = {
             } catch (error) {
                 console.error('Failed to fetch order details:', error.message);
             }
-        }
-    },
-    getters: {
-        getOrderDetailsById: (state) => (orderId) => {
-            return state.orderDetails[orderId];
         },
-        getOrderById: (state) => (orderId) => {
-            return state.orders.find(order => order.id == orderId);
-        }
+        async fetchOrderItemIdReturnList({ commit }, orderId) {
+            try {
+                const response = await axios.get(`${BASE_URL}/api/OrderItemReturns/ItemIdList/${orderId}`);
+                commit('setorderItemIdReturnList', { orderId, orderItemIdReturnList: response.data });
+                console.log("action: fetchOrderItemIdReturnList", response)
+            } catch (error) {
+                console.error('Failed to fetch OrderItemIdReturnList :', error.message);
+            }
+        },
+        async postOrderItemReturns({ commit }, createOrderItemReturnCommandList) {
+            try {
+                const response = await axios.post(
+                    `${BASE_URL}/api/OrderItemReturns/MultipleOrderItemsReturn`,
+                    createOrderItemReturnCommandList,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+                //todo: 
+                //commit action => fetchOrders  
+                //commit mutation => update order state (since order status will change after post action)
+            } catch (error) {
+                console.log('Failed to post order item returns:', error.message);
+            }
+        },
     }
 };
 

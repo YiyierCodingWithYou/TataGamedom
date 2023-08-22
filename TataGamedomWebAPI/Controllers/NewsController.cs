@@ -93,8 +93,9 @@ namespace TataGamedomWebAPI.Controllers
         }
 
 
-        // GET: api/News/5
-        [HttpGet("{id}")]
+		// GET: api/News/5
+		[EnableCors("AllowAny")]
+		[HttpGet("{id}")]
         public async Task<ActionResult<NewsDto>> GetSingleNews(int id)
         {
             if (_context.News == null)
@@ -185,63 +186,34 @@ ORDER BY ViewCount DESC";
 
 		//// PUT: api/News/5
 		//// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-		//[HttpPut("{id}")]
-		//public async Task<IActionResult> PutNews(int id, News news)
-		//{
-		//    if (id != news.Id)
-		//    {
-		//        return BadRequest();
-		//    }
-
-		//    _context.Entry(news).State = EntityState.Modified;
-
-		//    try
-		//    {
-		//        await _context.SaveChangesAsync();
-		//    }
-		//    catch (DbUpdateConcurrencyException)
-		//    {
-		//        if (!NewsExists(id))
-		//        {
-		//            return NotFound();
-		//        }
-		//        else
-		//        {
-		//            throw;
-		//        }
-		//    }
-
-		//    return NoContent();
-		//}
-
-		//POST: api/News
-		//To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-		[Authorize]
+		[EnableCors("AllowCookie")]
 		[HttpPost("{newsId}/Comment")]
-        public async Task<ActionResult<NewsComment>> PostNewsComment(int newsId, NewsCommentsDTO newsCommentsDTO)
-        {
-            if (_context.News == null)
-            {
-                return Problem("Entity set 'AppDbContext.News'  is null.");
-            }
+		public async Task<ActionResult<NewsComment>> PostNewsComment(int newsId, NewsCommentsDTO newsCommentsDTO)
+		{
+			if (_context.News == null)
+			{
+				return Problem("Entity set 'AppDbContext.News'  is null.");
+			}
 
-			var memberId = HttpContext.User.FindFirstValue("Membersid");
+			var account = HttpContext.User.FindFirstValue("MembersAccount");
+			var user = _context.Members.FirstOrDefault(m => m.Account == account);
 
 			NewsComment newsComment = new NewsComment
-            {
-                NewsId = newsId,
-                MemberId = int.Parse(memberId),
-                Content = newsCommentsDTO.Content,
-                ActiveFlag = true,
-                Time = DateTime.Now
+			{
+				NewsId = newsId,
+				MemberId =user.Id,
+				Content = newsCommentsDTO.Content,
+				ActiveFlag = true,
+				Time = DateTime.Now
 			};
-            _context.NewsComments.Add(newsComment);
-            await _context.SaveChangesAsync();
+			_context.NewsComments.Add(newsComment);
+			await _context.SaveChangesAsync();
 
-            return Ok("成功留言");
+			return Ok("成功留言");
 		}
 
-		[Authorize]
+
+		[EnableCors("AllowAny")]
 		[HttpPost("{newsId}/Like")]
 		public async Task<ActionResult<NewslikesDTO>> PostNewsLike(int newsId, NewslikesDTO newslikesDTO)
 		{
@@ -264,7 +236,7 @@ ORDER BY ViewCount DESC";
 			return Ok("成功按讚");
 		}
 
-		[Authorize]
+		[EnableCors("AllowAny")]
 		[HttpDelete("{newsId}/Like")]
 		public async Task<ActionResult<NewslikesDTO>> DeleteNewsLike(int newsId, NewslikesDTO newslikesDTO)
 		{
