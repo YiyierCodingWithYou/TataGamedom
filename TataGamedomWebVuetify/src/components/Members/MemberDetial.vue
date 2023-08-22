@@ -4,31 +4,62 @@
     <v-container>
       <v-row class="mt-10">
         <v-col cols="12" md="6">
-          <v-text-field v-model="name" :rules="nameRules" label="姓名" required></v-text-field>
+          <v-text-field
+            v-model="name"
+            :rules="nameRules"
+            label="姓名"
+            required
+          ></v-text-field>
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-text-field v-model="phone" :rules="phoneRules" :counter="10" label="手機" required></v-text-field>
+          <v-text-field
+            v-model="phone"
+            :rules="phoneRules"
+            :counter="10"
+            label="手機"
+            required
+          ></v-text-field>
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-text-field v-model="email" label="E-mail" required readonly></v-text-field>
+          <v-text-field
+            v-model="email"
+            label="E-mail"
+            required
+            readonly
+          ></v-text-field>
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-text-field v-model="birthday" label="生日" required readonly></v-text-field>
+          <v-text-field
+            v-model="birthday"
+            label="生日"
+            required
+            readonly
+          ></v-text-field>
         </v-col>
 
-        <v-col cols="12" md="12">About Me
-          <QuillEditor :modules="modules" :toolbar="toolbarOptions" class="quill-editor" contentType="html"
-            v-model:content="editor" />
+        <v-col cols="12" md="12"
+          >About Me
+          <QuillEditor
+            :modules="modules"
+            :toolbar="toolbarOptions"
+            class="quill-editor"
+            contentType="html"
+            v-model:content="editor"
+          />
         </v-col>
 
-        <v-col cols="12" md="12" style="margin-top:50px;">
-          <v-file-input label="上傳頭像" variant="filled" prepend-icon="mdi-camera" @change="uploadImage"></v-file-input>
+        <v-col cols="12" md="12" style="margin-top: 50px">
+          <v-file-input
+            label="上傳頭像"
+            variant="filled"
+            prepend-icon="mdi-camera"
+            @change="uploadImage"
+          ></v-file-input>
         </v-col>
-        <img style="height: 300px; width: 300px;" :src="img + iconImg" />
-
+        <img style="height: 300px; width: 300px" :src="img + iconImg" />
       </v-row>
     </v-container>
     <v-btn color="success" @click="onClick" style="margin-left: 45%">
@@ -38,17 +69,35 @@
 
   <v-card class="mx-auto mt-16" color="white" max-width="600" title="更改密碼">
     <v-container>
-      <v-text-field v-model="originalPassword" :append-inner-icon="originalPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary" label="舊密碼" :type="originalPasswordVisible ? 'text' : 'password'" variant="underlined"
-        @click:append-inner="originalPasswordVisible = !originalPasswordVisible"></v-text-field>
+      <v-text-field
+        v-model="originalPassword"
+        :append-inner-icon="originalPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary"
+        label="舊密碼"
+        :type="originalPasswordVisible ? 'text' : 'password'"
+        variant="underlined"
+        @click:append-inner="originalPasswordVisible = !originalPasswordVisible"
+      ></v-text-field>
 
-      <v-text-field v-model="createPassword" :append-inner-icon="createPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary" label="新密碼" :type="createPasswordVisible ? 'text' : 'password'" variant="underlined"
-        @click:append-inner="createPasswordVisible = !createPasswordVisible"></v-text-field>
+      <v-text-field
+        v-model="createPassword"
+        :append-inner-icon="createPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary"
+        label="新密碼"
+        :type="createPasswordVisible ? 'text' : 'password'"
+        variant="underlined"
+        @click:append-inner="createPasswordVisible = !createPasswordVisible"
+      ></v-text-field>
 
-      <v-text-field v-model="confirmPassword" :append-inner-icon="confirmPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary" label="確認密碼" :type="confirmPasswordVisible ? 'text' : 'password'" variant="underlined"
-        @click:append-inner="confirmPasswordVisible = !confirmPasswordVisible"></v-text-field>
+      <v-text-field
+        v-model="confirmPassword"
+        :append-inner-icon="confirmPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary"
+        label="確認密碼"
+        :type="confirmPasswordVisible ? 'text' : 'password'"
+        variant="underlined"
+        @click:append-inner="confirmPasswordVisible = !confirmPasswordVisible"
+      ></v-text-field>
       <p v-if="createPassword !== confirmPassword" class="password-mismatch">
         新密碼需與確認密碼相符
       </p>
@@ -72,7 +121,6 @@ import { format } from "date-fns";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import ImageUploader from "quill-image-uploader";
-
 
 //const member = ref([]);
 const valid = ref(false);
@@ -283,7 +331,6 @@ const phoneRules = [
     if (value) return true;
     return "手機為必填";
   },
-
 ];
 </script>
     
