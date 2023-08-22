@@ -102,7 +102,7 @@ public class ECPayShipmentService
         var orderDict = new Dictionary<string, string>
         {
             { "MerchantID", order.MerchantID },
-            { "MerchantTradeNo", order.MerchantTradeNo },   //可為null，不可重複，但有給的話demo蠻好辨識的
+            { "MerchantTradeNo", order.MerchantTradeNo },   //可為null，不可重複，但有給的話demo蠻好辨識的，目前先放OrderIndex
             { "MerchantTradeDate", order.MerchantTradeDate},
             { "LogisticsType", order.LogisticsType},
             { "LogisticsSubType", order.LogisticsSubType},  //B2C接受參數: FAMI、UNIMART、HILIFE、UNIMARTFREEZE
@@ -113,8 +113,8 @@ public class ECPayShipmentService
             { "ReceiverCellPhone", order.ReceiverCellPhone },   //todo 從購物車取memberInfo
             { "ReceiverEmail", order.ReceiverEmail }, // todo?
             { "ServerReplyURL", order.ServerReplyURL},//localhost:3000/Orders" }, //todo ngrok
-            { "ReceiverStoreID", order.ReceiverStoreID },  //todo 收件人門市代號，看能不能從11弄的db取  / 7-ELEVEN 超商：131386 7-ELEVEN 超商冷凍店取：896539 全家：006598 OK：1328
-            //{ "ClientReplyURL", ""},  可以導覽前端頁面，目前採幕後建物流訂單，先不填。 todo => 寫一個有值得給LinePay用，目前LinePay沒物流
+            { "ReceiverStoreID", order.ReceiverStoreID },// 7-ELEVEN 超商：131386 7-ELEVEN 超商冷凍店取：896539 全家：006598 OK：1328
+            //{ "ClientReplyURL", ""},  可以導覽前端頁面，目前採幕後建物流訂單，先不填。 todo => 寫一個有值的給LinePay用，目前LinePay沒物流
         };
 
         orderDict["CheckMacValue"] = GetCheckMacValue(orderDict);
