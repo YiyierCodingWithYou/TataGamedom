@@ -35,9 +35,12 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
 import axios from "axios";
+import { useRouter, useRoute } from "vue-router";
 
 const boardOrAccount = ref(null);
 const data = ref([]);
+const router = useRouter();
+const route = useRoute();
 
 const fetchData = () => {
   axios
@@ -52,7 +55,28 @@ const fetchData = () => {
 
 const linkTo = (value) => {
   console.log(value);
+  if (!isNaN(+value)) {
+    router.push({
+      name: "GameLoungeBoard",
+      params: { boardId: value },
+    });
+  }
+  if (isNaN(+value)) {
+    console.log("im str");
+    router.push({
+      name: "GameLoungeAccount",
+      params: { account: value },
+    });
+  }
 };
+
+if (route.params.account !== undefined) {
+  boardOrAccount.value = route.params.account;
+}
+
+if (route.params.boardId !== undefined) {
+  boardOrAccount.value = route.params.boardId;
+}
 
 onMounted(() => {
   fetchData();

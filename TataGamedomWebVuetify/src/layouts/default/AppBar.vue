@@ -6,6 +6,7 @@
     </v-app-bar-title>
     <a href="/GameLounge" class="me-3">👀</a>
     <a href="/Cart" class="me-3">Cart</a>
+    <a href="/News" class="me-3">偷看一下</a>
     <v-spacer></v-spacer>
     <div v-if="$store.state.isLoggedIn">
       <!-- <a color="primary" @click="toggleMemberProfile">HI {{ name }}</a> -->
@@ -42,7 +43,7 @@ export default {
   },
   data() {
     return {
-      // isRouterAlive: true,
+      //isRouterAlive: true,
       account: "",
       returnTo: null,
       forceRerenderKey: 0,
@@ -58,7 +59,8 @@ export default {
       axios.delete("https://localhost:7081/api/members/Logout", {
         withCredentials: true,
       });
-      this.$store.commit("SET_LOGIN", false); // 將登入狀態重置為未登入
+      //this.$store.commit("SET_LOGIN", false); // 將登入狀態重置為未登入
+      this.$router.go(0);
     },
     checkLogin() {
       axios

@@ -63,15 +63,17 @@ namespace TataGamedomWebAPI.Controllers
 					Index = p.Index,
 					IsVirtual = p.IsVirtual,
 					Price = p.Price,
-					SpecialPrice = (p.CouponsProducts.Any(c => currentTime >= c.Coupon.StartTime && currentTime <= c.Coupon.EndTime))
-									? (int)Math.Round(p.CouponsProducts
-										.Select(c => c.Coupon.DiscountTypeId == 1
-											? p.Price * (c.Coupon.Discount / 100.0)
-											: (c.Coupon.DiscountTypeId == 2
-												? p.Price - c.Coupon.Discount
-												: p.Price))
+					SpecialPrice = p.CouponsProducts
+							.Any(cp => currentTime >= cp.Coupon.StartTime && currentTime <= cp.Coupon.EndTime && cp.ProductId == p.Id)
+							? (int)Math.Round(p.CouponsProducts
+										.Where(cp => currentTime >= cp.Coupon.StartTime && currentTime <= cp.Coupon.EndTime && cp.ProductId == p.Id)
+										.Select(cp => cp.Coupon.DiscountTypeId == 1
+										? p.Price * (cp.Coupon.Discount / 100.0)
+										: (cp.Coupon.DiscountTypeId == 2
+										? p.Price - cp.Coupon.Discount
+										: p.Price))
 										.FirstOrDefault(), 1)
-									: p.Price,
+							: p.Price,
 					GamePlatformName = p.GamePlatform.Name,
 					SaleDate = p.SaleDate,
 					Score = Math.Round(p.Game.GameComments.Select(c => (double?)c.Score).Average() ?? 0.0, 1),
@@ -139,15 +141,17 @@ namespace TataGamedomWebAPI.Controllers
 					GameId = p.GameId,
 					IsVirtual = p.IsVirtual,
 					Price = p.Price,
-					SpecialPrice = p.CouponsProducts.Any(c => currentTime >= c.Coupon.StartTime && currentTime <= c.Coupon.EndTime)
-									? (int)Math.Round(p.CouponsProducts
-										.Select(c => c.Coupon.DiscountTypeId == 1
-											? p.Price * (c.Coupon.Discount / 100.0)
-											: (c.Coupon.DiscountTypeId == 2
-												? p.Price - c.Coupon.Discount
-												: p.Price))
+					SpecialPrice = p.CouponsProducts
+							.Any(cp => currentTime >= cp.Coupon.StartTime && currentTime <= cp.Coupon.EndTime && cp.ProductId == p.Id)
+							? (int)Math.Round(p.CouponsProducts
+										.Where(cp => currentTime >= cp.Coupon.StartTime && currentTime <= cp.Coupon.EndTime && cp.ProductId == p.Id)
+										.Select(cp => cp.Coupon.DiscountTypeId == 1
+										? p.Price * (cp.Coupon.Discount / 100.0)
+										: (cp.Coupon.DiscountTypeId == 2
+										? p.Price - cp.Coupon.Discount
+										: p.Price))
 										.FirstOrDefault(), 1)
-									: p.Price,
+							: p.Price,
 					GamePlatformName = p.GamePlatform.Name,
 					SaleDate = p.SaleDate,
 					Score = Math.Round(p.Game.GameComments.Select(c => (double?)c.Score).Average() ?? 0.0, 1),

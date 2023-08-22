@@ -1,7 +1,7 @@
 <template>
   <v-tabs v-model="tab" color="yellow-darken-3" align-tabs="center">
     <v-tab :value="1">🏠</v-tab>
-    <v-tab :value="2" v-if="test">🦦</v-tab>
+    <v-tab :value="2">🦦</v-tab>
     <v-tab :value="3">🔍</v-tab>
     <transition name="slide-fade">
       <t-tab v-if="tab === 3" class="w-50">
@@ -12,8 +12,35 @@
     </transition>
   </v-tabs>
   <v-window v-model="tab">
-    <v-window-item :value="1"> </v-window-item>
+    <v-window-item :value="1">
+      <v-container>
+        <v-row>
+          <LeftCol>
+            <template #container>
+              <BoardList></BoardList>
+            </template>
+          </LeftCol>
+          <MainCol>
+            <template #container> 這裡放熱門ㄉ貼文啦 </template>
+          </MainCol>
+          <RightCol></RightCol>
+        </v-row>
+      </v-container>
+    </v-window-item>
     <v-window-item :value="2">
+      <v-container>
+        <v-row>
+          <LeftCol> </LeftCol>
+          <MainCol>
+            <template #container>
+              <ReadPostPersonalize></ReadPostPersonalize>
+            </template>
+          </MainCol>
+          <RightCol></RightCol>
+        </v-row>
+      </v-container>
+    </v-window-item>
+    <v-window-item :value="3" v-if="isSearch">
       <v-container>
         <v-row>
           <LeftCol> </LeftCol>
@@ -22,14 +49,16 @@
               <ReadPostTotal></ReadPostTotal>
             </template>
           </MainCol>
-          <RightCol></RightCol>
+          <RightCol>
+            <template #container>
+              <AboutAccount></AboutAccount>
+              <AboutBoard></AboutBoard>
+            </template>
+          </RightCol>
         </v-row>
       </v-container>
     </v-window-item>
-    <v-window-item :value="3" v-if="isAccountSearch"
-      >{{ account }}123</v-window-item
-    >
-    <v-window-item :value="3" v-if="!isAccountSearch">456</v-window-item>
+    <v-window-item :value="3" v-if="!isSearch"> </v-window-item>
   </v-window>
 </template>
 
@@ -40,21 +69,26 @@ import RightCol from "@/components/GameLounge/RightCol.vue";
 import MainCol from "@/components/GameLounge/MainCol.vue";
 import SearchBar from "@/components/GameLounge/SearchBar.vue";
 import ReadPostTotal from "@/components/GameLounge/ReadPostTotal.vue";
+import ReadPostPersonalize from "@/components/GameLounge/ReadPostPersonalize.vue";
+import BoardList from "@/components/GameLounge/LeftBoardList/BoardList.vue";
+import AboutAccount from "@/components/GameLounge/RightBoardList/AboutAccount.vue";
+import AboutBoard from "@/components/GameLounge/RightBoardList/AboutBoard.vue";
 import { useRoute } from "vue-router";
 
 const tab = ref(1);
-const test = ref(true);
-
 const route = useRoute();
-
-const isAccountSearch = ref(false);
+const isSearch = ref(false);
 const account = ref("");
+const boardId = ref("");
+
 account.value = route.params.account;
-if (account.value !== undefined) {
-  isAccountSearch.value = true;
+boardId.value = route.params.boardId;
+if (account.value !== undefined || boardId.value !== undefined) {
+  isSearch.value = true;
+  tab.value = 3;
 }
 console.log(account.value);
-console.log(isAccountSearch.value);
+console.log(isSearch.value);
 </script>
 
 <style scoped>

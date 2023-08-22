@@ -72,19 +72,16 @@
             </td>
           </tr>
           <tr>
-            <td>已享用優惠</td>
+            <td>優惠活動</td>
             <td>
               <span
                 class="me-auto"
-                v-for="item in cartData.distinctCoupons"
-                :key="item"
+                v-for="(item, index) in cartData.distinctCoupons"
+                :key="index"
               >
-                {{ item }}　</span
-              ><span
-                v-for="item in cartData.distinctCouponsDescription"
-                :key="item"
-                >{{ item }}<br
-              /></span>
+                {{ item }} {{ cartData.distinctCouponsDescription[index]
+                }}<br />
+              </span>
             </td>
             <td></td>
             <td></td>
@@ -134,7 +131,7 @@
           <v-card class="mt-3">
             <v-card-title class="d-flex">訂單資訊</v-card-title>
             <hr />
-            <v-card-subtitle>小計：{{ cartData.total }}</v-card-subtitle>
+            <v-card-subtitle>小計：{{ cartData.subTotal }}</v-card-subtitle>
             <v-card-subtitle>運費：{{ freight }}</v-card-subtitle>
             <v-card-subtitle
               >合計：{{ cartData.total + freight }}</v-card-subtitle
@@ -194,6 +191,24 @@ const returnSelectedHandler = () => {
   emit("getreturnSelected", selectedData);
 };
 
+watch(
+  () => {
+    return {
+      location: selectLocation.value,
+      shipMethod: selectShipMethod.value,
+      payment: selectPayment.value,
+      freight: freight.value,
+      totalAmount: total.value,
+    };
+  },
+  (newValue, oldValue) => {
+    // 當 selectedData 發生變化時觸發
+    // 這裡可以添加相關邏輯，例如檢查 selectedData 的不同並觸發 loadData
+    console.log("selectedData changed:", newValue);
+    loadData();
+  }
+);
+
 const shipLocation = ref([
   { loc: "taiwan", label: "台灣" },
   { loc: "singapore", label: "新加坡" },
@@ -225,7 +240,6 @@ const loadData = async () => {
   });
   const datas = await response.json();
   cartData.value = datas;
-  //console.log(cartData.value);
   cartItems.value = datas.cartItems;
   total.value = datas.total;
 };
@@ -350,9 +364,9 @@ const calculatePaymentOption = () => {
 };
 
 const calculateShippingFee = () => {
-  if (total.value >= 3000 || selectShipMethod.value.method === "oversea") {
+  if (total.value >= 2000 || selectShipMethod.value.method === "oversea") {
     freight.value = 0;
-  } else if (total.value < 3000) {
+  } else if (total.value < 2000) {
     if (
       selectShipMethod.value.method !== "payFirstAtHome" &&
       selectShipMethod.value.method !== "payAtHome"

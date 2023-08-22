@@ -4,6 +4,7 @@ import eCommerce from "@/views/eCommerce.vue";
 import SingleProduct from "@/views/SingleProduct.vue";
 import Members from "../views/Members.vue";
 import News from "../views/NewsIndex.vue";
+import NewsPage from "@/components/News/NewsPage.vue";
 import RegisterVue from "@/components/Members/Register.vue";
 import Login from "@/components/Members/Login.vue";
 import ForgetPwd from "@/components/Members/ForgetPwd.vue";
@@ -16,6 +17,7 @@ import LinePayConfirmPayment from '../views/LinePayConfirmPayment.vue'
 import Cart from '@/views/Cart.vue'
 import MemberDetial from "@/components/Members/MemberDetial.vue"
 import ResetPassword from "@/components/Members/ResetPassword.vue"
+import store from '@/store'
 import RedirectToLogisticsSelection_Test from "@/components/ECPay/RedirectToLogisticsSelection_Test"
 
 
@@ -44,24 +46,51 @@ const routes = [
         component: News,
       },
       {
+        path: "News/:newsId",
+        name: "NewsPage",
+        component: NewsPage,
+      },
+      {
         path: "/Members/Register",
         name: "Register",
         component: RegisterVue,
+        beforeEnter: (to, from, next) => {
+          if (store.state.isLoggedIn === true) {
+            next('/');
+          } else {
+            next();
+          }
+        }
       },
       {
         path: "/Members/Login",
         name: "Login",
         component: Login,
+        beforeEnter: (to, from, next) => {
+          if (store.state.isLoggedIn === true) {
+            next('/');
+          } else {
+            next();
+          }
+        }
       },
       {
         path: "/Members/ForgetPwd",
         name: "ForgetPwd",
         component: ForgetPwd,
+        beforeEnter: (to, from, next) => {
+          if (store.state.isLoggedIn === true) {
+            next('/');
+          } else {
+            next();
+          }
+        }
       },
       {
         path: "/Members/MemberDetial",
         name: "MemberDetial",
         component: MemberDetial,
+        meta: { requiresAuth: true }//表示登入才可以用此頁面
       },
       {
         path: "/Orders",
@@ -92,6 +121,13 @@ const routes = [
         path: "/Members/ActiveRegister",
         name: "ActiveRegister",
         component: ActiveRegister,
+        beforeEnter: (to, from, next) => {
+          if (store.state.isLoggedIn === true) {
+            next('/');
+          } else {
+            next();
+          }
+        }
       },
       {
         path: "/LinePayConfirmPayment",
@@ -99,18 +135,21 @@ const routes = [
         component: LinePayConfirmPayment,
       },
       {
-        path: '/Members/MemberDetial',
-        name: 'MemberDetial',
-        component: MemberDetial
-      },
-      {
         path: '/Members/ResetPassword',
         name: 'ResetPassword',
         component: ResetPassword,
+        beforeEnter: (to, from, next) => {
+          if (store.state.isLoggedIn === true) {
+            next('/');
+          } else {
+            next();
+          }
+        },
         props: (route) => ({
           memberId: parseInt(route.query.memberId),
           confirmCode: route.query.confirmCode,
         }),
+
       }
     ],
   },
@@ -167,6 +206,13 @@ const routes = [
     ],
   },
   {
+    path: "/Test",
+    component: () => import("@/layouts/default/Default.vue"),
+    children: [
+      { path: "", name: "Test", component: () => import("@/views/Test.vue") },
+    ],
+  },
+  {
     path: "/RedirectToLogisticsSelection_Test",
     name: "RedirectToLogisticsSelection_Test",
     component: RedirectToLogisticsSelection_Test,
@@ -177,5 +223,20 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
+
+//判斷是否登入，有登入才可以進入該頁面(beforeEach)
+router.beforeEach((to, from, next) => {
+
+  if (to.matched.some(route => route.meta.requiresAuth)) {
+
+    if (store.state.isLoggedIn === true) {
+      next();
+    } else {
+      next('/Members/Login');
+    }
+  } else {
+    next(); // 不需要登入，直接允許
+  }
+})
 
 export default router;

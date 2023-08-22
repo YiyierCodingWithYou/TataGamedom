@@ -2,7 +2,7 @@
   <h2>是我啦會員資料</h2>
   <v-form v-model="valid">
     <v-container>
-      <v-row>
+      <v-row class="mt-10">
         <v-col cols="12" md="6">
           <v-text-field
             v-model="name"
@@ -23,6 +23,16 @@
 
         <v-col cols="12" md="6">
           <v-text-field
+            v-model="phone"
+            :rules="phoneRules"
+            :counter="10"
+            label="手機"
+            required
+          ></v-text-field>
+        </v-col>
+
+        <v-col cols="12" md="6">
+          <v-text-field
             v-model="email"
             label="E-mail"
             required
@@ -39,25 +49,20 @@
           ></v-text-field>
         </v-col>
 
-        <v-col cols="12" md="6">
-          <v-text-field
-            v-model="phone"
-            :rules="phoneRules"
-            :counter="10"
-            label="手機"
-            required
-          ></v-text-field>
-        </v-col>
-
         <v-col cols="12" md="12">
           <v-file-input
             label="上傳頭像"
             variant="filled"
             prepend-icon="mdi-camera"
+            @change="uploadImage"
           ></v-file-input>
         </v-col>
 
-        <img style="height: 300px; width: 300px" :src="img + iconImg" alt="" />
+        <img
+          style="height: 300px; width: 300px; margin-left: 40%"
+          :src="img + iconImg"
+        />
+
         <!-- <v-col cols="12" md="8">
           <v-text-field
             v-model="iconImg"
@@ -68,7 +73,7 @@
         </v-col> -->
       </v-row>
     </v-container>
-    <v-btn color="success" @click="onClick" style="left: auto">
+    <v-btn color="success" @click="onClick" style="margin-left: 45%">
       確認修改
     </v-btn>
   </v-form>
@@ -141,7 +146,7 @@ const createPasswordVisible = ref(false);
 const confirmPasswordVisible = ref(false);
 const passwordsMatch = ref(true);
 const router = useRouter();
-let img = "https://localhost:7081/Files/Icons/";
+let img = "https://localhost:7081/Files/Uploads/Icons/";
 
 watch([createPassword, confirmPassword], () => {
   passwordsMatch.value = createPassword === confirmPassword;
@@ -160,6 +165,7 @@ const loadMember = async () => {
   birthday.value = relativeTime(datas.birthday);
   phone.value = datas.phone;
   iconImg.value = datas.iconImg;
+  //iconImg.value = imageUrl;
   console.log("123132", datas);
 };
 
@@ -167,10 +173,42 @@ onMounted(() => {
   loadMember();
 });
 
+//上傳圖片
+async function uploadImage(event) {
+  const file = event.target.files[0];
+  if (!file) {
+    return;
+  }
+
+  const folderName = "Icons";
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const response = await axios.post(
+      `https://localhost:7081/api/Common/uploadImage/${folderName}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    //用來/分割上傳的連結(只取最後的XXXX.JPG)
+    const parts = response.data.split("/");
+    iconImg.value = parts[parts.length - 1];
+    console.log("上傳成功", iconImg.value);
+  } catch (error) {
+    console.error("上傳失敗", error);
+  }
+}
+
+//確認修改
 const onClick = async () => {
   axios
     .put(
-      "https://localhost:7081/api/Members",
+      `https://localhost:7081/api/Members?iconImgFileName=${iconImg.value}`,
       {
         name: name.value,
         phone: phone.value,
@@ -208,7 +246,7 @@ const logout = async () => {
 
 //改密碼
 const onSubmit = async () => {
-  axios
+  await axios
     .post(
       "https://localhost:7081/api/Members/ChangePassword",
       {
@@ -262,5 +300,4 @@ const phoneRules = [
 ];
 </script>
     
-<style>
-</style>
+<style></style>

@@ -1,5 +1,5 @@
 <template>
-  <v-col cols="12" sm="8">
+  <v-col cols="12" sm="7">
     <v-sheet min-height="70vh" rounded="lg">
       <v-container>
         <slot name="container"></slot>
