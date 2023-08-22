@@ -68,15 +68,19 @@
           立即註冊 <v-icon icon="mdi-chevron-right"></v-icon>
         </a>
       </v-card-text>
+      <GoogleLogin :callback="callback" prompt></GoogleLogin>
     </v-card>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import ForgetPwd from "./ForgetPwd.vue";
-
+//import ForgetPwd from "./ForgetPwd.vue";
+import GoogleLogin from "../Members/GoogleLogin.vue";
 export default {
+  components: {
+    GoogleLogin,
+  },
   data: () => ({
     visible: false,
     account: "", // Add this line
@@ -128,4 +132,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>

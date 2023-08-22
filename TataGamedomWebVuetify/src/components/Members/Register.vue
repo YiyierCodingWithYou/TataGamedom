@@ -91,6 +91,7 @@
     
 <script>
 import axios from "axios";
+
 export default {
   data: () => ({
     account: "",
@@ -151,6 +152,9 @@ export default {
           console.log(err);
           console.log("註冊失敗");
         });
+    },
+    callback(response) {
+      this.data = response;
     },
   },
 };
