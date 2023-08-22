@@ -169,7 +169,8 @@ namespace TataGamedomWebAPI.Controllers
 								.Where(c => currentTime >= c.Coupon.StartTime && currentTime <= c.Coupon.EndTime)
 								.Select(c => c.Coupon.Description),
 					ProductImg = p.ProductImages.Select(p => p.Image)!,
-					CommentCount = p.Game.GameComments.Where(c=>c.ActiveFlag==true).Count()
+					CommentCount = p.Game.GameComments.Where(c=>c.ActiveFlag==true).Count(),
+					BoardId = p.Game.Boards.Where(b=>b.GameId == p.GameId ).Select(b=>b.Id).FirstOrDefault(),
 				}).FirstOrDefaultAsync();
 
 			//做評論的分頁

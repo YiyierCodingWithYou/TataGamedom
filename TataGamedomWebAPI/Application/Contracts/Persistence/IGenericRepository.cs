@@ -16,5 +16,6 @@ public interface IGenericRepository<T> where T : BaseEntity
 
     Task DeleteAsync(T entity);
 
+	Task DeleteAsync(IEnumerable<T> entities);
 }
 
