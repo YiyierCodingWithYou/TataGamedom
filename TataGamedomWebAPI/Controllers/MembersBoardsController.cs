@@ -2,7 +2,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,10 +20,12 @@ namespace TataGamedomWebAPI.Controllers
 	public class MembersBoardsController : ControllerBase
 	{
 		private readonly AppDbContext _context;
+		private SimpleHelper _simpleHelper;
 
 		public MembersBoardsController(AppDbContext context)
 		{
 			_context = context;
+			_simpleHelper = new SimpleHelper(context);
 		}
 
 		// GET: api/MembersBoards
@@ -68,11 +72,11 @@ namespace TataGamedomWebAPI.Controllers
 
 		// PUT: api/MembersBoards/{boardId}/Follow
 		[HttpPut("{boardId}/Follow")]
+		[EnableCors("AllowCookie")]
 		public async Task<ApiResult> ToggleMembersBoardFollow(int boardId)
 		{
-			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
-			int memberId = 3; // 王五 wangwu 測試用
+			var memberAccount = HttpContext.User.FindFirstValue("MembersAccount");
+			int memberId = _simpleHelper.memberIdByAccount(memberAccount);
 			var ExisitingFollow = _context.MembersBoards
 				.FirstOrDefault(b => b.BoardId == boardId && b.MemberId == memberId);
 
@@ -115,11 +119,11 @@ namespace TataGamedomWebAPI.Controllers
 		// PUT: api/MembersBoards/5
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPut("{boardId}/Favorite")]
+		[EnableCors("AllowCookie")]
 		public async Task<ApiResult> ToggleMembersBoardFavorite(int boardId)
 		{
-			//var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-			//int memberId = _simpleHelper.memberIdByAccount(memberAccount);
-			int memberId = 3; // 王五 wangwu 測試用
+			var memberAccount = HttpContext.User.FindFirstValue("MembersAccount");
+			int memberId = _simpleHelper.memberIdByAccount(memberAccount);
 			var ExisitingFollow= _context.MembersBoards
 				.FirstOrDefault(b => b.BoardId == boardId && b.MemberId == memberId);
 			var ExisitingFavo = _context.MembersBoards
