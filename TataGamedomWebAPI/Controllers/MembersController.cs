@@ -18,10 +18,10 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Cors;
 using static System.Net.WebRequestMethods;
 using Google.Apis.Auth;
+using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 
 namespace TataGamedomWebAPI.Controllers
 {
-	[EnableCors("AllowCookie")]
 	[Route("api/[controller]")]
     [ApiController]
     public class MembersController : ControllerBase
@@ -97,10 +97,11 @@ namespace TataGamedomWebAPI.Controllers
 
         }
 
+
 		// POST: api/Members/GoogleLogin
 		[EnableCors("AllowCookie")]
 		[HttpPost("GoogleLogin")]
-		public async Task<IActionResult> GoogleLogin( string idToken)
+		public async Task<IActionResult> GoogleLogin([FromBody] string credential)
 		{
 			try
 			{
@@ -108,8 +109,9 @@ namespace TataGamedomWebAPI.Controllers
 				{
 					Audience = new List<string> { _configuration["GoogleApiClientId"] }
 				};
+				Console.WriteLine(_configuration["GoogleApiClientId"]);
 
-				var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+				var payload = await GoogleJsonWebSignature.ValidateAsync(credential, settings);
 
 				if (payload != null)
 				{
@@ -125,6 +127,43 @@ namespace TataGamedomWebAPI.Controllers
 				return BadRequest(new { message = "登入失敗", error = ex.Message });
 			}
 		}
+
+
+
+		//public class CredentialModel
+		//{
+		//	public string Credential { get; set; }
+		//}
+
+		//// POST: api/Members/GoogleLogin
+		//[EnableCors("AllowCookie")]
+		//[HttpPost("GoogleLogin")]
+		//public async Task<IActionResult> GoogleLogin([FromBody] CredentialModel model)
+		//{
+		//	try
+		//	{
+		//		var settings = new GoogleJsonWebSignature.ValidationSettings
+		//		{
+		//			Audience = new List<string> { _configuration["GoogleApiClientId"] }
+		//		};
+		//		Console.WriteLine(_configuration["GoogleApiClientId"]);
+
+		//		var payload = await GoogleJsonWebSignature.ValidateAsync(model.Credential, settings);
+
+		//		if (payload != null)
+		//		{
+		//			return Ok(new { message = "登入成功", user = payload });
+		//		}
+		//		else
+		//		{
+		//			return BadRequest(new { message = "Google登入驗證失敗" });
+		//		}
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		return BadRequest(new { message = "登入失敗", error = ex.Message });
+		//	}
+		//}
 
 
 
