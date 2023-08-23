@@ -306,6 +306,11 @@
 <script setup>
 import { ref, defineProps, computed, watch } from "vue";
 import Payment from "@/components/Cart/Payment.vue";
+import { useRoute, useRouter } from "vue-router";
+import { useStore } from "vuex";
+const store = useStore();
+const router = useRouter();
+const route = useRoute();
 const dialog = ref(false);
 const cartData = ref({});
 const cartItems = ref([]);
@@ -333,8 +338,10 @@ const fillRecipient = ref(false);
 const buyerName = ref("");
 const buyerPhone = ref("");
 const buyerEmail = ref("");
+const payload = ref({});
 const createOrderCommand = ref({});
 const createOrderItemCommandList = [];
+
 const rules = {
   required: (value) => !!value || "此欄位必填",
   email: (value) => {
@@ -403,6 +410,7 @@ const loadData = async (type) => {
   total.value = datas.total;
   console.log(cartItems.value);
   count.value = datas.cartItems.length;
+  payload.value.goodsAmount = props.selectedData.totalAmount;
 };
 
 const load = async () => {
@@ -464,49 +472,80 @@ const checkoutECPay = async () => {
   }
 };
 
+const createLogisticsOrder = async (payload) => {
+  {
+    try {
+      const result = await store.dispatch("createLogisticsOrder", payload);
+      console.log(result);
+    } catch (error) {
+      console.error("Error creating logistics order:", error);
+    }
+    return {
+      createLogisticsOrder,
+    };
+  }
+};
+
 const checkoutLinePay = async () => {
   const response = await fetch(`https://localhost:7081/api/LinePay/Create`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({}),
-  })
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+  });
+  if (response.ok) {
+    const data = await response.json();
+    console.log(data);
+    window.location = data.info.paymentUrl.web;
+  } else {
+    console.log(response);
+  }
 };
 
 const createOrder = async () => {
-  const response = await fetch(
-    `https://localhost:7081/api/Orders/OrderWithMultipleItems`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        createOrderCommand: createOrderCommand.value,
-        createOrderItemCommandList: createOrderItemCommandList,
-      }),
+  try {
+    const response = await fetch(
+      `https://localhost:7081/api/Orders/OrderWithMultipleItems`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          createOrderCommand: createOrderCommand.value,
+          createOrderItemCommandList: createOrderItemCommandList,
+        }),
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
     }
-  )
-    .then()
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+  } catch (error) {
+    console.error("Error:", error);
+  }
 };
 
 const handleSubmit = async () => {
-  createOrder();
-  if (props.selectedData.payment.id == 2) {
-    await checkoutECPay();
-    ecpayForm.value.submit();
-  } else if (props.selectedData.payment.id == 1) {
-    await checkoutLinePay();
+  try {
+    const orderResult = await createOrder();
+    payload.value.receiverName = buyerName.value;
+    payload.value.MerchantTradeNo = orderResult[0].orderIndex;
+    console.log(payload.value);
+    createLogisticsOrder(payload.value);
+    if (props.selectedData.payment.id == 2) {
+      await checkoutECPay();
+      ecpayForm.value.submit();
+    } else if (props.selectedData.payment.id == 1) {
+      await checkoutLinePay();
+    } else {
+      router.push({ name: "Cart", query: { paymentSuccess: "true" } });
+    }
+  } catch (error) {
+    console.error("Error:", error);
   }
 };
 

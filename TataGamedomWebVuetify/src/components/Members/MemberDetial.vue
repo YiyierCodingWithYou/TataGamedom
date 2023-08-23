@@ -11,15 +11,6 @@
             required
           ></v-text-field>
         </v-col>
-        <!-- 
-        <v-col cols="12" md="4">
-          <v-text-field
-            v-model="account"
-            :counter="10"
-            label="帳號"
-            required
-          ></v-text-field>
-        </v-col> -->
 
         <v-col cols="12" md="6">
           <v-text-field
@@ -49,7 +40,18 @@
           ></v-text-field>
         </v-col>
 
-        <v-col cols="12" md="12">
+        <v-col cols="12" md="12"
+          >About Me
+          <QuillEditor
+            :modules="modules"
+            :toolbar="toolbarOptions"
+            class="quill-editor"
+            contentType="html"
+            v-model:content="editor"
+          />
+        </v-col>
+
+        <v-col cols="12" md="12" style="margin-top: 50px">
           <v-file-input
             label="上傳頭像"
             variant="filled"
@@ -57,20 +59,7 @@
             @change="uploadImage"
           ></v-file-input>
         </v-col>
-
-        <img
-          style="height: 300px; width: 300px; margin-left: 40%"
-          :src="img + iconImg"
-        />
-
-        <!-- <v-col cols="12" md="8">
-          <v-text-field
-            v-model="iconImg"
-            :rules="emailRules"
-            label="大頭貼"
-            required
-          ></v-text-field>
-        </v-col> -->
+        <img style="height: 300px; width: 300px" :src="img + iconImg" />
       </v-row>
     </v-container>
     <v-btn color="success" @click="onClick" style="margin-left: 45%">
@@ -129,6 +118,9 @@ import { useRouter } from "vue-router";
 import store from "@/store";
 import { zhTW } from "date-fns/locale";
 import { format } from "date-fns";
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import ImageUploader from "quill-image-uploader";
 
 //const member = ref([]);
 const valid = ref(false);
@@ -146,6 +138,7 @@ const createPasswordVisible = ref(false);
 const confirmPasswordVisible = ref(false);
 const passwordsMatch = ref(true);
 const router = useRouter();
+const editor = ref("");
 let img = "https://localhost:7081/Files/Uploads/Icons/";
 
 watch([createPassword, confirmPassword], () => {
@@ -269,6 +262,51 @@ const onSubmit = async () => {
     });
 };
 
+const toolbarOptions = [
+  [{ header: [1, 2, 3, 4, 5, false] }], // custom button values
+  ["bold", "italic", "underline", "strike"], // toggled buttons
+  ["blockquote", "code-block"],
+  [{ list: "ordered" }, { list: "bullet" }],
+  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+  ["link", "image"],
+  ["clean"], // remove formatting button
+];
+
+const modules = {
+  name: "imageUploader",
+  module: ImageUploader,
+  toolbar: toolbarOptions,
+  options: {
+    upload: (file) => {
+      return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        axios
+          .post(
+            "https://localhost:7081/api/Common/uploadImage/Post",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+              withCredentials: true,
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            let imgurLink = res.data;
+            console.log(imgurLink);
+            resolve(imgurLink);
+          })
+          .catch((err) => {
+            reject("Upload failed");
+            console.error("Error:", err);
+          });
+      });
+    },
+  },
+};
+
 //修改時間格式
 const relativeTime = (datetime) => {
   const date = new Date(datetime);
@@ -293,11 +331,14 @@ const phoneRules = [
     if (value) return true;
     return "手機為必填";
   },
-  // (value) => {
-  //   if (/.+@.+\..+/.test(value)) return true;
-  //   return "E-mail must be valid.";
-  // },
 ];
 </script>
     
-<style></style>
+<style>
+.quill-editor {
+  resize: vertical;
+  overflow: auto;
+  min-height: 200px;
+  max-height: 300px;
+}
+</style>

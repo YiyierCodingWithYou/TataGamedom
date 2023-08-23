@@ -66,7 +66,4 @@ onMounted(() => {
 </script>
 
 <style>
-.bar {
-  z-index: ;
-}
 </style>
