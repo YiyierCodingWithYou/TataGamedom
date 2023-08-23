@@ -172,18 +172,21 @@ ReturnMessage: {responseDto.ReturnMessage}
             {
                 Name = c.Product.Game!.ChiName,
                 Quantity = 1,
-                Price = c.Product.Price,
+                OriginalPrice = c.Product.Price,
+                Price = c.Product.,
             })
             .ToListAsync();
         return productDtos;
     }
 
-    private static PaymentRequestDto CreatePaymentRequest(List<PackageDto> packageDtos)
+    private static async PaymentRequestDto CreatePaymentRequest(List<PackageDto> packageDtos)
     {
+        
+
         //Mapping to paymentRequestDto
         PaymentRequestDto? paymentRequestDto = new PaymentRequestDto
         {
-            Amount = packageDtos.Select(p => p.Amount).Sum(),  //todo
+            Amount = packageDtos.Select(p => p.Amount).Sum(),
             OrderId = Guid.NewGuid().ToString(),    //todo => 先建訂單，傳Index到OrderId
             Packages = packageDtos,
             RedirectUrls = new RedirectUrlsDto()
