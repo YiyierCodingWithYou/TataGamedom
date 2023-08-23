@@ -47,9 +47,9 @@ public class LinePayController : ControllerBase
 
     [HttpPost("Confirm")]
     [EnableCors("AllowCookie")]
-    public async Task<PaymentConfirmResponseDto> ConfirmPayment([FromQuery] string transactionId, [FromQuery] string orderId, PaymentConfirmDto dto)
+    public async Task<PaymentConfirmResponseDto> ConfirmPayment([FromQuery] string transactionId,PaymentConfirmDto dto)
     {
-        return await _linePayService.ConfirmPayment(transactionId, orderId, dto);
+        return await _linePayService.ConfirmPayment(transactionId, dto);
     }
 
 
