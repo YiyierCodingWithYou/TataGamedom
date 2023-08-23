@@ -1,16 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text;
 using TataGamedomWebAPI.Infrastructure.Data;
-using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.Payment;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.PaymentConfirm;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.PaymentRefund;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.Payment;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.PaymentConfirm;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.PaymentRefund;
-using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter;
 
@@ -32,7 +29,7 @@ public class LinePayService
         this._httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<PaymentResponseDto> SendPaymentRequest()
+    public async Task<PaymentResponseDto> SendPaymentRequestWithCartInfo()
     {
 
         string? account = _httpContextAccessor.HttpContext?.User.Claims.Where(c => c.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
@@ -94,10 +91,8 @@ public class LinePayService
 
         Console.WriteLine(nonce);
         Console.WriteLine(signature);
+        Console.WriteLine(response);
 
-
-
-        // Todo 刪除購物車
 
 
         return linePayResponse;

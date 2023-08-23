@@ -71,6 +71,7 @@ public class OrderItemsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesDefaultResponseType]
     public async Task<ActionResult> Post(CreateMultipleOrderItemsCommand orderItemList)
     {
         List<CreateOrderItemResponseDto> response = await _mediator.Send(orderItemList);

@@ -9,5 +9,6 @@ public interface IOrderRepository : IGenericRepository<Order>
     Task<string?> GetOrderIndexById(int orderId);
     Task<List<OrderWithDeatilsDto>> GetOrderWithDetailsByAccount();
     Task<bool> IsOrderExist(int orderId);
+    Task UpdateOrderStatusAfterReturn(int orderItemId);
 }
 

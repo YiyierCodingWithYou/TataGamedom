@@ -18,6 +18,24 @@
               <div>發表於:{{ relativeTime(item.time) }}</div>
             </div>
 
+            <div
+              class="mt-5"
+              style="
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+              "
+            >
+              <v-btn
+                class=""
+                variant="text"
+                icon="mdi-thumb-up"
+                color="blue-lighten-2"
+                @click="likes"
+              ></v-btn>
+              {{ newsData.likeCount }}人說讚
+            </div>
+
             <v-form style="padding: 5px 15px">
               <div v-if="$store.state.isLoggedIn">
                 <v-textarea
@@ -45,11 +63,6 @@
                 </v-card>
               </div>
             </v-form>
-
-            <div class="mt-5">
-              留言區塊
-              <div>按讚啦</div>
-            </div>
           </v-sheet>
         </v-col>
 
@@ -87,7 +100,7 @@
 <script setup >
 import axios from "axios";
 import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import NewsCarousel from "../News/NewsCarousel.vue";
 import SearchTextBox from "../News/SearchTextBox.vue";
 import NewsGameClass from "./NewsGameClass.vue";
@@ -95,11 +108,13 @@ import HotNews from "../News/HotNews.vue";
 import { format } from "date-fns";
 import { zhTW } from "date-fns/locale";
 
+const router = useRouter();
 const route = useRoute();
 const newsData = ref([]);
 const newsComments = ref([]);
 const newsId = ref(parseInt(route.params.newsId, 10));
 const comment = ref("");
+const likeCount = ref("");
 
 const loadData = async () => {
   try {
@@ -108,6 +123,7 @@ const loadData = async () => {
     );
     const datas = await response.json();
     newsData.value = datas;
+    console.log(datas);
   } catch (err) {
     console.log("錯誤訊息", err);
   }
@@ -118,31 +134,6 @@ onMounted(() => {
 });
 
 //留言
-// const onSubmit = async () => {
-//   const response = await fetch(
-//     `https://localhost:7081/api/News/${newsId.value}/Comment`,
-//     {
-//       method: "POST",
-//       credentials: "include",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         content: comment.value,
-//         newsId: newsId.value,
-//       }),
-//     }
-//   )
-//     .then((response) => response.json())
-//     .then((response) => {
-//       console.log(response);
-//       console.log(response.message);
-//     })
-//     .catch((error) => {
-//       console.error("Error:", error);
-//     });
-// };
-
 const onSubmit = async () => {
   await axios
     .post(
@@ -165,6 +156,22 @@ const onSubmit = async () => {
     });
 };
 
+const inputHandler = (value) => {
+  router.push({
+    name: "News",
+    query: { keyword: value },
+  });
+};
+
+const classificationHandler = (value) => {
+  router.push({
+    name: "News",
+    query: {
+      gamesCategory: value,
+    },
+  });
+};
+
 const rules = [
   (value) => !!value || "評論不可為空",
   (value) => (value && value.length >= 10) || "評論不得低於10個字",
@@ -172,10 +179,32 @@ const rules = [
 ];
 
 // //按讚
-// const likes;
-
-// //收回讚
-// const dislikes;
+const likes = async () => {
+  await axios
+    .post(
+      `https://localhost:7081/api/News/${newsId.value}/Like`,
+      {
+        newsId: newsId.value,
+      },
+      {
+        withCredentials: true,
+      }
+    )
+    .then((res) => {
+      console.log(res);
+      if (res.data === "成功按讚") {
+        alert("已按讚");
+        loadData();
+      } else {
+        alert("已取消按讚");
+        loadData();
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      alert("按讚失敗");
+    });
+};
 
 //時間轉換
 const relativeTime = (datetime) => {

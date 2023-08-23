@@ -50,7 +50,7 @@ namespace TataGamedomWebAPI.Controllers
             using (var conn = _context.Database.GetDbConnection())
             {
                 string sql = @"SELECT n.Id, n.Title, n.Content, n.ScheduleDate, b.Name AS BackendMemberName, ncc.Name as NewsCategoryName,n.CoverImg,
-                              COUNT(nv.MemberId) AS ViewCount, COUNT(nl.MemberId) AS LikeCount, n.ActiveFlag,gc.Name
+                              COUNT(nv.MemberId)/2 AS ViewCount, COUNT( DISTINCT  nl.MemberId) AS LikeCount, n.ActiveFlag,gc.Name
                               FROM news AS n
                               JOIN BackendMembers AS b ON b.Id = n.BackendMemberId 
                               LEFT JOIN NewsCategoryCodes AS ncc ON ncc.Id = n.NewsCategoryId
@@ -105,7 +105,7 @@ namespace TataGamedomWebAPI.Controllers
             using (var conn = _context.Database.GetDbConnection())
             {
                 string sql = @"SELECT n.Id, n.Title, n.Content, n.ScheduleDate, b.Name AS BackendMemberName, ncc.Name as NewsCategoryName,gc.Name,n.CoverImg,
-                              COUNT(nv.MemberId) AS ViewCount, COUNT(nl.MemberId) AS LikeCount, n.ActiveFlag
+                              COUNT(nv.MemberId)/2 AS ViewCount, COUNT( DISTINCT  nl.MemberId) AS LikeCount, n.ActiveFlag
                               FROM news AS n
                               JOIN BackendMembers AS b ON b.Id = n.BackendMemberId 
                               LEFT JOIN NewsCategoryCodes AS ncc ON ncc.Id = n.NewsCategoryId
@@ -213,72 +213,68 @@ ORDER BY ViewCount DESC";
 		}
 
 
-		[EnableCors("AllowAny")]
+		[EnableCors("AllowCookie")]
 		[HttpPost("{newsId}/Like")]
-		public async Task<ActionResult<NewslikesDTO>> PostNewsLike(int newsId, NewslikesDTO newslikesDTO)
+		public async Task<ActionResult<NewslikesDTO>> ToggleNewsLike(int newsId, NewslikesDTO newslikesDTO)
 		{
 			if (_context.News == null)
 			{
 				return Problem("Entity set 'AppDbContext.News'  is null.");
 			}
 
-			var memberId = HttpContext.User.FindFirstValue("Membersid");
+			var account = HttpContext.User.FindFirstValue("MembersAccount");
+			var user = _context.Members.FirstOrDefault(m => m.Account == account);
+			var like = _context.NewsLikes.FirstOrDefault(like => like.NewsId == newsId && like.MemberId == user.Id);
 
-			NewsLike newslike = new NewsLike
+			if (like != null)
 			{
-				NewsId = newsId,
-				MemberId = int.Parse(memberId),
-				Time = DateTime.Now
-			};
-			_context.NewsLikes.Add(newslike);
-			await _context.SaveChangesAsync();
-
-			return Ok("成功按讚");
-		}
-
-		[EnableCors("AllowAny")]
-		[HttpDelete("{newsId}/Like")]
-		public async Task<ActionResult<NewslikesDTO>> DeleteNewsLike(int newsId, NewslikesDTO newslikesDTO)
-		{
-			if (_context.News == null)
-			{
-				return Problem("Entity set 'AppDbContext.News'  is null.");
-			}
-			var memberId = HttpContext.User.FindFirstValue("Membersid");
-			//var memberId = int.Parse(User.FindFirstValue("Membersid"));
-
-
-			using (var conn = _context.Database.GetDbConnection())
-			{
-				string sql = @"DELETE 
+				using (var conn = _context.Database.GetDbConnection())
+				{
+					string Sql = @"DELETE 
 FROM NewsLikes
-WHERE NewsId =　@newsId
+WHERE NewsId = @newsId
 AND MemberId = @memberId";
-
-				var news = conn.QueryFirstOrDefault<NewslikesDTO>(sql, new { newsId = newsId, memberId = memberId });
+					conn.Execute(Sql, new { newsId = newsId, memberId = user.Id });
+				}
+				return Ok("取消按讚");
 			}
-			return Ok("取消按讚");
+			else {
+				NewsLike newslike = new NewsLike
+				{
+					NewsId = newsId,
+					MemberId = user.Id,
+					Time = DateTime.Now
+				};
+				_context.NewsLikes.Add(newslike);
+				await _context.SaveChangesAsync();
+
+				return Ok("成功按讚");
+			}
 		}
 
-		//// DELETE: api/News/5
-		//[HttpDelete("{id}")]
-		//public async Task<IActionResult> DeleteNews(int id)
-		//{
-		//    if (_context.News == null)
-		//    {
-		//        return NotFound();
-		//    }
-		//    var news = await _context.News.FindAsync(id);
-		//    if (news == null)
-		//    {
-		//        return NotFound();
-		//    }
+//		[EnableCors("AllowCookie")]
+//		[HttpDelete("{newsId}/Like")]
+//		public async Task<ActionResult<NewslikesDTO>> DeleteNewsLike(int newsId, NewslikesDTO newslikesDTO)
+//		{
+//			if (_context.News == null)
+//			{
+//				return Problem("Entity set 'AppDbContext.News'  is null.");
+//			}
+//			var account = HttpContext.User.FindFirstValue("MembersAccount");
+//			var user = _context.Members.FirstOrDefault(m => m.Account == account);
 
-		//    _context.News.Remove(news);
-		//    await _context.SaveChangesAsync();
+//			using (var conn = _context.Database.GetDbConnection())
+//			{
+//				string sql = @"DELETE 
+//FROM NewsLikes
+//WHERE NewsId =　@newsId
+//AND MemberId = @memberId";
 
-		//    return NoContent();
-		//}
+//				var news = conn.QueryFirstOrDefault<NewslikesDTO>(sql, new { newsId = newsId, memberId = user.Id });
+//			}
+//			return Ok("取消按讚");
+//		}
+
 
 		private bool NewsExists(int id)
         {

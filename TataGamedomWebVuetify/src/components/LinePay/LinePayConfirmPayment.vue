@@ -74,7 +74,7 @@ export default {
         if (response.ok) {
           paymentStatus.value = "交易狀態 : 成功";
           setTimeout(() => {
-            window.location = "https://localhost:3000/Orders";
+            window.location = "https://localhost:3000/Cart?paymentSuccess=true";
           }, 2000);
         } else {
           console.error("Failed to confirm payment");

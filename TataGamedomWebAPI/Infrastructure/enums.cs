@@ -9,6 +9,6 @@
     enum OrderStatus
     {
         ReturnProcessing = 3,
-        Completed = 4
+        Completed = 4,
     }
 }

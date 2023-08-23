@@ -25,12 +25,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(T entity)
-    {
-        _dbContext.Remove(entity);
-        await _dbContext.SaveChangesAsync();
-    }
-
     public async Task<IReadOnlyList<T>> GetListAsync()
     {
         return await _dbContext.Set<T>().AsNoTracking().ToListAsync();
@@ -47,4 +41,15 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         await _dbContext.SaveChangesAsync();
     }
 
+	public async Task DeleteAsync(T entity)
+	{
+		_dbContext.Remove(entity);
+		await _dbContext.SaveChangesAsync();
+	}
+
+	public async Task DeleteAsync(IEnumerable<T> entities)
+	{
+		_dbContext.RemoveRange(entities);
+		await _dbContext.SaveChangesAsync();
+	}
 }
