@@ -1,12 +1,13 @@
 import { createStore } from "vuex";
-import OrderStore from './components/Orders/OrderStore';
-import ECpayStore from './components/ECpay/ECpayStore';
+import OrderStore from "./components/Orders/OrderStore";
+import ECpayStore from "./components/ECpay/ECpayStore";
+import GameLoungeStore from "./components/GameLounge/GameLoungeStore";
 
 const store = createStore({
   //類似namespace
   modules: {
     OrderStore,
-    ECpayStore
+    ECpayStore,
     GameLoungeStore,
   },
   state: {
