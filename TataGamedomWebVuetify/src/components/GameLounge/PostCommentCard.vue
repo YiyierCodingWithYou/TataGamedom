@@ -25,7 +25,7 @@
         <span class="material-symbols-rounded size-20"> chat_bubble </span>
       </v-btn>
       <v-btn
-        v-show="comment.isAuthor || comment.isMod"
+        v-if="comment.isAuthor || comment.isMod"
         @click="deleteContent('comment', comment.commentId, comment.postId)"
       >
         <span class="material-symbols-rounded size-20"> delete </span>
