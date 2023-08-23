@@ -2,8 +2,10 @@
   <div>
     <carousel ref="bookmark" @getProductInput="GetSingleProduct"></carousel>
     <div @click="closeDrawer">
-      <CartDrawer></CartDrawer>
+      <CartDrawer :drawerState="drawer" @openDrawer="openDrawerFromParent"></CartDrawer>
+
     </div>
+
   </div>
 
   <div class="container mt-10">
@@ -79,6 +81,7 @@ import Carousel from "@/components/eCommerce/Carousel.vue";
 import SideBar from "@/components/eCommerce/SideBar.vue";
 import { useRoute, useRouter } from "vue-router";
 import CartDrawer from '@/components/eCommerce/CartDrawer.vue'
+import store from '@/store'
 
 const router = useRouter();
 const route = useRoute();
@@ -190,24 +193,60 @@ const clickHandler = (nextPage) => {
 
 //加入購物車
 const Add2Cart = async (productId) => {
-  const response = await fetch(`${API}Carts`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      productId: productId,
-      qty: 1,
-    }),
-  });
-  let result = await response.json();
-  if (result.isFail) {
-    router.push({
-      name: "Login",
+  if (store.state.isLoggedIn) {
+    const response = await fetch(`${API}Carts`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productId: productId,
+        qty: 1,
+      }),
     });
+    let result = await response.json();
+    if (result.isFail) {
+      router.push({
+        name: "Login",
+      });
+    }
+    alert(result.message);
+    autoToggleDrawer();
+  } else {
+    let localCart = localStorage.getItem('localCart');
+    if (localCart) {
+      localCart = JSON.parse(localCart);
+    } else {
+      localCart = [];
+    }
+    const existingProduct = localCart.find(item => item.productId === productId);
+    if (existingProduct) {
+      existingProduct.qty += 1;
+    } else {
+      localCart.push({ productId, qty: 1 });
+    }
+    localStorage.setItem('localCart', JSON.stringify(localCart));
+    alert('已成功加入購物車！');
+    autoToggleDrawer();
   }
-  alert(result.message);
+};
+
+const drawer = ref(false);
+
+const autoToggleDrawer = () => {
+  openDrawerFromParent();
+  setTimeout(() => {
+    closeDrawer();
+  }, 1000); 
+};
+
+const openDrawerFromParent = () => {
+  drawer.value = true;
+};
+
+const closeDrawer = () => {
+  drawer.value = false;
 };
 
 onMounted(() => {
