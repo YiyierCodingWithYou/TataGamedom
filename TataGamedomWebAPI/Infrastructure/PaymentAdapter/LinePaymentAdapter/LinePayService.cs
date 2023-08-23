@@ -93,10 +93,6 @@ public class LinePayService
         Console.WriteLine(signature);
 
 
-
-        // Todo 刪除購物車
-
-
         return linePayResponse;
     }
 
@@ -107,21 +103,21 @@ public class LinePayService
         var requstUrl = "/v3/payments/request";
         var signature = SignatureProvider.HMACSHA256(channelSecretKey, channelSecretKey + requstUrl + json + nonce);
 
+        client.DefaultRequestHeaders.Add("X-LINE-ChannelId", channelId);
+        client.DefaultRequestHeaders.Add("X-LINE-Authorization-Nonce", nonce);
+        client.DefaultRequestHeaders.Add("X-LINE-Authorization", signature);
+
         var request = new HttpRequestMessage(HttpMethod.Post, linePayBaseApiUrl + requstUrl)
         {
             Content = new StringContent(json, Encoding.UTF8, "application/json")
         };
 
-        client.DefaultRequestHeaders.Add("X-LINE-ChannelId", channelId);
-        client.DefaultRequestHeaders.Add("X-LINE-Authorization-Nonce", nonce);
-        client.DefaultRequestHeaders.Add("X-LINE-Authorization", signature);
-
         var response = await client.SendAsync(request);
+
         var linePayResponse = _jsonProvider.Deserialize<PaymentResponseDto>(await response.Content.ReadAsStringAsync());
 
         Console.WriteLine(nonce);
         Console.WriteLine(signature);
-
         return linePayResponse;
     }
 
