@@ -34,6 +34,26 @@
       <v-card-text v-html="boardData?.boardAbout"></v-card-text>
     </v-card-text>
   </v-card>
+  <v-card class="w-100 my-5" id="buyProduct">
+    <v-list density="compact">
+      <v-list-subheader>立即購買</v-list-subheader>
+
+      <v-list-item
+        v-for="(item, i) in productData"
+        :key="i"
+        :value="item.value"
+        :text="item"
+        color="primary"
+        @click="openLink(item.value)"
+      >
+        <template v-slot:prepend>
+          <v-icon icon="mdi-flag"></v-icon>
+        </template>
+
+        <v-list-item-title v-text="item.text"></v-list-item-title>
+      </v-list-item>
+    </v-list>
+  </v-card>
 </template>
 <script setup lang="ts">
 import { ref, reactive, onMounted, defineProps, watch, computed } from "vue";
@@ -56,6 +76,7 @@ interface BoardData {
 
 const boardData = ref<BoardData>();
 const iconUrl = ref("");
+const productData = ref<any>([]);
 
 const props = defineProps({
   boardId: {
@@ -79,6 +100,12 @@ const getBoardData = async () => {
       iconUrl.value =
         boardData.value?.boardHeaderCoverImgUrl ??
         "https://pbs.twimg.com/media/F32EcZxbYAI5Oml.jpg";
+      productData.value = boardData.value?.productLinks.map((item) => {
+        return {
+          value: item.id,
+          text: item.platformName,
+        };
+      });
     })
     .catch((err) => {
       console.log(err.data);
@@ -130,5 +157,15 @@ const count = computed(() => store.state.GameLoungeStore.aboutRefreshCount);
 watch(count, (newValue, oldValue) => {
   getBoardData();
 });
+
+//set link
+const router = useRouter();
+const openLink = (id) => {
+  console.log(id);
+  router.push({
+    name: "SingleProduct",
+    params: { productId: id },
+  });
+};
 </script>
 <style lang=""></style>
