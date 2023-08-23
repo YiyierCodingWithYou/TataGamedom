@@ -57,31 +57,6 @@ public class LinePayService
         return linePayResponse;
     }
 
-    private static PaymentRequestDto CreatePaymentRequest(List<PackageDto> packageDtos)
-    {
-        //Mapping to paymentRequestDto
-        PaymentRequestDto? paymentRequestDto = new PaymentRequestDto
-        {
-            Amount = packageDtos.Select(p => p.Amount).Sum(),  //todo
-            OrderId = Guid.NewGuid().ToString(),    //todo => 先建訂單，傳Index到OrderId
-            Packages = packageDtos,
-            RedirectUrls = new RedirectUrlsDto()
-        };
-        return paymentRequestDto;
-    }
-
-    private static List<PackageDto> PutProductsIntoPackage(List<LinePayProductDto> productDtos)
-    {
-        //Maping PackageDto
-        List<PackageDto> packageDtos = new List<PackageDto>();
-        packageDtos.Add(new PackageDto
-        {
-            Amount = productDtos.Select(p => p.Price).Sum(),
-            Products = productDtos
-        });
-        return packageDtos;
-    }
-
     public async Task<PaymentResponseDto> SendPaymentRequest(PaymentRequestDto dto)
     {
         var json = _jsonProvider.Serialize(dto);
@@ -181,7 +156,6 @@ ReturnMessage: {responseDto.ReturnMessage}
 
     }
 
-
     public async void TransactionCancel(string transactionId)
     {
         Console.WriteLine($"訂單 {transactionId} 已取消");
@@ -198,10 +172,35 @@ ReturnMessage: {responseDto.ReturnMessage}
             {
                 Name = c.Product.Game!.ChiName,
                 Quantity = 1,
-                Price = c.Product.Price,   //未處理優惠
+                Price = c.Product.Price,
             })
             .ToListAsync();
         return productDtos;
+    }
+
+    private static PaymentRequestDto CreatePaymentRequest(List<PackageDto> packageDtos)
+    {
+        //Mapping to paymentRequestDto
+        PaymentRequestDto? paymentRequestDto = new PaymentRequestDto
+        {
+            Amount = packageDtos.Select(p => p.Amount).Sum(),  //todo
+            OrderId = Guid.NewGuid().ToString(),    //todo => 先建訂單，傳Index到OrderId
+            Packages = packageDtos,
+            RedirectUrls = new RedirectUrlsDto()
+        };
+        return paymentRequestDto;
+    }
+
+    private static List<PackageDto> PutProductsIntoPackage(List<LinePayProductDto> productDtos)
+    {
+        //Maping PackageDto
+        List<PackageDto> packageDtos = new List<PackageDto>();
+        packageDtos.Add(new PackageDto
+        {
+            Amount = productDtos.Select(p => p.Price).Sum(),
+            Products = productDtos
+        });
+        return packageDtos;
     }
 
 }
