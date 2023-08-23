@@ -17,19 +17,23 @@ using TataGamedomWebAPI.Infrastructure;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Cors;
 using static System.Net.WebRequestMethods;
+using Google.Apis.Auth;
 
 namespace TataGamedomWebAPI.Controllers
 {
-    [Route("api/[controller]")]
+	[EnableCors("AllowCookie")]
+	[Route("api/[controller]")]
     [ApiController]
     public class MembersController : ControllerBase
     {
         private readonly AppDbContext _context;
+		private readonly IConfiguration _configuration;
 
-        public MembersController(AppDbContext context)
+		public MembersController(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
-        }
+			_configuration = configuration;
+		}
 
 		// POST: api/Members/Login
 		[EnableCors("AllowCookie")]
@@ -92,6 +96,37 @@ namespace TataGamedomWebAPI.Controllers
             }
 
         }
+
+		// POST: api/Members/GoogleLogin
+		[EnableCors("AllowCookie")]
+		[HttpPost("GoogleLogin")]
+		public async Task<IActionResult> GoogleLogin( string idToken)
+		{
+			try
+			{
+				var settings = new GoogleJsonWebSignature.ValidationSettings
+				{
+					Audience = new List<string> { _configuration["GoogleApiClientId"] }
+				};
+
+				var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+
+				if (payload != null)
+				{
+					return Ok(new { message = "登入成功", user = payload });
+				}
+				else
+				{
+					return BadRequest(new { message = "Google登入驗證失敗" });
+				}
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(new { message = "登入失敗", error = ex.Message });
+			}
+		}
+
+
 
 		private void ClearReturnToRoute()
 		{
