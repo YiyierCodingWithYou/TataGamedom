@@ -1,7 +1,14 @@
 <template>
   <div>
     <carousel ref="bookmark" @getProductInput="GetSingleProduct"></carousel>
+    <div @click="closeDrawer">
+      <CartDrawer
+        :drawer="drawer"
+        :drawerMiniVariant="drawerMiniVariant"
+      ></CartDrawer>
+    </div>
   </div>
+
   <div class="container mt-10">
     <v-row class="row">
       <v-col cols="2">
@@ -118,6 +125,7 @@ import { ref, reactive, onMounted, watchEffect, nextTick } from "vue";
 import Carousel from "@/components/eCommerce/Carousel.vue";
 import SideBar from "@/components/eCommerce/SideBar.vue";
 import { useRoute, useRouter } from "vue-router";
+import CartDrawer from "@/components/eCommerce/CartDrawer.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -130,6 +138,7 @@ const products = ref([]);
 const totalPages = ref();
 const thePage = ref(1);
 const bookmark = ref(null);
+const cart = ref([]);
 let img = "https://localhost:7081/Files/Uploads/";
 
 const select = ref({
@@ -147,7 +156,13 @@ const items = ref([
 
 const inputPlatform = ref("");
 const API = "https://localhost:7081/api/";
+const drawer = ref(true);
+const drawerMiniVariant = ref(false);
 
+const closeDrawer = () => {
+  drawer.value = false;
+  drawerMiniVariant.value = false;
+};
 const loadProducts = async () => {
   const response = await fetch(
     `${API}Products?keyword=${keyword.value}&platform=${platform.value}&classification=${classification.value}&sortBy=${sortBy.value}&isAscending=${isAscending.value}&page=${thePage.value}`,
@@ -158,15 +173,6 @@ const loadProducts = async () => {
   const datas = await response.json();
   products.value = datas.products;
   totalPages.value = datas.totalPages;
-  // nextTick(() => {
-  //   if (bookmark.value) {
-  //     const offset = bookmark.value.offsetTop;
-  //     window.scrollTo({
-  //       top: offset,
-  //       behavior: "smooth",
-  //     });
-  //   }
-  // });
 };
 
 const once = (func) => {

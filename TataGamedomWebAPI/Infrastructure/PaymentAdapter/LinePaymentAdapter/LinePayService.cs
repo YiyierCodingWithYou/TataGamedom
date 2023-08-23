@@ -91,6 +91,14 @@ public class LinePayService
 
         Console.WriteLine(nonce);
         Console.WriteLine(signature);
+        Console.WriteLine(response);
+
+
+
+
+
+
+
 
 
         return linePayResponse;
