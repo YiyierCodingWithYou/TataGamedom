@@ -76,7 +76,6 @@ const getMemberData = async () => {
       withCredentials: true,
     })
     .then((res) => {
-      console.log(res.data);
       memberData.value = res.data;
       iconUrl.value =
         memberData.value?.iconUrl ??
@@ -97,7 +96,6 @@ const followAction = async () => {
       }
     )
     .then((res) => {
-      console.log(res.data);
       getMemberData();
     })
     .catch((err) => {

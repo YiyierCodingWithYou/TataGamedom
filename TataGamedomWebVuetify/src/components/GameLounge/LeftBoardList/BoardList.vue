@@ -90,8 +90,6 @@ const fetchData = () => {
         })
         .slice(0, 5);
 
-      console.log(data.value);
-      console.log(topFiveItems.value);
       items.value = items.value
         .concat(headerItem("header", "🕹️熱門巢穴"))
         .concat(topFiveItems.value)
@@ -109,8 +107,9 @@ onMounted(() => {
   fetchData();
 });
 
+//set refresh
 const store = useStore();
-const count = computed(() => store.state.GameLoungeStore.count);
+const count = computed(() => store.state.GameLoungeStore.boardListRefreshCount);
 
 watch(count, (newValue, oldValue) => {
   fetchData();

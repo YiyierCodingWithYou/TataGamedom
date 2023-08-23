@@ -3,7 +3,6 @@
     <v-list
       item-props
       :items="items"
-      lines="two"
       @click:select="openLink"
       select-strategy="single-leaf"
     >
@@ -138,8 +137,9 @@ onMounted(() => {
   fetchData();
 });
 
+//set refresh
 const store = useStore();
-const count = computed(() => store.state.GameLoungeStore.count);
+const count = computed(() => store.state.GameLoungeStore.boardListRefreshCount);
 
 watch(count, (newValue, oldValue) => {
   fetchData();

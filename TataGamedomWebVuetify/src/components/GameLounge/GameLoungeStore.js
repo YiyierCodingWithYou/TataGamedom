@@ -3,12 +3,22 @@ const BASE_URL = "https://localhost:7081";
 const GameLoungeStore = {
   state: () => ({
     personalList: [],
-    count: 0,
+    boardListRefreshCount: 0,
+    aboutRefreshCount: 0,
+    keyword: "",
   }),
   mutations: {
-    increment(state) {
-      state.count++;
-      console.log("increment", state.count);
+    boardListRefresh(state) {
+      state.boardListRefreshCount++;
+      console.log("boardListRefresh", state.boardListRefreshCount);
+    },
+    aboutRefresh(state) {
+      state.aboutRefreshCount++;
+      console.log("aboutRefresh", state.aboutRefreshCount);
+    },
+    setKeyword(state, keyword) {
+      state.keyword = keyword;
+      console.log("setKeyword", state.keyword);
     },
   },
   getters: {},

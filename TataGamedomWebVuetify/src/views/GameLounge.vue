@@ -74,7 +74,6 @@
                 v-if="isSearch"
                 :memberAccount="account"
                 :boardId="boardId"
-                :keyword="keyword"
               ></ReadPostTotal>
             </template>
           </MainCol>
@@ -118,9 +117,9 @@ const isSearchAccount = ref(false);
 const isSearchBoard = ref(false);
 const account = ref("");
 const boardId = ref("");
-const keyword = ref("");
 const isLogin = computed(() => store.state.isLoggedIn);
 const loginMemberAccount = computed(() => store.state.account);
+const keyword = computed(() => store.state.GameLoungeStore.keyword);
 
 account.value = route.params.account;
 boardId.value = route.params.boardId;

@@ -1,7 +1,12 @@
 <template>
   <NewPostBtn @postComplete="reloadPosts"></NewPostBtn>
-  <PostCard v-for="post in posts" :key="post.postId" :post="post"></PostCard>
-  <InfiniteLoading @infinite="loadPosts">
+  <PostCard
+    v-for="post in posts"
+    :key="post.postId"
+    :post="post"
+    @deletePost="reloadPosts(true)"
+  ></PostCard>
+  <InfiniteLoading @infinite="loadPosts" ref="infiniteLoading">
     <template #complete>
       <p class="text-center">已經看完所有貼文🦦</p>
     </template>
@@ -18,12 +23,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, defineProps } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import NewPostBtn from "./NewPostBtn.vue";
 import PostCard from "./PostCard.vue";
 import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css"; //required if you're not going to override default slots
 import { useRoute } from "vue-router";
+import { useStore } from "vuex";
+import { tr } from "date-fns/locale";
 
 interface Comment {
   commentContent: string;
@@ -57,10 +64,6 @@ const baseaddress = "https://localhost:7081/api/";
 const posts = ref<Post[]>([]);
 const route = useRoute();
 const props = defineProps({
-  keyword: {
-    type: String,
-    default: "",
-  },
   memberAccount: {
     type: String,
     default: "",
@@ -69,11 +72,39 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  keyword: {
+    type: String,
+    default: "",
+  },
 });
+const store = useStore();
+const infiniteLoading = ref<any>(null);
+
+const reloadPosts = (refresh) => {
+  console.log("reloadPosts");
+  loadPosts({
+    reset: true,
+  });
+  setTimeout(() => {
+    infiniteLoading.value?.state?.loaded();
+    loadPosts({});
+  }, 30);
+  if (refresh) {
+    store.commit("aboutRefresh");
+  }
+};
+
+const keyword = computed(() => store.state.GameLoungeStore.keyword);
+
 const loadPosts = async ($state: any) => {
+  if ($state.reset) {
+    page.value = 1;
+    posts.value = [];
+    return;
+  }
   try {
     const response = await fetch(
-      `${baseaddress}Posts?page=${page.value}&keyword=${props.keyword}&memberAccount=${props.memberAccount}&boardId=${props.boardId}`,
+      `${baseaddress}Posts?page=${page.value}&keyword=${keyword.value}&memberAccount=${props.memberAccount}&boardId=${props.boardId}`,
       {
         credentials: "include",
       }
@@ -82,7 +113,6 @@ const loadPosts = async ($state: any) => {
 
     if (datas.length) {
       posts.value = [...posts.value, ...datas];
-      $state.loaded();
     } else {
       $state.complete();
     }
@@ -92,11 +122,11 @@ const loadPosts = async ($state: any) => {
     $state.error(); // 如果加載出錯，告訴組件加載出錯
   }
 };
-const reloadPosts = () => {
-  console.log("reloadPosts");
-  page.value = 1;
-  posts.value = [];
-  loadPosts({ loaded: () => {}, complete: () => {}, error: () => {} });
-};
+
+watch(keyword, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    reloadPosts(true);
+  }
+});
 </script>
 <style lang=""></style>

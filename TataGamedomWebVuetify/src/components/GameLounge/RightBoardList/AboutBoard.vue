@@ -36,7 +36,7 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import { ref, reactive, onMounted, defineProps } from "vue";
+import { ref, reactive, onMounted, defineProps, watch, computed } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -66,7 +66,7 @@ const props = defineProps({
 
 const store = useStore();
 const incrememtCount = () => {
-  store.commit("increment");
+  store.commit("boardListRefresh");
 };
 
 const getBoardData = async () => {
@@ -121,6 +121,13 @@ const favoriteAction = async () => {
 };
 
 onMounted(() => {
+  getBoardData();
+});
+
+//set refresh
+const count = computed(() => store.state.GameLoungeStore.aboutRefreshCount);
+
+watch(count, (newValue, oldValue) => {
   getBoardData();
 });
 </script>
