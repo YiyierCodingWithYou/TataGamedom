@@ -5,9 +5,10 @@
       TataGamedom
     </v-app-bar-title>
     <a href="/GameLounge" class="me-3">👀</a>
-    <a href="/Cart" class="me-3">Cart</a>
+    
     <a href="/News" class="me-3">偷看一下</a>
     <v-spacer></v-spacer>
+    <a href="/Cart" class="me-3" ><v-icon>mdi-cart-outline</v-icon></a>
     <div v-if="$store.state.isLoggedIn">
       <!-- <a color="primary" @click="toggleMemberProfile">HI {{ name }}</a> -->
       <a color="primary" @mouseover="showMemberProfile = true">
@@ -15,14 +16,11 @@
       </a>
       <v-btn color="primary" @click="logout">登出</v-btn>
     </div>
+    
     <v-btn v-else color="primary" @click="login">登入</v-btn>
   </v-app-bar>
-  <MemberProfile
-    class="MemberProfile"
-    v-if="showMemberProfile"
-    @close="closeMemberProfile"
-    @mouseleave="showMemberProfile = false"
-  />
+  <MemberProfile class="MemberProfile" v-if="showMemberProfile" @close="closeMemberProfile"
+    @mouseleave="showMemberProfile = false" />
 </template>
 
 <script>
