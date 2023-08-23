@@ -128,7 +128,6 @@
     <Folder Include="Files\Uploads\PostComment\" />
     <Folder Include="Infrastructure\Data\DapperRepository\" />
     <Folder Include="Infrastructure\Data\EFRepository\" />
-    <Folder Include="Models\EFModels\" />
   </ItemGroup>
 
 </Project>

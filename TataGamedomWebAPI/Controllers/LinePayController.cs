@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Cors;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.PaymentRefund;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.PaymentRefund;
 using TataGamedomWebAPI.Infrastructure.Data;
+using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Controllers;
 
@@ -40,9 +41,9 @@ public class LinePayController : ControllerBase
 
     [HttpPost("Create")]
     [EnableCors("AllowCookie")]
-    public async Task<PaymentResponseDto> CreatePaymentByAccount()
+    public async Task<PaymentResponseDto> CreatePaymentByAccount(ShipmentMethodDto shipmemtMethod)
     {
-        return await _linePayService.SendPaymentRequestWithCartInfo();
+        return await _linePayService.SendPaymentRequestWithCartInfo(shipmemtMethod);
     }
 
     [HttpPost("Confirm")]
