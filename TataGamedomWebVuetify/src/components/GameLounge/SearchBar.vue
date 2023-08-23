@@ -29,13 +29,22 @@
 </template>
     </v-autocomplete>
   </v-col>
-  <v-col cols="6"> <v-text-field label="Keyword"></v-text-field> </v-col>
+  <v-col cols="6">
+    <v-text-field
+      label="Keyword"
+      @update:modelValue="setKeyword"
+      :disabled="
+        route.params.account === undefined && route.params.boardId === undefined
+      "
+    ></v-text-field>
+  </v-col>
 </template>
 
 <script setup>
 import { ref, watch, onMounted } from "vue";
 import axios from "axios";
 import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
 
 const boardOrAccount = ref(null);
 const data = ref([]);
@@ -81,6 +90,12 @@ if (route.params.boardId !== undefined) {
 onMounted(() => {
   fetchData();
 });
+
+//set keyword
+const store = useStore();
+const setKeyword = (keyword) => {
+  store.commit("setKeyword", keyword);
+};
 </script>
 <style scoped>
 .w-100px {

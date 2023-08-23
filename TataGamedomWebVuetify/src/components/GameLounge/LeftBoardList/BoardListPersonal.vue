@@ -1,12 +1,20 @@
 <template>
-  <div class="mx-auto w-50">
-    <v-list item-props :items="items"> </v-list>
+  <div>
+    <v-list
+      item-props
+      :items="items"
+      @click:select="openLink"
+      select-strategy="single-leaf"
+    >
+    </v-list>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, defineProps, watch, computed } from "vue";
 import axios from "axios";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 const items = ref<item>([]);
 const allItems = ref<item>([]);
@@ -14,6 +22,13 @@ const topFiveItems = ref<item>([]);
 const noFavo = ref<item>([]);
 const noFollow = ref<item>([]);
 const data = ref<boardData>([]);
+const router = useRouter();
+const props = defineProps({
+  memberAccount: {
+    type: String,
+    required: true,
+  },
+});
 
 interface item {
   type?: string;
@@ -53,10 +68,17 @@ const headerItem = (type: string, title: string): item => {
 
 const fetchData = () => {
   axios
-    .get(`https://localhost:7081/api/Boards?memberAccount=lisi`)
+    .get(
+      `https://localhost:7081/api/Boards?memberAccount=${props.memberAccount}`,
+      {
+        withCredentials: true,
+      }
+    )
     .then((res) => {
+      items.value = [];
+      noFavo.value = [];
+      noFollow.value = [];
       data.value = res.data;
-
       allItems.value = data.value.map((data) => {
         return {
           title: data.name,
@@ -67,9 +89,7 @@ const fetchData = () => {
       });
 
       topFiveItems.value = data.value
-        .filter((item) => {
-          item.isFavorite === false;
-        })
+        .filter((item) => item.isFavorite)
         .sort((a, b) => {
           return b.postCurrentCount - a.postCurrentCount;
         })
@@ -77,11 +97,9 @@ const fetchData = () => {
           return {
             title: data.name,
             value: data.id,
-            prependAvatar: "",
             prependAvatar: data.boardHeaderCoverImgUrl,
             height: "75px",
             rounded: "shaped",
-            appendIcon: data.isFavorite ? "mdi-cards-heart" : "",
           };
         })
         .slice(0, 5);
@@ -100,16 +118,15 @@ const fetchData = () => {
           height: "100px",
         };
       }
-
-      console.log(data.value);
-      console.log(topFiveItems.value.length);
       items.value = items.value
         .concat(headerItem("header", "🕹️熱門最愛"))
         .concat(topFiveItems.value)
         .concat(noFavo.value)
         .concat(divider)
         .concat(headerItem("subheader", "所有追蹤"))
-        .concat(allItems.value);
+        .concat(allItems.value)
+        .concat(noFollow.value)
+        .concat(divider);
     })
     .catch((err) => {
       console.log(err);
@@ -119,4 +136,23 @@ const fetchData = () => {
 onMounted(() => {
   fetchData();
 });
+
+//set refresh
+const store = useStore();
+const count = computed(() => store.state.GameLoungeStore.boardListRefreshCount);
+
+watch(count, (newValue, oldValue) => {
+  fetchData();
+});
+
+const openLink = (e) => {
+  console.log(e.id);
+
+  if (e.id !== undefined) {
+    router.push({
+      name: "GameLoungeBoard",
+      params: { boardId: e.id },
+    });
+  }
+};
 </script>

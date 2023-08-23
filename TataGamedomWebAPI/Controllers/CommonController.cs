@@ -26,7 +26,7 @@ namespace TataGamedomWebAPI.Controllers
 			_context = context;
 		}
 
-
+		[EnableCors("AllowCookie")]
 		[HttpPost("uploadImage/{folderName}")]
 
 		public async Task<string> UploadImage(string folderName, IFormFile file)

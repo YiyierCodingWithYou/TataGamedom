@@ -166,6 +166,8 @@ const vote = async (
   }
 };
 
+const emits = defineEmits(["deletePost"]);
+
 const deleteContent = async (
   type: string,
   deleteId: number,
@@ -181,6 +183,9 @@ const deleteContent = async (
     );
     let result = await response.json();
     await reloadPost(postId);
+    if (type === "post") {
+      emits("deletePost");
+    }
   } catch {
     alert(":<");
   }
