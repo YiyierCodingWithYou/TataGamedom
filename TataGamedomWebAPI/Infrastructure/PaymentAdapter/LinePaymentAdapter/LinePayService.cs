@@ -92,14 +92,7 @@ public class LinePayService
         Console.WriteLine(nonce);
         Console.WriteLine(signature);
         Console.WriteLine(response);
-
-
-
-
-
-
-
-
+        Console.WriteLine(linePayResponse);
 
         return linePayResponse;
     }
