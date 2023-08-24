@@ -32,7 +32,10 @@ const ECpayStore = {
         async navigateToLogisticsSelection(_, payload) {
             try {
                 const response = await axios.post(`${BASE_URL}/api/ECPay/LogisticsSelection`, payload);
-                return response;
+
+                const url = response.data.url;
+                window.location = `${BASE_URL}${url}`;
+
             } catch (error) {
                 throw error;
             }

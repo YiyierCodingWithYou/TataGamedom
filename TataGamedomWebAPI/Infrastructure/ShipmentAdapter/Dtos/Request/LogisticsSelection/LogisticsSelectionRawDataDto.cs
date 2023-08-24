@@ -10,8 +10,8 @@ public class LogisticsSelectionRawDataDto
     public string SenderZipCode { get; set; } = "320";
     public string SenderAddress { get; set; } = "桃園市中壢區新生路二段421號";
     public string Remark { get; set; } = "xxx";
-    public string ServerReplyURL { get; set; } = "https://localhost:3000/Orders";  //todo ngrok
-    public string ClientReplyURL { get; set; } = "https://localhost:3000/Carts";   //todo ngrok
+    public string ServerReplyURL { get; set; } = "https://704f-61-222-34-1.ngrok-free.app/Cart";  //todo ngrok
+    public string ClientReplyURL { get; set; } = "https://704f-61-222-34-1.ngrok-free.app/Cart";   //todo ngrok
     public string Temperature { get; set; } = "0001";
     public string Specification { get; set; } = "0001";
     public string ScheduledPickupTime { get; set; } = "4";  //宅配物流商預定取貨的時段

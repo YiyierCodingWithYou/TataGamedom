@@ -1,6 +1,6 @@
 <template>
-  <v-card class="mx-auto my-12" max-width="250">
-    <v-img cover max-height="200" :src="iconUrl"></v-img>
+  <v-card class="w-100">
+    <v-img cover max-height="250" :src="iconUrl"></v-img>
     <v-card-item>
       <v-card-title>{{ memberData?.name }}</v-card-title>
       <v-card-subtitle>
@@ -45,7 +45,7 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, defineProps } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 
@@ -63,14 +63,19 @@ interface MemberData {
 
 const memberData = ref<MemberData>();
 const iconUrl = ref("");
+const props = defineProps({
+  memberAccount: {
+    type: String,
+    required: true,
+  },
+});
 
 const getMemberData = async () => {
   const res = await axios
-    .get("https://localhost:7081/api/MembersAbout/lisi", {
+    .get(`https://localhost:7081/api/MembersAbout/${props.memberAccount}`, {
       withCredentials: true,
     })
     .then((res) => {
-      console.log(res.data);
       memberData.value = res.data;
       iconUrl.value =
         memberData.value?.iconUrl ??
@@ -84,14 +89,13 @@ const getMemberData = async () => {
 const followAction = async () => {
   const res = await axios
     .post(
-      "https://localhost:7081/api/MembersAbout/Follow?memberAccount=lisi",
+      `https://localhost:7081/api/MembersAbout/Follow?memberAccount=${props.memberAccount}`,
       {},
       {
         withCredentials: true,
       }
     )
     .then((res) => {
-      console.log(res.data);
       getMemberData();
     })
     .catch((err) => {

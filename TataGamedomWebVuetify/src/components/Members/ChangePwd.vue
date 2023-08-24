@@ -1,68 +1,4 @@
 <template>
-  <v-form v-model="valid">
-    <v-container>
-      <v-row class="mt-10">
-        <v-col cols="12" md="6">
-          <v-text-field
-            v-model="name"
-            :rules="nameRules"
-            label="姓名"
-            required
-          ></v-text-field>
-        </v-col>
-
-        <v-col cols="12" md="6">
-          <v-text-field
-            v-model="phone"
-            :rules="phoneRules"
-            :counter="10"
-            label="手機"
-            required
-          ></v-text-field>
-        </v-col>
-
-        <v-col cols="12" md="6">
-          <v-text-field
-            v-model="email"
-            label="E-mail"
-            required
-            readonly
-          ></v-text-field>
-        </v-col>
-
-        <v-col cols="12" md="6">
-          <v-text-field v-model="birthday" label="生日" readonly>
-          </v-text-field>
-        </v-col>
-
-        <v-col cols="12" md="12"
-          >About Me
-          <QuillEditor
-            :modules="modules"
-            :toolbar="toolbarOptions"
-            class="quill-editor"
-            contentType="html"
-            v-model:content="editor"
-          />
-        </v-col>
-
-        <v-col cols="12" md="12" style="margin-top: 50px">
-          <v-file-input
-            label="上傳頭像"
-            variant="filled"
-            prepend-icon="mdi-camera"
-            @change="uploadImage"
-          ></v-file-input>
-        </v-col>
-        <img style="height: 300px; width: 300px" :src="img + iconImg" />
-      </v-row>
-    </v-container>
-    <v-btn color="success" @click="onClick" style="margin-left: 45%">
-      確認修改
-    </v-btn>
-  </v-form>
-
-  <!-- 
   <v-card class="mx-auto mt-16" color="white" max-width="600" title="更改密碼">
     <v-container>
       <v-text-field
@@ -103,10 +39,10 @@
         <v-icon icon="mdi-chevron-right" end></v-icon>
       </v-btn>
     </v-container>
-  </v-card> -->
+  </v-card>
 </template>
     
-<script setup >
+<script setup>
 import axios from "axios";
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
@@ -116,7 +52,6 @@ import { format } from "date-fns";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import ImageUploader from "quill-image-uploader";
-import ChangePwd from "./ChangePwd.vue";
 //import { VDatePicker } from "vuetify/labs/VDatePicker";
 
 //const member = ref([]);
@@ -331,10 +266,4 @@ const phoneRules = [
 </script>
     
 <style>
-.quill-editor {
-  resize: vertical;
-  overflow: auto;
-  min-height: 200px;
-  max-height: 300px;
-}
 </style>

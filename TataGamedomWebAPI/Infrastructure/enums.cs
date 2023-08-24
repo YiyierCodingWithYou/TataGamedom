@@ -11,4 +11,10 @@
         ReturnProcessing = 3,
         Completed = 4,
     }
+
+    enum DiscountType
+    {
+        PercentDiscount = 1,
+        DirectDiscount = 2
+    }
 }
