@@ -1,12 +1,19 @@
+<template>
+  <div>
+    <p v-if="errorMessage">{{ errorMessage }}</p>
+  </div>
+</template>
+
 <script>
 import { ref, onMounted } from "vue";
+import axios from "axios";
 
 export default {
   setup() {
     const totalAmount = sessionStorage.getItem("totalAmount");
-    const baseLoginPayUrl = "https://localhost:7081/api/LinePay/";
+    const baseLinePayUrl = "https://localhost:7081/api/LinePay/";
     let transactionId = "";
-    let orderId = "";
+    const errorMessage = ref("");
 
     const confirmPayment = async () => {
       const payment = {
@@ -14,36 +21,31 @@ export default {
         currency: "TWD",
       };
 
-      try {
-        const response = await fetch(
-          `${baseLoginPayUrl}Confirm?transactionId=${transactionId}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payment),
-          }
-        );
-
-        if (response.ok) {
-          setTimeout(() => {
-            window.location = "https://localhost:3000/Cart?paymentSuccess=true";
-          });
-        } else {
-          console.error("Failed to confirm payment" + response);
+      const response = await axios.post(
+        `${baseLinePayUrl}Confirm?transactionId=${transactionId}`,
+        payment,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      } catch (error) {
-        console.error(error);
+      );
+
+      if (response.data.returnCode === '0000') {
+        window.location = "https://localhost:3000/Cart?paymentSuccess=true";
+      }
+      else {
+        errorMessage.value = "交易驗證失敗，原因:" + response.data.returnMessage;
       }
     };
 
     onMounted(() => {
-      console.log(totalAmount);
       const params = new URLSearchParams(window.location.search);
       transactionId = params.get("transactionId");
       confirmPayment();
     });
+
+    return { errorMessage };
   },
 };
 </script>
