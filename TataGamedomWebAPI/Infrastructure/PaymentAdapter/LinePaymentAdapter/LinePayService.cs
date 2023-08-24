@@ -34,7 +34,7 @@ public class LinePayService
 
     public async Task<PaymentResponseDto> SendPaymentRequestWithCartInfo(ShipmentMethodDto shipment)
     {
-        List<LinePayProductDto> productDtos = await GetProductsInCartsInfo();
+        List<LinePayProductDto> productDtos = await GetProductsInCartsInfo(shipment);
 
         List<PackageDto> packageDtos = PutProductsIntoPackage(productDtos, shipment);
 
@@ -145,7 +145,7 @@ public class LinePayService
         Console.WriteLine($"訂單 {transactionId} 已取消");
     }
 
-    private async Task<List<LinePayProductDto>> GetProductsInCartsInfo()
+    private async Task<List<LinePayProductDto>> GetProductsInCartsInfo(ShipmentMethodDto shipmentMethodDto)
     {
         string? account = _httpContextAccessor.HttpContext?.User.Claims.Where(c => c.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
 
@@ -170,23 +170,20 @@ public class LinePayService
                             )
                         .FirstOrDefault(), 1)
                         :c.Product.Price,
-            })
+            }) 
             .ToListAsync();
+
+        int totalWithoutDiscount = productDtos.Sum(p => p.Price);
+        productDtos.Add(new LinePayProductDto
+        {
+            Name = "運費和折扣",
+            Quantity = 1,
+            Price = CalculateTotalAmount(totalWithoutDiscount, shipmentMethodDto)- totalWithoutDiscount
+        });
+
         return productDtos;
     }
 
-    //private static List<PackageDto> PutProductsIntoPackage(List<LinePayProductDto> productDtos, ShipmentMethodDto shipment)
-    //{
-    //    //Maping PackageDto
-    //    List<PackageDto> packageDtos = new List<PackageDto>();
-    //    packageDtos.Add(new PackageDto
-    //    {
-    //        Amount = productDtos.Select(p => p.Price).Sum(),
-    //        Products = productDtos
-    //    });
-
-    //    return packageDtos;
-    //}
     private static List<PackageDto> PutProductsIntoPackage(List<LinePayProductDto> productDtos, ShipmentMethodDto shipment)
     {
         int totalAmount = productDtos.Select(p => p.Price).Sum();
@@ -196,21 +193,12 @@ public class LinePayService
         List<PackageDto> packageDtos = new List<PackageDto>();
         packageDtos.Add(new PackageDto
         {
-            Amount = finalTotalAmount,
+            Amount = totalAmount,
             Products = productDtos
         });
 
         return packageDtos;
     }
-
-    private static int CalculateTotalAmountWithDiscountAndShipping(List<PackageDto> packageDtos, ShipmentMethodDto shipment)
-    {
-        var totalAmount = packageDtos.Select(p => p.Amount).Sum();
-
-        return CalculateTotalAmount(totalAmount, shipment);
-    }
-
-    //
 
     private static int CalculateTotalAmount(int amount, ShipmentMethodDto shipment)
     {
@@ -232,58 +220,18 @@ public class LinePayService
     }
 
 
-
-
-    //
-
-
-    //private static int CalculateTotalAmountWithDiscountAndShipping(List<PackageDto> packageDtos, ShipmentMethodDto shipment)
-    //{
-    //    var total = packageDtos.Select(p => p.Amount).Sum();
-    //    int shippingCost = 0;
-    //    if (shipment.Method != "payFirstAtHome" && shipment.Method != "payAtHome")
-    //    {
-    //        shippingCost = 60;
-    //    }
-    //    else
-    //    {
-    //        shippingCost = 80;
-    //    }
-
-    //    total = total > 2000 ? total : total + shippingCost;
-    //    total = total > 3000 ? total - 300 : total;
-
-    //    return total;
-    //}
-
-
-
-    //private static PaymentRequestDto CreatePaymentRequest(List<PackageDto> packageDtos, ShipmentMethodDto shipment)
-    //{
-    //    //Mapping to paymentRequestDto
-    //    PaymentRequestDto? paymentRequestDto = new PaymentRequestDto
-    //    {
-    //        Amount = CalculateTotalAmountWithDiscountAndShipping(packageDtos, shipment),
-    //        OrderId = Guid.NewGuid().ToString(),    //todo => 先建訂單，傳Index到OrderId
-    //        Packages = packageDtos,
-    //        RedirectUrls = new RedirectUrlsDto()
-    //    };
-    //    return paymentRequestDto;
-    //}
-
     private static PaymentRequestDto CreatePaymentRequest(List<PackageDto> packageDtos, ShipmentMethodDto shipment)
     {
-        PaymentRequestDto paymentRequestDto = new PaymentRequestDto
+        //Mapping to paymentRequestDto
+        PaymentRequestDto? paymentRequestDto = new PaymentRequestDto
         {
             Amount = packageDtos.Select(p => p.Amount).Sum(),
-            OrderId = Guid.NewGuid().ToString(),
+            OrderId = Guid.NewGuid().ToString(),    //todo => 先建訂單，傳Index到OrderId
             Packages = packageDtos,
             RedirectUrls = new RedirectUrlsDto()
         };
         return paymentRequestDto;
     }
-
-
 }
 
 public class ShipmentMethodDto 
