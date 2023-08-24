@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-carousel v-model="currentIndex" cycle class="h-screen">
+    <v-carousel v-model="currentIndex" cycle class="fullScreen">
       <v-carousel-item
         v-for="product in topFive"
         :src="imgLink + product.gameGameCoverImg"
@@ -40,7 +40,7 @@ const handleProductClick = (productId) => {
 </script>
     
 <style>
-/* .carousel-H{
-  height: 100dvh;
-} */
+.fullScreen {
+  height: calc(100dvh - 64px) !important;
+}
 </style>
