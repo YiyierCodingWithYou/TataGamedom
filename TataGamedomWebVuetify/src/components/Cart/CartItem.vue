@@ -16,11 +16,7 @@
         <tbody>
           <tr v-for="item in cartItems" :key="item.product.id">
             <td>
-              <img
-                :src="imgLink + item.product.gameCoverImg"
-                height="150"
-                cover
-              />
+              <img :src="imgLink + item.product.gameCoverImg" height="150" cover />
             </td>
             <td>
               <div>{{ item.product.chiName }}</div>
@@ -31,10 +27,7 @@
                 </v-chip>
               </div>
             </td>
-            <td
-              v-if="item.product.price != item.product.specialPrice"
-              class="text-end"
-            >
+            <td v-if="item.product.price != item.product.specialPrice" class="text-end">
               <div>
                 <s>NT${{ item.product.price }}</s>
               </div>
@@ -44,41 +37,25 @@
             <td>
               <v-row>
                 <v-col class="d-flex" cols="3">
-                  <v-btn @click="decreaseQuantity(item)" :max="limit"
-                    ><v-icon>mdi-minus</v-icon></v-btn
-                  >
+                  <v-btn @click="decreaseQuantity(item)" :max="limit"><v-icon>mdi-minus</v-icon></v-btn>
                 </v-col>
                 <v-col cols="6">
-                  <v-text-field
-                    v-model="item.qty"
-                    min="0"
-                    :max="limit"
-                    variant="outlined"
-                    readonly
-                  ></v-text-field>
+                  <v-text-field v-model="item.qty" min="0" :max="limit" variant="outlined" readonly></v-text-field>
                 </v-col>
                 <v-col cols="3">
-                  <v-btn @click="increaseQuantity(item)" :max="limit"
-                    ><v-icon>mdi-plus</v-icon></v-btn
-                  >
+                  <v-btn @click="increaseQuantity(item)" :max="limit"><v-icon>mdi-plus</v-icon></v-btn>
                 </v-col>
               </v-row>
             </td>
             <td class="text-end" v-text="item.subTotal"></td>
             <td class="text-end">
-              <v-icon @click="removeItem(item.product.id)"
-                >mdi-cart-remove</v-icon
-              >
+              <v-icon @click="removeItem(item.product.id)">mdi-cart-remove</v-icon>
             </td>
           </tr>
           <tr>
             <td>優惠活動</td>
             <td>
-              <span
-                class="me-auto"
-                v-for="(item, index) in cartData.distinctCoupons"
-                :key="index"
-              >
+              <span class="me-auto" v-for="(item, index) in cartData.distinctCoupons" :key="index">
                 {{ item }} {{ cartData.distinctCouponsDescription[index]
                 }}<br />
               </span>
@@ -96,35 +73,14 @@
             <v-card-title class="d-flex">選擇送貨及付款方式</v-card-title>
             <hr />
             <v-card-subtitle>送貨地點</v-card-subtitle>
-            <v-select
-              v-model="selectLocation"
-              :items="shipLocation"
-              item-title="label"
-              item-value="item"
-              return-object
-              single-line
-              variant="solo"
-            ></v-select>
+            <v-select v-model="selectLocation" :items="shipLocation" item-title="label" item-value="item" return-object
+              single-line variant="solo"></v-select>
             <v-card-subtitle>送貨方式</v-card-subtitle>
-            <v-select
-              v-model="selectShipMethod"
-              :items="shipMethod"
-              item-title="label"
-              item-value="item"
-              return-object
-              single-line
-              variant="solo"
-            ></v-select>
+            <v-select v-model="selectShipMethod" :items="shipMethod" item-title="label" item-value="item" return-object
+              single-line variant="solo"></v-select>
             <v-card-subtitle>付款方式</v-card-subtitle>
-            <v-select
-              v-model="selectPayment"
-              :items="payment"
-              item-title="label"
-              item-value="item"
-              return-object
-              single-line
-              variant="solo"
-            ></v-select>
+            <v-select v-model="selectPayment" :items="payment" item-title="label" item-value="item" return-object
+              single-line variant="solo"></v-select>
           </v-card>
         </v-col>
         <v-col cols="4">
@@ -133,36 +89,30 @@
             <hr />
             <v-card-subtitle>小計：{{ cartData.subTotal }}</v-card-subtitle>
             <v-card-subtitle>運費：{{ freight }}</v-card-subtitle>
-            <v-card-subtitle
-              >合計：{{ cartData.total + freight }}</v-card-subtitle
-            >
+            <v-card-subtitle>合計：{{ cartData.total + freight }}</v-card-subtitle>
             <br />
             <hr />
             <br />
             <div class="d-flex justify-center">
-              <v-btn width="300" color="primary" @click="returnSelectedHandler"
-                >前往結帳</v-btn
-              >
+              <v-btn width="300" color="primary" @click="returnSelectedHandler">前往結帳</v-btn>
             </div>
           </v-card>
         </v-col>
       </v-row>
     </v-sheet>
 
-    <v-sheet v-else class="text-center"
-      >您的購物車為空，<a href="/eCommerce">點我到商城逛逛！</a></v-sheet
-    >
+    <v-sheet v-else class="text-center">您的購物車為空，<a href="/eCommerce">點我到商城逛逛！</a></v-sheet>
   </v-container>
 </template>
     
 <script setup lang='ts'>
 import { ref, watch } from "vue";
+import store from '@/store';
 
 const cartData = ref({});
 const cartItems = ref([]);
 const imgLink = "https://localhost:7081/Files/Uploads/";
 const limit = ref(0);
-const quantity = ref();
 const total = ref(0);
 const freight = ref(0);
 const selectLocation = ref({ loc: "taiwan", label: "台灣" });
@@ -202,9 +152,6 @@ watch(
     };
   },
   (newValue, oldValue) => {
-    // 當 selectedData 發生變化時觸發
-    // 這裡可以添加相關邏輯，例如檢查 selectedData 的不同並觸發 loadData
-    console.log("selectedData changed:", newValue);
     loadData();
   }
 );
@@ -234,14 +181,36 @@ const payment = ref([
 ]);
 
 const loadData = async () => {
-  const response = await fetch(`https://localhost:7081/api/Carts`, {
-    method: "GET",
-    credentials: "include",
-  });
-  const datas = await response.json();
-  cartData.value = datas;
-  cartItems.value = datas.cartItems;
-  total.value = datas.total;
+  if (store.state.isLoggedIn) {
+    const response = await fetch(`https://localhost:7081/api/Carts`, {
+      method: "GET",
+      credentials: "include",
+    });
+    const datas = await response.json();
+    cartData.value = datas;
+    cartItems.value = datas.cartItems;
+    total.value = datas.total;
+  }
+  else {
+    cartItems.value = []; // 清空cartItems
+    const localCart = JSON.parse(localStorage.getItem("localCart") || "[]");
+    for (const localItem of localCart) {
+      try {
+        const response = await fetch(
+          `https://localhost:7081/api/Products/${localItem.productId}?page=1&pageSize=5`
+        );
+        const productDetail = await response.json();
+        cartItems.value.push({
+          product: productDetail,
+          qty: localItem.qty,
+        });
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+      }
+    }
+
+  }
+
 };
 
 watch(
