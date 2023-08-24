@@ -529,25 +529,6 @@ const createOrder = async () => {
   }
 };
 
-// const handleSubmit = async () => {
-//   try {
-//     const orderResult = await createOrder();
-//     payload.value.receiverName = buyerName.value;
-//     payload.value.MerchantTradeNo = orderResult[0].orderIndex;
-//     createLogisticsOrder(payload.value);
-//     if (props.selectedData.payment.id == 2) {
-//       await checkoutECPay();
-//       ecpayForm.value.submit();
-//     } else if (props.selectedData.payment.id == 1) {
-//       await checkoutLinePay();
-//     } else {
-//       router.push({ name: "Cart", query: { paymentSuccess: "true" } });
-//     }
-//   } catch (error) {
-//     console.error("Error:", error);
-//   }
-// };
-
 const handleSubmit = async () => {
   try {
     if (props.selectedData.payment.id == 2) {
@@ -568,6 +549,25 @@ const handleSubmit = async () => {
     console.error("Error:", error);
   }
 };
+
+// const handleSubmit = async () => {
+//   try {
+//     const orderResult = await createOrder();
+//     payload.value.receiverName = buyerName.value;
+//     payload.value.MerchantTradeNo = orderResult[0].orderIndex;
+//     createLogisticsOrder(payload.value);
+//     if (props.selectedData.payment.id == 2) {
+//       await checkoutECPay();
+//       ecpayForm.value.submit();
+//     } else if (props.selectedData.payment.id == 1) {
+//       await checkoutLinePay();
+//     } else {
+//       router.push({ name: "Cart", query: { paymentSuccess: "true" } });
+//     }
+//   } catch (error) {
+//     console.error("Error:", error);
+//   }
+// };
 
 load();
 </script>
