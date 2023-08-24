@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
 using TataGamedomWebAPI.Infrastructure.Data;
@@ -35,7 +36,7 @@ public class LinePayService
     {
         List<LinePayProductDto> productDtos = await GetProductsInCartsInfo();
 
-        List<PackageDto> packageDtos = PutProductsIntoPackage(productDtos);
+        List<PackageDto> packageDtos = PutProductsIntoPackage(productDtos, shipment);
 
         PaymentRequestDto paymentRequestDto = CreatePaymentRequest(packageDtos, shipment);
 
@@ -79,10 +80,6 @@ public class LinePayService
 
         var linePayResponse = _jsonProvider.Deserialize<PaymentResponseDto>(await response.Content.ReadAsStringAsync());
 
-        //Console.WriteLine(nonce);
-        //Console.WriteLine(signature);
-        Console.WriteLine("OrderId:" + dto.OrderId);
-        Console.WriteLine("Linepay Respone:" + linePayResponse.Info);
         return linePayResponse;
     }
 
@@ -161,8 +158,10 @@ public class LinePayService
                 Quantity = 1,
                 OriginalPrice = c.Product.Price,
                 Price = c.Product.CouponsProducts
-                        .Any(IsCouponValidate(c))?
-                        (int)Math.Round(c.Product.CouponsProducts.Where(IsCouponValidate(c))
+                .Any(
+                    cp => DateTime.Now >= cp.Coupon.StartTime && DateTime.Now <= cp.Coupon.EndTime && cp.ProductId == c.ProductId) ?
+                    (int)Math.Round(c.Product.CouponsProducts
+                    .Where(cp => DateTime.Now >= cp.Coupon.StartTime && DateTime.Now <= cp.Coupon.EndTime && cp.ProductId == c.ProductId)
                             .Select
                             (
                                 cp => cp.Coupon.DiscountTypeId == (int)DiscountType.PercentDiscount ? c.Product.Price * (cp.Coupon.Discount / 100.0)
@@ -176,54 +175,114 @@ public class LinePayService
         return productDtos;
     }
 
-    private static List<PackageDto> PutProductsIntoPackage(List<LinePayProductDto> productDtos)
+    //private static List<PackageDto> PutProductsIntoPackage(List<LinePayProductDto> productDtos, ShipmentMethodDto shipment)
+    //{
+    //    //Maping PackageDto
+    //    List<PackageDto> packageDtos = new List<PackageDto>();
+    //    packageDtos.Add(new PackageDto
+    //    {
+    //        Amount = productDtos.Select(p => p.Price).Sum(),
+    //        Products = productDtos
+    //    });
+
+    //    return packageDtos;
+    //}
+    private static List<PackageDto> PutProductsIntoPackage(List<LinePayProductDto> productDtos, ShipmentMethodDto shipment)
     {
-        //Maping PackageDto
+        int totalAmount = productDtos.Select(p => p.Price).Sum();
+
+        int finalTotalAmount = CalculateTotalAmount(totalAmount, shipment);
+
         List<PackageDto> packageDtos = new List<PackageDto>();
         packageDtos.Add(new PackageDto
         {
-            Amount = productDtos.Select(p => p.Price).Sum(),
+            Amount = finalTotalAmount,
             Products = productDtos
         });
+
         return packageDtos;
     }
 
+    private static int CalculateTotalAmountWithDiscountAndShipping(List<PackageDto> packageDtos, ShipmentMethodDto shipment)
+    {
+        var totalAmount = packageDtos.Select(p => p.Amount).Sum();
+
+        return CalculateTotalAmount(totalAmount, shipment);
+    }
+
+    //
+
+    private static int CalculateTotalAmount(int amount, ShipmentMethodDto shipment)
+    {
+        int shippingCost = 0;
+
+        if (shipment.Method != "payFirstAtHome" && shipment.Method != "payAtHome")
+        {
+            shippingCost = 60;
+        }
+        else
+        {
+            shippingCost = 80;
+        }
+
+        int total = amount > 2000 ? amount : amount + shippingCost;
+        total = total > 3000 ? total - 300 : total;
+
+        return total;
+    }
+
+
+
+
+    //
+
+
+    //private static int CalculateTotalAmountWithDiscountAndShipping(List<PackageDto> packageDtos, ShipmentMethodDto shipment)
+    //{
+    //    var total = packageDtos.Select(p => p.Amount).Sum();
+    //    int shippingCost = 0;
+    //    if (shipment.Method != "payFirstAtHome" && shipment.Method != "payAtHome")
+    //    {
+    //        shippingCost = 60;
+    //    }
+    //    else
+    //    {
+    //        shippingCost = 80;
+    //    }
+
+    //    total = total > 2000 ? total : total + shippingCost;
+    //    total = total > 3000 ? total - 300 : total;
+
+    //    return total;
+    //}
+
+
+
+    //private static PaymentRequestDto CreatePaymentRequest(List<PackageDto> packageDtos, ShipmentMethodDto shipment)
+    //{
+    //    //Mapping to paymentRequestDto
+    //    PaymentRequestDto? paymentRequestDto = new PaymentRequestDto
+    //    {
+    //        Amount = CalculateTotalAmountWithDiscountAndShipping(packageDtos, shipment),
+    //        OrderId = Guid.NewGuid().ToString(),    //todo => 先建訂單，傳Index到OrderId
+    //        Packages = packageDtos,
+    //        RedirectUrls = new RedirectUrlsDto()
+    //    };
+    //    return paymentRequestDto;
+    //}
+
     private static PaymentRequestDto CreatePaymentRequest(List<PackageDto> packageDtos, ShipmentMethodDto shipment)
     {
-        //Mapping to paymentRequestDto
-        PaymentRequestDto? paymentRequestDto = new PaymentRequestDto
+        PaymentRequestDto paymentRequestDto = new PaymentRequestDto
         {
-            Amount = CalculateTotalAmountWithDiscountAndShipping(packageDtos, shipment),
-            OrderId = Guid.NewGuid().ToString(),    //todo => 先建訂單，傳Index到OrderId
+            Amount = packageDtos.Select(p => p.Amount).Sum(),
+            OrderId = Guid.NewGuid().ToString(),
             Packages = packageDtos,
             RedirectUrls = new RedirectUrlsDto()
         };
         return paymentRequestDto;
     }
 
-    private static int CalculateTotalAmountWithDiscountAndShipping(List<PackageDto> packageDtos, ShipmentMethodDto shipment)
-    {
-        var total = packageDtos.Select(p => p.Amount).Sum();
-        int shippingCost = 0;
-        if (shipment.Method != "payFirstAtHome" && shipment.Method != "payAtHome")
-        {
-            shippingCost = 60;
-        }
-        else 
-        {
-            shippingCost = 80;
-        }
-        
-        total = total > 2000 ? total : total + shippingCost;
-        total = total > 3000 ? total - 300 : total;
-
-        return total;
-    }
-
-    private static Func<CouponsProduct, bool> IsCouponValidate(Cart c)
-    {
-        return cp => DateTime.Now >= cp.Coupon.StartTime && DateTime.Now <= cp.Coupon.EndTime && cp.ProductId == c.ProductId;
-    }
 
 }
 
