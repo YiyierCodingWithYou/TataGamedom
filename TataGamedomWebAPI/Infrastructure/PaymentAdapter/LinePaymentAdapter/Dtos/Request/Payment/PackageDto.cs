@@ -3,7 +3,7 @@
 public class PackageDto
 {
 
-    public string Id { get; set; }
+    public string Id { get; set; } = Guid.NewGuid().ToString();
 
     /// <summary>
     /// 小計

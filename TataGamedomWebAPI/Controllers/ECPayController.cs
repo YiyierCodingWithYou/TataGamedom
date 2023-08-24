@@ -40,6 +40,7 @@ namespace TataGamedomWebAPI.Controllers
 				{ "PaymentType",  "aio"},
 				{ "ChoosePayment",  "ALL"},
 				{ "EncryptType",  "1"},
+				//{"OrderResultURL", "https://4601-61-222-34-1.ngrok-free.app/cart" }
 			};
 			order["CheckMacValue"] = GetCheckMacValue(order);
 			return Ok(order);
@@ -77,7 +78,9 @@ namespace TataGamedomWebAPI.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult> RedirectToLogisticsSelection(LogisticsSelectionRawDataDto logisticsSelection)
         {
-            return Ok(await _shipmentService.SendLogisticsSelectionRequest(logisticsSelection));
+            var fileUrl = await _shipmentService.SendLogisticsSelectionRequest(logisticsSelection);
+            return Ok(new { url = fileUrl });
+            //return Ok(await _shipmentService.SendLogisticsSelectionRequest(logisticsSelection));
         }
 
         [HttpPost("LogisticsOrder")]
