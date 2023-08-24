@@ -53,7 +53,7 @@ export default {
 
     const confirmPayment = async () => {
       const payment = {
-        amount: 5850,
+        amount: 5850,  
         currency: "TWD",
       };
 

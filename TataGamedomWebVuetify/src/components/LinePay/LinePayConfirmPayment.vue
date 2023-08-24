@@ -3,19 +3,20 @@ import { ref, onMounted } from "vue";
 
 export default {
   setup() {
+    const totalAmount = sessionStorage.getItem("totalAmount");
     const baseLoginPayUrl = "https://localhost:7081/api/LinePay/";
     let transactionId = "";
     let orderId = "";
 
     const confirmPayment = async () => {
       const payment = {
-        amount: 5850,
+        amount: totalAmount,
         currency: "TWD",
       };
 
       try {
         const response = await fetch(
-          `${baseLoginPayUrl}Confirm?transactionId=${transactionId}&orderId=${orderId}`,
+          `${baseLoginPayUrl}Confirm?transactionId=${transactionId}`,
           {
             method: "POST",
             headers: {
@@ -28,9 +29,9 @@ export default {
         if (response.ok) {
           setTimeout(() => {
             window.location = "https://localhost:3000/Cart?paymentSuccess=true";
-          }, 2000);
+          });
         } else {
-          console.error("Failed to confirm payment");
+          console.error("Failed to confirm payment" + response);
         }
       } catch (error) {
         console.error(error);
@@ -38,16 +39,11 @@ export default {
     };
 
     onMounted(() => {
+      console.log(totalAmount);
       const params = new URLSearchParams(window.location.search);
       transactionId = params.get("transactionId");
-      orderId = params.get("orderId");
-
       confirmPayment();
     });
-
-    return {
-      paymentStatus,
-    };
   },
 };
 </script>

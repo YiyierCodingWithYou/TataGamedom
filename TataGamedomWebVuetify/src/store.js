@@ -1,6 +1,7 @@
 import { createStore } from "vuex";
 import OrderStore from "./components/Orders/OrderStore";
 import ECpayStore from "./components/ECpay/ECpayStore";
+import LinePayStore from "./components/LinePay/LinePayStore";
 import GameLoungeStore from "./components/GameLounge/GameLoungeStore";
 
 const store = createStore({
@@ -8,6 +9,7 @@ const store = createStore({
   modules: {
     OrderStore,
     ECpayStore,
+    LinePayStore,
     GameLoungeStore,
   },
   state: {
