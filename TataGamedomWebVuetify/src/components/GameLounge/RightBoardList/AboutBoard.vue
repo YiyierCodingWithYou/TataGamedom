@@ -1,6 +1,6 @@
 <template>
-  <v-card class="mx-auto my-12" max-width="250">
-    <v-img cover max-height="200" :src="iconUrl"></v-img>
+  <v-card class="w-100 my-5">
+    <v-img cover max-height="250" :src="iconUrl"></v-img>
     <v-card-item>
       <v-card-title>{{ boardData?.name }}</v-card-title>
     </v-card-item>
@@ -34,11 +34,32 @@
       <v-card-text v-html="boardData?.boardAbout"></v-card-text>
     </v-card-text>
   </v-card>
+  <v-card class="w-100 my-5" id="buyProduct">
+    <v-list density="compact">
+      <v-list-subheader>立即購買</v-list-subheader>
+
+      <v-list-item
+        v-for="(item, i) in productData"
+        :key="i"
+        :value="item.value"
+        :text="item"
+        color="primary"
+        @click="openLink(item.value)"
+      >
+        <template v-slot:prepend>
+          <v-icon icon="mdi-flag"></v-icon>
+        </template>
+
+        <v-list-item-title v-text="item.text"></v-list-item-title>
+      </v-list-item>
+    </v-list>
+  </v-card>
 </template>
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, defineProps, watch, computed } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 interface BoardData {
   id: number;
@@ -55,18 +76,36 @@ interface BoardData {
 
 const boardData = ref<BoardData>();
 const iconUrl = ref("");
+const productData = ref<any>([]);
+
+const props = defineProps({
+  boardId: {
+    type: String,
+    required: true,
+  },
+});
+
+const store = useStore();
+const incrememtCount = () => {
+  store.commit("boardListRefresh");
+};
 
 const getBoardData = async () => {
   const res = await axios
-    .get("https://localhost:7081/api/Boards/1", {
+    .get(`https://localhost:7081/api/Boards/${props.boardId}`, {
       withCredentials: true,
     })
     .then((res) => {
-      console.log(res.data);
       boardData.value = res.data;
       iconUrl.value =
         boardData.value?.boardHeaderCoverImgUrl ??
         "https://pbs.twimg.com/media/F32EcZxbYAI5Oml.jpg";
+      productData.value = boardData.value?.productLinks.map((item) => {
+        return {
+          value: item.id,
+          text: item.platformName,
+        };
+      });
     })
     .catch((err) => {
       console.log(err.data);
@@ -76,15 +115,15 @@ const getBoardData = async () => {
 const followAction = async () => {
   const res = await axios
     .put(
-      "https://localhost:7081/api/MembersBoards/1/Follow",
+      `https://localhost:7081/api/MembersBoards/${props.boardId}/Follow`,
       {},
       {
         withCredentials: true,
       }
     )
     .then((res) => {
-      console.log(res.data);
       getBoardData();
+      incrememtCount();
     })
     .catch((err) => {
       console.log(err);
@@ -93,15 +132,15 @@ const followAction = async () => {
 const favoriteAction = async () => {
   const res = await axios
     .put(
-      "https://localhost:7081/api/MembersBoards/1/Favorite",
+      `https://localhost:7081/api/MembersBoards/${props.boardId}/Favorite`,
       {},
       {
         withCredentials: true,
       }
     )
     .then((res) => {
-      console.log(res.data);
       getBoardData();
+      incrememtCount();
     })
     .catch((err) => {
       console.log(err);
@@ -111,5 +150,22 @@ const favoriteAction = async () => {
 onMounted(() => {
   getBoardData();
 });
+
+//set refresh
+const count = computed(() => store.state.GameLoungeStore.aboutRefreshCount);
+
+watch(count, (newValue, oldValue) => {
+  getBoardData();
+});
+
+//set link
+const router = useRouter();
+const openLink = (id) => {
+  console.log(id);
+  router.push({
+    name: "SingleProduct",
+    params: { productId: id },
+  });
+};
 </script>
 <style lang=""></style>

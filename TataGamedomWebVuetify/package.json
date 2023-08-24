@@ -44,7 +44,7 @@
     "vite": "^4.2.0",
     "vite-plugin-vuetify": "^1.0.0",
     "vue-tsc": "^1.8.8",
-    "vue3-google-login": "^2.0.18"
+    "vue3-google-login": "^2.0.20"
   },
   "proxy": "https://localhost:7081",
   "description": "```\r # yarn\r yarn",

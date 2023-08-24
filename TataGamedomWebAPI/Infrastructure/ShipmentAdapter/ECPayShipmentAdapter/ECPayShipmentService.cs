@@ -26,8 +26,8 @@ public class ECPayShipmentService
     }
 
 
-    #region 開啟物流選擇頁
-    public async Task<IActionResult> SendLogisticsSelectionRequest(LogisticsSelectionRawDataDto logisticsSelection)
+    #region 開啟物流選擇頁(url)
+    public async Task<string> SendLogisticsSelectionRequest(LogisticsSelectionRawDataDto logisticsSelection)
     {
         var requestJson = JsonSerializer.Serialize(new LogisticsSelectionRequestDto
         {
@@ -52,13 +52,13 @@ public class ECPayShipmentService
         //Console.WriteLine(decodedData);
         #endregion
 
-        var htmlContent = await response.Content.ReadAsStringAsync();
-        return new ContentResult
-        {
-            ContentType = "text/html",
-            StatusCode = (int?)HttpStatusCode.OK,
-            Content = htmlContent
-        };
+        string htmlContent = await response.Content.ReadAsStringAsync();
+        
+        var guid = Guid.NewGuid().ToString();
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files/LogisticsSelectionHtml", $"{guid}.html");
+        await System.IO.File.WriteAllTextAsync(filePath, htmlContent);
+
+        return $"/Files/LogisticsSelectionHtml/{guid}.html";
     }
 
 
@@ -102,7 +102,7 @@ public class ECPayShipmentService
         var orderDict = new Dictionary<string, string>
         {
             { "MerchantID", order.MerchantID },
-            { "MerchantTradeNo", order.MerchantTradeNo },   //可為null，不可重複，但有給的話demo蠻好辨識的，目前先放OrderIndex
+            { "MerchantTradeNo", order.MerchantTradeNo },   //目前從前端傳回新建訂單的OrderIndex
             { "MerchantTradeDate", order.MerchantTradeDate},
             { "LogisticsType", order.LogisticsType},
             { "LogisticsSubType", order.LogisticsSubType},  //B2C接受參數: FAMI、UNIMART、HILIFE、UNIMARTFREEZE

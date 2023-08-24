@@ -10,9 +10,7 @@
         <tbody>
           <tr>
             <td>
-              <img
-                src="https://static.accupass.com/org/2011051025162614811630.jpg"
-              />
+              <img src="https://static.accupass.com/org/2011051025162614811630.jpg" />
             </td>
           </tr>
           <tr>
@@ -33,7 +31,7 @@
   </div>
 </template>
   
-  <script>
+<script>
 export default {
   name: "PaymentComponent",
   data() {
@@ -90,7 +88,7 @@ export default {
 };
 </script>
   
-  <style scoped>
+<style scoped>
 .centered {
   display: flex;
   justify-content: center;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using TataGamedomWebAPI.Infrastructure.Data;
@@ -8,6 +9,7 @@ using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Re
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.Payment;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.PaymentConfirm;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.PaymentRefund;
+using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter;
 
@@ -29,48 +31,13 @@ public class LinePayService
         this._httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<PaymentResponseDto> SendPaymentRequestWithCartInfo()
+    public async Task<PaymentResponseDto> SendPaymentRequestWithCartInfo(ShipmentMethodDto shipment)
     {
+        List<LinePayProductDto> productDtos = await GetProductsInCartsInfo();
 
-        string? account = _httpContextAccessor.HttpContext?.User.Claims.Where(c => c.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
+        List<PackageDto> packageDtos = PutProductsIntoPackage(productDtos);
 
-        //Maping LinePayproduct
-        List<LinePayProductDto> productDtos = await _dbContext.Carts
-            .Where(c => c.Member.Account == account)
-            .Select(c => new LinePayProductDto 
-            {
-                Name = c.Product.Game!.ChiName,
-                Quantity = 1,
-                Price = c.Product.Price,   //未處理優惠
-            })
-            .ToListAsync();
-
-
-        //Maping PackageDto
-        List<PackageDto> packageDtos = new List<PackageDto>();
-        packageDtos.Add(new PackageDto
-        {
-            Id = Guid.NewGuid().ToString(),
-            Amount = productDtos.Select(p => p.Price).Sum(),
-            Products = productDtos
-        });
-
-
-        //Mapping to paymentRequestDto
-        PaymentRequestDto? paymentRequestDto = new PaymentRequestDto
-        {
-			Amount = packageDtos.Select(p => p.Amount).Sum(),  //todo
-			Currency = "TWD",
-            OrderId = Guid.NewGuid().ToString(),     //todo => 先建訂單，傳Index到OrderId
-            Packages = packageDtos,
-            RedirectUrls = new RedirectUrlsDto
-            {
-                ConfirmUrl = "https://localhost:3000/LinePayConfirmPayment",
-                CancelUrl = ""
-            }
-        };
-
-
+        PaymentRequestDto paymentRequestDto = CreatePaymentRequest(packageDtos, shipment);
 
         var json = _jsonProvider.Serialize(paymentRequestDto);
         var nonce = Guid.NewGuid().ToString();
@@ -89,12 +56,6 @@ public class LinePayService
         var response = await client.SendAsync(request);
         var linePayResponse = _jsonProvider.Deserialize<PaymentResponseDto>(await response.Content.ReadAsStringAsync());
 
-        Console.WriteLine(nonce);
-        Console.WriteLine(signature);
-        Console.WriteLine(response);
-
-
-
         return linePayResponse;
     }
 
@@ -105,25 +66,27 @@ public class LinePayService
         var requstUrl = "/v3/payments/request";
         var signature = SignatureProvider.HMACSHA256(channelSecretKey, channelSecretKey + requstUrl + json + nonce);
 
+        client.DefaultRequestHeaders.Add("X-LINE-ChannelId", channelId);
+        client.DefaultRequestHeaders.Add("X-LINE-Authorization-Nonce", nonce);
+        client.DefaultRequestHeaders.Add("X-LINE-Authorization", signature);
+
         var request = new HttpRequestMessage(HttpMethod.Post, linePayBaseApiUrl + requstUrl)
         {
             Content = new StringContent(json, Encoding.UTF8, "application/json")
         };
 
-        client.DefaultRequestHeaders.Add("X-LINE-ChannelId", channelId);
-        client.DefaultRequestHeaders.Add("X-LINE-Authorization-Nonce", nonce);
-        client.DefaultRequestHeaders.Add("X-LINE-Authorization", signature);
-
         var response = await client.SendAsync(request);
+
         var linePayResponse = _jsonProvider.Deserialize<PaymentResponseDto>(await response.Content.ReadAsStringAsync());
 
-        Console.WriteLine(nonce);
-        Console.WriteLine(signature);
-
+        //Console.WriteLine(nonce);
+        //Console.WriteLine(signature);
+        Console.WriteLine("OrderId:" + dto.OrderId);
+        Console.WriteLine("Linepay Respone:" + linePayResponse.Info);
         return linePayResponse;
     }
 
-    public async Task<PaymentConfirmResponseDto> ConfirmPayment(string transactionId, string orderId, PaymentConfirmDto dto)
+    public async Task<PaymentConfirmResponseDto> ConfirmPayment(string transactionId, PaymentConfirmDto dto)
     {
         var json = _jsonProvider.Serialize(dto);
 
@@ -141,7 +104,8 @@ public class LinePayService
         client.DefaultRequestHeaders.Add("X-LINE-Authorization", signature);
 
         var response = await client.SendAsync(request);
-        var responseDto = _jsonProvider.Deserialize<PaymentConfirmResponseDto>(await response.Content.ReadAsStringAsync());
+        PaymentConfirmResponseDto responseDto = _jsonProvider.Deserialize<PaymentConfirmResponseDto>(await response.Content.ReadAsStringAsync());
+
         return responseDto;
     }
 
@@ -149,6 +113,7 @@ public class LinePayService
     {
         string json = _jsonProvider.Serialize(dto);
         string nonce = Guid.NewGuid().ToString();
+
         var requestUrl = string.Format("/v3/payments/{0}/refund", transactionId);
         
         var signature = SignatureProvider.HMACSHA256(channelSecretKey, channelSecretKey + requestUrl + json + nonce);
@@ -162,17 +127,109 @@ public class LinePayService
         client.DefaultRequestHeaders.Add("X-LINE-Authorization-Nonce", nonce);
         client.DefaultRequestHeaders.Add("X-LINE-Authorization", signature);
 
-        var response = await client.SendAsync(request);
-        var responseDto = _jsonProvider.Deserialize<PaymentRefundResponseDto>(await response.Content.ReadAsStringAsync());
-        return responseDto;
-    }
+        HttpResponseMessage response = await client.SendAsync(request);
+        Console.WriteLine(response);
+        try 
+        {
+            var responseDto = _jsonProvider.Deserialize<PaymentRefundResponseDto>(await response.Content.ReadAsStringAsync());
+            return responseDto;
 
+        }
+        catch (Exception ex) 
+        {
+            Console.WriteLine(ex);
+        }
+        return null;
+
+    }
 
     public async void TransactionCancel(string transactionId)
     {
         Console.WriteLine($"訂單 {transactionId} 已取消");
     }
 
+    private async Task<List<LinePayProductDto>> GetProductsInCartsInfo()
+    {
+        string? account = _httpContextAccessor.HttpContext?.User.Claims.Where(c => c.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
+
+        //Maping LinePayproduct
+        List<LinePayProductDto> productDtos = await _dbContext.Carts
+            .Where(c => c.Member.Account == account)
+            .Select(c => new LinePayProductDto
+            {
+                Name = c.Product.Game!.ChiName,
+                Quantity = 1,
+                OriginalPrice = c.Product.Price,
+                Price = c.Product.CouponsProducts
+                        .Any(IsCouponValidate(c))?
+                        (int)Math.Round(c.Product.CouponsProducts.Where(IsCouponValidate(c))
+                            .Select
+                            (
+                                cp => cp.Coupon.DiscountTypeId == (int)DiscountType.PercentDiscount ? c.Product.Price * (cp.Coupon.Discount / 100.0)
+                                : cp.Coupon.DiscountTypeId == (int)DiscountType.DirectDiscount ? c.Product.Price - cp.Coupon.Discount
+                                : c.Product.Price
+                            )
+                        .FirstOrDefault(), 1)
+                        :c.Product.Price,
+            })
+            .ToListAsync();
+        return productDtos;
+    }
+
+    private static List<PackageDto> PutProductsIntoPackage(List<LinePayProductDto> productDtos)
+    {
+        //Maping PackageDto
+        List<PackageDto> packageDtos = new List<PackageDto>();
+        packageDtos.Add(new PackageDto
+        {
+            Amount = productDtos.Select(p => p.Price).Sum(),
+            Products = productDtos
+        });
+        return packageDtos;
+    }
+
+    private static PaymentRequestDto CreatePaymentRequest(List<PackageDto> packageDtos, ShipmentMethodDto shipment)
+    {
+        //Mapping to paymentRequestDto
+        PaymentRequestDto? paymentRequestDto = new PaymentRequestDto
+        {
+            Amount = CalculateTotalAmountWithDiscountAndShipping(packageDtos, shipment),
+            OrderId = Guid.NewGuid().ToString(),    //todo => 先建訂單，傳Index到OrderId
+            Packages = packageDtos,
+            RedirectUrls = new RedirectUrlsDto()
+        };
+        return paymentRequestDto;
+    }
+
+    private static int CalculateTotalAmountWithDiscountAndShipping(List<PackageDto> packageDtos, ShipmentMethodDto shipment)
+    {
+        var total = packageDtos.Select(p => p.Amount).Sum();
+        int shippingCost = 0;
+        if (shipment.Method != "payFirstAtHome" && shipment.Method != "payAtHome")
+        {
+            shippingCost = 60;
+        }
+        else 
+        {
+            shippingCost = 80;
+        }
+        
+        total = total > 2000 ? total : total + shippingCost;
+        total = total > 3000 ? total - 300 : total;
+
+        return total;
+    }
+
+    private static Func<CouponsProduct, bool> IsCouponValidate(Cart c)
+    {
+        return cp => DateTime.Now >= cp.Coupon.StartTime && DateTime.Now <= cp.Coupon.EndTime && cp.ProductId == c.ProductId;
+    }
 
 }
+
+public class ShipmentMethodDto 
+{
+    public string Method { get; set; } = string.Empty;
+}
+
 

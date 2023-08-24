@@ -110,6 +110,7 @@
     <PackageReference Include="Dapper" Version="2.0.143" />
     <PackageReference Include="FluentValidation" Version="11.6.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.6.0" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.61.0" />
     <PackageReference Include="MediatR" Version="12.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.10" />
@@ -124,10 +125,10 @@
   <ItemGroup>
     <Folder Include="Application\Features\InventoryItem\Shared\" />
     <Folder Include="Application\Features\OrderItem\Shared\" />
+    <Folder Include="Files\LogisticsSelectionHtml\" />
     <Folder Include="Files\Uploads\PostComment\" />
     <Folder Include="Infrastructure\Data\DapperRepository\" />
     <Folder Include="Infrastructure\Data\EFRepository\" />
-    <Folder Include="Models\EFModels\" />
   </ItemGroup>
 
 </Project>
