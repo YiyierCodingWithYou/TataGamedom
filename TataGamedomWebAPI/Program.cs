@@ -42,7 +42,11 @@ namespace TataGamedomWebAPI
                 );
             });
 
-			string MyAllowOrigins = "AllowAny";
+
+
+
+            //
+            string MyAllowOrigins = "AllowAny";
 			builder.Services.AddCors(options => {
 				options.AddPolicy(
 					name: MyAllowOrigins, policy => policy.WithOrigins("*").WithHeaders("*").WithMethods("*")

@@ -13,6 +13,7 @@ public static class SignatureProvider
 
         HMACSHA256 hmacsha256 = new HMACSHA256(keyByte);
 
+
         byte[] messageBytes = encoding.GetBytes(message);
 
         byte[] hashmessage = hmacsha256.ComputeHash(messageBytes);

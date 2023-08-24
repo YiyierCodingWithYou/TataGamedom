@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TataGamedomWebAPI.Models.EFModels;
 
-public partial class ShipmemtMethod
+public partial class ShipmentMethod
 {
     public int Id { get; set; }
 
