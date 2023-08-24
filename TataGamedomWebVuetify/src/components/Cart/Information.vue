@@ -424,8 +424,8 @@ const handleSubmit = async () => {
       router.push({ name: "Cart", query: { paymentSuccess: "true" } });
     }
 
+    // todo  => Confirm
     const orderResult = await createOrder();
-
     payload.value.receiverName = buyerName.value;
     payload.value.MerchantTradeNo = orderResult[0].orderIndex;
     createLogisticsOrder(payload.value);
