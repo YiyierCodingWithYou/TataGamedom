@@ -1,19 +1,42 @@
 <template>
-  <!-- <RouterLink to="/Members/Login">登入</RouterLink> -->
-  <RouterLink to="/Members/Login">登入</RouterLink>
-  <br />
-  <RouterLink to="/Members/Register">註冊</RouterLink>
-  <br />
-  <RouterLink to="/Members/ActiveRegister">會員驗證</RouterLink>
+  <v-tabs fixed-tabs bg-color="white">
+    <v-tab
+      @click="selectedTab = 'MemberDetial'"
+      :active="selectedTab === 'MemberDetial'"
+    >
+      修改資料
+    </v-tab>
+    <v-tab
+      @click="selectedTab = 'ChangePwd'"
+      :active="selectedTab === 'ChangePwd'"
+    >
+      修改密碼
+    </v-tab>
+  </v-tabs>
 
-  <!-- <Login />
-    <Register /> -->
+  <MemberDetial v-if="selectedTab === 'MemberDetial'"></MemberDetial>
+  <ChangePwd v-if="selectedTab === 'ChangePwd'"></ChangePwd>
 </template>
     
 <script setup>
-// import LoginVue from "@/components/Members/Login.vue";
-// import Register from "@/components/Members/Register.vue";
-// import ActiveRegister from "@/components/Members/ActiveRegister.vue";
+import { ref, onMounted } from "vue";
+import MemberDetial from "@/components/Members/MemberDetial.vue";
+import ChangePwd from "@/components/Members/ChangePwd.vue";
+const showChangePwd = ref(false);
+const selectedTab = ref("MemberDetial");
+onMounted(() => {
+  const Pwd =
+    "26256583618AA9595240F1D7BE6AE79A35AF7BF1DE258F04636875BA4E11C291";
+  if (
+    Pwd !== "26256583618AA9595240F1D7BE6AE79A35AF7BF1DE258F04636875BA4E11C291"
+  ) {
+    showChangePwd.value = true;
+  }
+});
 </script>
     
-<style></style>
+<style>
+.Detail {
+  border: solid;
+}
+</style>
