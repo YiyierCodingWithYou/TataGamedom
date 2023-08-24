@@ -18,6 +18,7 @@ const emit = defineEmits(["searchInput"]);
 const inputHandler = () => {
   //引發事件 子將資料傳給父
   emit("searchInput", keyword.value);
+  keyword.value="";
 };
 </script>
     

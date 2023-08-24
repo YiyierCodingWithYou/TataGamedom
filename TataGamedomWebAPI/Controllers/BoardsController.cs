@@ -66,7 +66,7 @@ namespace TataGamedomWebAPI.Controllers
 				PostTotalCount = b.Posts.Count(p => p.ActiveFlag),
 				MemberFollowCount = b.MembersBoards.Count(),
 				IsFollowed = b.MembersBoards.Any(m => m.MemberId == loggedInMemberId),
-				IsFavorite = b.MembersBoards.Any(m => m.MemberId == loggedInMemberId && m.IsFavorite),
+				IsFavorite = b.MembersBoards.Any(m => m.MemberId == loggedInMemberId && m.IsFavorite == true),
 				IsMod = b.BoardsModerators.Any(m => m.ModeratorMember.Account == loggedInAccount),
 				Mods = b.BoardsModerators.Select(m => new ModReadDto
 				{

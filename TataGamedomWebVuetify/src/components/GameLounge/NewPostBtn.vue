@@ -73,7 +73,7 @@ const toolbarOptions = [
   ["blockquote", "code-block"],
   [{ list: "ordered" }, { list: "bullet" }],
   [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-  ["link", "image"],
+  ["image"],
   ["clean"], // remove formatting button
 ];
 

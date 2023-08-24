@@ -1,10 +1,12 @@
 <template>
-  <v-list item-props :items="items"> </v-list>
+  <v-list item-props :items="items" @click:select="openLink"> </v-list>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import axios from "axios";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 const items = ref<item>([]);
 const allItems = ref<item>([]);
@@ -53,8 +55,11 @@ const searchItem: item = {
 };
 
 const fetchData = () => {
+  items.value = [];
   axios
-    .get(`https://localhost:7081/api/Boards`)
+    .get(`https://localhost:7081/api/Boards`, {
+      withCredentials: true,
+    })
     .then((res) => {
       data.value = res.data.sort((a, b) => {
         return a.name.localeCompare(b.name, "zh-TW");
@@ -65,6 +70,7 @@ const fetchData = () => {
           title: data.name,
           value: data.id,
           rounded: "shaped",
+          appendIcon: data.isFavorite ? "mdi-cards-heart" : "",
         };
       });
 
@@ -84,8 +90,6 @@ const fetchData = () => {
         })
         .slice(0, 5);
 
-      console.log(data.value);
-      console.log(topFiveItems.value);
       items.value = items.value
         .concat(headerItem("header", "🕹️熱門巢穴"))
         .concat(topFiveItems.value)
@@ -102,4 +106,25 @@ const fetchData = () => {
 onMounted(() => {
   fetchData();
 });
+
+//set refresh
+const store = useStore();
+const count = computed(() => store.state.GameLoungeStore.boardListRefreshCount);
+
+watch(count, (newValue, oldValue) => {
+  fetchData();
+});
+
+const router = useRouter();
+
+const openLink = (e) => {
+  console.log(e.id);
+
+  if (e.id !== undefined && e.id !== "search") {
+    router.push({
+      name: "GameLoungeBoard",
+      params: { boardId: e.id },
+    });
+  }
+};
 </script>
