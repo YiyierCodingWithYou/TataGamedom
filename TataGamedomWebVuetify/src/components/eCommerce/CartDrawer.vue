@@ -163,9 +163,6 @@ watchEffect(() => {
   drawer.value = props.drawerState;
 });
 
-watch(drawer.value, (newValue, oldValue) => {
-  console.log("old" + oldValue + "new" + newValue);
-});
 
 const openDrawerFromCart = () => {
   emit("openDrawer"); // 觸發自定義事件

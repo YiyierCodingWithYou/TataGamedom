@@ -238,11 +238,11 @@ const autoToggleDrawer = () => {
   console.log("打開！");
   openDrawerFromParent();
   console.log(drawer.value);
-  setTimeout(() => {
-    console.log("關起來");
-    closeDrawer();
-    console.log(drawer.value);
-  }, 1000);
+  // setTimeout(() => {
+  //   console.log("關起來");
+  //   closeDrawer();
+  //   console.log(drawer.value);
+  // }, 1000);
 };
 
 const openDrawerFromParent = () => {

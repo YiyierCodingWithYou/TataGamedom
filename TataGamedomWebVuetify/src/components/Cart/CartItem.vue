@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-sheet v-if="cartData.allowCheckout">
+    <v-sheet v-if="cartItems?.length > 0">
       <v-table>
         <thead class="text-center">
           <tr>
@@ -100,13 +100,13 @@
         </v-col>
       </v-row>
     </v-sheet>
-
     <v-sheet v-else class="text-center">您的購物車為空，<a href="/eCommerce">點我到商城逛逛！</a></v-sheet>
+
   </v-container>
 </template>
     
-<script setup lang='ts'>
-import { ref, watch } from "vue";
+<script setup>
+import { ref, watch, watchEffect, computed } from "vue";
 import store from '@/store';
 
 const cartData = ref({});
@@ -115,6 +115,7 @@ const imgLink = "https://localhost:7081/Files/Uploads/";
 const limit = ref(0);
 const total = ref(0);
 const freight = ref(0);
+const isLogin = computed(() => store.state.isLoggedIn);
 const selectLocation = ref({ loc: "taiwan", label: "台灣" });
 const selectShipMethod = ref({
   id: "1",
@@ -152,7 +153,8 @@ watch(
     };
   },
   (newValue, oldValue) => {
-    loadData();
+    console.log("selectedData changed:", newValue);
+    //loadData();
   }
 );
 
@@ -181,37 +183,46 @@ const payment = ref([
 ]);
 
 const loadData = async () => {
-  if (store.state.isLoggedIn) {
-    const response = await fetch(`https://localhost:7081/api/Carts`, {
-      method: "GET",
-      credentials: "include",
-    });
-    const datas = await response.json();
-    cartData.value = datas;
-    cartItems.value = datas.cartItems;
-    total.value = datas.total;
+  if (isLogin.value) {
+    await getCart();
+  } else {
+    await getLocalCart();
+    console.log(cartItems.value);
   }
-  else {
-    cartItems.value = []; // 清空cartItems
-    const localCart = JSON.parse(localStorage.getItem("localCart") || "[]");
-    for (const localItem of localCart) {
-      try {
-        const response = await fetch(
-          `https://localhost:7081/api/Products/${localItem.productId}?page=1&pageSize=5`
-        );
-        const productDetail = await response.json();
-        cartItems.value.push({
-          product: productDetail,
-          qty: localItem.qty,
-        });
-      } catch (error) {
-        console.error("Error fetching product details:", error);
-      }
-    }
-
-  }
-
 };
+
+const getLocalCart = async () => {
+  cartItems.value = []; // 清空cartItems
+  cartData.value.total = 0; // 初始化總金額
+  const localCart = JSON.parse(localStorage.getItem("localCart") || "[]");
+  for (const localItem of localCart) {
+    try {
+      const response = await fetch(
+        `https://localhost:7081/api/Products/${localItem.productId}?page=1&pageSize=5`
+      );
+      const productDetail = await response.json();
+      const subtotal = productDetail.specialPrice * localItem.qty; // 計算小計
+      cartItems.value.push({
+        product: productDetail,
+        qty: localItem.qty,
+      });
+      cartData.value.total += subtotal; // 加到總金額
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+    }
+  }
+}
+
+const getCart = async () => {
+  const response = await fetch(`https://localhost:7081/api/Carts`, {
+    method: "GET",
+    credentials: "include",
+  });
+  const datas = await response.json();
+  cartData.value = datas;
+  cartItems.value = datas.cartItems;
+  total.value = datas.total;
+}
 
 watch(
   () => cartItems.value,
@@ -394,23 +405,36 @@ const decreaseQuantity = async (item) => {
 };
 
 const removeItem = async (productId) => {
-  const response = await fetch(
-    `https://localhost:7081/api/Carts?productId=${productId}`,
-    {
-      method: "DELETE",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  )
-    .then(() => {
+  if (store.state.isLoggedIn) {
+    const response = await fetch(
+      `https://localhost:7081/api/Carts?productId=${productId}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then(() => {
+        getCart();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  } else {
+    let localCart = JSON.parse(localStorage.getItem("localCart") || "[]");
+    const productIndex = localCart.findIndex(
+      (item) => item.productId === productId
+    );
+    if (productIndex > -1) {
+      localCart.splice(productIndex, 1);
+      localStorage.setItem("localCart", JSON.stringify(localCart));
       loadData();
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+    }
+  }
 };
+
 loadData();
 updateShipmentOptions();
 calculatePaymentOption();
