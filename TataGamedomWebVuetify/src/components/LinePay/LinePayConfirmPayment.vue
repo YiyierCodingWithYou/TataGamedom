@@ -9,9 +9,7 @@
       <tbody>
         <tr>
           <td colspan="2">
-            <img
-              src="https://static.accupass.com/org/2011051025162614811630.jpg"
-            />
+            <img src="https://static.accupass.com/org/2011051025162614811630.jpg" />
           </td>
         </tr>
         <tr>
@@ -37,7 +35,7 @@
   </div>
 </template>
   
-  <script>
+<script>
 import { ref, onMounted } from "vue";
 
 export default {
@@ -55,7 +53,7 @@ export default {
 
     const confirmPayment = async () => {
       const payment = {
-        amount: 3998,
+        amount: 5850,
         currency: "TWD",
       };
 
