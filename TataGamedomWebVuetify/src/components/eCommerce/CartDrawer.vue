@@ -1,7 +1,8 @@
 <template>
   <div>
-    <v-btn class="ma-2" color="orange-darken-2" icon="mdi-cart-outline" @click="openDrawer" ref="drawerRef"></v-btn>
-    <v-navigation-drawer v-model="drawer" :rail="rail" permanent location="right" class="w-25" @click.stop>
+    <v-btn class="ma-2" color="orange-darken-2" icon="mdi-cart-outline" @click.stop="toggleDrawer"></v-btn>
+    <v-navigation-drawer v-model="drawer" :rail="rail" permanent location="right" class="w-25" ref="drawerRef"
+      @click.stop>
       <div v-if="cartItems?.length > 0" class="cart-container">
         <div class="cart-content">
           <div v-for="item in cartItems" :key="item.product.id" class="mb-3">
@@ -23,7 +24,7 @@
                   <div class="me-auto">
                     {{ item.qty }} X NT${{ item.product.specialPrice }}
                   </div>
-                  <div @click="deleteProduct(item.product.id)">
+                  <div @click.stop="deleteProduct(item.product.id)">
                     <v-icon>mdi-trash-can</v-icon>
                   </div>
                 </div>
@@ -49,15 +50,27 @@ import { watchEffect, watch } from "vue";
 import { defineProps } from "vue";
 import { defineEmits } from "vue";
 
-const emit = defineEmits(["openDrawer"]);
+import { computed } from 'vue'
+
+const props = defineProps(['modelValue'])
+const emit = defineEmits(['update:modelValue'])
+
+const drawer = computed({
+  get() {
+    return props.modelValue
+  },
+  set(value) {
+    console.log(value);
+    emit('update:modelValue', value)
+  }
+})
+
 const router = useRouter();
 const drawerRef = ref(null);
 const rail = ref(true);
 const cartItems = ref([]);
 const imgLink = "https://localhost:7081/Files/Uploads/";
 
-const props = defineProps(["drawerState"]);
-const drawer = ref(props.drawerState || false);
 
 onMounted(() => {
   window.addEventListener("click", outsideClickListener);
@@ -69,20 +82,23 @@ onUnmounted(() => {
 
 const outsideClickListener = (event) => {
   // 檢查被點擊的元素是否是抽屜或其子元素
-  if (!drawerRef.value?.$el.contains(event.target)) {
+  if ((!drawerRef.value?.$el.contains(event.target)) && drawer.value) {
     closeDrawer();
   }
 };
 
 const openDrawer = () => {
-  drawer.value = true;
-
+  emit('update:modelValue', true)
   drawerContent();
 };
 
 const closeDrawer = () => {
-  drawer.value = false;
+  emit('update:modelValue', false)
 };
+
+const toggleDrawer = () => {
+  emit('update:modelValue', !drawer.value);
+}
 
 const getCart = async () => {
   const response = await fetch(`https://localhost:7081/api/Carts`, {
@@ -160,13 +176,9 @@ watchEffect(() => {
   if (store.state.isLoggedIn !== undefined) {
     drawerContent();
   }
-  drawer.value = props.drawerState;
 });
 
 
-const openDrawerFromCart = () => {
-  emit("openDrawer"); // 觸發自定義事件
-};
 </script>
   
 <style>

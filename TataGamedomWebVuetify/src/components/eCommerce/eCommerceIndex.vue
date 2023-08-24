@@ -1,8 +1,8 @@
 <template>
   <div>
     <carousel ref="bookmark" @getProductInput="GetSingleProduct"></carousel>
-    <div @click="closeDrawer">
-      <CartDrawer :drawerState="drawer" @openDrawer="openDrawerFromParent"></CartDrawer>
+    <div>
+      <CartDrawer v-model="drawer"></CartDrawer>
     </div>
   </div>
 
@@ -59,7 +59,7 @@
                 readonly></v-rating>
 
               <v-card-actions class="justify-center">
-                <v-btn color="orange" @click="Add2Cart(product.id)">加入購物車</v-btn>
+                <v-btn color="orange" @click.stop="Add2Cart(product.id)">加入購物車</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -229,20 +229,16 @@ const Add2Cart = async (productId) => {
     }
     localStorage.setItem("localCart", JSON.stringify(localCart));
     alert('已成功加入購物車！')
-    autoToggleDrawer();
   }
+  autoToggleDrawer();
 
 };
 
 const autoToggleDrawer = () => {
-  console.log("打開！");
   openDrawerFromParent();
-  console.log(drawer.value);
-  // setTimeout(() => {
-  //   console.log("關起來");
-  //   closeDrawer();
-  //   console.log(drawer.value);
-  // }, 1000);
+  setTimeout(() => {
+    closeDrawer();
+  }, 1000);
 };
 
 const openDrawerFromParent = () => {

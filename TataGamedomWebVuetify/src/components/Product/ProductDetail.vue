@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row>
-      <CartDrawer :drawerState="drawer" @openDrawer="openDrawerFromParent"></CartDrawer>
+      <CartDrawer v-model="drawer"></CartDrawer>
       <div class="d-flex flex-no-wrap">
         <div class="ma-3">
           <v-img :src="imgLink + productData.gameCoverImg" width="650" cover></v-img>
@@ -44,7 +44,8 @@
               </v-col>
             </v-row>
           </div>
-          <v-btn v-if="limit > 0" class="mt-auto ma-3" @click="Add2Cart(productData.id)" color="#FFBF5D">加入購物車</v-btn>
+          <v-btn v-if="limit > 0" class="mt-auto ma-3" @click.stop="Add2Cart(productData.id)"
+            color="#FFBF5D">加入購物車</v-btn>
           <v-btn v-else-if="limit === 0" class="mt-auto ma-3" disabled>售完</v-btn>
           <p v-if="limit > 0 && limit <= 10" class="text-center">
             現庫存剩餘{{ limit }}件
@@ -185,7 +186,8 @@ const Add2Cart = async (productId) => {
       });
     }
     alert(result.message);
-    autoToggleDrawer();
+    drawer.value = true; // 直接打開抽屜
+    autoToggleDrawer(); // 設置計時器來自動關閉抽屜
   } else {
     let localCart = localStorage.getItem("localCart");
     if (localCart) {
@@ -202,16 +204,14 @@ const Add2Cart = async (productId) => {
       localCart.push({ productId, qty: 1 });
     }
     localStorage.setItem("localCart", JSON.stringify(localCart));
-    autoToggleDrawer();
+    drawer.value = true; // 直接打開抽屜
+    autoToggleDrawer(); // 設置計時器來自動關閉抽屜
     alert("已成功加入購物車！");
   }
 };
 
 const autoToggleDrawer = () => {
-  console.log("打開！");
-  openDrawerFromParent();
   setTimeout(() => {
-    console.log("關起來");
     closeDrawer();
   }, 1000);
 };

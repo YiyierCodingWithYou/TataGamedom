@@ -185,6 +185,7 @@ const payment = ref([
 const loadData = async () => {
   if (isLogin.value) {
     await getCart();
+    console.log(cartItems.value);
   } else {
     await getLocalCart();
     console.log(cartItems.value);
