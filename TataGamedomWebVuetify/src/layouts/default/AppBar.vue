@@ -1,14 +1,24 @@
 <template>
-  <v-app-bar flat>
-    <v-app-bar-title>
-      <v-icon icon="mdi-circle-slice-4" />
-      TataGamedom
+  <v-app-bar flat class="bg-tataC2">
+    <v-app-bar-title class="text-light-blue-lighten-5 text-c2">
+      <v-slot id="text">
+        <div class="d-flex align-center font-comfortaa">
+          <img
+            src="./TataGamdom_Circle.svg"
+            style="height: 35px"
+            class="me-2"
+            alt=""
+            srcset=""
+          />
+          TataGamedom
+        </div>
+      </v-slot>
     </v-app-bar-title>
     <a href="/GameLounge" class="me-3">👀</a>
-    
+
     <a href="/News" class="me-3">偷看一下</a>
     <v-spacer></v-spacer>
-    <a href="/Cart" class="me-3" ><v-icon>mdi-cart-outline</v-icon></a>
+    <a href="/Cart" class="me-3"><v-icon>mdi-cart-outline</v-icon></a>
     <div v-if="$store.state.isLoggedIn">
       <!-- <a color="primary" @click="toggleMemberProfile">HI {{ name }}</a> -->
       <a color="primary" @mouseover="showMemberProfile = true">
@@ -16,11 +26,15 @@
       </a>
       <v-btn color="primary" @click="logout">登出</v-btn>
     </div>
-    
+
     <v-btn v-else color="primary" @click="login">登入</v-btn>
   </v-app-bar>
-  <MemberProfile class="MemberProfile" v-if="showMemberProfile" @close="closeMemberProfile"
-    @mouseleave="showMemberProfile = false" />
+  <MemberProfile
+    class="MemberProfile"
+    v-if="showMemberProfile"
+    @close="closeMemberProfile"
+    @mouseleave="showMemberProfile = false"
+  />
 </template>
 
 <script>
@@ -89,5 +103,13 @@ export default {
   z-index: 5;
   right: 0;
   margin-top: 64px;
+}
+
+.bg-tataC2 {
+  background-color: #f9ee08 !important;
+}
+
+.text-c2 {
+  color: #01010f !important;
 }
 </style>
