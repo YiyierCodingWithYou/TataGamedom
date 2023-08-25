@@ -1,7 +1,6 @@
 <template>
     <div>
         <SingleProductCarousel v-if="product !== undefined" :productData="product" ref="bookmark"></SingleProductCarousel>
-
         <v-main class="bg-grey-lighten-2">
             <v-container>
                 <v-row>
@@ -20,7 +19,6 @@
                 </v-row>
             </v-container>
         </v-main>
-
     </div>
 </template>
             
@@ -32,6 +30,7 @@ import ProductDetail from "@/components/Product/ProductDetail.vue";
 import { defineEmits } from "vue";
 import SideBar from "@/components/eCommerce/SideBar.vue";
 import { watch } from "vue";
+
 
 const route = useRoute();
 const router = useRouter();
@@ -57,15 +56,15 @@ const paginationHandler = (value) => {
 };
 const reload = () => {
     loadData();
-}
+};
 
 const inputHandler = (value) => {
     router.push({
         name: "eCommerce",
         query: {
-            keywordInput: value
-        }
-    })
+            keywordInput: value,
+        },
+    });
 };
 
 //遊戲分類
@@ -73,9 +72,9 @@ const classificationHandler = (value) => {
     router.push({
         name: "eCommerce",
         query: {
-            classificationChosen: value
-        }
-    })
+            classificationChosen: value,
+        },
+    });
 };
 
 //刷新商品頁面
@@ -83,7 +82,7 @@ const GetSingleProduct = async (value) => {
     productId.value = parseInt(value, 10);
     router.push({
         name: "SingleProduct",
-        params: { productId: productId.value }
+        params: { productId: productId.value },
     });
 };
 

@@ -32,8 +32,9 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const member = ref([]);
 const name = ref("");
-const iconImg = ref("");
 const email = ref("");
+
+const iconImg = ref("");
 let img = "https://localhost:7081/Files/Uploads/Icons/";
 
 const loadMember = async () => {
@@ -69,7 +70,7 @@ const handleItemClick = (item) => {
 
 const gotoDetial = () => {
   router.push({
-    name: "MemberDetial",
+    name: "Members",
   });
 };
 

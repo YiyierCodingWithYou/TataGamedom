@@ -1,5 +1,10 @@
 <template>
-  <v-tabs v-model="tab" color="yellow-darken-3" align-tabs="center">
+  <v-tabs
+    v-model="tab"
+    color="yellow-darken-3"
+    bg-color="black"
+    align-tabs="center"
+  >
     <v-tab :value="1">🏠</v-tab>
     <v-tab :value="2" v-if="isLogin">🦦</v-tab>
     <v-tab :value="3">🔍</v-tab>
@@ -13,23 +18,9 @@
   </v-tabs>
   <v-window v-model="tab">
     <v-window-item :value="1">
-      <v-container>
-        <v-row>
-          <LeftCol>
-            <template #container>
-              <BoardList></BoardList>
-            </template>
-          </LeftCol>
-          <MainCol>
-            <template #container>
-              <ReadPostTotal
-                :memberAccount="loginMemberAccount"
-              ></ReadPostTotal>
-            </template>
-          </MainCol>
-          <RightCol></RightCol>
-        </v-row>
-      </v-container>
+      <v-container-fluid>
+        <GameLoungeHome></GameLoungeHome>
+      </v-container-fluid>
     </v-window-item>
     <v-window-item :value="2" v-if="isLogin">
       <v-container>
@@ -56,7 +47,14 @@
         </v-row>
       </v-container>
     </v-window-item>
-    <v-window-item :value="3">
+    <v-window-item
+      v-if="!isSearchBoard && !isSearchAccount"
+      :value="3"
+      class="bg-black h100vh"
+    >
+      <GameLoungeSearchPage></GameLoungeSearchPage>
+    </v-window-item>
+    <v-window-item v-if="isSearchAccount || isSearchBoard" :value="3">
       <v-container>
         <v-row>
           <LeftCol>
@@ -107,6 +105,8 @@ import BoardList from "@/components/GameLounge/LeftBoardList/BoardList.vue";
 import BoardListPersonal from "@/components/GameLounge/LeftBoardList/BoardListPersonal.vue";
 import AboutAccount from "@/components/GameLounge/RightBoardList/AboutAccount.vue";
 import AboutBoard from "@/components/GameLounge/RightBoardList/AboutBoard.vue";
+import GameLoungeHome from "@/components/GameLounge/Main/GameLoungeHome.vue";
+import GameLoungeSearchPage from "@/components/GameLounge/Main/GameLoungeSearchPage.vue";
 import { useRoute } from "vue-router";
 import store from "@/store";
 
@@ -149,8 +149,11 @@ if (boardId.value !== undefined) {
 .slide-fade-leave-to {
   opacity: 0;
 }
-
 .slide-fade-enter-to {
   opacity: 1;
+}
+
+.h100vh {
+  min-height: calc(100vh - 64px - 48px);
 }
 </style>

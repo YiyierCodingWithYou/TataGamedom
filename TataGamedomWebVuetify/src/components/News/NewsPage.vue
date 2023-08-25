@@ -164,6 +164,9 @@ const inputHandler = (value) => {
 };
 
 const classificationHandler = (value) => {
+  if (value === "所有遊戲") {
+    value = "";
+  }
   router.push({
     name: "News",
     query: {

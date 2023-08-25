@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-sheet v-if="cartData.allowCheckout">
+    <v-sheet v-if="cartData?.cartItems?.length > 0">
       <v-table>
         <thead class="text-center">
           <tr>
@@ -14,13 +14,9 @@
         </thead>
 
         <tbody>
-          <tr v-for="item in cartItems" :key="item.product.id">
+          <tr v-for="item in cartData.cartItems" :key="item.product.id">
             <td>
-              <img
-                :src="imgLink + item.product.gameCoverImg"
-                height="150"
-                cover
-              />
+              <img :src="imgLink + item.product.gameCoverImg" height="150" cover />
             </td>
             <td>
               <div>{{ item.product.chiName }}</div>
@@ -31,54 +27,35 @@
                 </v-chip>
               </div>
             </td>
-            <td
-              v-if="item.product.price != item.product.specialPrice"
-              class="text-end"
-            >
+            <td v-if="item.product.price != item.product.specialPrice" class="text-end">
               <div>
-                <s>NT${{ item.product.price }}</s>
+                <s>NT$ {{ item.product.price }}</s>
               </div>
-              <div>NTS{{ item.product.specialPrice }}</div>
+              <div>NT$ {{ item.product.specialPrice }}</div>
             </td>
-            <td v-else>NT${{ item.product.price }}</td>
+            <td v-else>NT$ {{ item.product.price }}</td>
             <td>
               <v-row>
                 <v-col class="d-flex" cols="3">
-                  <v-btn @click="decreaseQuantity(item)" :max="limit"
-                    ><v-icon>mdi-minus</v-icon></v-btn
-                  >
+                  <v-btn @click="decreaseQuantity(item)" :max="limit"><v-icon>mdi-minus</v-icon></v-btn>
                 </v-col>
                 <v-col cols="6">
-                  <v-text-field
-                    v-model="item.qty"
-                    min="0"
-                    :max="limit"
-                    variant="outlined"
-                    readonly
-                  ></v-text-field>
+                  <v-text-field v-model="item.qty" min="0" :max="limit" variant="outlined" readonly></v-text-field>
                 </v-col>
                 <v-col cols="3">
-                  <v-btn @click="increaseQuantity(item)" :max="limit"
-                    ><v-icon>mdi-plus</v-icon></v-btn
-                  >
+                  <v-btn @click="increaseQuantity(item)" :max="limit"><v-icon>mdi-plus</v-icon></v-btn>
                 </v-col>
               </v-row>
             </td>
-            <td class="text-end" v-text="item.subTotal"></td>
+            <td class="text-end">NT$ {{ item.subTotal }}{{ item.product.subTotal }}</td>
             <td class="text-end">
-              <v-icon @click="removeItem(item.product.id)"
-                >mdi-cart-remove</v-icon
-              >
+              <v-icon @click="removeItem(item.product.id)">mdi-cart-remove</v-icon>
             </td>
           </tr>
           <tr>
             <td>優惠活動</td>
             <td>
-              <span
-                class="me-auto"
-                v-for="(item, index) in cartData.distinctCoupons"
-                :key="index"
-              >
+              <span class="me-auto" v-for="(item, index) in cartData.distinctCoupons" :key="index">
                 {{ item }} {{ cartData.distinctCouponsDescription[index]
                 }}<br />
               </span>
@@ -96,35 +73,14 @@
             <v-card-title class="d-flex">選擇送貨及付款方式</v-card-title>
             <hr />
             <v-card-subtitle>送貨地點</v-card-subtitle>
-            <v-select
-              v-model="selectLocation"
-              :items="shipLocation"
-              item-title="label"
-              item-value="item"
-              return-object
-              single-line
-              variant="solo"
-            ></v-select>
+            <v-select v-model="selectLocation" :items="shipLocation" item-title="label" item-value="item" return-object
+              single-line variant="solo"></v-select>
             <v-card-subtitle>送貨方式</v-card-subtitle>
-            <v-select
-              v-model="selectShipMethod"
-              :items="shipMethod"
-              item-title="label"
-              item-value="item"
-              return-object
-              single-line
-              variant="solo"
-            ></v-select>
+            <v-select v-model="selectShipMethod" :items="shipMethod" item-title="label" item-value="item" return-object
+              single-line variant="solo"></v-select>
             <v-card-subtitle>付款方式</v-card-subtitle>
-            <v-select
-              v-model="selectPayment"
-              :items="payment"
-              item-title="label"
-              item-value="item"
-              return-object
-              single-line
-              variant="solo"
-            ></v-select>
+            <v-select v-model="selectPayment" :items="payment" item-title="label" item-value="item" return-object
+              single-line variant="solo"></v-select>
           </v-card>
         </v-col>
         <v-col cols="4">
@@ -133,38 +89,50 @@
             <hr />
             <v-card-subtitle>小計：{{ cartData.subTotal }}</v-card-subtitle>
             <v-card-subtitle>運費：{{ freight }}</v-card-subtitle>
-            <v-card-subtitle
-              >合計：{{ cartData.total + freight }}</v-card-subtitle
-            >
+            <div v-if="!isLogin">
+              <v-card-subtitle>合計：{{ finalTotal
+              }}</v-card-subtitle>
+            </div>
+            <div v-else><v-card-subtitle>合計：{{ cartData.total + freight
+            }}</v-card-subtitle></div>
             <br />
             <hr />
             <br />
             <div class="d-flex justify-center">
-              <v-btn width="300" color="primary" @click="returnSelectedHandler"
-                >前往結帳</v-btn
-              >
+              <v-btn v-if="isLogin" width="300" color="primary" @click="returnSelectedHandler">前往結帳</v-btn>
+              <v-btn v-else width="300" color="primary" @click="returnLogin">請登入後結帳</v-btn>
+
             </div>
           </v-card>
         </v-col>
       </v-row>
     </v-sheet>
+    <v-sheet v-else class="text-center">您的購物車為空，<a href="/eCommerce">點我到商城逛逛！</a></v-sheet>
 
-    <v-sheet v-else class="text-center"
-      >您的購物車為空，<a href="/eCommerce">點我到商城逛逛！</a></v-sheet
-    >
   </v-container>
 </template>
     
-<script setup lang='ts'>
-import { ref, watch } from "vue";
+<script setup>
+import { ref, watch, watchEffect, computed, onMounted } from "vue";
+import store from '@/store';
+import { useRouter } from "vue-router";
 
+onMounted(() => {
+  getCart();
+})
+
+const router = useRouter();
 const cartData = ref({});
 const cartItems = ref([]);
 const imgLink = "https://localhost:7081/Files/Uploads/";
 const limit = ref(0);
-const quantity = ref();
 const total = ref(0);
 const freight = ref(0);
+const finalTotal = computed(() => {
+  const computedTotal = cartData.value.subTotal + freight.value
+  return computedTotal >= 3000 ? computedTotal - 300 : computedTotal;
+})
+const isLogin = computed(() => store.state.isLoggedIn);
 const selectLocation = ref({ loc: "taiwan", label: "台灣" });
 const selectShipMethod = ref({
   id: "1",
@@ -191,23 +159,11 @@ const returnSelectedHandler = () => {
   emit("getreturnSelected", selectedData);
 };
 
-watch(
-  () => {
-    return {
-      location: selectLocation.value,
-      shipMethod: selectShipMethod.value,
-      payment: selectPayment.value,
-      freight: freight.value,
-      totalAmount: total.value,
-    };
-  },
-  (newValue, oldValue) => {
-    // 當 selectedData 發生變化時觸發
-    // 這裡可以添加相關邏輯，例如檢查 selectedData 的不同並觸發 loadData
-    console.log("selectedData changed:", newValue);
-    loadData();
-  }
-);
+const returnLogin = () => {
+  router.push({
+    name: "Login",
+  });
+}
 
 const shipLocation = ref([
   { loc: "taiwan", label: "台灣" },
@@ -234,6 +190,76 @@ const payment = ref([
 ]);
 
 const loadData = async () => {
+  if (isLogin.value) {
+    await getCart();
+  } else {
+    await getLocalCart();
+  }
+};
+
+
+const fee = ref(0);
+const getLocalCart = async () => {
+  cartData.value = {
+    cartItems: [],
+    subTotal: 0,
+    total: 0,
+    distinctCoupons: [],
+    distinctCouponsDescription: []
+  };
+
+  const localCart = JSON.parse(localStorage.getItem("localCart") || "[]");
+
+  for (const localItem of localCart) {
+    try {
+      const response = await fetch(
+        `https://localhost:7081/api/Products/${localItem.productId}?page=1&pageSize=5`
+      );
+      const productDetail = await response.json();
+      const subTotal = productDetail.specialPrice * localItem.qty;
+
+      console.log(localItem.qty)
+      console.log(subTotal)
+
+      cartData.value.cartItems.push({
+        product: {
+          id: localItem.productId,
+          price: productDetail.price,
+          specialPrice: productDetail.specialPrice,
+          subTotal: subTotal,
+          couponDescription: productDetail.couponDescription,
+          gameCoverImg: productDetail.gameCoverImg,
+          chiName: productDetail.chiName,
+          coupons: productDetail.coupons,
+          gamePlatformName: productDetail.gamePlatformName,
+        },
+        qty: localItem.qty,
+      });
+
+      for (let i = 0; i < productDetail.coupons.length; i++) {
+        const coupon = productDetail.coupons[i];
+        const couponDescription = productDetail.couponDescription[i];
+
+        if (!cartData.value.distinctCoupons.includes(coupon)) {
+          cartData.value.distinctCoupons.push(coupon);
+          cartData.value.distinctCouponsDescription.push(couponDescription);
+        }
+      }
+      console.log(cartData.value);
+
+      calculateShippingFee();
+
+      cartData.value.subTotal += subTotal;
+
+      total.value = cartData.value.subTotal;
+
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+    }
+  }
+}
+
+const getCart = async () => {
   const response = await fetch(`https://localhost:7081/api/Carts`, {
     method: "GET",
     credentials: "include",
@@ -242,7 +268,7 @@ const loadData = async () => {
   cartData.value = datas;
   cartItems.value = datas.cartItems;
   total.value = datas.total;
-};
+}
 
 watch(
   () => cartItems.value,
@@ -258,9 +284,12 @@ watch([() => selectLocation.value, () => selectShipMethod.value], () => {
   updateShipmentOptions();
   calculatePaymentOption();
 });
+const loading = ref(false);
+
 
 watch([() => total.value, () => selectShipMethod.value], () => {
   calculateShippingFee();
+  //   loadData();
 });
 
 watch([() => selectShipMethod.value, () => selectPayment.value], () => {
@@ -376,6 +405,7 @@ const calculateShippingFee = () => {
       freight.value = 80;
     }
   }
+  console.log("calculateShippingFee")
 };
 
 const fetchQuantityLimit = async (productId) => {
@@ -387,61 +417,105 @@ const fetchQuantityLimit = async (productId) => {
 };
 
 const increaseQuantity = async (item) => {
-  if (item.qty < limit.value) {
-    item.qty++;
-  }
-  await fetch(
-    `https://localhost:7081/api/Carts?productId=${item.product.id}&newQty=${item.qty}`,
-    {
-      method: "PUT",
-      credentials: "include",
+  if (isLogin.value) {
+    if (item.qty < limit.value) {
+      item.qty++;
     }
-  )
-    .then((response) => {
-      loadData();
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+    await fetch(
+      `https://localhost:7081/api/Carts?productId=${item.product.id}&newQty=${item.qty}`,
+      {
+        method: "PUT",
+        credentials: "include",
+      }
+    )
+      .then((response) => {
+        loadData();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  } else {
+    let localCart = JSON.parse(localStorage.getItem("localCart") || "[]");
+    const productIndex = localCart.findIndex(
+      (localItem) => localItem.productId === item.product.id
+    );
+    if (productIndex !== -1) {
+      localCart[productIndex].qty += 1;
+    } else {
+      alert('購物車中無此商品！');
+    }
+    localStorage.setItem("localCart", JSON.stringify(localCart));
+    console.log(localCart);
+    loadData();
+  }
 };
-
 const decreaseQuantity = async (item) => {
-  if (item.qty > 0) {
-    item.qty--;
-  }
-  await fetch(
-    `https://localhost:7081/api/Carts?productId=${item.product.id}&newQty=${item.qty}`,
-    {
-      method: "PUT",
-      credentials: "include",
+  if (isLogin.value) {
+    if (item.qty > 0) {
+      item.qty--;
     }
-  )
-    .then((response) => {
+    await fetch(
+      `https://localhost:7081/api/Carts?productId=${item.product.id}&newQty=${item.qty}`,
+      {
+        method: "PUT",
+        credentials: "include",
+      }
+    )
+      .then((response) => {
+        loadData();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+  else {
+    let localCart = JSON.parse(localStorage.getItem("localCart") || "[]");
+    const productIndex = localCart.findIndex(
+      (localItem) => localItem.productId === item.product.id
+    );
+    if (productIndex !== -1 && localCart[productIndex].qty > 0) {
+      localCart[productIndex].qty -= 1;
+      if (localCart[productIndex].qty === 0) {
+        localCart.splice(productIndex, 1);
+      }
+      localStorage.setItem("localCart", JSON.stringify(localCart));
+      console.log(localCart);
       loadData();
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+    }
+  }
 };
 
 const removeItem = async (productId) => {
-  const response = await fetch(
-    `https://localhost:7081/api/Carts?productId=${productId}`,
-    {
-      method: "DELETE",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  )
-    .then(() => {
+  if (store.state.isLoggedIn) {
+    const response = await fetch(
+      `https://localhost:7081/api/Carts?productId=${productId}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then(() => {
+        getCart();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  } else {
+    let localCart = JSON.parse(localStorage.getItem("localCart") || "[]");
+    const productIndex = localCart.findIndex(
+      (item) => item.productId === productId
+    );
+    if (productIndex > -1) {
+      localCart.splice(productIndex, 1);
+      localStorage.setItem("localCart", JSON.stringify(localCart));
       loadData();
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+    }
+  }
 };
+
 loadData();
 updateShipmentOptions();
 calculatePaymentOption();

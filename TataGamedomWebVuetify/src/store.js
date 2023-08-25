@@ -4,6 +4,7 @@ import ECpayStore from "./components/ECpay/ECpayStore";
 import LinePayStore from "./components/LinePay/LinePayStore";
 import GameLoungeStore from "./components/GameLounge/GameLoungeStore";
 
+const img = "https://localhost:7081/Files/Uploads/Icons/"
 const store = createStore({
   //類似namespace
   modules: {
@@ -13,10 +14,11 @@ const store = createStore({
     GameLoungeStore,
   },
   state: {
-    isLoggedIn: false,
+    isLoggedIn: null,
     name: "",
     account: "",
     age: "",
+    iconImg: img + "",
   },
   mutations: {
     SET_LOGIN(state, value) {
@@ -24,10 +26,11 @@ const store = createStore({
       state.name = value.name;
       state.account = value.account;
       state.age = value.age;
+      state.iconImg = img + value.iconImg;
       console.log("StoreLogin", value);
     },
-    SET_UPDATENAME(state, value) {
-      state.name = value;
+    SET_UPDATEIMG(state, value) {
+      state.iconImg = img + value;
     },
   },
 });

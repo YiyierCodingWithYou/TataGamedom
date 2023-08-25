@@ -91,7 +91,7 @@ namespace TataGamedomWebAPI.Controllers
 				var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 				HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-				return Ok(new { Name = user.Name, Age = age });
+				return Ok(new { Name = user.Name, Age = age ,IconImg = user.IconImg});
 
             }
 
@@ -115,7 +115,35 @@ namespace TataGamedomWebAPI.Controllers
 
 				if (payload != null)
 				{
-					return Ok(new { message = "登入成功", user = payload });
+					//到資料庫找現在用戶有沒有註冊這個EMAIL
+					var existingMember = await _context.Members.FirstOrDefaultAsync(m => m.Email == payload.Email);
+
+					if (existingMember == null)
+					{
+						var newMember = new Member
+						{
+							//Id = existingMember.Id,
+							Name = payload.Name,
+							Password = "26256583618AA9595240F1D7BE6AE79A35AF7BF1DE258F04636875BA4E11C291",
+							Email = payload.Email,
+							Account = payload.Email,
+							Birthday = new DateTime(1970, 01, 01),
+							RegistrationDate = DateTime.Now,
+							Phone = "",
+							IconImg = "tataUserIcon.jpg",
+							IsConfirmed = true,
+							ActiveFlag = true,
+						};
+						await _context.Members.AddAsync(newMember);
+						await _context.SaveChangesAsync();
+					}
+
+					var loginDto = new LoginDTO
+					{
+					Account = payload.Email,
+					Password = "456"
+					};
+					return await Login(loginDto);
 				}
 				else
 				{
