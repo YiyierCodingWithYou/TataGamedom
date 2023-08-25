@@ -67,6 +67,7 @@ const drawer = computed({
 
 const router = useRouter();
 const drawerRef = ref(null);
+const isLogin = computed(() => store.state.isLoggedIn);
 const rail = ref(true);
 const cartItems = ref([]);
 const imgLink = "https://localhost:7081/Files/Uploads/";
@@ -129,7 +130,7 @@ const getLocalCart = async () => {
 };
 
 const drawerContent = async () => {
-  if (store.state.isLoggedIn) {
+  if (isLogin) {
     getCart();
   } else {
     getLocalCart();
@@ -142,7 +143,7 @@ const checkout = async () => {
 };
 
 const deleteProduct = async (productId) => {
-  if (store.state.isLoggedIn) {
+  if (isLogin) {
     const response = await fetch(
       `https://localhost:7081/api/Carts?productId=${productId}`,
       {

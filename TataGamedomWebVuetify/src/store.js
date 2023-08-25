@@ -11,7 +11,7 @@ const store = createStore({
     GameLoungeStore,
   },
   state: {
-    isLoggedIn: false,
+    isLoggedIn: null,
     name: "",
     account: "",
     age: "",

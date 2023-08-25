@@ -302,7 +302,7 @@ const commentSubmit = async () => {
 };
 
 const toBoard = async () => {
-  console.log(props.productData.boardId);
+  //console.log(props.productData.boardId);
   router.push({
     name: "GameLoungeBoard",
     params: { boardId: props.productData.boardId },
