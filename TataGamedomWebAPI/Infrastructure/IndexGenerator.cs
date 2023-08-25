@@ -15,7 +15,7 @@ public class IndexGenerator : IIndexGenerator
     /// <returns></returns>
     public string GetOrderIndex(Order order, int maxOrderId)
     {
-        return string.Concat(order.CreatedAt.ToString("yyyyMMdd"), order.ShipmemtMethodId, order.MemberId, maxOrderId + 1);
+        return string.Concat(order.CreatedAt.ToString("yyyyMMdd"), order.ShipmentMethodId, order.MemberId, maxOrderId + 1);
     }
 
     /// <summary>

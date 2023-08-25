@@ -18,7 +18,7 @@ public class OrderWithDeatilsDto
 
     public DateTime? OrderCompletedAt { get; set; }
 
-    public string? OrderShipmemtMethod { get; set; } = string.Empty;
+    public string? OrderShipmentMethod { get; set; } = string.Empty;
 
     public string? OrderRecipientName { get; set; } = string.Empty;
 

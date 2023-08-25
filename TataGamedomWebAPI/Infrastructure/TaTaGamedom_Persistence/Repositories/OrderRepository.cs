@@ -42,7 +42,7 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
                 OrderStatusCodeName = o.OrderStatus.Name,
                 OrderIndex = o.Index,
                 OrderCompletedAt = o.CompletedAt,
-                OrderShipmemtMethod = o.ShipmemtMethod!.Name,
+                OrderShipmentMethod = o.ShipmentMethod!.Name,
                 OrderRecipientName = o.RecipientName,
                 ContactEmails = o.ContactEmails,
                 ToAddress = o.ToAddress,
