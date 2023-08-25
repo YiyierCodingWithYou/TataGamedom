@@ -25,7 +25,9 @@
 
                   <div>{{ item.name }}</div>
                   <div class="text-caption mt-7">
-                    {{ item.scheduleDate }}
+                    {{ relativeTime(item.scheduleDate) }}
+                    <br />
+                    點閱率{{ item.viewCount }}
                   </div>
                   <v-btn
                     style="position: absolute"
@@ -85,6 +87,8 @@ import SearchTextBox from "../News/SearchTextBox.vue";
 import NewsGameClass from "./NewsGameClass.vue";
 import HotNews from "../News/HotNews.vue";
 import { useRoute, useRouter } from "vue-router";
+import { format } from "date-fns";
+import { zhTW } from "date-fns/locale";
 
 const keyword = ref("");
 const news = ref([]);
@@ -179,6 +183,17 @@ const searchOnce = once(function () {
     keyword.value = route.query.keyword;
   }
 });
+
+const relativeTime = (datetime) => {
+  const formattedDate = format(
+    new Date(datetime),
+    "yyyy年MM月dd日 EEEE HH:mm:ss",
+    {
+      locale: zhTW,
+    }
+  );
+  return formattedDate;
+};
 
 watchEffect(() => {
   searchOnce();
