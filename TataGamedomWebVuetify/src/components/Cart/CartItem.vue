@@ -92,10 +92,6 @@
             <div v-if="!isLogin">
               <v-card-subtitle v-if="finalTotal.value !== cartData.total + freight">合計：{{ finalTotal
               }}</v-card-subtitle>
-              <v-card-subtitle v-else>合計：{{ cartData.total >= 3000
-                ? cartData.total - 300 + freight
-                : cartData.total + freight
-              }}</v-card-subtitle>
             </div>
             <div v-else><v-card-subtitle>合計：{{ cartData.total + freight
             }}</v-card-subtitle></div>
@@ -195,7 +191,6 @@ const loadData = async () => {
     await getCart();
   } else {
     await getLocalCart();
-    console.log('123')
   }
 };
 
@@ -217,6 +212,9 @@ const getLocalCart = async () => {
       );
       const productDetail = await response.json();
       const subTotal = productDetail.specialPrice * localItem.qty;
+
+      console.log(localItem.qty)
+      console.log(subTotal)
 
       cartData.value.cartItems.push({
         product: {
@@ -245,9 +243,10 @@ const getLocalCart = async () => {
 
       calculateShippingFee();
 
-
       cartData.value.subTotal += subTotal;
-      total.value = subTotal;
+
+      total.value = cartData.value.subTotal;
+
       finalTotal.value = total.value >= 3000 ? total.value - 300 : total.value + freight.value;
     } catch (error) {
       console.error("Error fetching product details:", error);
@@ -282,17 +281,11 @@ watch([() => selectLocation.value, () => selectShipMethod.value], () => {
 });
 const loading = ref(false);
 
-watch([() => total.value, () => selectShipMethod.value], async () => {
-  if (loading.value) return;
-  loading.value = true;
+
+watch([() => total.value, () => selectShipMethod.value], () => {
   calculateShippingFee();
-  await loadData();
-  loading.value = false;
+  //   loadData();
 });
-// watch([() => total.value, () => selectShipMethod.value], () => {
-//   calculateShippingFee();
-//   loadData();
-// });
 
 watch([() => selectShipMethod.value, () => selectPayment.value], () => {
   calculatePaymentOption();
