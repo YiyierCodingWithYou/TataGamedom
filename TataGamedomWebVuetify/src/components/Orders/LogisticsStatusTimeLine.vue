@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useStore } from "vuex";
 
 export default {
@@ -99,8 +99,9 @@ export default {
   },
   setup(props) {
     const store = useStore();
+    const order = computed(() => store.getters.getOrderById(props.orderId));
     const dialog = ref(false);
-    const MerchantTradeNo = "GW2308211940193466";
+    const MerchantTradeNo = order.value.orderIndex;
     const logisticsTradeInfo = ref({});
     const logisticsTradeInfoData = ref({});
 
@@ -119,10 +120,12 @@ export default {
 
     onMounted(() => {
       fetchLogisticsTradeInfo();
+      console.log("物流查詢頁", order.value);
     });
 
     return {
       dialog,
+      order,
       logisticsTradeInfo,
       logisticsTradeInfoData,
     };
