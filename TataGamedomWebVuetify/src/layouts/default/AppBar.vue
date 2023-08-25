@@ -1,8 +1,18 @@
 <template>
-  <v-app-bar flat>
-    <v-app-bar-title>
-      <v-icon icon="mdi-circle-slice-4" />
-      TataGamedom
+  <v-app-bar flat class="bg-tataC2">
+    <v-app-bar-title class="text-light-blue-lighten-5 text-c2">
+      <v-slot id="text">
+        <div class="d-flex align-center font-comfortaa">
+          <img
+            src="./TataGamdom_Circle.svg"
+            style="height: 35px"
+            class="me-2"
+            alt=""
+            srcset=""
+          />
+          TataGamedom
+        </div>
+      </v-slot>
     </v-app-bar-title>
     <a href="/GameLounge" class="me-3">👀</a>
 
@@ -108,5 +118,13 @@ img {
   height: 40px;
   width: 40px;
   border-radius: 50%;
+}
+
+.bg-tataC2 {
+  background-color: #f9ee08 !important;
+}
+
+.text-c2 {
+  color: #01010f !important;
 }
 </style>
