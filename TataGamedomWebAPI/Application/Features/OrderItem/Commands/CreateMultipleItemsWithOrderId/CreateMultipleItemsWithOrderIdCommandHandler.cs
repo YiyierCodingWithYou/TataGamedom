@@ -3,6 +3,7 @@ using MediatR;
 using TataGamedomWebAPI.Application.Contracts.Logging;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
 using TataGamedomWebAPI.Application.Exceptions;
+using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderDetails;
 using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleOrderItems;
 using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateOrderItem;
 using TataGamedomWebAPI.Models.Interfaces;
@@ -66,8 +67,11 @@ public class CreateMultipleItemsWithOrderIdCommandHandler : IRequestHandler<Crea
 		await _orderItemRepository.CreateAsync(orderItemToBeCreatedList);
 		await DeleteCart(request);
 
-		_logger.LogInformation("Created multiple order items ans Delete Cart successfully");
+        //find OrderItems IN Order & Update OrderStatus By IsVirtual 
+        //var order = await _mediator.Send(new GetOrderDetailQuery(responseOrderId));
 
+        //
+		_logger.LogInformation("Created multiple order items ans Delete Cart successfully");
 
 		return _mapper.Map<List<CreateOrderItemResponseDto>>(orderItemToBeCreatedList);
 	}
