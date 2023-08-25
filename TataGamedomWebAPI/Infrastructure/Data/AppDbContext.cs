@@ -762,6 +762,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Index).HasMaxLength(30);
             entity.Property(e => e.RecipientName).HasMaxLength(20);
             entity.Property(e => e.SentAt).HasColumnType("datetime");
+            entity.Property(e => e.ShippingFee).HasColumnType("decimal(8, 0)");
             entity.Property(e => e.ToAddress).HasMaxLength(50);
             entity.Property(e => e.TrackingNum).HasMaxLength(20);
 

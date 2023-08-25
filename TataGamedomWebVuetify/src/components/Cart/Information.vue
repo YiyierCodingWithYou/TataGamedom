@@ -389,6 +389,7 @@ const spotHandler = async (value) => {
   createOrderCommand.value.toAddress = datas.address;
   createOrderCommand.value.ShipmemtMethodId = props.selectedData.shipMethod.id;
   createOrderCommand.value.recipientName = buyerName;
+  createOrderCommand.value.shippingFee = props.selectedData.freight;
 };
 
 const handleFillRecipient = () => {

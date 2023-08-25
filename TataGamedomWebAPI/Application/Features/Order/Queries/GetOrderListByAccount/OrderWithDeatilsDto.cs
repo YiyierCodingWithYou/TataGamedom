@@ -9,7 +9,7 @@ public class OrderWithDeatilsDto
 
     public DateTime CreatedAt { get; set; }
 
-    public decimal Total { get; set; }
+    public decimal? Total { get; set; }
 
     public required string OrderStatusCodeName { get; set; }
 

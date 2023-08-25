@@ -35,7 +35,7 @@ public partial class Order
 
     public string? ContactEmails { get; set; }
 
-    public int? ShippingFee { get; set; }
+    public decimal? ShippingFee { get; set; }
 
     public virtual Member Member { get; set; } = null!;
 

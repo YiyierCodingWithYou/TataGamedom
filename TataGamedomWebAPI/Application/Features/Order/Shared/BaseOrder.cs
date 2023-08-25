@@ -7,4 +7,5 @@ public abstract class BaseOrder
     public int PaymentStatusId { get; set; } = 1;
     public int? ShipmemtMethodId { get; set; }
     public string? RecipientName { get; set; }
+    public int? ShippingFee { get; set; }
 }
