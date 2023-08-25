@@ -29,11 +29,11 @@
             </td>
             <td v-if="item.product.price != item.product.specialPrice" class="text-end">
               <div>
-                <s>NT${{ item.product.price }}</s>
+                <s>NT$ {{ item.product.price }}</s>
               </div>
-              <div>NTS{{ item.product.specialPrice }}</div>
+              <div>NT$ {{ item.product.specialPrice }}</div>
             </td>
-            <td v-else>NT${{ item.product.price }}</td>
+            <td v-else>NT$ {{ item.product.price }}</td>
             <td>
               <v-row>
                 <v-col class="d-flex" cols="3">
@@ -47,7 +47,7 @@
                 </v-col>
               </v-row>
             </td>
-            <td class="text-end">{{ item.subTotal }}{{ item.product.subTotal }}</td>
+            <td class="text-end">NT$ {{ item.subTotal }}{{ item.product.subTotal }}</td>
             <td class="text-end">
               <v-icon @click="removeItem(item.product.id)">mdi-cart-remove</v-icon>
             </td>
@@ -90,7 +90,7 @@
             <v-card-subtitle>小計：{{ cartData.subTotal }}</v-card-subtitle>
             <v-card-subtitle>運費：{{ freight }}</v-card-subtitle>
             <div v-if="!isLogin">
-              <v-card-subtitle v-if="finalTotal.value !== cartData.total + freight">合計：{{ finalTotal
+              <v-card-subtitle>合計：{{ finalTotal
               }}</v-card-subtitle>
             </div>
             <div v-else><v-card-subtitle>合計：{{ cartData.total + freight
@@ -128,7 +128,10 @@ const imgLink = "https://localhost:7081/Files/Uploads/";
 const limit = ref(0);
 const total = ref(0);
 const freight = ref(0);
-const finalTotal = ref(0);
+const finalTotal = computed(() => {
+  const computedTotal = cartData.value.subTotal + freight.value
+  return computedTotal >= 3000 ? computedTotal - 300 : computedTotal;
+})
 const isLogin = computed(() => store.state.isLoggedIn);
 const selectLocation = ref({ loc: "taiwan", label: "台灣" });
 const selectShipMethod = ref({
@@ -194,6 +197,8 @@ const loadData = async () => {
   }
 };
 
+
+const fee = ref(0);
 const getLocalCart = async () => {
   cartData.value = {
     cartItems: [],
@@ -219,6 +224,7 @@ const getLocalCart = async () => {
       cartData.value.cartItems.push({
         product: {
           id: localItem.productId,
+          price: productDetail.price,
           specialPrice: productDetail.specialPrice,
           subTotal: subTotal,
           couponDescription: productDetail.couponDescription,
@@ -247,7 +253,6 @@ const getLocalCart = async () => {
 
       total.value = cartData.value.subTotal;
 
-      finalTotal.value = total.value >= 3000 ? total.value - 300 : total.value + freight.value;
     } catch (error) {
       console.error("Error fetching product details:", error);
     }
@@ -400,6 +405,7 @@ const calculateShippingFee = () => {
       freight.value = 80;
     }
   }
+  console.log("calculateShippingFee")
 };
 
 const fetchQuantityLimit = async (productId) => {

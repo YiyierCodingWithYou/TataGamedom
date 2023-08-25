@@ -49,6 +49,7 @@ import { useRouter } from "vue-router";
 import { watchEffect, watch } from "vue";
 import { defineProps } from "vue";
 import { defineEmits } from "vue";
+import { defineExpose } from "vue"
 
 import { computed } from 'vue'
 
@@ -64,6 +65,8 @@ const drawer = computed({
     emit('update:modelValue', value)
   }
 })
+
+
 
 const router = useRouter();
 const drawerRef = ref(null);
@@ -90,7 +93,7 @@ const outsideClickListener = (event) => {
 
 const openDrawer = () => {
   emit('update:modelValue', true)
-  drawerContent();
+  console.log("打開");
 };
 
 const closeDrawer = () => {
@@ -99,6 +102,7 @@ const closeDrawer = () => {
 
 const toggleDrawer = () => {
   emit('update:modelValue', !drawer.value);
+  drawerContent();
 }
 
 const getCart = async () => {
@@ -127,15 +131,20 @@ const getLocalCart = async () => {
       console.error("Error fetching product details:", error);
     }
   }
+  console.log("getLocalCart");
 };
 
+
 const drawerContent = async () => {
-  if (isLogin) {
+  if (isLogin.value) {
     getCart();
   } else {
     getLocalCart();
+    console.log("drawerContent叫我的");
   }
 };
+
+
 const checkout = async () => {
   router.push({
     name: "Cart",
@@ -143,7 +152,7 @@ const checkout = async () => {
 };
 
 const deleteProduct = async (productId) => {
-  if (isLogin) {
+  if (isLogin.value) {
     const response = await fetch(
       `https://localhost:7081/api/Carts?productId=${productId}`,
       {
@@ -169,17 +178,22 @@ const deleteProduct = async (productId) => {
       localCart.splice(productIndex, 1);
       localStorage.setItem("localCart", JSON.stringify(localCart));
       getLocalCart();
+      console.log("deleteProduct叫我的");
+
     }
   }
 };
 
-watchEffect(() => {
-  if (store.state.isLoggedIn !== undefined) {
-    drawerContent();
-  }
-});
 
 
+// onMounted(() => {
+//   getCart();
+// });
+
+
+defineExpose({
+  drawerContent
+})
 </script>
   
 <style>
