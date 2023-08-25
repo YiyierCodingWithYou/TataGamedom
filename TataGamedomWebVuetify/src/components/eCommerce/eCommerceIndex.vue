@@ -2,7 +2,7 @@
   <div>
     <carousel ref="bookmark" @getProductInput="GetSingleProduct"></carousel>
     <div>
-      <CartDrawer v-model="drawer"></CartDrawer>
+      <CartDrawer v-model="drawer" ref="drawerComponent"></CartDrawer>
     </div>
   </div>
 
@@ -95,6 +95,7 @@ const bookmark = ref(null);
 const cart = ref([]);
 const drawer = ref(false);
 let img = "https://localhost:7081/Files/Uploads/";
+const drawerComponent = ref(null)
 
 const select = ref({
   sort: "",
@@ -242,11 +243,14 @@ const autoToggleDrawer = () => {
 };
 
 const openDrawerFromParent = () => {
+  drawerComponent.value.drawerContent();
   drawer.value = true;
+  console.log('func:openDrawerFromParent');
 };
 
 const closeDrawer = () => {
   drawer.value = false;
+  console.log('func:closeDrawer');
 };
 
 onMounted(() => {
