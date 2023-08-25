@@ -35,26 +35,32 @@
         <v-list-item prepend-icon="mdi-calendar-today" title="完成日期:"
           >{{ relativeTime(order.orderCompletedAt) }}
         </v-list-item>
-        <v-divider inset></v-divider>
-        <v-list-item prepend-icon="mdi-cube-send" title="寄送方式:">{{
-          order.orderShipmemtMethod
-        }}</v-list-item>
+        <div v-if="order.orderShipmemtMethod">
+          <v-divider inset></v-divider>
+          <v-list-item prepend-icon="mdi-cube-send" title="寄送方式:">{{
+            order.orderShipmemtMethod
+          }}</v-list-item>
+        </div>
+
         <v-divider inset></v-divider>
         <v-list-item
           prepend-icon="mdi-account-arrow-left-outline"
           title="收件人:"
           >{{ order.orderRecipientName }}</v-list-item
         >
-        <v-divider inset></v-divider>
-        <v-list-item prepend-icon="mdi-email-fast-outline" title="信箱:"
-          >{{ order.contactEmails }}
-        </v-list-item>
+        <div v-if="order.contactEmails">
+          <v-divider inset></v-divider>
+          <v-list-item prepend-icon="mdi-email-fast-outline" title="信箱:"
+            >{{ order.contactEmails }}
+          </v-list-item>
+        </div>
 
-        <v-divider inset></v-divider>
-
-        <v-list-item prepend-icon="mdi-map-marker-outline" title="收件地址:"
-          >{{ order.toAddress }}
-        </v-list-item>
+        <div v-if="order.toAddress">
+          <v-divider inset></v-divider>
+          <v-list-item prepend-icon="mdi-map-marker-outline" title="收件地址:"
+            >{{ order.toAddress }}
+          </v-list-item>
+        </div>
       </v-list>
     </v-card>
   </v-dialog>
