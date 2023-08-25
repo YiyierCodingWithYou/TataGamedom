@@ -73,7 +73,7 @@ namespace TataGamedomWebAPI.Controllers
 				{
 					age--; // 如果生日尚未到來，則減少一歲
 				}
-				return Ok(new { IsLoggedIn = true, Account = user.Account , Name = user.Name ,Age = age});
+				return Ok(new { IsLoggedIn = true, Account = user.Account , Name = user.Name ,Age = age, IconImg = user.IconImg});
 			}
 		}
 

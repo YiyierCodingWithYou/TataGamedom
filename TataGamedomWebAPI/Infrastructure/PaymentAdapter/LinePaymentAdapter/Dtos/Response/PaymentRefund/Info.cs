@@ -2,7 +2,7 @@
 
 public class Info
 {
-    public int RefundTransactionId { get; set; }
+    public long RefundTransactionId { get; set; } 
 
     public string RefundTransactionDate { get; set;}
 }

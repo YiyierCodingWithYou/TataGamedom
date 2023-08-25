@@ -124,7 +124,7 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Reply> Replies { get; set; }
 
-    public virtual DbSet<ShipmemtMethod> ShipmemtMethods { get; set; }
+    public virtual DbSet<ShipmentMethod> ShipmemtMethods { get; set; }
 
     public virtual DbSet<ShipmentStatusesCode> ShipmentStatusesCodes { get; set; }
 
@@ -1085,7 +1085,7 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("FK__Replies__IssueId__0B5CAFEA");
         });
 
-        modelBuilder.Entity<ShipmemtMethod>(entity =>
+        modelBuilder.Entity<ShipmentMethod>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Shipmemt__3214EC0793B49E53");
 
