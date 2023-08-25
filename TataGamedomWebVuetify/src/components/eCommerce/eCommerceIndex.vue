@@ -225,10 +225,10 @@ const Add2Cart = async (productId) => {
     );
     if (existingProduct) {
       existingProduct.qty += 1;
-      localStorage.setItem("localCart", JSON.stringify(localCart));
     } else {
       localCart.push({ productId, qty: 1 });
     }
+    localStorage.setItem("localCart", JSON.stringify(localCart));
     alert('已成功加入購物車！')
   }
   autoToggleDrawer();
