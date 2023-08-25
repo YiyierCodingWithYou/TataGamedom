@@ -21,7 +21,7 @@ public partial class Order
 
     public DateTime? CompletedAt { get; set; }
 
-    public int? ShipmemtMethodId { get; set; }
+    public int? ShipmentMethodId { get; set; }
 
     public string? RecipientName { get; set; }
 
@@ -35,6 +35,8 @@ public partial class Order
 
     public string? ContactEmails { get; set; }
 
+    public decimal? ShippingFee { get; set; }
+
     public virtual Member Member { get; set; } = null!;
 
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
@@ -43,7 +45,7 @@ public partial class Order
 
     public virtual PaymentStatusCode PaymentStatus { get; set; } = null!;
 
-    public virtual ShipmentMethod? ShipmemtMethod { get; set; }
+    public virtual ShipmemtMethod? ShipmentMethod { get; set; }
 
     public virtual ShipmentStatusesCode? ShipmentStatus { get; set; }
 }

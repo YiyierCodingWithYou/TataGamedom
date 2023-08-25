@@ -4,7 +4,6 @@ using TataGamedomWebAPI.Application.Contracts.Persistence;
 using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderListByAccount;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.EFModels;
-using static Dapper.SqlMapper;
 
 namespace TataGamedomWebAPI.Infrastructure.TaTaGamedom_Persistence.Repositories;
 
@@ -38,11 +37,11 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
                 GameChiName = o.OrderItems.Select(oi => oi.InventoryItem.Product.Game!.ChiName).ToList(),
                 ProductIsVirtual = o.OrderItems.Select(oi => oi.InventoryItem.Product.IsVirtual).ToList(),
                 CreatedAt = o.CreatedAt,
-                Total = o.OrderItems.Select(oi => oi.ProductPrice).Sum(),
+                Total = o.OrderItems.Select(oi => oi.ProductPrice).Sum() + o.ShippingFee,
                 OrderStatusCodeName = o.OrderStatus.Name,
                 OrderIndex = o.Index,
                 OrderCompletedAt = o.CompletedAt,
-                OrderShipmemtMethod = o.ShipmemtMethod!.Name,
+                OrderShipmentMethod = o.ShipmentMethod!.Name,
                 OrderRecipientName = o.RecipientName,
                 ContactEmails = o.ContactEmails,
                 ToAddress = o.ToAddress,
