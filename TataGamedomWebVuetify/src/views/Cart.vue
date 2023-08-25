@@ -1,12 +1,7 @@
 <template>
   <v-container>
     <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="center">
-      <v-tab
-        v-for="item in flows"
-        :key="item"
-        :value="item"
-        :disabled="disabledTabs[item]"
-      >
+      <v-tab v-for="item in flows" :key="item" :value="item" :disabled="disabledTabs[item]">
         {{ item }}
       </v-tab>
     </v-tabs>
@@ -15,10 +10,7 @@
         <CartItem @getreturnSelected="returnSelectedHandler"></CartItem>
       </v-window-item>
       <v-window-item value="填寫資料">
-        <Information
-          v-if="selectedData !== undefined"
-          :selectedData="selectedData"
-        ></Information>
+        <Information v-if="selectedData !== undefined" :selectedData="selectedData"></Information>
       </v-window-item>
       <v-window-item value="訂單確認">
         <OrderConfirmation></OrderConfirmation>
@@ -65,5 +57,4 @@ onMounted(() => {
 });
 </script>
 
-<style>
-</style>
+<style></style>

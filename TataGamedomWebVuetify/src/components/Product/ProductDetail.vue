@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row>
-      <CartDrawer v-model="drawer"></CartDrawer>
+      <CartDrawer v-model="drawer" ref="drawerComponent"></CartDrawer>
       <div class="d-flex flex-no-wrap">
         <div class="ma-3">
           <v-img :src="imgLink + productData.gameCoverImg" width="650" cover></v-img>
@@ -35,7 +35,7 @@
                 </v-btn>
               </v-col>
               <v-col cols="4">
-                <v-text-field v-model="quantity" min="1" :max="limit" outlined readonly></v-text-field>
+                <v-text-field v-model="quantity" min="1" :max="limit" outlined></v-text-field>
               </v-col>
               <v-col cols="4">
                 <v-btn icon @click="increaseQuantity" v-model="quantity">
@@ -47,7 +47,7 @@
           <v-btn v-if="limit > 0" class="mt-auto ma-3" @click.stop="Add2Cart(productData.id)"
             color="#FFBF5D">加入購物車</v-btn>
           <v-btn v-else-if="limit === 0" class="mt-auto ma-3" disabled>售完</v-btn>
-          <p v-if="limit > 0 && limit <= 10" class="text-center">
+          <p v-if="limit > 0 && limit <= 1000" class="text-center">
             現庫存剩餘{{ limit }}件
           </p>
           <p v-else-if="limit === 0" class="text-center">無庫存</p>
@@ -133,6 +133,8 @@ const bookmark = ref(null);
 const star = ref(0);
 const comment = ref("");
 const API = "https://localhost:7081/api/";
+const drawerComponent = ref(null)
+const quantityNum = ref(0)
 
 watch(props, (newProps) => {
   if (newProps.productData.id) {
@@ -167,6 +169,13 @@ const decreaseQuantity = () => {
 
 //加入購物車
 const Add2Cart = async (productId) => {
+  if (quantity.value > limit.value) {
+    alert("所選數量超過庫存限制！");
+    return;
+  }
+
+  let totalQuantity = quantity.value;
+
   if (store.state.isLoggedIn) {
     const response = await fetch(`${API}Carts`, {
       method: "POST",
@@ -176,7 +185,7 @@ const Add2Cart = async (productId) => {
       },
       body: JSON.stringify({
         productId: productId,
-        qty: 1,
+        qty: quantity.value,
       }),
     });
     let result = await response.json();
@@ -186,9 +195,13 @@ const Add2Cart = async (productId) => {
       });
     }
     alert(result.message);
-    drawer.value = true; // 直接打開抽屜
     autoToggleDrawer(); // 設置計時器來自動關閉抽屜
-  } else {
+  }
+
+
+  quantityNum.value = parseInt(quantity.value)
+
+  if (!store.state.isLoggedIn) {
     let localCart = localStorage.getItem("localCart");
     if (localCart) {
       localCart = JSON.parse(localCart);
@@ -199,25 +212,44 @@ const Add2Cart = async (productId) => {
       (item) => item.productId === productId
     );
     if (existingProduct) {
-      existingProduct.qty += 1;
-    } else {
-      localCart.push({ productId, qty: 1 });
+      totalQuantity = quantityNum.value + existingProduct.qty;
+      if (totalQuantity > limit.value) {
+        alert("所選數量加上購物車中現有數量超過庫存限制！");
+        return;
+      }
+      console.log("exqty=" + existingProduct.qty);
+      console.log("quantityNum.value=" + quantityNum.value);
+      existingProduct.qty += quantityNum.value;
+      console.log("exqty=" + existingProduct.qty);
+      localStorage.setItem("localCart", JSON.stringify(localCart));
     }
-    localStorage.setItem("localCart", JSON.stringify(localCart));
-    drawer.value = true; // 直接打開抽屜
+    else {
+      localCart.push({ productId, qty: quantityNum.value });
+    }
     autoToggleDrawer(); // 設置計時器來自動關閉抽屜
     alert("已成功加入購物車！");
   }
 };
 
+
+
 const autoToggleDrawer = () => {
+  console.log("我該還沒開ㄌ" + drawer.value);
+  openDrawerFromParent();
+  console.log("我該開ㄌ" + drawer.value);
   setTimeout(() => {
+    console.log("我準備關ㄌ" + drawer.value);
     closeDrawer();
+    console.log("我該關ㄌ" + drawer.value);
   }, 1000);
 };
 
 const openDrawerFromParent = () => {
+  drawerComponent.value.drawerContent();
   drawer.value = true;
+
+  console.log("我開ㄌ3");
+
 };
 
 const closeDrawer = () => {
@@ -302,7 +334,7 @@ const commentSubmit = async () => {
 };
 
 const toBoard = async () => {
-  console.log(props.productData.boardId);
+  //console.log(props.productData.boardId);
   router.push({
     name: "GameLoungeBoard",
     params: { boardId: props.productData.boardId },

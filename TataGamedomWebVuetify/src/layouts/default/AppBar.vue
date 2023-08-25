@@ -75,7 +75,14 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.$store.commit("SET_LOGIN", res.data);
-        });
+        }).catch((err) => {
+          this.$store.commit("SET_LOGIN", {
+            isLoggedIn: false,
+            name: "",
+            account: "",
+            age: ""
+          });
+        });;
     },
     toggleMemberProfile() {
       this.showMemberProfile = !this.showMemberProfile;
