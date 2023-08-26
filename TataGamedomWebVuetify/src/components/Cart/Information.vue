@@ -552,9 +552,9 @@ const handleSubmit = async () => {
 
     // todo  => Confirm
     const orderResult = await createOrder();
-    payload.value.receiverName = buyerName.value;
-    payload.value.ReceiverCellPhone = buyerPhone.value;
-    payload.value.ReceiverEmail = buyerEmail.value;
+    // payload.value.receiverName = buyerName.value;
+    // payload.value.ReceiverCellPhone = buyerPhone.value;
+    // payload.value.ReceiverEmail = buyerEmail.value;
     payload.value.MerchantTradeNo = orderResult[0].orderIndex;
     payload.value.OrderId = orderResult[0].orderId;
     await createLogisticsOrder(payload.value);

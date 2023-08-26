@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Web;
 using TataGamedomWebAPI.Application.Exceptions;
+using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderDetails;
 using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request;
 using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request.LogisticsSelection;
 using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request.QueryLogisticsTradeInfo;
@@ -91,7 +92,13 @@ public class ECPayShipmentService
     // 交易訊息代碼 105000___ 自訂錯誤代碼
     public async Task<Dictionary<string, string>> SendLogisticsOrderForPickUpRequest(LogisticsOrderRequestDto shipmentOrder)
     {
-        //GetOrder  把既有資料賦值給shipmentOrder? 
+
+        OrderDetailsDto orderCreated = await _mediator.Send(new GetOrderDetailQuery(shipmentOrder.OrderId));
+        shipmentOrder.ReceiverName = orderCreated.RecipientName!;
+        shipmentOrder.ReceiverCellPhone = orderCreated.ReceiverCellPhone!;
+        shipmentOrder.ReceiverEmail = orderCreated.ReceiverEmail!;
+
+
         using FormUrlEncodedContent content = new FormUrlEncodedContent(ComputeOrderRequestData(shipmentOrder));
         HttpResponseMessage response = await _httpClient.PostAsync($"{BaseAPIUrl}/Create", content);
         string responseBody = await response.Content.ReadAsStringAsync();
@@ -100,10 +107,11 @@ public class ECPayShipmentService
 
         NameValueCollection responseValues = HttpUtility.ParseQueryString(responseBody.Split('|')[1]);
         Dictionary<string, string> data = responseValues.AllKeys.ToDictionary(k => k!, k => responseValues[k]!);
-        
-        //ThrowExceptionIfCheckMacValueNotMatch(responseValues, data);
 
-        //todo 物流訂單建立成功，更新回傳資訊到tataDb
+        //TODO => 如果失敗，ThrowExceptionIfCheckMacValueNotMatch不拋出例外，而是將訂單update成待處理 => UI界面使無法查詢
+        //根據訂單主檔既有資料 => 重新向綠界建物流訂單 => 成功了再update成處理中
+        ThrowExceptionIfCheckMacValueNotMatch(responseValues, data);
+        
         return data;
     }
 

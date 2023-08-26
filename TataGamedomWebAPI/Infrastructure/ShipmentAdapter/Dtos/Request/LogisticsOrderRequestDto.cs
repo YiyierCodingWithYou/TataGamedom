@@ -10,9 +10,9 @@ public class LogisticsOrderRequestDto
     public decimal GoodsAmount { get; set; }
     public string SenderName { get; set; } = "Tata";
     public string SenderCellPhone { get; set; } = "0916224868";
-    public required string ReceiverName { get; set; }
-    public string ReceiverCellPhone { get; set; } = "0916224868";
-    public string ReceiverEmail { get; set; } = "tatagamedom@gmail.com";
+    public string ReceiverName { get; set; } = string.Empty;
+    public string ReceiverCellPhone { get; set; } = string.Empty;
+    public string ReceiverEmail { get; set; } =  string.Empty;
 
     public string ServerReplyURL { get; set; } = "https://localhost:3000/Orders";
 

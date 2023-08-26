@@ -24,6 +24,12 @@ public class OrderDetailsDto
 
     public required string ToAddress { get; set; }
 
+    public string? ReceiverEmail { get; set; }
+
+    public decimal? ShippingFee { get; set; }
+
+    public string? ReceiverCellPhone { get; set; }
+
     public DateTime? SentAt { get; set; }
 
     public DateTime? DeliveredAt { get; set; }
