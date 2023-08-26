@@ -1,8 +1,8 @@
 <template lang="">
-  <v-container-fluid class="d-md-flex flex-column align-center justify-center">
+  <v-container class="d-md-flex flex-column align-center justify-center">
     <div class="">
       <h4
-        class="text-h4 text-weight-600 d-flex align-end justify-center font-IBM font-weight-bold"
+        class="text-h4 text-weight-600 d-flex align-end justify-center font-digi font-weight-bold"
       >
         <span class="material-symbols-rounded size1 m-0 p-0">
           switch_access_shortcut
@@ -12,33 +12,33 @@
     </div>
     <div class="d-md-flex mt-5">
       <v-sheet
-        class="sheet sheet1 mx-4"
+        class="sheet sheet1"
         border
         rounded
         :style="{
           backgroundImage: `url(${no1.bgImg})`,
         }"
       >
-        <p class="sheet-text text-h2 font-weight-black" v-html="no1.title"></p>
+        <p class="sheet-text text-h3 font-weight-black" v-html="no1.title"></p>
       </v-sheet>
       <v-sheet
-        class="sheet sheet2 mx-4"
+        class="sheet sheet2"
         border
         rounded
         :style="{ backgroundImage: `url(${no2.bgImg})` }"
       >
-        <p class="sheet-text text-h2 font-weight-black" v-html="no2.title"></p>
+        <p class="sheet-text text-h3 font-weight-black" v-html="no2.title"></p>
       </v-sheet>
       <v-sheet
-        class="sheet sheet3 mx-4"
+        class="sheet sheet3"
         :style="{ backgroundImage: `url(${no3.bgImg})` }"
         border
         rounded
       >
-        <p class="sheet-text text-h2 font-weight-black" v-html="no3.title"></p>
+        <p class="sheet-text text-h3 font-weight-black" v-html="no3.title"></p>
       </v-sheet>
     </div>
-  </v-container-fluid>
+  </v-container>
 </template>
 
 <script setup>
@@ -67,11 +67,8 @@ const fetchData = () => {
         })
         .map((data) => {
           return {
-            title: data.name
-              .replace(" ", "<br>")
-              .replace("說", "説")
-              .replace("淚", "涙")
-              .replace("卡", "卡"),
+            title: data.name.replace(" ", "<br>").replace("！", "！<br>"),
+
             value: data.id,
             prependAvatar: "",
             bgImg: data.boardHeaderCoverImgUrl,
@@ -97,12 +94,17 @@ onMounted(() => {
 </script>
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Zen+Antique&display=swap");
+
+.font-digi {
+  font-family: "Digi-font" !important;
+}
+
 .size1 {
   font-size: 4rem !important;
 }
 .sheet-text {
   max-width: 80%;
-  font-family: "Zen Antique", cursive !important;
+  font-family: "Digi-font" !important;
   filter: contrast(1.2);
   color: #a1dfe9;
   margin-left: 3%;
@@ -121,18 +123,19 @@ onMounted(() => {
   background-color: rgba(99, 99, 99, 0.05);
   border: 1pt solid rgba(249, 238, 8, 0.5);
   rotate: 15deg;
+  transform: scale(0.8);
 }
 .sheet:hover {
-  transform: translateY(-5vh) scale(1.01);
+  transform: translateY(-5vh) scale(1);
   background-color: black;
   box-shadow: 0px 0px 15px 10px rgba(161, 223, 233, 0.6);
   z-index: 5;
 }
 .sheet:hover::before {
   content: "進入巢穴";
-  font-family: IBM Plex Sans JP;
+  font-family: "Digi-font";
   font-weight: 700;
-  font-size: 5rem;
+  font-size: 3rem;
 }
 
 .sheet:hover::after {
@@ -157,7 +160,7 @@ onMounted(() => {
 .sheet1::before {
   position: absolute;
   content: "NO.1";
-  font-size: 7rem;
+  font-size: 4rem;
   bottom: 1%;
   right: 10%;
   font-family: Silkscreen;
@@ -167,7 +170,7 @@ onMounted(() => {
 .sheet2::before {
   position: absolute;
   content: "NO.2";
-  font-size: 6rem;
+  font-size: 3rem;
   bottom: 1%;
   right: 10%;
   font-family: Silkscreen;
@@ -177,7 +180,7 @@ onMounted(() => {
 .sheet3::before {
   position: absolute;
   content: "NO.3";
-  font-size: 5rem;
+  font-size: 3rem;
   bottom: 1%;
   right: 10%;
   font-family: Silkscreen;

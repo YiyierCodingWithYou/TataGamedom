@@ -1,6 +1,9 @@
 <template>
   <v-app-bar flat class="bg-tataC2">
-    <v-app-bar-title class="text-light-blue-lighten-5 text-c2">
+    <v-app-bar-title
+      class="text-light-blue-lighten-5 text-c2 cursor-pointer"
+      @click="link('')"
+    >
       <v-slot id="text">
         <div class="d-flex align-center font-comfortaa">
           <img
@@ -14,20 +17,59 @@
         </div>
       </v-slot>
     </v-app-bar-title>
-    <a href="/GameLounge" class="me-3">👀</a>
-
-    <a href="/News" class="me-3">偷看一下</a>
+    <v-btn
+      variant="text"
+      rounded="0"
+      class="h-100 pageBtn"
+      @click="link('News')"
+    >
+      新聞
+    </v-btn>
+    <v-btn
+      variant="text"
+      rounded="0"
+      class="h-100 pageBtn"
+      @click="link('GameLounge')"
+    >
+      論壇
+    </v-btn>
+    <v-btn
+      variant="text"
+      rounded="0"
+      class="h-100 pageBtn"
+      @click="link('eCommerce')"
+    >
+      商城
+    </v-btn>
     <v-spacer></v-spacer>
-    <a href="/Cart" class="me-3"><v-icon>mdi-cart-outline</v-icon></a>
+    <v-spacer></v-spacer>
+    <v-spacer></v-spacer>
+    <v-btn class="pageBtn" icon="mdi-cart-outline" @click="link('Cart')">
+    </v-btn>
+
     <div v-if="$store.state.isLoggedIn">
       <!-- <a color="primary" @mouseover="showMemberProfile = true">
         HI {{ name }}
       </a> -->
       <img :src="iconImg" @mouseover="showMemberProfile = true" />
-      <v-btn color="primary" @click="logout">登出</v-btn>
+      <v-btn
+        variant="text"
+        rounded="0"
+        class="h-100 pageBtn logBtn"
+        @click="logout"
+        >登出</v-btn
+      >
     </div>
 
-    <v-btn v-else color="primary" @click="login">登入</v-btn>
+    <v-btn
+      v-else
+      prepend-icon="mdi-login-variant"
+      variant="text"
+      class="h-100 pageBtn logBtn"
+      @click="login"
+      rounded="0"
+      >登入</v-btn
+    >
   </v-app-bar>
   <MemberProfile
     class="MemberProfile"
@@ -66,6 +108,9 @@ export default {
     };
   },
   methods: {
+    link(page) {
+      this.$router.push(`/${page}`);
+    },
     login() {
       this.returnTo = this.$route.fullPath;
       this.$router.push("/Members/login");
@@ -85,14 +130,15 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.$store.commit("SET_LOGIN", res.data);
-        }).catch((err) => {
+        })
+        .catch((err) => {
           this.$store.commit("SET_LOGIN", {
             isLoggedIn: false,
             name: "",
             account: "",
-            age: ""
+            age: "",
           });
-        });;
+        });
     },
     toggleMemberProfile() {
       this.showMemberProfile = !this.showMemberProfile;
@@ -108,6 +154,9 @@ export default {
 </script>
 
 <style scoped>
+.cursor-pointer {
+  cursor: pointer;
+}
 .MemberProfile {
   position: fixed;
   z-index: 5;
@@ -126,5 +175,16 @@ img {
 
 .text-c2 {
   color: #01010f !important;
+}
+
+.pageBtn {
+  font-family: "Digi-font";
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.pageBtn:hover {
+  color: #f9ee08;
+  background-color: #01010f;
 }
 </style>
