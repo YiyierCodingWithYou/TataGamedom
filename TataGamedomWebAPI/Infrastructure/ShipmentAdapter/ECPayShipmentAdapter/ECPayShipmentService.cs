@@ -92,7 +92,9 @@ public class ECPayShipmentService
         NameValueCollection responseValues = HttpUtility.ParseQueryString(responseBody.Split('|')[1]);
         Dictionary<string, string> data = responseValues.AllKeys.ToDictionary(k => k!, k => responseValues[k]!);
 
-        ThrowExceptionIfCheckMacValueNotMatch(responseValues, data);    //加入OrderId後再打開
+        ThrowExceptionIfCheckMacValueNotMatch(responseValues, data);
+
+        //todo 物流訂單建立成功，更新回傳資訊到tataDb
 
         return data;
     }
@@ -114,7 +116,6 @@ public class ECPayShipmentService
             { "ReceiverEmail", order.ReceiverEmail }, // todo?
             { "ServerReplyURL", order.ServerReplyURL},//localhost:3000/Orders" }, //todo ngrok
             { "ReceiverStoreID", order.ReceiverStoreID },// 7-ELEVEN 超商：131386 7-ELEVEN 超商冷凍店取：896539 全家：006598 OK：1328
-            //{ "ClientReplyURL", ""},  可以導覽前端頁面，目前採幕後建物流訂單，先不填。 todo => 寫一個有值的給LinePay用，目前LinePay沒物流
         };
 
         orderDict["CheckMacValue"] = GetCheckMacValue(orderDict);

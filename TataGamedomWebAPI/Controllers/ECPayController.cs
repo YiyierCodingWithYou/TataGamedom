@@ -80,7 +80,6 @@ namespace TataGamedomWebAPI.Controllers
         {
             var fileUrl = await _shipmentService.SendLogisticsSelectionRequest(logisticsSelection);
             return Ok(new { url = fileUrl });
-            //return Ok(await _shipmentService.SendLogisticsSelectionRequest(logisticsSelection));
         }
 
         [HttpPost("LogisticsOrder")]

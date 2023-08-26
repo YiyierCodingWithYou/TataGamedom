@@ -29,8 +29,7 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
             .AsNoTracking()
             .Where(o => o.Member.Account == account)
             .Where(o => o.OrderItems.Any())
-            .OrderBy(o => o.OrderStatusId)
-            .ThenByDescending(o => o.CreatedAt)
+            .OrderByDescending(o => o.CreatedAt)
             .Select(o => new OrderWithDeatilsDto
             {
                 Id = o.Id,

@@ -4,8 +4,12 @@
     <v-sheet width="1000" class="mx-auto">
       <v-form validate-on="submit lazy" @submit.prevent="submit">
         <div class="d-flex pa-4 justify-center">
-          <v-checkbox v-model="selectAll" label="全選/取消" :disabled="!isOrderCompleted"
-            :indeterminate="!isOrderCompleted"></v-checkbox>
+          <v-checkbox
+            v-model="selectAll"
+            label="全選/取消"
+            :disabled="!isOrderCompleted"
+            :indeterminate="!isOrderCompleted"
+          ></v-checkbox>
           <p v-show="!isOrderCompleted" class="font-weight-medium">
             *訂單未完成，無法執行退貨操作
           </p>
@@ -13,26 +17,55 @@
         <v-card v-for="orderDetail in orderDetails" :key="orderDetail.id">
           <v-card-text>
             <div class="d-flex pa-4">
-              <v-checkbox-btn v-model="orderDetail.enabled" class="pe-2" :disabled="!isOrderCompleted || isIdInReturnList(orderDetail.id)
-                " :indeterminate="!isOrderCompleted">
+              <v-checkbox-btn
+                v-model="orderDetail.enabled"
+                class="pe-2"
+                :disabled="
+                  !isOrderCompleted || isIdInReturnList(orderDetail.id)
+                "
+                :indeterminate="!isOrderCompleted"
+              >
               </v-checkbox-btn>
-              <v-chip class="ma-5" color="pink" v-show="isIdInReturnList(orderDetail.id)"><v-icon start
-                  icon="mdi-tag-off"></v-icon>已退貨</v-chip>
-              <v-text-field readonly hide-details label="" variant="underlined" class="flex-grow-1">
+              <v-chip
+                class="ma-5"
+                color="pink"
+                v-show="isIdInReturnList(orderDetail.id)"
+                ><v-icon start icon="mdi-tag-off"></v-icon>已退貨</v-chip
+              >
+              <v-text-field
+                readonly
+                hide-details
+                label=""
+                variant="underlined"
+                class="flex-grow-1"
+              >
                 {{ orderDetail.index }}
                 {{ orderDetail.gameChiName }}
                 {{ orderDetail.productIsVirtual ? "(序號)" : "(遊戲片)" }}
               </v-text-field>
             </div>
 
-            <v-textarea v-model="orderDetail.reason" :disabled="!orderDetail.enabled" clearable counter label="原因"
-              maxlength="200" single-line></v-textarea>
+            <v-textarea
+              v-model="orderDetail.reason"
+              :disabled="!orderDetail.enabled"
+              clearable
+              counter
+              label="原因"
+              maxlength="200"
+              single-line
+            ></v-textarea>
           </v-card-text>
         </v-card>
 
         <v-spacer></v-spacer>
         <v-btn block class="mt-2" text="取消" @click.stop="closeDialog"></v-btn>
-        <v-btn :loading="loading" block class="mt-2" text="送出" type="submit"></v-btn>
+        <v-btn
+          :loading="loading"
+          block
+          class="mt-2"
+          text="送出"
+          type="submit"
+        ></v-btn>
       </v-form>
     </v-sheet>
   </v-dialog>
@@ -77,10 +110,14 @@ export default {
       orderDetails.value.forEach((detail) => {
         detail.enabled = false;
       });
-    }
+    };
 
     const isOrderCompleted = computed(() => {
-      return order.value && (order.value.orderStatusCodeName === "已完成" || order.value.orderStatusCodeName === "退貨程序處理中");
+      return (
+        order.value &&
+        (order.value.orderStatusCodeName === "已完成" ||
+          order.value.orderStatusCodeName === "退貨程序處理中")
+      );
     });
 
     const isIdInReturnList = (orderItemId) => {
@@ -91,9 +128,11 @@ export default {
     };
 
     onMounted(() => {
-      if (hasOrderDetails.value) { initializeCheckBox() }
+      if (hasOrderDetails.value) {
+        initializeCheckBox();
+      }
       store.dispatch("fetchOrderItemIdReturnList", props.orderId);
-      console.log("OrderItemReturn Test => order from getter:", order.value);
+      console.log("OrderItemReturn.vue => order from getter:", order.value);
     });
 
     const selectAll = ref(false);
@@ -119,10 +158,13 @@ export default {
           reason: detail.reason,
         }));
 
-      const requestData = { createOrderItemReturnCommandList: createOrderItemReturnCommandList.value };
+      const requestData = {
+        createOrderItemReturnCommandList:
+          createOrderItemReturnCommandList.value,
+      };
       const payload = {
         requestData: requestData,
-        orderId: props.orderId
+        orderId: props.orderId,
       };
 
       const timeoutPromise = new Promise((resolve) =>
@@ -130,7 +172,7 @@ export default {
       );
 
       try {
-        console.log(requestData)
+        console.log(requestData);
         await Promise.all([
           store.dispatch("postOrderItemReturns", payload),
           timeoutPromise,
@@ -155,7 +197,7 @@ export default {
       submit,
       closeDialog,
       isIdInReturnList,
-      initializeCheckBox
+      initializeCheckBox,
     };
   },
 };

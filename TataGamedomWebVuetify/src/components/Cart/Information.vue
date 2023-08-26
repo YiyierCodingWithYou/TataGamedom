@@ -388,6 +388,13 @@ const spotHandler = async (value) => {
   spotList.value = [];
   createOrderCommand.value.toAddress = datas.address;
   createOrderCommand.value.ShipmemtMethodId = props.selectedData.shipMethod.id;
+  createOrderCommand.value.PaymentStatusId =
+    props.selectedData.shipMethod.id == 2 || 4 || 6 ? 2 : null;
+  createOrderCommand.value.OrderStatusId =
+    createOrderCommand.value.PaymentStatusId == 2 &&
+    (props.selectedData.shipMethod.id == 2 || 4 || 6)
+      ? 4
+      : null;
   createOrderCommand.value.recipientName = buyerName;
   createOrderCommand.value.shippingFee = props.selectedData.freight;
 };

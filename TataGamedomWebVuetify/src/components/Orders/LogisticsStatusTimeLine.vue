@@ -108,7 +108,11 @@ export default {
           { MerchantTradeNo }
         );
         logisticsTradeInfoData.value = logisticsTradeInfo.value.decodedData;
-        console.log("logisticsTradeInfo:", logisticsTradeInfo.value);
+        console.log(
+          "綠界物流查詢:",
+          "查詢用訂單編號: " + MerchantTradeNo,
+          "傳回結果:" + logisticsTradeInfoData.value.rtnMsg
+        );
       } catch (error) {
         console.error("Failed to fetch logistics trade info:", error);
       }
@@ -121,7 +125,6 @@ export default {
 
     onMounted(() => {
       fetchLogisticsTradeInfo();
-      console.log("物流查詢頁", order.value);
     });
 
     return {
