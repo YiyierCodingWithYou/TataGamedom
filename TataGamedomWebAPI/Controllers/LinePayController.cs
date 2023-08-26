@@ -41,9 +41,9 @@ public class LinePayController : ControllerBase
 
     [HttpPost("Create")]
     [EnableCors("AllowCookie")]
-    public async Task<PaymentResponseDto> CreatePaymentByAccount(ShipmentMethodDto shipmemtMethod)
+    public async Task<PaymentResponseDto> CreatePaymentByAccount(ShipmentMethodDto shipmentMethod)
     {
-        return await _linePayService.SendPaymentRequestWithCartInfo(shipmemtMethod);
+        return await _linePayService.SendPaymentRequestWithCartInfo(shipmentMethod);
     }
 
     [HttpPost("Confirm")]

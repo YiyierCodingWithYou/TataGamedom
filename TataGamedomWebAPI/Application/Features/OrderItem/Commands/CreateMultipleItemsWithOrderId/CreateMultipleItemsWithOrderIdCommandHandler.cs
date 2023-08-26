@@ -70,25 +70,11 @@ public class CreateMultipleItemsWithOrderIdCommandHandler : IRequestHandler<Crea
 
         await _orderItemRepository.CreateAsync(orderItemToBeCreatedList);
         await DeleteCart(request);
-        //await UpdateStatusIfPaidandAllVirtual(responseOrderId);
 
         _logger.LogInformation("Created multiple order items and Delete Cart successfully");
 
         return _mapper.Map<List<CreateOrderItemResponseDto>>(orderItemToBeCreatedList);
     }
-
-    //private async Task UpdateStatusIfPaidandAllVirtual(int responseOrderId)
-    //{
-    //    List<OrderItemWithDetailsDto> orderItemsCreated = await _mediator.Send(new GetOrderItemListByOrderIdQuery(responseOrderId));
-    //    OrderDetailsDto orderCreated = await _mediator.Send(new GetOrderDetailQuery(responseOrderId));
-    //    if (orderCreated.PaymentStatusId == (int)PaymentStatus.Paid && orderItemsCreated.All(oi => oi.ProductIsVirtual == true))
-    //    {
-    //        Models.EFModels.Order? order = await _orderRepository.GetByIdAsync(responseOrderId);
-    //        order!.OrderStatusId = (int)OrderStatus.Completed;
-    //        await _orderRepository.UpdateAsync(order);
-    //        _logger.LogInformation("皆為虛擬商品且已付款，訂單狀態更新為已完成");
-    //    }
-    //}
 
     private async Task DeleteCart(CreateMultipleItemsWithOrderIdCommand request)
 	{

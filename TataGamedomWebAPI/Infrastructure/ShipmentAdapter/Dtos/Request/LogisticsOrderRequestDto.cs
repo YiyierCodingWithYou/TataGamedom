@@ -18,6 +18,10 @@ public class LogisticsOrderRequestDto
 
     public string ReceiverStoreID { get; set; } = "131386";  //7-11
 
+    public int CollectionAmount { get; set; }
+
+    public string IsCollection { get; set; } = "N"; //是否代收貨款
+
     public int OrderId { get; set; }
 
 }

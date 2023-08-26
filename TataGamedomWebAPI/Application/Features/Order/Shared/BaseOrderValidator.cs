@@ -17,7 +17,7 @@ public class BaseOrderValidator : AbstractValidator<BaseOrder>
             .NotEmpty().WithMessage("{PropertyName} 必填")
             .InclusiveBetween(1, 5);
 
-        RuleFor(p => p.ShipmemtMethodId)
+        RuleFor(p => p.ShipmentMethodId)
             .NotEmpty().WithMessage("{PropertyName} 必填")
             .InclusiveBetween(1, 6);
 

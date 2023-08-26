@@ -97,19 +97,28 @@ public class ECPayShipmentService
         shipmentOrder.ReceiverName = orderCreated.RecipientName!;
         shipmentOrder.ReceiverCellPhone = orderCreated.ReceiverCellPhone!;
         shipmentOrder.ReceiverEmail = orderCreated.ReceiverEmail!;
-
+        if (orderCreated.ShipmentMethodId == (int)LogisticsMethod.UNIMARTOnDelivery ||
+            orderCreated.ShipmentMethodId == (int)LogisticsMethod.FAMIPayOnDelivery ||
+            orderCreated.ShipmentMethodId == (int)LogisticsMethod.BlackCatOnDelivery) 
+        { 
+            shipmentOrder.IsCollection = "Y";
+            shipmentOrder.CollectionAmount = (int)shipmentOrder.GoodsAmount;
+        } 
 
         using FormUrlEncodedContent content = new FormUrlEncodedContent(ComputeOrderRequestData(shipmentOrder));
         HttpResponseMessage response = await _httpClient.PostAsync($"{BaseAPIUrl}/Create", content);
         string responseBody = await response.Content.ReadAsStringAsync();
+
+
+
+        //TODO => 如果失敗，ThrowExceptionIfCheckMacValueNotMatch不拋出例外，而是將訂單update成待處理 => UI界面使無法查詢
+        //根據訂單主檔既有資料 => 重新向綠界建物流訂單 => 成功了再update成處理中
 
         ThrowExceptionIfBadRequest(response, responseBody);
 
         NameValueCollection responseValues = HttpUtility.ParseQueryString(responseBody.Split('|')[1]);
         Dictionary<string, string> data = responseValues.AllKeys.ToDictionary(k => k!, k => responseValues[k]!);
 
-        //TODO => 如果失敗，ThrowExceptionIfCheckMacValueNotMatch不拋出例外，而是將訂單update成待處理 => UI界面使無法查詢
-        //根據訂單主檔既有資料 => 重新向綠界建物流訂單 => 成功了再update成處理中
         ThrowExceptionIfCheckMacValueNotMatch(responseValues, data);
         
         return data;
@@ -132,6 +141,8 @@ public class ECPayShipmentService
             { "ReceiverEmail", shipmentOrder.ReceiverEmail }, // todo?
             { "ServerReplyURL", shipmentOrder.ServerReplyURL},//localhost:3000/Orders" }, //todo ngrok
             { "ReceiverStoreID", shipmentOrder.ReceiverStoreID },// 7-ELEVEN 超商：131386 7-ELEVEN 超商冷凍店取：896539 全家：006598 OK：1328
+            { "IsCollection", shipmentOrder.IsCollection},
+            { "CollectionAmount", shipmentOrder.CollectionAmount.ToString()}
         };
 
         orderDict["CheckMacValue"] = GetCheckMacValue(orderDict);

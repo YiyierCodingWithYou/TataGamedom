@@ -47,7 +47,7 @@ public partial class Order
 
     public virtual PaymentStatusCode PaymentStatus { get; set; } = null!;
 
-    public virtual ShipmemtMethod? ShipmentMethod { get; set; }
+    public virtual ShipmentMethod? ShipmentMethod { get; set; }
 
     public virtual ShipmentStatusesCode? ShipmentStatus { get; set; }
 }
