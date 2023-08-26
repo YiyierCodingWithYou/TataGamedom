@@ -92,7 +92,7 @@ public class ECPayShipmentService
         NameValueCollection responseValues = HttpUtility.ParseQueryString(responseBody.Split('|')[1]);
         Dictionary<string, string> data = responseValues.AllKeys.ToDictionary(k => k!, k => responseValues[k]!);
 
-        //ThrowExceptionIfCheckMacValueNotMatch(responseValues, data);    //加入OrderId後再打開
+        ThrowExceptionIfCheckMacValueNotMatch(responseValues, data);    //加入OrderId後再打開
 
         return data;
     }
@@ -106,10 +106,10 @@ public class ECPayShipmentService
             { "MerchantTradeDate", order.MerchantTradeDate},
             { "LogisticsType", order.LogisticsType},
             { "LogisticsSubType", order.LogisticsSubType},  //B2C接受參數: FAMI、UNIMART、HILIFE、UNIMARTFREEZE
-            { "GoodsAmount", order.GoodsAmount.ToString() },  // todo 跟11確定總額&運費算法
+            { "GoodsAmount", order.GoodsAmount.ToString() },
             { "SenderName", order.SenderName},
             { "SenderCellPhone ", order.SenderCellPhone},
-            { "ReceiverName", order.ReceiverName },  //todo 從購物車取memberInfo
+            { "ReceiverName", order.ReceiverName },
             { "ReceiverCellPhone", order.ReceiverCellPhone },   //todo 從購物車取memberInfo
             { "ReceiverEmail", order.ReceiverEmail }, // todo?
             { "ServerReplyURL", order.ServerReplyURL},//localhost:3000/Orders" }, //todo ngrok

@@ -15,7 +15,6 @@ public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepos
 
     public async Task<List<OrderItemWithDetailsDto>> GetListByAccountWithDetailsAsync(int orderId)
     {
-        //Todo DiscountedPrice跟112確定後改用算的，或反正規化直接取值
         List<OrderItemWithDetailsDto> orderItemListWithDetails = await _dbContext.OrderItems
             .AsNoTracking() 
             .Where(oi => oi.OrderId == orderId)
@@ -25,7 +24,7 @@ public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepos
                 Index = oi.Index,
                 GameGameCoverImg = oi.Product!.Game!.GameCoverImg,
                 GameChiName = oi.Product.Game.ChiName,
-                DiscountedPrice = 0,
+                DiscountedPrice = oi.ProductPrice,
                 ProductIsVirtual = oi.Product.IsVirtual
             })
             .ToListAsync();

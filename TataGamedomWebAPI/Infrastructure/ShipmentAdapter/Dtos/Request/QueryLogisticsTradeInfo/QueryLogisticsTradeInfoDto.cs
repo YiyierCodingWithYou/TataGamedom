@@ -4,5 +4,5 @@ public class QueryLogisticsTradeInfoDto
 {
     public string MerchantID { get; set; } = "2000132";
     public string? LogisticsID { get; set; }
-    public string? MerchantTradeNo { get; set; } = "TataGamedomWeb";  //todo OrderId
+    public string? MerchantTradeNo { get; set; }
 }

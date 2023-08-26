@@ -2,18 +2,24 @@
   <v-dialog v-model="dialog" activator="parent" width="auto">
     <v-theme-provider theme="dark" with-background class="pa-10">
       <div class="text-h6">
-        <div>交易編號: {{ logisticsTradeInfoData.merchantTradeNo }}</div>
-        <!-- OrderIndex -->
-        <div>狀態: {{ logisticsTradeInfoData.logisticsStatus }}</div>
-        <div>方式: {{ logisticsTradeInfoData.logisticsType }}</div>
-        <div>物流費用: {{ logisticsTradeInfoData.handlingCharge }}</div>
-        <div>配送編號(B2C): {{ logisticsTradeInfoData.shipmentNo }}</div>
-        <div>託運單號(宅配): {{ logisticsTradeInfoData.bookingNote }}</div>
-        <div>寄貨編號(C2C): {{ logisticsTradeInfoData.cvsPaymentNo }}</div>
-        <div>7-11驗證碼(C2C): {{ logisticsTradeInfoData.cvsValidationNo }}</div>
+        <div>物流訂單編號: {{ logisticsTradeInfoData.merchantTradeNo }}</div>
         <div>
-          7-11交貨便代碼(C2C):{{ logisticsTradeInfoData.cvsPaymentNo
-          }}{{ logisticsTradeInfoData.cvsValidationNo }}
+          狀態:
+          {{ logisticsTradeInfoData.logisticsStatus == 300 ? "處理中" : "" }}
+        </div>
+        <div>
+          寄送方式:
+          {{
+            logisticsTradeInfoData.logisticsType == "CVS_UNIMART"
+              ? "7-11取貨"
+              : ""
+          }}
+        </div>
+        <div v-if="logisticsTradeInfoData.shipmentNo">
+          配送編號(B2C): {{ logisticsTradeInfoData.shipmentNo }}
+        </div>
+        <div v-if="logisticsTradeInfoData.bookingNote">
+          託運單號(宅配): {{ logisticsTradeInfoData.bookingNote }}
         </div>
       </div>
       <v-divider
@@ -28,26 +34,16 @@
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
           </template>
           <div class="d-flex text-h6">
-            <strong class="me-4">{{ logisticsTradeInfoData.tradeDate }}</strong>
+            <strong class="me-4">{{
+              relativeTime(logisticsTradeInfoData.tradeDate)
+            }}</strong>
             <div>
               <strong> 物流訂單成立</strong>
             </div>
           </div>
         </v-timeline-item>
-
         <v-timeline-item>
           <template v-slot:opposite>
-            <v-icon icon="mdi-pac-man" size="median"></v-icon>
-            <v-icon icon="mdi-pac-man" size="median"></v-icon>
-          </template>
-          <div>
-            <div class="text-h6">送達物流中心</div>
-          </div>
-        </v-timeline-item>
-
-        <v-timeline-item>
-          <template v-slot:opposite>
-            <v-icon icon="mdi-pac-man" size="median"></v-icon>
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
           </template>
@@ -58,7 +54,6 @@
 
         <v-timeline-item>
           <template v-slot:opposite>
-            <v-icon icon="mdi-pac-man" size="median"></v-icon>
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
@@ -74,7 +69,6 @@
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
-            <v-icon icon="mdi-pac-man" size="median"></v-icon>
           </template>
           <div>
             <div class="text-h6">取貨</div>
@@ -86,7 +80,9 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { zhTW } from "date-fns/locale";
+import { format } from "date-fns";
 import { useStore } from "vuex";
 
 export default {
@@ -99,8 +95,9 @@ export default {
   },
   setup(props) {
     const store = useStore();
+    const order = computed(() => store.getters.getOrderById(props.orderId));
     const dialog = ref(false);
-    const MerchantTradeNo = "GW2308211940193466";
+    const MerchantTradeNo = order.value.orderIndex;
     const logisticsTradeInfo = ref({});
     const logisticsTradeInfoData = ref({});
 
@@ -117,14 +114,22 @@ export default {
       }
     };
 
+    const relativeTime = (datetime) => {
+      const date = new Date(datetime);
+      return format(date, "yyyy/MM/dd HH:mm", { locale: zhTW });
+    };
+
     onMounted(() => {
       fetchLogisticsTradeInfo();
+      console.log("物流查詢頁", order.value);
     });
 
     return {
       dialog,
+      order,
       logisticsTradeInfo,
       logisticsTradeInfoData,
+      relativeTime,
     };
   },
 };

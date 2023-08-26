@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TataGamedomWebAPI.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using TataGamedomWebAPI.Infrastructure.Data;
 namespace TataGamedomWebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230825030043_addShippingFeeColumn_adjustShipmentMethodId")]
+    partial class addShippingFeeColumn_adjustShipmentMethodId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1297,8 +1300,8 @@ namespace TataGamedomWebAPI.Migrations
                     b.Property<int?>("ShipmentStatusId")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("ShippingFee")
-                        .HasColumnType("decimal(8, 0)");
+                    b.Property<int?>("ShippingFee")
+                        .HasColumnType("int");
 
                     b.Property<string>("ToAddress")
                         .HasMaxLength(50)
