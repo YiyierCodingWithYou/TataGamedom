@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TataGamedomWebAPI.Application.Contracts.Logging;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
 using TataGamedomWebAPI.Application.Exceptions;
-
+using TataGamedomWebAPI.Infrastructure;
 
 namespace TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder;
 
@@ -34,6 +34,7 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Uni
         {
             throw new NotFoundException(nameof(orderTobeUpdated),request.Id);
         }
+
         orderTobeUpdated = _mapper.Map(request, orderTobeUpdated);
 
         await _orderRepository.UpdateAsync(orderTobeUpdated);
