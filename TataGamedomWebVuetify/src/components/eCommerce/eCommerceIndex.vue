@@ -1,75 +1,81 @@
 <template>
-  <div>
-    <carousel ref="bookmark" @getProductInput="GetSingleProduct"></carousel>
+  <div class="shopContainer">
     <div>
-      <CartDrawer v-model="drawer" ref="drawerComponent"></CartDrawer>
+      <carousel ref="bookmark" @getProductInput="GetSingleProduct"></carousel>
+      <div class="myDraw">
+        <CartDrawer v-model="drawer" ref="drawerComponent"></CartDrawer>
+      </div>
     </div>
-  </div>
-
-  <div class="container mt-10">
-    <v-row class="row">
-      <v-col cols="2">
-        <SideBar @searchInput="inputHandler" @classificationInput="classificationHandler"
-          @getProductInput="GetSingleProduct"></SideBar>
-      </v-col>
-      <v-col cols="10">
-        <div class="d-flex">
-          <v-col cols="4" class="me-auto">
-            <v-btn-toggle v-model="inputPlatform" rounded="0" color="#ffbf5d" group @update:model-value="sortPlatform">
-              <v-btn value=""> 所有遊戲 </v-btn>
-
-              <v-btn value="PC"> PC </v-btn>
-
-              <v-btn value="PS4"> PS4 </v-btn>
-
-              <v-btn value="Switch"> Switch </v-btn>
-            </v-btn-toggle>
+    <v-container>
+      <div class="mt-10">
+        <v-row class="row">
+          <v-col cols="3">
+            <SideBar @searchInput="inputHandler" @classificationInput="classificationHandler"
+              @getProductInput="GetSingleProduct"></SideBar>
           </v-col>
-          <v-col cols="4">
-            <v-select v-model="select" :items="items" item-title="label" item-value="item" persistent-hint return-object
-              single-line @update:model-value="sortItems">
-            </v-select>
-          </v-col>
-        </div>
-        <v-row>
-          <v-col cols="4" v-for="product in products" :key="product.id">
-            <v-card height="550">
-              <v-img class="align-end text-white" height="350" :src="img + product.gameCoverImg" cover
-                @click="GetSingleProduct(product.id)"></v-img>
-              <div class="d-flex justify-center">
-                <v-chip class="mt-3 d-flex justify-center" color="primary" label text-color="white">
-                  <v-icon start icon="mdi-gamepad-right"></v-icon>
-                  {{ product.gamePlatformName }}
-                </v-chip>
-                <v-card-title class="mt-1 justify-center text-center" @click="GetSingleProduct(product.id)">
-                  {{ product.chiName }}
-                </v-card-title>
-              </div>
-              <v-card-text class="d-flex justify-center">
-                <div v-if="product.price != product.specialPrice">
-                  <span><s>${{ product.price }}</s>　</span>
-                  <span>${{ product.specialPrice }}</span>
-                </div>
-                <div v-else>
-                  <div>${{ product.price }}</div>
-                </div>
-              </v-card-text>
+          <v-col cols="9">
+            <div class="d-flex">
+              <v-col cols="6" class="me-auto">
+                <v-btn-toggle v-model="inputPlatform" rounded="0.5" group
+                  style="border:2px solid #fbf402; color:#fbf402 !important;" @update:model-value="sortPlatform"
+                  color="#fbf402" active="">
+                  <v-btn :class="{ 'myBtn': true, 'selectedBtn': inputPlatform === '' }" value="" rounded="0"> 所有遊戲 </v-btn>
+                  <v-btn :class="{ 'myBtn': true, 'selectedBtn': inputPlatform === 'PC' }" value="PC"> PC </v-btn>
+                  <v-btn :class="{ 'myBtn': true, 'selectedBtn': inputPlatform === 'PS4' }" value="PS4"> PS4 </v-btn>
+                  <v-btn :class="{ 'myBtn': true, 'selectedBtn': inputPlatform === 'Switch' }" value="Switch" rounded="0"> Switch
+                  </v-btn>
+                </v-btn-toggle>
+              </v-col>
+              <v-col cols="4">
+                <v-select v-model="select" :items="items" item-title="label" item-value="item" item-color="#f9ee08"  bg-color="#01010f" persistent-hint
+                  return-object single-line @update:model-value="sortItems" theme="dark">
+                </v-select>
+              </v-col>
+            </div>
 
-              <v-rating v-model="product.score" class="ma-2 d-flex justify-center" density="compact" half-increments
-                readonly></v-rating>
+            <v-row>
+              <v-col cols="4" v-for="product in products" :key="product.id">
+                <v-card height="410" class="myCard ma-1" density="compact">
+                  <v-img class="align-end text-white" height="200" :src="img + product.gameCoverImg" cover
+                    @click="GetSingleProduct(product.id)"></v-img>
+                    <v-divider class="border-opacity-100" color="#a1dfe9"></v-divider>
+                  <div class="d-flex justify-center align-center mt-2">
+                    <v-chip class="mt-1 d-flex justify-center" style="background-color:transparent; font-size: 12px;" label>
+                      <v-icon start icon="mdi-gamepad-right"></v-icon>
+                      {{ product.gamePlatformName }}
+                    </v-chip>
+                    <div class="mt-1 justify-center text-center" @click="GetSingleProduct(product.id)" style="color:white">
+                      {{ product.chiName }}
+                    </div>
+                  </div>
+                  <v-card-text class="d-flex justify-center">
+                    <div v-if="product.price != product.specialPrice">
+                      <span style="color:grey; font-size: 16px;"><s>${{ product.price }}</s>　</span>
+                      <span style="font-size: 20px; color:white">${{ product.specialPrice }}</span>
+                    </div>
+                    <div v-else>
+                      <div style="font-size: 20px; color:white">${{ product.price }}</div>
+                    </div>
+                  </v-card-text>
 
-              <v-card-actions class="justify-center">
-                <v-btn color="orange" @click.stop="Add2Cart(product.id)">加入購物車</v-btn>
-              </v-card-actions>
-            </v-card>
+                  <v-rating v-model="product.score" class="d-flex justify-center" density="compact" half-increments
+                    readonly size="x-small"></v-rating>
+
+                  <v-card-actions class="justify-center">
+                    <v-btn @click.stop="Add2Cart(product.id)" class="mt-3 add2cart" size="large">加入購物車</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <div class="text-center">
+              <v-pagination v-model="thePage" :length="totalPages" :total-visible="5"
+                @update:model-value="clickHandler"></v-pagination>
+            </div>
           </v-col>
         </v-row>
-      </v-col>
-    </v-row>
-  </div>
-  <div class="text-center">
-    <v-pagination v-model="thePage" :length="totalPages" :total-visible="5"
-      @update:model-value="clickHandler"></v-pagination>
+      </div>
+    </v-container>
   </div>
 </template>
   
@@ -266,4 +272,50 @@ const GetSingleProduct = async (productId) => {
 };
 </script>
   
-<style></style>
+<style scoped>
+.v-container {
+  max-width: 90%;
+}
+
+.shopContainer {
+  background-color: #01010f;
+  color: #f9ee08;
+}
+
+.myBtn {
+  background-color: #01010f;
+  color: #f9ee08
+}
+.selectedBtn {
+  background-color: #fbf402;
+  color: #01010f !important;
+}
+.myCard{
+  background-color:#01010f;
+  color:#fbf402;
+  box-shadow:2px 2px 10px #a1dfe9;
+  border-radius: 2%;
+  border: 2px inset #a1dfe9;
+  font-size:18px
+}
+
+.add2cart{
+  font-size: 18px;
+  border:1px solid #a1dfe9;
+  color:#a1dfe9;
+}
+.add2cart:hover{
+  background-color:#a1dfe9;
+  color:#01010f;
+  box-shadow:2px 2px 10px #a1dfe9
+}
+.v-img{
+  border:#a1dfe9 !important;
+}
+.myDraw {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 20;
+}
+</style>

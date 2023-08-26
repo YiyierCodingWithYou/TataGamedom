@@ -1,94 +1,99 @@
 <template>
   <div>
     <v-row>
-      <CartDrawer v-model="drawer" ref="drawerComponent"></CartDrawer>
-      <div class="d-flex flex-no-wrap">
-        <div class="ma-3">
-          <v-img :src="imgLink + productData.gameCoverImg" width="650" cover></v-img>
-        </div>
-        <div class="d-flex flex-column mt-3">
-          <v-card-title class="text-h5">
-            {{ productData.chiName }}
-          </v-card-title>
-          <hr />
-          <v-card-title class="text-h5">
-            {{ productData.engName }}
-          </v-card-title>
-          <div class="d-flex text-h3">
-            <v-card-subtitle class="me-auto" v-for="(item, index) in productData.coupons" :key="index">
-              {{ item }}{{ productData.couponDescription[index] }}<br />
-            </v-card-subtitle>
-          </div>
-          <v-card-subtitle v-if="productData.specialPrice === productData.price">${{ productData.price
-          }}</v-card-subtitle>
-          <v-card-subtitle v-else><s>${{ productData.price }}</s>${{ productData.specialPrice }}</v-card-subtitle>
-          <div class="d-flex">
-            <v-rating v-model="productData.score" class="ma-2 d-flex me-auto" density="compact" half-increments
-              readonly></v-rating>｜
-            <v-card-subtitle>{{ productData.commentCount }}個評論</v-card-subtitle>
-          </div>
-          <div>
-            <v-row>
-              <v-col cols="4">
-                <v-btn icon @click="decreaseQuantity" :max="limit" v-model="quantity">
-                  <v-icon>mdi-minus</v-icon>
-                </v-btn>
-              </v-col>
-              <v-col cols="4">
-                <v-text-field v-model="quantity" min="1" :max="limit" outlined></v-text-field>
-              </v-col>
-              <v-col cols="4">
-                <v-btn icon @click="increaseQuantity" v-model="quantity">
-                  <v-icon>mdi-plus</v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
-          </div>
-          <v-btn v-if="limit > 0" class="mt-auto ma-3" @click.stop="Add2Cart(productData.id)"
-            color="#FFBF5D">加入購物車</v-btn>
-          <v-btn v-else-if="limit === 0" class="mt-auto ma-3" disabled>售完</v-btn>
-          <p v-if="limit > 0 && limit <= 1000" class="text-center">
-            現庫存剩餘{{ limit }}件
-          </p>
-          <p v-else-if="limit === 0" class="text-center">無庫存</p>
-        </div>
-      </div>
+      <CartDrawer v-model="drawer" ref="drawerComponent" class="myDraw"></CartDrawer>
+      <v-container class="d-flex flex-no-wrap">
+        <v-row>
+          <v-col cols="6">
+            <div class="mt-3 d-flex justify-center align-center">
+              <v-img :src="imgLink + productData.gameCoverImg" height="400" cover></v-img>
+            </div>
+          </v-col>
+          <v-col cols="6">
+            <div class="d-flex flex-column mt-3">
+              <div class="text-h5 mb-2 ml-3">
+                {{ productData.chiName }}
+              </div>
+              <v-divider class="border-opacity-100 mb-2" color="#a1dfe9"></v-divider>
+              <div class="text-h5 ml-3">
+                {{ productData.engName }}
+              </div>
+              <div class="d-flex text-h3 mb-2">
+                <v-card-subtitle class="me-auto" v-for="(item, index) in productData.coupons" :key="index">
+                  {{ item }}{{ productData.couponDescription[index] }}<br />
+                </v-card-subtitle>
+              </div>
+              <v-card-subtitle v-if="productData.specialPrice === productData.price">${{ productData.price
+              }}</v-card-subtitle>
+              <v-card-subtitle v-else><s>${{ productData.price }}</s>${{ productData.specialPrice }}</v-card-subtitle>
+              <div class="d-flex">
+                <v-rating v-model="productData.score" class="ma-2 d-flex me-auto" density="compact" half-increments
+                  readonly></v-rating>｜
+                <v-card-subtitle>{{ productData.commentCount }}個評論</v-card-subtitle>
+              </div>
+              <div>
+                <v-row>
+                  <v-col cols="4">
+                    <v-btn icon @click="decreaseQuantity" :max="limit" v-model="quantity">
+                      <v-icon>mdi-minus</v-icon>
+                    </v-btn>
+                  </v-col>
+                  <v-col cols="4">
+                    <v-text-field v-model="quantity" min="1" :max="limit" outlined></v-text-field>
+                  </v-col>
+                  <v-col cols="4">
+                    <v-btn icon @click="increaseQuantity" v-model="quantity">
+                      <v-icon>mdi-plus</v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </div>
+              <v-btn v-if="limit > 0" class="mt-auto ma-3 myBtn" @click.stop="Add2Cart(productData.id)">加入購物車</v-btn>
+              <v-btn v-else-if="limit === 0" class="mt-auto ma-3" disabled>售完</v-btn>
+              <p v-if="limit > 0 && limit <= 1000" class="text-center">
+                現庫存剩餘{{ limit }}件
+              </p>
+              <p v-else-if="limit === 0" class="text-center">無庫存</p>
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-row>
     <v-row>
       <v-container>
-        <v-sheet>
+        <v-sheet class="myComment">
           <div class="ma-5">
-            <h3>🎮 遊戲簡介</h3>
-            <p>{{ productData.description }}</p>
+            <h3 class="mytitle">🦦 遊戲簡介</h3>
+            <p class="myContent">{{ productData.description }}</p>
           </div>
           <div class="ma-5">
-            <h3>🎮 系統需求</h3>
-            <p v-html="productData.systemRequire"></p>
+            <h3 class="mytitle">🦦 系統需求</h3>
+            <p class="myContent" v-html="productData.systemRequire"></p>
           </div>
           <div class="d-flex ma-5">
             <div v-for="item in productData.classification" :key="item">
               <v-chip class="mr-2" @click="classificationHandler(item)">#{{ item }}</v-chip>
             </div>
           </div>
-          <div class="d-flex ma-5">
-            <h3 ref="bookmark">🎮 遊戲評論</h3>
+          <div class="d-flex justify-center align-center">
+            <h3 class="mytitle" ref="bookmark">🦦 遊戲評論</h3>
             <span class="me-auto">({{ productData.commentCount }})</span>
-            <v-btn color="#FFBF5D" @click="toBoard">前往討論版</v-btn>
+            <v-btn class="myBtn" @click="toBoard">前往討論版</v-btn>
           </div>
-          <v-card v-for="item in productData.gameComments" :key="item" class="ma-5">
+          <v-card v-for="item in productData.gameComments" :key="item" class="ma-5 myCard">
             <v-card-item>
               <v-card-title>{{ item.memberName }}</v-card-title>
               <v-card-subtitle>發表於 {{ relativeTime(item.createdTime) }}</v-card-subtitle>
             </v-card-item>
-            <v-card-text> {{ item.content }} </v-card-text>
-            <v-rating v-model="item.score" density="compact" color="yellow" readonly></v-rating>
+            <v-card-text class="myContent"> {{ item.content }} </v-card-text>
+            <v-rating v-model="item.score" density="compact" color="yellow" readonly class="ml-3"></v-rating>
           </v-card>
-          <v-pagination v-model="thePage" :length="totalPages" :total-visible="5"
-            @click="paginationHandler(thePage)"></v-pagination>
+          <v-pagination v-model="thePage" :length="totalPages" :total-visible="5" @click="paginationHandler(thePage)"
+            color="#f9ee08"></v-pagination>
         </v-sheet>
         <v-form @submit.prevent="commentSubmit">
           <div class="ma-5">
-            <h3>🎮 發表評論</h3>
+            <h3 class="mytitle">🦦 發表評論</h3>
             <div v-if="$store.state.isLoggedIn">
               <v-textarea :rules="rules" clearable variant="solo" rows="4" v-model="comment"></v-textarea>
               <div class="d-flex">
@@ -96,7 +101,7 @@
                   <v-rating v-model="star" bg-color="orange-lighten-1" color="yellow"></v-rating>
                 </div>
                 <v-btn type="submit" :disabled="comment.length < 10 || comment.length > 500 || star == 0
-                  " color="#FFBF5D">送出</v-btn>
+                  " class="myBtn">送出</v-btn>
               </div>
             </div>
             <div v-else>
@@ -342,4 +347,48 @@ const toBoard = async () => {
 };
 </script>
     
-<style></style>
+<style>
+.myDraw {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 20;
+}
+
+.myBtn {
+  font-size: 18px;
+  border: 1px solid #a1dfe9;
+  background-color: #01010f;
+  color: #a1dfe9;
+}
+
+.myBtn:hover {
+  background-color: #a1dfe9;
+  color: #01010f;
+  box-shadow: 2px 2px 10px #a1dfe9
+}
+
+.myComment {
+  background-color: #01010f;
+  color: white
+}
+
+.myCard {
+  background-color: #01010f;
+  color: #f9ee08;
+  box-shadow: 2px 2px 10px #a1dfe9;
+  border-radius: 3%;
+  border: 2px inset #a1dfe9;
+  font-size: 18px
+}
+
+.mytitle {
+  color: #a1dfe9 !important;
+  font-size: 20px;
+}
+
+.myContent {
+  color: white;
+  font-size: 18px;
+}
+</style>

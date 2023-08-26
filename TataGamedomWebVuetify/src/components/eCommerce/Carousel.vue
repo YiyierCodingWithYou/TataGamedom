@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-carousel v-model="currentIndex" cycle class="fullScreen">
+    <v-carousel v-model="currentIndex" cycle class="fullScreen" show-arrows="hover">
       <v-carousel-item
         v-for="product in topFive"
         :src="imgLink + product.gameGameCoverImg"

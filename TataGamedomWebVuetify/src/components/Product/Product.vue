@@ -1,24 +1,28 @@
 <template>
-    <div>
-        <SingleProductCarousel v-if="product !== undefined" :productData="product" ref="bookmark"></SingleProductCarousel>
-        <v-main class="bg-grey-lighten-2">
-            <v-container>
+    <div class="shopContainer">
+        <div>
+            <SingleProductCarousel v-if="product !== undefined" :productData="product" ref="bookmark">
+            </SingleProductCarousel>
+        </div>
+        <div>
+            <v-container class="mt-10">
                 <v-row>
                     <v-col cols="3">
-                        <v-sheet rounded="lg">
+                        <v-sheet rounded="lg" color="transparent">
                             <SideBar @searchInput="inputHandler" @classificationInput="classificationHandler"
                                 @getProductInput="GetSingleProduct"></SideBar>
                         </v-sheet>
                     </v-col>
-                    <v-col>
-                        <v-sheet rounded="lg">
+                    <v-col cols="9">
+                        <v-sheet rounded="lg" color="transparent">
                             <ProductDetail v-if="product !== undefined" :productData="product" class="justify-center"
                                 @commentSucceed="reload" @paginationInput="paginationHandler"></ProductDetail>
                         </v-sheet>
                     </v-col>
                 </v-row>
             </v-container>
-        </v-main>
+        </div>
+
     </div>
 </template>
             
@@ -106,4 +110,14 @@ onMounted(() => {
 });
 </script>
            
-<style></style>
+<style scoped>
+.v-container {
+    max-width: 90%;
+}
+
+.shopContainer {
+    background-color: #01010f;
+    color: #f9ee08;
+}
+
+</style>

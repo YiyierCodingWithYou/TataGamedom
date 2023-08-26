@@ -1,24 +1,25 @@
 <template>
   <div>
-    <ul>
-      <li
+      <v-list-item
         v-for="product in topFive"
         :key="product.id"
         class="mt-8"
         @click="handleProductClick(product.id)"
       >
+      
         <div class="d-flex">
-          <img :src="imgLink + product.gameGameCoverImg" width="150" cover />
-          <div class="d-flex flex-column">
-            <v-chip class="ma-2 w100 justify-center" color="primary">
+          <v-avatar :image="imgLink + product.gameGameCoverImg" size="x-large" class="ml-5"></v-avatar>
+          <div class="d-flex flex-column ml-5 ">
+            <div class="justify-center" style="color:#a1dfe9">
               <v-icon start icon="mdi-gamepad-right"></v-icon>
               {{ product.gamePlatformName }}
-            </v-chip>
+            </div>
             {{ product.gameChiName }}
           </div>
         </div>
-      </li>
-    </ul>
+        <v-divider class="border-opacity-50 mt-3" color="#f9ee08"></v-divider>
+      </v-list-item>
+      
   </div>
 </template>
     
@@ -45,9 +46,7 @@ const handleProductClick = (productId) => {
 };
 </script>
     
-<style>
-.w100 {
-  width: 85px;
-  text-align: center;
-}
+<style scoped>
+
+
 </style>
