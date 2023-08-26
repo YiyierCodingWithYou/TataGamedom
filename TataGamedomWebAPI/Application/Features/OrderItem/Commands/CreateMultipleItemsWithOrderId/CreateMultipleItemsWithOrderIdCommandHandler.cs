@@ -6,6 +6,10 @@ using TataGamedomWebAPI.Application.Exceptions;
 using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderDetails;
 using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleOrderItems;
 using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateOrderItem;
+using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemList;
+using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemListByAccount;
+using TataGamedomWebAPI.Infrastructure;
+using TataGamedomWebAPI.Models.EFModels;
 using TataGamedomWebAPI.Models.Interfaces;
 
 namespace TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleItemsWithOrderId;
@@ -45,38 +49,48 @@ public class CreateMultipleItemsWithOrderIdCommandHandler : IRequestHandler<Crea
     }
 
     public async Task<List<CreateOrderItemResponseDto>> Handle(CreateMultipleItemsWithOrderIdCommand request, CancellationToken cancellationToken)
-	{
-		var orderItemToBeCreatedList = new List<Models.EFModels.OrderItem>();
-		HashSet<int> soldOutIds = await _inventoryItemRepository.GetSoldOutIdList();
+    {
+        var orderItemToBeCreatedList = new List<Models.EFModels.OrderItem>();
+        HashSet<int> soldOutIds = await _inventoryItemRepository.GetSoldOutIdList();
 
-		int responseOrderId = await _mediator.Send(request.CreateOrderCommand);
+        int responseOrderId = await _mediator.Send(request.CreateOrderCommand);
 
-		foreach (var createOrderItemCommand in request.CreateOrderItemCommandList)
-		{
+        foreach (var createOrderItemCommand in request.CreateOrderItemCommandList)
+        {
 
-			var orderItem = _mapper.Map<Models.EFModels.OrderItem>(createOrderItemCommand);
+            var orderItem = _mapper.Map<Models.EFModels.OrderItem>(createOrderItemCommand);
 
-			orderItem.OrderId = responseOrderId;
+            orderItem.OrderId = responseOrderId;
 
-			await AddInventoryIemIdToOrderItem(soldOutIds, createOrderItemCommand, orderItem);
+            await AddInventoryIemIdToOrderItem(soldOutIds, createOrderItemCommand, orderItem);
 
-			await GenerateIndex(createOrderItemCommand, orderItem);
-			orderItemToBeCreatedList.Add(orderItem);
-		}
+            await GenerateIndex(createOrderItemCommand, orderItem);
+            orderItemToBeCreatedList.Add(orderItem);
+        }
 
-		await _orderItemRepository.CreateAsync(orderItemToBeCreatedList);
-		await DeleteCart(request);
+        await _orderItemRepository.CreateAsync(orderItemToBeCreatedList);
+        await DeleteCart(request);
+        await UpdateStatusIfPaidandAllVirtual(responseOrderId);
 
-        //find OrderItems IN Order & Update OrderStatus By IsVirtual 
-        //var order = await _mediator.Send(new GetOrderDetailQuery(responseOrderId));
+        _logger.LogInformation("Created multiple order items ans Delete Cart successfully");
 
-        //
-		_logger.LogInformation("Created multiple order items ans Delete Cart successfully");
+        return _mapper.Map<List<CreateOrderItemResponseDto>>(orderItemToBeCreatedList);
+    }
 
-		return _mapper.Map<List<CreateOrderItemResponseDto>>(orderItemToBeCreatedList);
-	}
+    private async Task UpdateStatusIfPaidandAllVirtual(int responseOrderId)
+    {
+        List<OrderItemWithDetailsDto> orderItemsCreated = await _mediator.Send(new GetOrderItemListByOrderIdQuery(responseOrderId));
+        OrderDetailsDto orderCreated = await _mediator.Send(new GetOrderDetailQuery(responseOrderId));
+        if (orderCreated.PaymentStatusId == (int)PaymentStatus.Paid && orderItemsCreated.All(oi => oi.ProductIsVirtual == true))
+        {
+            Models.EFModels.Order? order = await _orderRepository.GetByIdAsync(responseOrderId);
+            order!.OrderStatusId = (int)OrderStatus.Completed;
+            await _orderRepository.UpdateAsync(order);
+            _logger.LogInformation("皆為虛擬商品且已付款，訂單狀態更新為已完成");
+        }
+    }
 
-	private async Task DeleteCart(CreateMultipleItemsWithOrderIdCommand request)
+    private async Task DeleteCart(CreateMultipleItemsWithOrderIdCommand request)
 	{
 		var cart = await _cartRepository.GetCartListByMemberIdAsync(request.CreateOrderCommand.MemberId);
 		if (cart?.Any() == false)
