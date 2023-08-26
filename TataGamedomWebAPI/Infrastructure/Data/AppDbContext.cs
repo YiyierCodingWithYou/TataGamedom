@@ -756,10 +756,11 @@ public partial class AppDbContext : DbContext
             entity.HasIndex(e => e.Index, "UQ__Orders__9A5B62299A9DCB7B").IsUnique();
 
             entity.Property(e => e.CompletedAt).HasColumnType("datetime");
-            entity.Property(e => e.ContactEmails).HasMaxLength(50);
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.DeliveredAt).HasColumnType("datetime");
             entity.Property(e => e.Index).HasMaxLength(30);
+            entity.Property(e => e.ReceiverCellPhone).HasMaxLength(20);
+            entity.Property(e => e.ReceiverEmail).HasMaxLength(50);
             entity.Property(e => e.RecipientName).HasMaxLength(20);
             entity.Property(e => e.SentAt).HasColumnType("datetime");
             entity.Property(e => e.ShippingFee).HasColumnType("decimal(8, 0)");

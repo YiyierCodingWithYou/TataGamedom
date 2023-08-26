@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TataGamedomWebAPI.Application.Contracts.Logging;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
 using TataGamedomWebAPI.Application.Exceptions;
-using TataGamedomWebAPI.Application.Features.Order.Commands.CreateOrder;
-using TataGamedomWebAPI.Models.EFModels;
+
 
 namespace TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder;
 
@@ -30,6 +30,10 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Uni
         await ValidateRequest(request);
 
         Models.EFModels.Order? orderTobeUpdated = await _orderRepository.GetByIdAsync(request.Id);
+        if (orderTobeUpdated == null) 
+        {
+            throw new NotFoundException(nameof(orderTobeUpdated),request.Id);
+        }
         orderTobeUpdated = _mapper.Map(request, orderTobeUpdated);
 
         await _orderRepository.UpdateAsync(orderTobeUpdated);

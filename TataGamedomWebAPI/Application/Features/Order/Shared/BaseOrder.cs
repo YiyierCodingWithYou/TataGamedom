@@ -10,4 +10,6 @@ public abstract class BaseOrder
     public int? ShipmemtMethodId { get; set; }
     public string? RecipientName { get; set; }
     public int? ShippingFee { get; set; }
+    public string ReceiverEmail { get; set; } = string.Empty;
+    public string ReceiverCellPhone { get; set; } = string.Empty;
 }

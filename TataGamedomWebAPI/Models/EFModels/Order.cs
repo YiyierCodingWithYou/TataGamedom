@@ -33,9 +33,11 @@ public partial class Order
 
     public string? TrackingNum { get; set; }
 
-    public string? ContactEmails { get; set; }
+    public string? ReceiverEmail { get; set; }
 
     public decimal? ShippingFee { get; set; }
+
+    public string? ReceiverCellPhone { get; set; }
 
     public virtual Member Member { get; set; } = null!;
 

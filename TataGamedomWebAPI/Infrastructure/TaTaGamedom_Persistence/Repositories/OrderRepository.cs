@@ -42,7 +42,7 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
                 OrderCompletedAt = o.CompletedAt,
                 OrderShipmentMethod = o.ShipmentMethod!.Name,
                 OrderRecipientName = o.RecipientName,
-                ContactEmails = o.ContactEmails,
+                ContactEmails = o.ReceiverEmail,
                 ToAddress = o.ToAddress,
             })
             .ToListAsync();

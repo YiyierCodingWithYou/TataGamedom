@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Specialized;
 using System.Net;
 using System.Security.Cryptography;
@@ -20,11 +22,17 @@ public class ECPayShipmentService
     private readonly string BaseAPIUrl = "https://logistics-stage.ecpay.com.tw/Express";
 
     private static readonly HttpClient _httpClient;
+    private readonly IMediator _mediator;
+
     static ECPayShipmentService()
     {
         _httpClient = new HttpClient();
     }
 
+    public ECPayShipmentService(IMediator mediator)
+    {
+        this._mediator = mediator;
+    }
 
     #region 開啟物流選擇頁(url)
     public async Task<string> SendLogisticsSelectionRequest(LogisticsSelectionRawDataDto logisticsSelection)
@@ -81,9 +89,10 @@ public class ECPayShipmentService
     // 成功: 1| Response參數
     // 失敗: 0| ErrorMessage
     // 交易訊息代碼 105000___ 自訂錯誤代碼
-    public async Task<Dictionary<string, string>> SendLogisticsOrderForPickUpRequest(LogisticsOrderRequestDto order)
+    public async Task<Dictionary<string, string>> SendLogisticsOrderForPickUpRequest(LogisticsOrderRequestDto shipmentOrder)
     {
-        using FormUrlEncodedContent content = new FormUrlEncodedContent(ComputeOrderRequestData(order));
+        //GetOrder  把既有資料賦值給shipmentOrder? 
+        using FormUrlEncodedContent content = new FormUrlEncodedContent(ComputeOrderRequestData(shipmentOrder));
         HttpResponseMessage response = await _httpClient.PostAsync($"{BaseAPIUrl}/Create", content);
         string responseBody = await response.Content.ReadAsStringAsync();
 
@@ -91,31 +100,30 @@ public class ECPayShipmentService
 
         NameValueCollection responseValues = HttpUtility.ParseQueryString(responseBody.Split('|')[1]);
         Dictionary<string, string> data = responseValues.AllKeys.ToDictionary(k => k!, k => responseValues[k]!);
-
-        ThrowExceptionIfCheckMacValueNotMatch(responseValues, data);
+        
+        //ThrowExceptionIfCheckMacValueNotMatch(responseValues, data);
 
         //todo 物流訂單建立成功，更新回傳資訊到tataDb
-
         return data;
     }
 
-    private Dictionary<string, string> ComputeOrderRequestData(LogisticsOrderRequestDto order)
+    private Dictionary<string, string> ComputeOrderRequestData(LogisticsOrderRequestDto shipmentOrder)
     {
         var orderDict = new Dictionary<string, string>
         {
-            { "MerchantID", order.MerchantID },
-            { "MerchantTradeNo", order.MerchantTradeNo },   //目前從前端傳回新建訂單的OrderIndex
-            { "MerchantTradeDate", order.MerchantTradeDate},
-            { "LogisticsType", order.LogisticsType},
-            { "LogisticsSubType", order.LogisticsSubType},  //B2C接受參數: FAMI、UNIMART、HILIFE、UNIMARTFREEZE
-            { "GoodsAmount", order.GoodsAmount.ToString() },
-            { "SenderName", order.SenderName},
-            { "SenderCellPhone ", order.SenderCellPhone},
-            { "ReceiverName", order.ReceiverName },
-            { "ReceiverCellPhone", order.ReceiverCellPhone },   //todo 從購物車取memberInfo
-            { "ReceiverEmail", order.ReceiverEmail }, // todo?
-            { "ServerReplyURL", order.ServerReplyURL},//localhost:3000/Orders" }, //todo ngrok
-            { "ReceiverStoreID", order.ReceiverStoreID },// 7-ELEVEN 超商：131386 7-ELEVEN 超商冷凍店取：896539 全家：006598 OK：1328
+            { "MerchantID", shipmentOrder.MerchantID },
+            { "MerchantTradeNo", shipmentOrder.MerchantTradeNo },   //目前從前端傳回新建訂單的OrderIndex
+            { "MerchantTradeDate", shipmentOrder.MerchantTradeDate},
+            { "LogisticsType", shipmentOrder.LogisticsType},
+            { "LogisticsSubType", shipmentOrder.LogisticsSubType},  //B2C接受參數: FAMI、UNIMART、HILIFE、UNIMARTFREEZE
+            { "GoodsAmount", shipmentOrder.GoodsAmount.ToString() },
+            { "SenderName", shipmentOrder.SenderName},
+            { "SenderCellPhone ", shipmentOrder.SenderCellPhone},
+            { "ReceiverName", shipmentOrder.ReceiverName },
+            { "ReceiverCellPhone", shipmentOrder.ReceiverCellPhone },   //todo 從購物車取memberInfo
+            { "ReceiverEmail", shipmentOrder.ReceiverEmail }, // todo?
+            { "ServerReplyURL", shipmentOrder.ServerReplyURL},//localhost:3000/Orders" }, //todo ngrok
+            { "ReceiverStoreID", shipmentOrder.ReceiverStoreID },// 7-ELEVEN 超商：131386 7-ELEVEN 超商冷凍店取：896539 全家：006598 OK：1328
         };
 
         orderDict["CheckMacValue"] = GetCheckMacValue(orderDict);

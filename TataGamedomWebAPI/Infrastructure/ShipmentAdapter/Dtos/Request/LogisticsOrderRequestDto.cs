@@ -9,13 +9,15 @@ public class LogisticsOrderRequestDto
     public string LogisticsSubType { get; set; } = "UNIMART"; //7-11
     public decimal GoodsAmount { get; set; }
     public string SenderName { get; set; } = "Tata";
-    public string SenderCellPhone { get; set; } = "0916224867";
+    public string SenderCellPhone { get; set; } = "0916224868";
     public required string ReceiverName { get; set; }
-    public string ReceiverCellPhone { get; set; } = "0916224867";
+    public string ReceiverCellPhone { get; set; } = "0916224868";
     public string ReceiverEmail { get; set; } = "tatagamedom@gmail.com";
 
     public string ServerReplyURL { get; set; } = "https://localhost:3000/Orders";
 
     public string ReceiverStoreID { get; set; } = "131386";  //7-11
+
+    public int OrderId { get; set; }
 
 }

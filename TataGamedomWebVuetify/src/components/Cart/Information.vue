@@ -395,8 +395,10 @@ const spotHandler = async (value) => {
     (props.selectedData.shipMethod.id == 2 || 4 || 6)
       ? 4
       : null;
-  createOrderCommand.value.recipientName = buyerName;
-  createOrderCommand.value.shippingFee = props.selectedData.freight;
+  createOrderCommand.value.RecipientName = buyerName;
+  createOrderCommand.value.ReceiverEmail = buyerEmail;
+  createOrderCommand.value.ReceiverCellPhone = buyerPhone;
+  createOrderCommand.value.ShippingFee = props.selectedData.freight;
 };
 
 const handleFillRecipient = () => {
@@ -551,31 +553,15 @@ const handleSubmit = async () => {
     // todo  => Confirm
     const orderResult = await createOrder();
     payload.value.receiverName = buyerName.value;
+    payload.value.ReceiverCellPhone = buyerPhone.value;
+    payload.value.ReceiverEmail = buyerEmail.value;
     payload.value.MerchantTradeNo = orderResult[0].orderIndex;
-    createLogisticsOrder(payload.value);
+    payload.value.OrderId = orderResult[0].orderId;
+    await createLogisticsOrder(payload.value);
   } catch (error) {
     console.error("Error:", error);
   }
 };
-
-// const handleSubmit = async () => {
-//   try {
-//     const orderResult = await createOrder();
-//     payload.value.receiverName = buyerName.value;
-//     payload.value.MerchantTradeNo = orderResult[0].orderIndex;
-//     createLogisticsOrder(payload.value);
-//     if (props.selectedData.payment.id == 2) {
-//       await checkoutECPay();
-//       ecpayForm.value.submit();
-//     } else if (props.selectedData.payment.id == 1) {
-//       await checkoutLinePay();
-//     } else {
-//       router.push({ name: "Cart", query: { paymentSuccess: "true" } });
-//     }
-//   } catch (error) {
-//     console.error("Error:", error);
-//   }
-// };
 
 load();
 </script>
