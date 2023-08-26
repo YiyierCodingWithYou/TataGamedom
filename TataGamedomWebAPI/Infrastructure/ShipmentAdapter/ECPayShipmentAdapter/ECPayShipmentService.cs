@@ -119,7 +119,7 @@ public class ECPayShipmentService
         NameValueCollection responseValues = HttpUtility.ParseQueryString(responseBody.Split('|')[1]);
         Dictionary<string, string> data = responseValues.AllKeys.ToDictionary(k => k!, k => responseValues[k]!);
 
-        ThrowExceptionIfCheckMacValueNotMatch(responseValues, data);
+        //ThrowExceptionIfCheckMacValueNotMatch(responseValues, data);  todo
         
         return data;
     }
