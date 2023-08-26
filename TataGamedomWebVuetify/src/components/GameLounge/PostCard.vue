@@ -12,7 +12,7 @@
         <span class="ms-auto"> @{{ post.boardName }}</span></v-card-subtitle
       >
     </v-card-item>
-    <v-card-text v-html="post.postContent"> </v-card-text>
+    <v-card-text class="post-text" v-html="post.postContent"> </v-card-text>
     <v-card-actions>
       <v-btn
         @click="vote('post', post.postId, 'Up', post.postId)"
@@ -227,7 +227,7 @@ const newComment = async (postId: number) => {
   }
 };
 </script>
-<style scoped>
+<style>
 .post {
   border-color: rgba(250, 112, 0, 0.1);
   box-shadow: 2px 2px 2px 2px rgba(250, 112, 0, 0.05);
@@ -235,5 +235,10 @@ const newComment = async (postId: number) => {
 .comment {
   border-color: rgba(64, 64, 64, 0.1);
   background-color: rgba(64, 64, 64, 0.03);
+}
+
+.v-card-text img {
+  max-width: 100%;
+  height: auto;
 }
 </style>

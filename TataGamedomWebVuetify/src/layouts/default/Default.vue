@@ -21,4 +21,7 @@ import DefaultView from "./View.vue";
 .font-IBM {
   font-family: "IBM Plex Sans JP", sans-serif;
 }
+.font-digit {
+  font-family: "Digi-font";
+}
 </style>

@@ -144,8 +144,8 @@ onMounted(() => {
 .swiper-slide {
   text-align: center;
   font-size: 18px;
-  background: #fff;
-  color: black;
+  background-color: rgb(1, 1, 15);
+  color: #f9ee08;
 
   /* Center slide text vertically */
   display: flex;
@@ -180,7 +180,7 @@ onMounted(() => {
   transform: translateX(-50%) rotate(45deg);
 }
 .diamond-wrapper:hover .diamond {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(1, 1, 15, 0.3);
 }
 .diamond-wrapper:hover .diamond:before,
 .diamond-wrapper:hover .diamond:after {
@@ -196,31 +196,33 @@ onMounted(() => {
   left: 50px;
   text-align: center;
   transform: rotate(-45deg);
+  color: #a1dfe9;
+  font-family: "Digi-font";
 }
 .diamond-text > * {
   transition: transform 0.25s ease-in-out;
 }
 .diamond-text h1 {
-  color: #222;
+  color: #f9ee08;
   line-height: 0.8;
   font-size: 48px;
-  margin: 0;
+  margin-bottom: 20px;
 }
 
 .diamond {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: #fff;
+  background-color: rgb(1, 1, 15);
   transition: all 0.25s ease-in-out;
 }
 .diamond:first-of-type:before {
   transform: rotate(5deg);
   background: linear-gradient(
     to bottom,
-    white 0%,
-    rgba(255, 255, 255, 0.5) 50%,
-    rgba(255, 255, 255, 0) 100%
+    rgb(1, 1, 15) 0%,
+    rgba(1, 1, 15, 0.5) 50%,
+    rgba(1, 1, 15, 0) 100%
   );
   top: 13px;
   left: -15px;
@@ -229,9 +231,9 @@ onMounted(() => {
   transform: rotate(5deg);
   background: linear-gradient(
     to top,
-    white 0%,
-    rgba(255, 255, 255, 0.5) 50%,
-    rgba(255, 255, 255, 0) 100%
+    rgb(1, 1, 15) 0%,
+    rgba(1, 1, 15, 0.5) 50%,
+    rgba(1, 1, 15, 0) 100%
   );
   bottom: 13px;
   left: 15px;
@@ -240,9 +242,9 @@ onMounted(() => {
   transform: rotate(5deg);
   background: linear-gradient(
     to left,
-    white 0%,
-    rgba(255, 255, 255, 0.5) 50%,
-    rgba(255, 255, 255, 0) 100%
+    rgb(1, 1, 15) 0%,
+    rgba(1, 1, 15, 0.5) 50%,
+    rgba(1, 1, 15, 0) 100%
   );
   top: -14px;
   left: -13px;
@@ -251,9 +253,9 @@ onMounted(() => {
   transform: rotate(5deg);
   background: linear-gradient(
     to right,
-    white 0%,
-    rgba(255, 255, 255, 0.5) 50%,
-    rgba(255, 255, 255, 0) 100%
+    rgb(1, 1, 15) 0%,
+    rgba(1, 1, 15, 0.5) 50%,
+    rgba(1, 1, 15, 0) 100%
   );
   bottom: -14px;
   left: 13px;
