@@ -1,96 +1,100 @@
 <template>
-  <v-tabs
-    v-model="tab"
-    color="yellow-darken-3"
-    bg-color="black"
-    align-tabs="center"
-  >
-    <v-tab :value="1">🏠</v-tab>
-    <v-tab :value="2" v-if="isLogin">🦦</v-tab>
-    <v-tab :value="3">🔍</v-tab>
-    <transition name="slide-fade">
-      <div v-if="tab === 3" class="w-50">
-        <v-row>
-          <search-bar></search-bar>
-        </v-row>
-      </div>
-    </transition>
-  </v-tabs>
-  <v-window v-model="tab">
-    <v-window-item :value="1">
-      <v-container-fluid>
-        <GameLoungeHome></GameLoungeHome>
-      </v-container-fluid>
-    </v-window-item>
-    <v-window-item :value="2" v-if="isLogin">
-      <v-container>
-        <v-row>
-          <LeftCol>
-            <template #container>
-              <BoardListPersonal
-                :memberAccount="loginMemberAccount"
-              ></BoardListPersonal>
-            </template>
-          </LeftCol>
-          <MainCol>
-            <template #container>
-              <ReadPostPersonalize
-                :memberAccount="loginMemberAccount"
-              ></ReadPostPersonalize>
-            </template>
-          </MainCol>
-          <RightCol>
-            <template #container>
-              <AboutAccount :memberAccount="loginMemberAccount"></AboutAccount>
-            </template>
-          </RightCol>
-        </v-row>
-      </v-container>
-    </v-window-item>
-    <v-window-item
-      v-if="!isSearchBoard && !isSearchAccount"
-      :value="3"
-      class="bg-black h100vh"
+  <div class="m-0 p-0">
+    <v-tabs
+      v-model="tab"
+      color="yellow-darken-3"
+      bg-color="black"
+      align-tabs="center"
     >
-      <GameLoungeSearchPage></GameLoungeSearchPage>
-    </v-window-item>
-    <v-window-item v-if="isSearchAccount || isSearchBoard" :value="3">
-      <v-container>
-        <v-row>
-          <LeftCol>
-            <template #container>
-              <BoardListPersonal
-                v-if="isLogin"
-                :memberAccount="loginMemberAccount"
-              ></BoardListPersonal>
-              <BoardList></BoardList>
-            </template>
-          </LeftCol>
-          <MainCol>
-            <template #container>
-              <ReadPostTotal
-                v-if="isSearch"
-                :memberAccount="account"
-                :boardId="boardId"
-              ></ReadPostTotal>
-            </template>
-          </MainCol>
-          <RightCol>
-            <template #container>
-              <AboutAccount
-                v-if="isSearchAccount"
-                :memberAccount="account"
-              ></AboutAccount>
-              <AboutBoard
-                v-if="isSearchBoard && boardId !== undefined"
-                :boardId="boardId"
-              ></AboutBoard>
-            </template>
-          </RightCol>
-        </v-row>
-      </v-container>
-    </v-window-item>
-  </v-window>
+      <v-tab :value="1">🏠</v-tab>
+      <v-tab :value="2" v-if="isLogin">🦦</v-tab>
+      <v-tab :value="3">🔍</v-tab>
+      <transition name="slide-fade">
+        <div v-if="tab === 3" class="w-50">
+          <v-row>
+            <search-bar></search-bar>
+          </v-row>
+        </div>
+      </transition>
+    </v-tabs>
+    <v-window v-model="tab">
+      <v-window-item :value="1">
+        <v-container-fluid>
+          <GameLoungeHome @goTab3="goTab3"></GameLoungeHome>
+        </v-container-fluid>
+      </v-window-item>
+      <v-window-item :value="2" v-if="isLogin">
+        <v-container>
+          <v-row>
+            <LeftCol>
+              <template #container>
+                <BoardListPersonal
+                  :memberAccount="loginMemberAccount"
+                ></BoardListPersonal>
+              </template>
+            </LeftCol>
+            <MainCol>
+              <template #container>
+                <ReadPostPersonalize
+                  :memberAccount="loginMemberAccount"
+                ></ReadPostPersonalize>
+              </template>
+            </MainCol>
+            <RightCol>
+              <template #container>
+                <AboutAccount
+                  :memberAccount="loginMemberAccount"
+                ></AboutAccount>
+              </template>
+            </RightCol>
+          </v-row>
+        </v-container>
+      </v-window-item>
+      <v-window-item
+        v-if="!isSearchBoard && !isSearchAccount"
+        :value="3"
+        class="bg-black h100vh"
+      >
+        <GameLoungeSearchPage></GameLoungeSearchPage>
+      </v-window-item>
+      <v-window-item v-if="isSearchAccount || isSearchBoard" :value="3">
+        <v-container>
+          <v-row>
+            <LeftCol>
+              <template #container>
+                <BoardListPersonal
+                  v-if="isLogin"
+                  :memberAccount="loginMemberAccount"
+                ></BoardListPersonal>
+                <BoardList></BoardList>
+              </template>
+            </LeftCol>
+            <MainCol>
+              <template #container>
+                <ReadPostTotal
+                  v-if="isSearch"
+                  :memberAccount="account"
+                  :boardId="boardId"
+                ></ReadPostTotal>
+              </template>
+            </MainCol>
+            <RightCol>
+              <template #container>
+                <AboutAccount
+                  v-if="isSearchAccount"
+                  :memberAccount="account"
+                ></AboutAccount>
+                <AboutBoard
+                  v-if="isSearchBoard && boardId !== undefined"
+                  :boardId="boardId"
+                ></AboutBoard>
+              </template>
+            </RightCol>
+          </v-row>
+        </v-container>
+      </v-window-item>
+    </v-window>
+  </div>
 </template>
 
 <script setup>
@@ -120,6 +124,10 @@ const boardId = ref("");
 const isLogin = computed(() => store.state.isLoggedIn);
 const loginMemberAccount = computed(() => store.state.account);
 const keyword = computed(() => store.state.GameLoungeStore.keyword);
+const goTab3 = () => {
+  console.log("goTab3");
+  tab.value = 3;
+};
 
 account.value = route.params.account;
 boardId.value = route.params.boardId;
@@ -136,6 +144,14 @@ if (boardId.value !== undefined) {
 </script>
 
 <style scoped>
+.v-card {
+  background-color: transparent !important;
+  color: #fff;
+}
+.v-sheet {
+  background-color: #01010f;
+  color: #fff;
+}
 .slide-fade-enter-active {
   transition: opacity 0.5s;
 }

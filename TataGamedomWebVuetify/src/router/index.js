@@ -9,16 +9,15 @@ import RegisterVue from "@/components/Members/Register.vue";
 import Login from "@/components/Members/Login.vue";
 import ForgetPwd from "@/components/Members/ForgetPwd.vue";
 import Orders from "../views/Orders.vue";
-import SupportHub from '../views/SupportHub.vue'
-import LinePay from '../views/LinePay.vue'
-import ActiveRegister from '@/components/Members/ActiveRegister.vue'
-import LinePayConfirmPayment from '../views/LinePayConfirmPayment.vue'
-import Cart from '@/views/Cart.vue'
-import MemberDetial from "@/components/Members/MemberDetial.vue"
-import ResetPassword from "@/components/Members/ResetPassword.vue"
-import store from '@/store'
-import RedirectToLogisticsSelection_Test from "@/components/ECPay/RedirectToLogisticsSelection_Test"
-
+import SupportHub from "../views/SupportHub.vue";
+import LinePay from "../views/LinePay.vue";
+import ActiveRegister from "@/components/Members/ActiveRegister.vue";
+import LinePayConfirmPayment from "../views/LinePayConfirmPayment.vue";
+import Cart from "@/views/Cart.vue";
+import MemberDetial from "@/components/Members/MemberDetial.vue";
+import ResetPassword from "@/components/Members/ResetPassword.vue";
+import store from "@/store";
+import RedirectToLogisticsSelection_Test from "@/components/ECPay/RedirectToLogisticsSelection_Test";
 
 const routes = [
   {
@@ -55,11 +54,11 @@ const routes = [
         component: RegisterVue,
         beforeEnter: (to, from, next) => {
           if (store.state.isLoggedIn === true) {
-            next('/');
+            next("/");
           } else {
             next();
           }
-        }
+        },
       },
       {
         path: "/Members/Login",
@@ -67,11 +66,11 @@ const routes = [
         component: Login,
         beforeEnter: (to, from, next) => {
           if (store.state.isLoggedIn === true) {
-            next('/');
+            next("/");
           } else {
             next();
           }
-        }
+        },
       },
       {
         path: "/Members/ForgetPwd",
@@ -79,17 +78,17 @@ const routes = [
         component: ForgetPwd,
         beforeEnter: (to, from, next) => {
           if (store.state.isLoggedIn === true) {
-            next('/');
+            next("/");
           } else {
             next();
           }
-        }
+        },
       },
       {
         path: "/Members/MemberDetial",
         name: "MemberDetial",
         component: MemberDetial,
-        meta: { requiresAuth: true }//表示登入才可以用此頁面
+        meta: { requiresAuth: true }, //表示登入才可以用此頁面
       },
       {
         path: "/Orders",
@@ -112,11 +111,11 @@ const routes = [
         component: ActiveRegister,
         beforeEnter: (to, from, next) => {
           if (store.state.isLoggedIn === true) {
-            next('/');
+            next("/");
           } else {
             next();
           }
-        }
+        },
       },
       {
         path: "/LinePayConfirmPayment",
@@ -124,12 +123,12 @@ const routes = [
         component: LinePayConfirmPayment,
       },
       {
-        path: '/Members/ResetPassword',
-        name: 'ResetPassword',
+        path: "/Members/ResetPassword",
+        name: "ResetPassword",
         component: ResetPassword,
         beforeEnter: (to, from, next) => {
           if (store.state.isLoggedIn === true) {
-            next('/');
+            next("/");
           } else {
             next();
           }
@@ -138,8 +137,7 @@ const routes = [
           memberId: parseInt(route.query.memberId),
           confirmCode: route.query.confirmCode,
         }),
-
-      }
+      },
     ],
   },
   {
@@ -168,7 +166,9 @@ const routes = [
         path: "",
         name: "Cart",
         component: Cart,
-        props: (route) => ({ paymentSuccess: route.query.paymentSuccess === 'true' })
+        props: (route) => ({
+          paymentSuccess: route.query.paymentSuccess === "true",
+        }),
       },
     ],
   },
@@ -177,7 +177,7 @@ const routes = [
     component: () => import("@/layouts/default/Default.vue"),
     children: [
       {
-        path: "",
+        path: "/GameLounge",
         name: "GameLounge",
         component: () => import("@/views/GameLounge.vue"),
       },
@@ -190,8 +190,7 @@ const routes = [
         path: "/GameLounge/:account",
         name: "GameLoungeAccount",
         component: () => import("@/views/GameLounge.vue"),
-      }
-
+      },
     ],
   },
   {
@@ -215,18 +214,16 @@ const router = createRouter({
 
 //判斷是否登入，有登入才可以進入該頁面(beforeEach)
 router.beforeEach((to, from, next) => {
-
-  if (to.matched.some(route => route.meta.requiresAuth)) {
-
+  if (to.matched.some((route) => route.meta.requiresAuth)) {
     if (store.state.isLoggedIn === true) {
       next();
     } else {
-      next('/Members/Login');
+      next("/Members/Login");
     }
   } else {
     next(); // 不需要登入，直接允許
   }
-})
+});
 
 router.afterEach((to, from, next) => {
 	window.scrollTo(0, 0);

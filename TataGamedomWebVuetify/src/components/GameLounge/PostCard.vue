@@ -231,6 +231,7 @@ const newComment = async (postId: number) => {
 .post {
   border-color: rgba(250, 112, 0, 0.1);
   box-shadow: 2px 2px 2px 2px rgba(250, 112, 0, 0.05);
+  background-color: black;
 }
 .comment {
   border-color: rgba(64, 64, 64, 0.1);

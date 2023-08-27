@@ -47,7 +47,7 @@
     <v-btn class="pageBtn" icon="mdi-cart-outline" @click="link('Cart')">
     </v-btn>
 
-    <div v-if="$store.state.isLoggedIn">
+    <div v-if="$store.state.isLoggedIn" class="h-100 pageBtn">
       <!-- <a color="primary" @mouseover="showMemberProfile = true">
         HI {{ name }}
       </a> -->
@@ -55,7 +55,7 @@
       <v-btn
         variant="text"
         rounded="0"
-        class="h-100 pageBtn logBtn"
+        class="logBtn pageBtn h-100"
         @click="logout"
         >登出</v-btn
       >
@@ -154,6 +154,12 @@ export default {
 </script>
 
 <style scoped>
+.v-btn {
+  color: #01010f;
+}
+.v-btn:hover {
+  color: #f9ee08;
+}
 .cursor-pointer {
   cursor: pointer;
 }
@@ -184,6 +190,10 @@ img {
 }
 
 .pageBtn:hover {
+  color: #f9ee08;
+  background-color: #01010f;
+}
+.pageBtn:hover > .pageBtn {
   color: #f9ee08;
   background-color: #01010f;
 }
