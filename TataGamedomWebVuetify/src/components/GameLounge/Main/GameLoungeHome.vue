@@ -1,5 +1,5 @@
 <template>
-  <div id="JoinUs" class="diamond-wrapper">
+  <div id="JoinUs" class="diamond-wrapper" @click="sendEmits">
     <div class="diamond"></div>
     <div class="diamond"></div>
     <div class="diamond-text">
@@ -83,6 +83,12 @@ import "swiper/css/pagination";
 import { Autoplay, Pagination } from "swiper/modules";
 import { useRouter } from "vue-router";
 import axios from "axios";
+
+const emits = defineEmits(["goTab3"]);
+const sendEmits = () => {
+  emits("goTab3");
+};
+
 const modules = ref([Autoplay, Pagination]);
 const boardInfo = ref([]);
 const router = useRouter();

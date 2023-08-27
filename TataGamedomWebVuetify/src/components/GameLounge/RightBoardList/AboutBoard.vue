@@ -168,4 +168,17 @@ const openLink = (id) => {
   });
 };
 </script>
-<style lang=""></style>
+<style scoped>
+.v-card {
+  background-color: transparent !important;
+  box-shadow: 0px 0px 10px 2px #a1dfe9 !important;
+}
+
+.v-list {
+  background-color: transparent !important;
+}
+.v-list-item:hover {
+  background-color: #f9ee08;
+  color: #01010f;
+}
+</style>
