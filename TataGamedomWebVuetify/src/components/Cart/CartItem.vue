@@ -23,6 +23,7 @@
                 <v-icon start icon="mdi-gamepad-right"></v-icon>
                 {{ item.product.gamePlatformName }}
               </v-chip>
+              <div v-if="item.product.isVirtual" style="font-size: 12px;">※虛擬商品</div>
             </td>
             <td class="myTd">
               <div style="text-align: left;">{{ item.product.chiName }}</div>
@@ -108,14 +109,12 @@
             <div v-else>
               <v-card-title class="textYellow">合計：{{ cartData.total + freight }}</v-card-title>
             </div>
-            <div class="d-flex align-center justify-end">
-              <div style="margin-left: auto;">
-                <img src="https://localhost:7081/Files/Uploads/icons/tataUserIcon.jpg" alt="" height="150">
-              </div>
+            <div class="d-flex align-center justify-end" style="margin-left: auto;">
+              <img src="https://localhost:7081/Files/Uploads/icons/tataUserIcon.jpg" alt="" height="150">
             </div>
             <div style="margin-top: auto;">
               <v-btn v-if="isLogin" width="100%" class="myBtn mb-5" @click="returnSelectedHandler">前往結帳</v-btn>
-              <v-btn v-else width="100%" color="primary" class="myBtn" @click="returnLogin">請登入後結帳</v-btn>
+              <v-btn v-else width="100%" class="myBtn" @click="returnLogin">請登入後結帳</v-btn>
             </div>
           </v-card>
         </v-col>
@@ -142,6 +141,8 @@ const imgLink = "https://localhost:7081/Files/Uploads/";
 const limit = ref(0);
 const total = ref(0);
 const freight = ref(0);
+const hasVirtualItem = ref(false);
+const hasPhysicalItem = ref(false);
 const finalTotal = computed(() => {
   const computedTotal = cartData.value.subTotal + freight.value
   return computedTotal >= 3000 ? computedTotal - 300 : computedTotal;
@@ -194,6 +195,7 @@ const shipMethod = ref([
   { id: "5", method: "payFirstAtHome", label: "宅配🚛 - 黑貓宅急便" },
   { id: "6", method: "payAtHome", label: "宅配🚛 - 黑貓宅急便 貨到付款" },
   { id: "7", method: "oversea", label: "海外 - 運費到付" },
+  { id: "8", method: "gameCode", label: "虛擬商品不須寄送" },
 ]);
 const payment = ref([
   { id: "1", method: "linePay", label: "LinePay📱" },
@@ -246,9 +248,16 @@ const getLocalCart = async () => {
           chiName: productDetail.chiName,
           coupons: productDetail.coupons,
           gamePlatformName: productDetail.gamePlatformName,
+          isVirtual: productDetail.isVirtual
         },
         qty: localItem.qty,
       });
+
+      if (productDetail.isVirtual) {
+        hasVirtualItem.value = true;
+      } else {
+        hasPhysicalItem.value = true;
+      }
 
       for (let i = 0; i < productDetail.coupons.length; i++) {
         const coupon = productDetail.coupons[i];
@@ -294,70 +303,97 @@ watch(
     }
   }
 );
-watch([() => selectLocation.value, () => selectShipMethod.value], () => {
-  updateShipmentOptions();
-  calculatePaymentOption();
-});
-const loading = ref(false);
 
+watch(
+  [selectLocation, hasVirtualItem, hasPhysicalItem],
+  ([newLocation, newHasVirtual, newHasPhysical]) => {
+    updateShipmentOptions();
+    calculatePaymentOption();
+  }
+);
 
 watch([() => total.value, () => selectShipMethod.value], () => {
   calculateShippingFee();
-  //   loadData();
 });
 
 watch([() => selectShipMethod.value, () => selectPayment.value], () => {
   calculatePaymentOption();
 });
 
+//寄送方式
 const updateShipmentOptions = () => {
-  if (selectLocation.value.loc !== "taiwan") {
+  if (hasVirtualItem.value && !hasPhysicalItem.value && selectLocation.value.loc === "taiwan") {
     shipMethod.value = [
-      { id: "7", method: "oversea", label: "海外 - 運費到付" },
+      { id: "8", method: "gameCode", label: "虛擬商品不須寄送" }
     ];
     payment.value = [
-      { id: "2", method: "creditCard", label: "信用卡💳(Visa, Master, JCB)" },
+      { id: "1", method: "linePay", label: "LinePay📱" },
+      { id: "2", method: "creditCard", label: "信用卡💳(Visa, Master, JCB)" }
     ];
-    selectShipMethod.value = {
-      id: "7",
-      method: "oversea",
-      label: "海外 - 運費到付",
-    };
-    selectPayment.value = {
-      id: "2",
-      method: "creditCard",
-      label: "信用卡💳(Visa, Master, JCB)",
-    };
-  } else {
-    shipMethod.value = [
-      { id: "1", method: "payAt711", label: "7-11超商🏣 - 取貨付款" },
-      { id: "2", method: "payFirstAt711", label: "7-11超商🏣 - 純取貨" },
-      { id: "3", method: "payAtFam", label: "全家超商🏣 - 取貨付款" },
-      { id: "4", method: "payFirstAtFam", label: "全家超商🏣 - 純取貨" },
-      { id: "5", method: "payFirstAtHome", label: "宅配🚛 - 黑貓宅急便" },
-      { id: "6", method: "payAtHome", label: "宅配🚛 - 黑貓宅急便 貨到付款" },
-    ];
+    selectShipMethod.value = { id: "8", method: "gameCode", label: "虛擬商品不須寄送" };
+    selectPayment.value = { id: "1", method: "linePay", label: "LinePay📱" };
 
-    if (
-      !shipMethod.value.some(
-        (method) => method.method === selectShipMethod.value.method
-      )
-    ) {
+  } else {
+    if (selectLocation.value.loc !== "taiwan") {
+      shipMethod.value = [
+        { id: "7", method: "oversea", label: "海外 - 運費到付" }
+      ];
+      payment.value = [
+        { id: "2", method: "creditCard", label: "信用卡💳(Visa, Master, JCB)" }
+      ];
       selectShipMethod.value = {
-        id: "1",
-        method: "payAt711",
-        label: "7-11超商🏣 - 取貨付款",
+        id: "7",
+        method: "oversea",
+        label: "海外 - 運費到付"
       };
+      selectPayment.value = {
+        id: "2",
+        method: "creditCard",
+        label: "信用卡💳(Visa, Master, JCB)"
+      };
+    } else {
+      if (hasVirtualItem.value && hasPhysicalItem.value && selectLocation.value.loc === "taiwan") {
+        shipMethod.value = [
+          { id: "2", method: "payFirstAt711", label: "7-11超商🏣 - 純取貨" },
+          { id: "4", method: "payFirstAtFam", label: "全家超商🏣 - 純取貨" },
+          { id: "5", method: "payFirstAtHome", label: "宅配🚛 - 黑貓宅急便" },
+        ];
+        selectShipMethod.value = { id: "2", method: "payFirstAt711", label: "7-11超商🏣 - 純取貨" };
+        selectPayment.value = { id: "1", method: "linePay", label: "LinePay📱" };
+      } else {
+        shipMethod.value = [
+          { id: "1", method: "payAt711", label: "7-11超商🏣 - 取貨付款" },
+          { id: "2", method: "payFirstAt711", label: "7-11超商🏣 - 純取貨" },
+          { id: "3", method: "payAtFam", label: "全家超商🏣 - 取貨付款" },
+          { id: "4", method: "payFirstAtFam", label: "全家超商🏣 - 純取貨" },
+          { id: "5", method: "payFirstAtHome", label: "宅配🚛 - 黑貓宅急便" },
+          { id: "6", method: "payAtHome", label: "宅配🚛 - 黑貓宅急便 貨到付款" },
+        ];
+        if (
+          !shipMethod.value.some(
+            (method) => method.method === selectShipMethod.value.method
+          )
+        ) {
+          selectShipMethod.value = {
+            id: "1",
+            method: "payAt711",
+            label: "7-11超商🏣 - 取貨付款"
+          };
+        }
+      }
+
     }
   }
 };
+
 
 const calculatePaymentOption = () => {
   if (selectLocation.value.loc === "taiwan") {
     if (
       selectShipMethod.value.method === "payFirstAt711" ||
       selectShipMethod.value.method === "payFirstAtFam" ||
-      selectShipMethod.value.method === "payFirstAtHome"
+      selectShipMethod.value.method === "payFirstAtHome" ||
+      selectShipMethod.value.method === "gameCode"
     ) {
       payment.value = [
         { id: "1", method: "linePay", label: "LinePay📱" },
@@ -407,7 +443,7 @@ const calculatePaymentOption = () => {
 };
 
 const calculateShippingFee = () => {
-  if (total.value >= 2000 || selectShipMethod.value.method === "oversea") {
+  if (total.value >= 2000 || selectShipMethod.value.method === "oversea" || (hasVirtualItem.value && !hasPhysicalItem.value)) {
     freight.value = 0;
   } else if (total.value < 2000) {
     if (
@@ -538,6 +574,7 @@ calculatePaymentOption();
 <style scoped>
 .v-container {
   max-width: 90% !important;
+
 }
 
 .myComment {
@@ -549,19 +586,20 @@ calculatePaymentOption();
   width: 100%;
   background-color: #01010f;
   color: #a1dfe9;
-  font-size: 16px
+  font-size: 16px;
 }
 
 .v-table {
   background-color: #01010f;
   color: white !important;
-  /* border:1px solid #a1dfe9; */
+  /* border:none; */
 }
 
 .myTh {
   text-align: center !important;
   color: #f9ee08 !important;
   width: auto;
+  /* border:none; */
 }
 
 .myTd {
@@ -569,6 +607,7 @@ calculatePaymentOption();
   justify-items: center !important;
   align-items: center !important;
   width: auto;
+  /* border:none; */
 }
 
 .myBtn {
