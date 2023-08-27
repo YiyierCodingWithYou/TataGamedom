@@ -35,9 +35,6 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Uni
             throw new NotFoundException(nameof(orderTobeUpdated),request.Index);
         }
 
-        
-
-
         orderTobeUpdated = _mapper.Map(request, orderTobeUpdated);
 
         await _orderRepository.UpdateAsync(orderTobeUpdated);

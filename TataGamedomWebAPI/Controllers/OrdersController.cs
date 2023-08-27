@@ -69,7 +69,7 @@ public class OrdersController : ControllerBase
     }
 
 
-    [HttpPut("{id}")]
+    [HttpPut("{Index}")]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
