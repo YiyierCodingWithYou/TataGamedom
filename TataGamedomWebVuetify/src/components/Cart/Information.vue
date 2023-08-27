@@ -347,6 +347,51 @@ const getMember = async () => {
   memberId.value = datas.id;
 };
 
+
+const createOrder = async () => {
+  try {
+    const response = await fetch(
+      `https://localhost:7081/api/Orders/OrderWithMultipleItems`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          createOrderCommand: createOrderCommand.value,
+          createOrderItemCommandList: createOrderItemCommandList,
+        }),
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+
+const checkoutLinePay = async (CreatePaymentRequestDto) => {
+  const response = await fetch(`https://localhost:7081/api/LinePay/Create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(CreatePaymentRequestDto),  //todo  ShipmentMethodDto
+  });
+  if (response.ok) {
+    const data = await response.json();
+    sessionStorage.setItem("totalAmount", props.selectedData.totalAmount);
+    window.location = data.info.paymentUrl.web;
+  } else {
+    console.log(response);
+  }
+};
+
 const checkoutECPay = async () => {
   try {
     const response = await fetch(
@@ -379,50 +424,6 @@ const createLogisticsOrder = async (payload) => {
   }
 };
 
-
-const checkoutLinePay = async () => {
-  const response = await fetch(`https://localhost:7081/api/LinePay/Create`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify({}),  //todo  ShipmentMethodDto
-  });
-  if (response.ok) {
-    const data = await response.json();
-    sessionStorage.setItem("totalAmount", props.selectedData.totalAmount);
-    window.location = data.info.paymentUrl.web;
-  } else {
-    console.log(response);
-  }
-};
-
-const createOrder = async () => {
-  try {
-    const response = await fetch(
-      `https://localhost:7081/api/Orders/OrderWithMultipleItems`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          createOrderCommand: createOrderCommand.value,
-          createOrderItemCommandList: createOrderItemCommandList,
-        }),
-      }
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    }
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
-
 const handleSubmit = async () => {
   try {
     const orderResult = await createOrder();
@@ -432,8 +433,13 @@ const handleSubmit = async () => {
       ecpayForm.value.submit();
 
     } else if (props.selectedData.payment.id == 1) {
-      //給Index
-      await checkoutLinePay();
+
+      const CreatePaymentRequestDto = {
+        OrderIndex: orderResult[0].orderIndex
+        //shipmentMethod:   todo 從CartItem取寄送方式
+      };
+      console.log(CreatePaymentRequestDto.OrderIndex);
+      await checkoutLinePay(CreatePaymentRequestDto);
 
     } else {
       router.push({ name: "Cart", query: { paymentSuccess: "true" } });
