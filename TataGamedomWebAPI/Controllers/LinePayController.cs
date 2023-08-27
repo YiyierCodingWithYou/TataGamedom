@@ -20,7 +20,6 @@ namespace TataGamedomWebAPI.Controllers;
 [EnableCors("AllowAny")]
 public class LinePayController : ControllerBase
 {
-
     //to do DI
     private readonly LinePayService _linePayService;
     private readonly AppDbContext _dbContext;

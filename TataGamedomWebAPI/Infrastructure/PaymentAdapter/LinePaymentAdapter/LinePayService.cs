@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
+using TataGamedomWebAPI.Application.Contracts.PaymentService;
 using TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder.UpdateLinePayInfo;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.Payment;
@@ -16,7 +17,7 @@ using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter;
 
-public class LinePayService
+public class LinePayService : ILinePayService
 {
     private readonly string channelId = "2000361109";
     private readonly string channelSecretKey = "0e4e5eea8de9d55687434baf986c7d43";

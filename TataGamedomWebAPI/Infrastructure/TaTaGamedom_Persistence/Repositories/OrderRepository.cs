@@ -84,6 +84,17 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
 
         return order;
     }
+
+    public async Task<string?> GetLinePayTransitionId(int? orderId)
+    {
+        string? linePayTransitionId = await _dbContext.Orders
+            .AsNoTracking()
+            .Where(o => o.Id == orderId)
+            .Select(o => o.LinePayTransactionId)
+            .FirstOrDefaultAsync();
+
+        return linePayTransitionId;
+    }
 }
 
 
