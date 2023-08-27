@@ -44,6 +44,13 @@
     </v-card-text>
   </v-card>
 </template>
+
+<style scoped>
+.v-card {
+  background-color: transparent !important;
+  box-shadow: 0px 0px 10px 2px #a1dfe9 !important;
+}
+</style>
 <script setup lang="ts">
 import { ref, reactive, onMounted, defineProps } from "vue";
 import axios from "axios";
@@ -107,4 +114,3 @@ onMounted(() => {
   getMemberData();
 });
 </script>
-<style lang=""></style>
