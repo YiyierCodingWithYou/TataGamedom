@@ -1,5 +1,5 @@
 <template>
-  <div class="ml-2 mb-3 font-color" >🦦 關鍵字搜尋</div>
+  <div class="mt-3 ml-2 mb-3 font-color" >🦦 關鍵字搜尋</div>
   <v-divider class="border-opacity-100" color="#a1dfe9"></v-divider>
 
   <SearchTextBox @searchInput="value => forwardEvent('searchInput', value)" class="mb-10"></SearchTextBox>

@@ -1,7 +1,7 @@
 <template>
     <div class="shopContainer">
         <div>
-            <SingleProductCarousel v-if="product !== undefined" :productData="product" ref="bookmark">
+            <SingleProductCarousel v-if="product !== undefined" :productData="product">
             </SingleProductCarousel>
         </div>
         <div>
@@ -27,7 +27,7 @@
 </template>
             
 <script setup>
-import { ref, onMounted, nextTick } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import SingleProductCarousel from "@/components/Product/SingleProductCarousel.vue";
 import ProductDetail from "@/components/Product/ProductDetail.vue";
@@ -38,7 +38,6 @@ import { watch } from "vue";
 
 const route = useRoute();
 const router = useRouter();
-const bookmark = ref(null);
 const productId = ref(parseInt(route.params.productId, 10));
 const page = ref(1);
 const product = ref({});
@@ -93,15 +92,6 @@ const GetSingleProduct = async (value) => {
 watch(productId, (newVal, oldVal) => {
     if (newVal !== oldVal) {
         loadData();
-        nextTick(() => {
-            if (bookmark.value) {
-                const offset = bookmark.value.$el.offsetTop;
-                window.scrollTo({
-                    top: offset,
-                    behavior: "smooth",
-                });
-            }
-        });
     }
 });
 

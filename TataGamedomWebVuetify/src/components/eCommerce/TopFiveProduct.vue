@@ -3,12 +3,12 @@
       <v-list-item
         v-for="product in topFive"
         :key="product.id"
-        class="mt-8"
+        class="mt-5"
         @click="handleProductClick(product.id)"
       >
       
         <div class="d-flex">
-          <v-avatar :image="imgLink + product.gameGameCoverImg" size="x-large" class="ml-5"></v-avatar>
+          <v-avatar :image="imgLink + product.gameGameCoverImg" size="x-large" class="ml-5 mb-3"></v-avatar>
           <div class="d-flex flex-column ml-5 ">
             <div class="justify-center" style="color:#a1dfe9">
               <v-icon start icon="mdi-gamepad-right"></v-icon>

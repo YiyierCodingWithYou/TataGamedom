@@ -6,43 +6,44 @@
         <v-row>
           <v-col cols="6">
             <div class="mt-3 d-flex justify-center align-center">
-              <v-img :src="imgLink + productData.gameCoverImg" height="400" cover></v-img>
+              <v-img :src="imgLink + productData.gameCoverImg" height="380" cover></v-img>
             </div>
           </v-col>
           <v-col cols="6">
-            <div class="d-flex flex-column mt-3">
-              <div class="text-h5 mb-2 ml-3">
-                {{ productData.chiName }}
+            <div class="d-flex flex-column mt-3 whiteText">
+              <div class="text-h5 mb-2 ml-3" style="color:#a1dfe9">
+                ✨{{ productData.chiName }}
               </div>
               <v-divider class="border-opacity-100 mb-2" color="#a1dfe9"></v-divider>
-              <div class="text-h5 ml-3">
+              <div class="text-h5 ml-3" style="color:#a1dfe9">
                 {{ productData.engName }}
               </div>
-              <div class="d-flex text-h3 mb-2">
-                <v-card-subtitle class="me-auto" v-for="(item, index) in productData.coupons" :key="index">
-                  {{ item }}{{ productData.couponDescription[index] }}<br />
-                </v-card-subtitle>
+              <div class="mt-3 mb-3 ml-3">
+                <p class="me-auto" v-for="(item, index) in productData.coupons" :key="index">{{ item }}{{
+                  productData.couponDescription[index] }}<br /></p>
               </div>
-              <v-card-subtitle v-if="productData.specialPrice === productData.price">${{ productData.price
-              }}</v-card-subtitle>
-              <v-card-subtitle v-else><s>${{ productData.price }}</s>${{ productData.specialPrice }}</v-card-subtitle>
-              <div class="d-flex">
+              <p class="ml-3 mb-3" style="font-size: 20px; color:white"
+                v-if="productData.specialPrice === productData.price">${{ productData.price
+                }}</p>
+              <p class="ml-3 mb-3" v-else><s style="font-size: 16px; color:grey">${{ productData.price }}</s><span
+                  style="font-size: 20px; color:white">　${{ productData.specialPrice }}</span></p>
+              <div class="d-flex align-center mb-3">
                 <v-rating v-model="productData.score" class="ma-2 d-flex me-auto" density="compact" half-increments
-                  readonly></v-rating>｜
-                <v-card-subtitle>{{ productData.commentCount }}個評論</v-card-subtitle>
+                  readonly style="color:#f9ee08" size="small"></v-rating>
+                <p class="mr-3">{{ productData.commentCount }}個評論</p>
               </div>
               <div>
-                <v-row>
-                  <v-col cols="4">
-                    <v-btn icon @click="decreaseQuantity" :max="limit" v-model="quantity">
+                <v-row class="d-flex justify-center align-center mb-3">
+                  <v-col cols="4" class="d-flex justify-center align-center">
+                    <v-btn icon @click="decreaseQuantity" :max="limit" v-model="quantity" class="plusMinBtn">
                       <v-icon>mdi-minus</v-icon>
                     </v-btn>
                   </v-col>
-                  <v-col cols="4">
-                    <v-text-field v-model="quantity" min="1" :max="limit" outlined></v-text-field>
+                  <v-col cols="4" class="d-flex justify-center align-center">
+                    <input type="number" v-model="quantity" min="1" :max="limit"  style="color:#a1dfe9" class="text-center" readonly />
                   </v-col>
-                  <v-col cols="4">
-                    <v-btn icon @click="increaseQuantity" v-model="quantity">
+                  <v-col cols="4" class="d-flex justify-center align-center">
+                    <v-btn icon @click="increaseQuantity" v-model="quantity" class="plusMinBtn">
                       <v-icon>mdi-plus</v-icon>
                     </v-btn>
                   </v-col>
@@ -50,7 +51,7 @@
               </div>
               <v-btn v-if="limit > 0" class="mt-auto ma-3 myBtn" @click.stop="Add2Cart(productData.id)">加入購物車</v-btn>
               <v-btn v-else-if="limit === 0" class="mt-auto ma-3" disabled>售完</v-btn>
-              <p v-if="limit > 0 && limit <= 1000" class="text-center">
+              <p v-if="limit > 0 && limit <= 10" class="text-center">
                 現庫存剩餘{{ limit }}件
               </p>
               <p v-else-if="limit === 0" class="text-center">無庫存</p>
@@ -72,7 +73,7 @@
           </div>
           <div class="d-flex ma-5">
             <div v-for="item in productData.classification" :key="item">
-              <v-chip class="mr-2" @click="classificationHandler(item)">#{{ item }}</v-chip>
+              <v-chip class="mr-2" @click="classificationHandler(item)" style="background-color: #f9ee08;color:#01010f;">#{{ item }}</v-chip>
             </div>
           </div>
           <div class="d-flex justify-center align-center">
@@ -80,13 +81,16 @@
             <span class="me-auto">({{ productData.commentCount }})</span>
             <v-btn class="myBtn" @click="toBoard">前往討論版</v-btn>
           </div>
-          <v-card v-for="item in productData.gameComments" :key="item" class="ma-5 myCard">
+          <v-card v-for="item in productData.gameComments" :key="item" class="mt-5 myCard whiteText justify-center align-center">
             <v-card-item>
-              <v-card-title>{{ item.memberName }}</v-card-title>
-              <v-card-subtitle>發表於 {{ relativeTime(item.createdTime) }}</v-card-subtitle>
+              <v-card-title class="mt-2 mb-2" >{{ item.memberName }}</v-card-title>
+             
+              <v-card-subtitle class="mb-2">發表於 {{ relativeTime(item.createdTime) }}</v-card-subtitle>
+              <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
             </v-card-item>
+            
             <v-card-text class="myContent"> {{ item.content }} </v-card-text>
-            <v-rating v-model="item.score" density="compact" color="yellow" readonly class="ml-3"></v-rating>
+            <v-rating v-model="item.score" density="compact" color="yellow" readonly class="ml-3 mb-3"></v-rating>
           </v-card>
           <v-pagination v-model="thePage" :length="totalPages" :total-visible="5" @click="paginationHandler(thePage)"
             color="#f9ee08"></v-pagination>
@@ -95,19 +99,20 @@
           <div class="ma-5">
             <h3 class="mytitle">🦦 發表評論</h3>
             <div v-if="$store.state.isLoggedIn">
-              <v-textarea :rules="rules" clearable variant="solo" rows="4" v-model="comment"></v-textarea>
+              <v-textarea :rules="rules" clearable variant="outlined" rows="5" v-model="comment" auto-grow
+                base-color="#a1dfe9" color="#a1dfe9"></v-textarea>
               <div class="d-flex">
                 <div class="text-center me-auto">
-                  <v-rating v-model="star" bg-color="orange-lighten-1" color="yellow"></v-rating>
+                  <v-rating v-model="star" color="#f9ee08"></v-rating>
                 </div>
                 <v-btn type="submit" :disabled="comment.length < 10 || comment.length > 500 || star == 0
                   " class="myBtn">送出</v-btn>
               </div>
             </div>
             <div v-else>
-              <v-card height="100" class="d-flex align-center justify-center">
-                <p>
-                  請先登入會員以啟用評論功能，<a href="/Members/Login">點此登入</a>
+              <v-card height="100" class="d-flex align-center justify-center myCard">
+                <p class="myComment">
+                  請先登入會員以啟用評論功能，<a href="/Members/Login" style="color:#a1dfe9">點此登入</a>
                 </p>
               </v-card>
             </div>
@@ -365,7 +370,7 @@ const toBoard = async () => {
 .myBtn:hover {
   background-color: #a1dfe9;
   color: #01010f;
-  box-shadow: 2px 2px 10px #a1dfe9
+  box-shadow: 2px 2px 10px #a1dfe9;
 }
 
 .myComment {
@@ -379,16 +384,25 @@ const toBoard = async () => {
   box-shadow: 2px 2px 10px #a1dfe9;
   border-radius: 3%;
   border: 2px inset #a1dfe9;
-  font-size: 18px
+  font-size: 16px
 }
 
 .mytitle {
   color: #a1dfe9 !important;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .myContent {
   color: white;
-  font-size: 18px;
+  font-size: 16px;
+}
+
+.whiteText {
+  color: white;
+}
+
+.plusMinBtn {
+  background-color: #01010f;
+  color: #a1dfe9;
 }
 </style>

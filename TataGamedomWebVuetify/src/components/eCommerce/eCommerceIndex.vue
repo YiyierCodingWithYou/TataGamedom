@@ -18,7 +18,7 @@
               <v-col cols="6" class="me-auto">
                 <v-btn-toggle v-model="inputPlatform" rounded="0.5" group
                   style="border:2px solid #fbf402; color:#fbf402 !important;" @update:model-value="sortPlatform"
-                  color="#fbf402" active="">
+                  color="#fbf402">
                   <v-btn :class="{ 'myBtn': true, 'selectedBtn': inputPlatform === '' }" value="" rounded="0"> 所有遊戲 </v-btn>
                   <v-btn :class="{ 'myBtn': true, 'selectedBtn': inputPlatform === 'PC' }" value="PC"> PC </v-btn>
                   <v-btn :class="{ 'myBtn': true, 'selectedBtn': inputPlatform === 'PS4' }" value="PS4"> PS4 </v-btn>
@@ -36,7 +36,7 @@
             <v-row>
               <v-col cols="4" v-for="product in products" :key="product.id">
                 <v-card height="410" class="myCard ma-1" density="compact">
-                  <v-img class="align-end text-white" height="200" :src="img + product.gameCoverImg" cover
+                  <v-img class="align-end text-white pointer" height="200" :src="img + product.gameCoverImg" cover
                     @click="GetSingleProduct(product.id)"></v-img>
                     <v-divider class="border-opacity-100" color="#a1dfe9"></v-divider>
                   <div class="d-flex justify-center align-center mt-2">
@@ -44,7 +44,7 @@
                       <v-icon start icon="mdi-gamepad-right"></v-icon>
                       {{ product.gamePlatformName }}
                     </v-chip>
-                    <div class="mt-1 justify-center text-center" @click="GetSingleProduct(product.id)" style="color:white">
+                    <div class="mt-1 justify-center text-center pointer" @click="GetSingleProduct(product.id)" style="color:white">
                       {{ product.chiName }}
                     </div>
                   </div>
@@ -59,7 +59,7 @@
                   </v-card-text>
 
                   <v-rating v-model="product.score" class="d-flex justify-center" density="compact" half-increments
-                    readonly size="x-small"></v-rating>
+                    readonly size="small"></v-rating>
 
                   <v-card-actions class="justify-center">
                     <v-btn @click.stop="Add2Cart(product.id)" class="mt-3 add2cart" size="large">加入購物車</v-btn>
@@ -80,7 +80,7 @@
 </template>
   
 <script setup>
-import { ref, reactive, onMounted, watchEffect, nextTick } from "vue";
+import { ref, reactive, onMounted, watchEffect } from "vue";
 import Carousel from "@/components/eCommerce/Carousel.vue";
 import SideBar from "@/components/eCommerce/SideBar.vue";
 import { useRoute, useRouter } from "vue-router";
@@ -284,8 +284,9 @@ const GetSingleProduct = async (productId) => {
 
 .myBtn {
   background-color: #01010f;
-  color: #f9ee08
+  color: #f9ee08;
 }
+
 .selectedBtn {
   background-color: #fbf402;
   color: #01010f !important;
@@ -318,4 +319,8 @@ const GetSingleProduct = async (productId) => {
   right: 20px;
   z-index: 20;
 }
+.pointer{
+  cursor: pointer;
+}
+
 </style>
