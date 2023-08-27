@@ -10,6 +10,7 @@ using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Re
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.PaymentRefund;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.EFModels;
+using MediatR;
 
 namespace TataGamedomWebAPI.Controllers;
 
@@ -19,15 +20,22 @@ namespace TataGamedomWebAPI.Controllers;
 [EnableCors("AllowAny")]
 public class LinePayController : ControllerBase
 {
+
+    //to do DI
     private readonly LinePayService _linePayService;
     private readonly AppDbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMediator _mediator;
 
-    public LinePayController(AppDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+    public LinePayController(
+        AppDbContext dbContext, 
+        IHttpContextAccessor httpContextAccessor,
+        IMediator mediator)
     {
         this._dbContext = dbContext;
         this._httpContextAccessor = httpContextAccessor;
-        _linePayService = new LinePayService(_dbContext, _httpContextAccessor);
+        this._mediator = mediator;
+        _linePayService = new LinePayService(_dbContext, _httpContextAccessor, _mediator);
     }
 
 

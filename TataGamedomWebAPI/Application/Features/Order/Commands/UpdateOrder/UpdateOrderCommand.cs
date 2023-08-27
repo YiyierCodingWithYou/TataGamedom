@@ -1,11 +1,8 @@
 ﻿using MediatR;
-using System.ComponentModel.DataAnnotations;
-using TataGamedomWebAPI.Application.Features.Order.Shared;
-using TataGamedomWebAPI.Infrastructure;
 
 namespace TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder;
 
-public class UpdateOrderCommand: IRequest<Unit>    //BaseOrder
+public class UpdateOrderCommand: IRequest<Unit> 
 {
     public string Index { get; set; } = string.Empty;
     public DateTime? SentAt { get; set; }      //出貨
@@ -18,5 +15,6 @@ public class UpdateOrderCommand: IRequest<Unit>    //BaseOrder
     public int? ShipmentStatusId { get; set; }
 
     public int? PaymentStatusId { get; set; }
+
 }
 

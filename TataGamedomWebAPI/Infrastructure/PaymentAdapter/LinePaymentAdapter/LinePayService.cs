@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
+using TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder.UpdateLinePayInfo;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.Payment;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.PaymentConfirm;
@@ -23,13 +25,18 @@ public class LinePayService
     private readonly JsonProvider _jsonProvider;
     private readonly AppDbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMediator _mediator;
 
-    public LinePayService(AppDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+    public LinePayService(
+        AppDbContext dbContext, 
+        IHttpContextAccessor httpContextAccessor,
+        IMediator mediator)
     {
         client = new HttpClient();
         _jsonProvider = new JsonProvider();
         this._dbContext = dbContext;
         this._httpContextAccessor = httpContextAccessor;
+        this._mediator = mediator;
     }
 
     public async Task<PaymentResponseDto> SendPaymentRequestWithCartInfo(CreatePaymentRequestDto createPaymentRequestDto)
@@ -103,12 +110,24 @@ public class LinePayService
         var response = await client.SendAsync(request);
         PaymentConfirmResponseDto responseDto = _jsonProvider.Deserialize<PaymentConfirmResponseDto>(await response.Content.ReadAsStringAsync());
 
-        if (responseDto.ReturnMessage == "Success") 
-        {
-            //update Order
-        }
+        await UpdateLinePayResponseToDb(transactionId, responseDto);
 
         return responseDto;
+    }
+
+    private async Task UpdateLinePayResponseToDb(string transactionId, PaymentConfirmResponseDto responseDto)
+    {
+        if (responseDto.ReturnMessage == "Success.")
+        {
+            await _mediator.Send(new UpdateLinePayInfoCommand
+            {
+                Index = responseDto.Info.OrderId,
+                PaymentStatusId = (int)PaymentStatus.Paid,
+                LinePayTransactionId = transactionId,
+                PaidAt = DateTime.Now,
+                MaskedCreditCardNumber = responseDto.Info.PayInfo.Select(p => p.MaskedCreditCardNumber).FirstOrDefault()
+            });
+        }
     }
 
     public async Task<PaymentRefundResponseDto> RefundPayment(string transactionId, PaymentRefundRequestDto dto)
