@@ -71,6 +71,8 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
 
     private async Task CallLinePayRefundAPI(List<OrderItemReturnDto> orderItemReturnList)
     {
+        //todo 如果是實體商品，要已退貨才能退款
+
         int orderItemId = orderItemReturnList.First().OrderItemId;
         Models.EFModels.OrderItem? orderItem = await _orderItemRepository.GetByIdAsync(orderItemId);
         string? linePayTransitionId = await _orderRepository.GetLinePayTransitionId(orderItem?.OrderId);
