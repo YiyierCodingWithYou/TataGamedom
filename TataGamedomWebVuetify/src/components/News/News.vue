@@ -1,39 +1,31 @@
 <template>
   <NewsCarousel />
-  <v-main class="bg-grey-lighten-3" style="position: relative">
+  <v-main style="position: relative;background-color:  #01010f;">
     <v-container class="container">
       <v-row>
         <!-- <v-col cols="9" v-for="(item, index) in news" :key="item.id" :offset="index == 0 ? index : 3"> -->
         <v-col cols="9" v-for="item in news" :key="item.id">
-          <v-sheet min-height="100" rounded="lg">
-            <v-card-item style="">
+          <v-sheet min-height="100" rounded="lg" style="background-color: #01010f;  box-shadow:2px 2px 10px #a1dfe9;"
+            theme="dark">
+            <v-card-item>
               <div class="d-flex">
-                <img
-                  style="height: 225px; width: 400px"
-                  :src="img + item.coverImg"
-                  @click="GotoNewsPage(item.id)"
-                />
+                <img style="height: 225px; width: 400px" :src="img + item.coverImg" @click="GotoNewsPage(item.id)" />
                 <div class="ms-5">
                   <div class="text-h4 mb-2" @click="GotoNewsPage(item.id)">
                     {{ item.title }}
                   </div>
-                  <div
-                    v-html="truncateAndEllipsis(item.content, 50)"
-                    class=""
-                  ></div>
+                  <div v-html="truncateAndEllipsis(item.content, 50)" class=""></div>
                   <!-- <div class="">{{ item.content }}</div> -->
 
                   <div>{{ item.name }}</div>
                   <div class="text-caption mt-7">
                     {{ relativeTime(item.scheduleDate) }}
-                    <br />
-                    點閱率{{ item.viewCount }}
                   </div>
-                  <v-btn
-                    style="position: absolute"
-                    variant="outlined"
-                    @click="GotoNewsPage(item.id)"
-                    >詳細
+                  <div style="">
+                    <v-icon class="mb-1">mdi-eye </v-icon>
+                    Views {{ item.viewCount }}
+                  </div>
+                  <v-btn style="position: absolute" variant="outlined" @click="GotoNewsPage(item.id)">詳細
                   </v-btn>
                 </div>
               </div>
@@ -42,40 +34,31 @@
         </v-col>
 
         <v-col cols="4" style="position: absolute; left: 71%; max-width: 550px">
-          <v-sheet rounded="lg" min-height="100">
-            <h1>關鍵字搜尋</h1>
-            <SearchTextBox
-              class="mt-2"
-              @searchInput="inputHandler"
-            ></SearchTextBox>
+          <v-sheet rounded="lg" min-height="100" style="background-color: #01010f; color:white" theme=" dark">
+            <h1 class="blue">關鍵字搜尋</h1>
+            <SearchTextBox class="mt-2" style="background-color: #01010f;" @searchInput="inputHandler">
+            </SearchTextBox>
           </v-sheet>
         </v-col>
 
         <v-col cols="4" class="gameclass">
-          <v-sheet rounded="lg" min-height="400">
-            <h1>遊戲類別</h1>
-            <NewsGameClass
-              @classificationInput="classificationHandler"
-              class="mt-10"
-            ></NewsGameClass>
+          <v-sheet rounded="lg" min-height="400" style="background-color: #01010f;" theme="dark">
+            <h1 class="blue">遊戲類別</h1>
+            <NewsGameClass @classificationInput="classificationHandler" class="mt-10"></NewsGameClass>
           </v-sheet>
         </v-col>
 
         <v-col cols="4" class="hotnews">
-          <v-sheet rounded="lg" min-height="500">
-            <h1 class="">熱門新聞</h1>
+          <v-sheet rounded="lg" min-height="500" style="background-color:  #01010f;" theme="dark">
+            <h1 class="blue">熱門新聞</h1>
             <HotNews></HotNews>
           </v-sheet>
         </v-col>
       </v-row>
     </v-container>
     <div class="text-center">
-      <v-pagination
-        v-model="thePage"
-        :length="totalPages"
-        :total-visible="5"
-        @update:model-value="clickHandler"
-      ></v-pagination>
+      <v-pagination v-model="thePage" :length="totalPages" :total-visible="5"
+        @update:model-value="clickHandler"></v-pagination>
     </div>
   </v-main>
 </template>
@@ -163,6 +146,9 @@ const GotoNewsPage = async (newsId) => {
     name: "NewsPage",
     params: { newsId: newsId },
   });
+  window.scrollTo({
+    top: 500,
+  });
 };
 
 const once = (func) => {
@@ -187,7 +173,7 @@ const searchOnce = once(function () {
 const relativeTime = (datetime) => {
   const formattedDate = format(
     new Date(datetime),
-    "yyyy年MM月dd日 EEEE HH:mm:ss",
+    "yyyy年MM月dd日 EEEE",
     {
       locale: zhTW,
     }
@@ -219,5 +205,21 @@ watchEffect(() => {
   left: 71%;
   max-width: 550px;
   margin-top: 550px;
+}
+
+.balck {
+  background-color: #01010f;
+}
+
+ul {
+  list-style: none;
+}
+
+html {
+  background-color: #01010f;
+}
+
+.blue {
+  color: #a1dfe9
 }
 </style>
