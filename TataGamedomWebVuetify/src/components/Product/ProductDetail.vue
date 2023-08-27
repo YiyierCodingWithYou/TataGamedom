@@ -83,7 +83,7 @@
           </div>
           <v-card v-for="item in productData.gameComments" :key="item" class="mt-5 myCard whiteText justify-center align-center">
             <v-card-item>
-              <v-card-title class="mt-2 mb-2" >{{ item.memberName }}</v-card-title>
+              <v-card-title class="mt-2 mb-2" style="color:#a1dfe9" >{{ item.memberName }}</v-card-title>
              
               <v-card-subtitle class="mb-2">發表於 {{ relativeTime(item.createdTime) }}</v-card-subtitle>
               <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
