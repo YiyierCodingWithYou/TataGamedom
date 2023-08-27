@@ -14,6 +14,7 @@ public class OrderProfile : Profile
         CreateMap<Order, OrderDto>();
         CreateMap<Order, OrderDetailsDto>();
         CreateMap<CreateOrderCommand, Order>();
-        CreateMap<UpdateOrderCommand, Order>();
+        CreateMap<UpdateOrderCommand, Order>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
     }
 }

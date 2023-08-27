@@ -6,7 +6,6 @@ namespace TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder;
 
 public class UpdateOrderCommand: IRequest<Unit>    //BaseOrder
 {
-    //public int Id { get; set; }
     public string Index { get; set; } = string.Empty;
     public DateTime? SentAt { get; set; }      //出貨
     public DateTime? DeliveredAt { get; set; } //送達超商門市
