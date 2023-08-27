@@ -11,8 +11,8 @@
           </v-col>
           <v-col cols="6">
             <div class="d-flex flex-column mt-3 whiteText">
-              <div class="text-h5 mb-2 ml-3" style="color:#a1dfe9">
-                ✨{{ productData.chiName }}
+              <div class="d-flex text-h5 mb-2 ml-3 justify-between" style="justify-content: space-between;color:#a1dfe9">
+                ✨{{ productData.chiName }} <div v-if="productData.isVirtual" style="font-size: 14px; color:#f9ee08">　　※虛擬商品</div>
               </div>
               <v-divider class="border-opacity-100 mb-2" color="#a1dfe9"></v-divider>
               <div class="text-h5 ml-3" style="color:#a1dfe9">
