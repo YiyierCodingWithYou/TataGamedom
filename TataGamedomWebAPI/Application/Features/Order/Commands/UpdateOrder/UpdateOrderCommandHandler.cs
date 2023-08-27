@@ -10,16 +10,16 @@ namespace TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder;
 
 public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Unit>
 {
-    private readonly IMapper _mapper;
+    //private readonly IMapper _mapper;
     private readonly IOrderRepository _orderRepository;
     private readonly IAppLogger<UpdateOrderCommandHandler> _logger;
 
     public UpdateOrderCommandHandler(
-        IMapper mapper, 
+        //IMapper mapper, 
         IOrderRepository orderRepository, 
         IAppLogger<UpdateOrderCommandHandler> logger)
     {
-        this._mapper = mapper;
+        //this._mapper = mapper;
         this._orderRepository = orderRepository;
         this._logger = logger;
     }
@@ -35,7 +35,37 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Uni
             throw new NotFoundException(nameof(orderTobeUpdated),request.Index);
         }
 
-        orderTobeUpdated = _mapper.Map(request, orderTobeUpdated);
+        // 手動映射
+        if (request.SentAt.HasValue)
+        {
+            orderTobeUpdated.SentAt = request.SentAt.Value;
+        }
+
+        if (request.DeliveredAt.HasValue)
+        {
+            orderTobeUpdated.DeliveredAt = request.DeliveredAt.Value;
+        }
+
+        if (request.CompletedAt.HasValue)
+        {
+            orderTobeUpdated.CompletedAt = request.CompletedAt.Value;
+        }
+
+        if (!string.IsNullOrEmpty(request.TrackingNum))
+        {
+            orderTobeUpdated.TrackingNum = request.TrackingNum;
+        }
+
+        orderTobeUpdated.OrderStatusId = request.OrderStatusId;
+
+        if (request.ShipmentStatusId.HasValue)
+        {
+            orderTobeUpdated.ShipmentStatusId = request.ShipmentStatusId.Value;
+        }
+
+        orderTobeUpdated.PaymentStatusId = request.PaymentStatusId;
+
+        //orderTobeUpdated = _mapper.Map(request, orderTobeUpdated);
 
         await _orderRepository.UpdateAsync(orderTobeUpdated);
         _logger.LogInformation("Order were updated successfully");
