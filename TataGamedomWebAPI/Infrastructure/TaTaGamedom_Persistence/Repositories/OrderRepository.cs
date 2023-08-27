@@ -36,6 +36,8 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
                 GameChiName = o.OrderItems.Select(oi => oi.InventoryItem.Product.Game!.ChiName).ToList(),
                 ProductIsVirtual = o.OrderItems.Select(oi => oi.InventoryItem.Product.IsVirtual).ToList(),
                 CreatedAt = o.CreatedAt,
+                SentAt = o.SentAt,
+                DeliveredAt = o.DeliveredAt,
                 Total = o.OrderItems.Select(oi => oi.ProductPrice).Sum() + o.ShippingFee,
                 OrderStatusCodeName = o.OrderStatus.Name,
                 OrderIndex = o.Index,

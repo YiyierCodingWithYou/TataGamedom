@@ -11,8 +11,8 @@
           寄送方式:
           {{
             logisticsTradeInfoData.logisticsType == "CVS_UNIMART"
-              ? "7-11取貨"
-              : ""
+            ? "7-11取貨"
+            : ""
           }}
         </div>
         <div v-if="logisticsTradeInfoData.shipmentNo">
@@ -22,11 +22,7 @@
           託運單號(宅配): {{ logisticsTradeInfoData.bookingNote }}
         </div>
       </div>
-      <v-divider
-        :thickness="2"
-        class="border-opacity-25 mb-10"
-        color="success"
-      ></v-divider>
+      <v-divider :thickness="2" class="border-opacity-25 mb-10" color="success"></v-divider>
 
       <v-timeline direction="horizontal">
         <v-timeline-item>
@@ -35,20 +31,28 @@
           </template>
           <div class="d-flex text-h6">
             <strong class="me-4">{{
-              relativeTime(logisticsTradeInfoData.tradeDate)
+              // relativeTime(logisticsTradeInfoData.tradeDate) 綠界測試環境只提供這個
+              relativeTime(order.createdAt)
             }}</strong>
             <div>
               <strong> 物流訂單成立</strong>
             </div>
           </div>
         </v-timeline-item>
+
+        <!-- 以下資料從Order Db拿出來Demo -->
         <v-timeline-item>
           <template v-slot:opposite>
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
           </template>
-          <div>
-            <div class="text-h6">出貨</div>
+          <div class="d-flex text-h6">
+            <strong class="me-4">{{
+              relativeTime(order.sentAt)
+            }}</strong>
+            <div>
+              <strong> 出貨</strong>
+            </div>
           </div>
         </v-timeline-item>
 
@@ -58,8 +62,13 @@
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
           </template>
-          <div>
-            <div class="text-h6">送達超商門市</div>
+          <div class="d-flex text-h6">
+            <strong class="me-4">{{
+              relativeTime(order.deliveredAt)
+            }}</strong>
+            <div>
+              <strong> 送達超商門市</strong>
+            </div>
           </div>
         </v-timeline-item>
 
@@ -70,8 +79,13 @@
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
           </template>
-          <div>
-            <div class="text-h6">取貨</div>
+          <div class="d-flex text-h6">
+            <strong class="me-4">{{
+              relativeTime(order.orderCompletedAt)
+            }}</strong>
+            <div>
+              <strong> 取貨</strong>
+            </div>
           </div>
         </v-timeline-item>
       </v-timeline>
@@ -107,6 +121,9 @@ export default {
           "getLogisticsTradeInfo",
           { MerchantTradeNo }
         );
+
+        console.log(order.value);
+
         logisticsTradeInfoData.value = logisticsTradeInfo.value.decodedData;
         console.log(
           "綠界物流查詢:",
