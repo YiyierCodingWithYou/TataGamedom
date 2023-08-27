@@ -1,85 +1,73 @@
 <template>
-  <v-container class="fill-height">
-    <v-responsive class="align-center text-center fill-height">
-      <v-img height="300" src="@/assets/logo.svg" />
-
-      <div class="text-body-2 font-weight-light mb-n1">Welcome to</div>
-
-      <h1 class="text-h2 font-weight-bold">Vuetify</h1>
-      <div class="py-14" />
-
-      <v-expansion-panels>
-        <v-expansion-panel title="獺獺好" text="大家試試看好像會變簡單">
-        </v-expansion-panel>
-      </v-expansion-panels>
-
-      <div class="py-14" />
-
-      <v-row class="d-flex align-center justify-center">
-        <v-col cols="auto">
-          <v-btn
-            href="https://vuetifyjs.com/components/all/"
-            min-width="164"
-            rel="noopener noreferrer"
-            target="_blank"
-            variant="text"
-          >
-            <v-icon icon="mdi-view-dashboard" size="large" start />
-
-            Components
-          </v-btn>
-        </v-col>
-
-        <v-select
-          label="Select"
-          :items="[
-            'California',
-            'Colorado',
-            'Florida',
-            'Georgia',
-            'Texas',
-            'Wyoming',
-          ]"
-          @update:model-value="test1"
-          variant="underlined"
-        ></v-select>
-
-        <v-col cols="auto">
-          <v-btn
-            color="primary"
-            href="https://vuetifyjs.com/introduction/why-vuetify/#feature-guides"
-            min-width="228"
-            rel="noopener noreferrer"
-            size="x-large"
-            target="_blank"
-            variant="flat"
-          >
-            <v-icon icon="mdi-speedometer" size="large" start />
-
-            Get Started
-          </v-btn>
-        </v-col>
-
-        <v-col cols="auto">
-          <v-btn
-            href="https://community.vuetifyjs.com/"
-            min-width="164"
-            rel="noopener noreferrer"
-            target="_blank"
-            variant="text"
-          >
-            <v-icon icon="mdi-account-group" size="large" start />
-
-            Community
-          </v-btn>
-        </v-col>
-      </v-row>
-    </v-responsive>
-  </v-container>
+  <div class="home flex-column">
+    <div class="homeTitle inline-title color-y">
+      <p class="inline-title color-b">最優質的</p>
+      <p class="inline-title">遊戲</p>
+      <Typed :options="options">
+        <p class="typing inline-title"></p>
+      </Typed>
+      <p class="inline-title color-b">都在...</p>
+    </div>
+    <div class="nya"></div>
+    <div class="inline-title">
+      <div class="inline-title-big color-y font-comfortaa">Tata</div>
+      <div class="inline-title-big color-b font-comfortaa">Gamedom</div>
+    </div>
+  </div>
 </template>
 
-<script setup>
-const test1 = () => {
-  console.log("可以動");
+<script setup lang="ts">
+import { Typed } from "@duskmoon/vue3-typed-js";
+import type { TypedOptions } from "@duskmoon/vue3-typed-js";
+
+const options: TypedOptions = {
+  strings: ["商城體驗", "論壇討論 ", "新聞快報"],
+  loop: true,
+  typeSpeed: 100,
+  smartBackspace: false,
 };
 </script>
+
+<style>
+.nya {
+  height: 30vh;
+  width: 100vw;
+  background-image: url("https://vincentgarreau.com/particles.js/assets/img/kbLd9vb_new.gif");
+  background-size: contain;
+}
+.home {
+  height: calc(100vh - 64px);
+  background-color: #01010f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("https://universe.nasa.gov/rails/active_storage/disk/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDVG9JYTJWNVNTSnpkbUZ5YVdGdWRITXZNalZpWVRJME1qa3RZamxoWkMwME5qQTRMV0kwTUdZdE56ZzJPR0ptT0RjMFlUUXdMemc1WVdVNFlqbGpZVEZqWTJKaU1HSTRZek0zTWpBM01EQmlZemhtTWpCak1USTJOVEF6TW1KaU9HSm1aR0UyTXpRMk16VXpOMk00T0dGaE1XSmhOVGdHT2daRlZEb1FaR2x6Y0c5emFYUnBiMjVKSWw5cGJteHBibVU3SUdacGJHVnVZVzFsUFNKemQybG1kRjlOTXpGZmJXOXpZV2xqWHpFMk1EQXVkMlZpY0NJN0lHWnBiR1Z1WVcxbEtqMVZWRVl0T0NjbmMzZHBablJmVFRNeFgyMXZjMkZwWTE4eE5qQXdMbmRsWW5BR093WlVPaEZqYjI1MFpXNTBYM1I1Y0dWSklnOXBiV0ZuWlM5M1pXSndCanNHVkRvUmMyVnlkbWxqWlY5dVlXMWxPZ3BzYjJOaGJBPT0iLCJleHAiOm51bGwsInB1ciI6ImJsb2Jfa2V5In19--9f1e36489bc11b71bb02fdc9e02701dcbb58e510/swift_M31_mosaic_1600.webp");
+  background-size: cover;
+  filter: saturate(400%);
+}
+
+.inline-title {
+  display: inline-block;
+  font-size: 2rem;
+  font-weight: 600;
+  font-family: "Digi-font";
+  letter-spacing: 15px;
+}
+.inline-title-big {
+  display: inline-block;
+  font-size: 3rem;
+}
+.typed-element {
+  display: inline-block;
+}
+
+.color-y {
+  color: #f9ee08;
+}
+.color-b {
+  color: #a1dfe9;
+}
+.color-k {
+  color: #01010f;
+}
+</style>

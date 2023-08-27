@@ -11,4 +11,8 @@
 import { onMounted, ref } from "vue";
 import ReadPostTotal from "./ReadPostTotal.vue";
 </script>
-<style scoped></style>
+<style scoped>
+.v-sheet {
+  background-color: transparent !important;
+}
+</style>

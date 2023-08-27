@@ -1,7 +1,12 @@
 <template>
   <NewPostBtn @postComplete="reloadPosts"></NewPostBtn>
-  <PostCard v-for="post in posts" :key="post.postId" :post="post"></PostCard>
-  <InfiniteLoading @infinite="loadPosts">
+  <PostCard
+    v-for="post in posts"
+    :key="post.postId"
+    :post="post"
+    @deletePost="reloadPosts"
+  ></PostCard>
+  <InfiniteLoading @infinite="loadPosts" :key="reloadKey">
     <template #complete>
       <p class="text-center">已經看完所有貼文🦦</p>
     </template>
@@ -50,7 +55,7 @@ interface Post {
   voted: string;
   comments: Comment[];
 }
-
+const reloadKey = ref<number>(0);
 const page = ref<number>(1);
 const baseaddress = "https://localhost:7081/api/";
 const posts = ref<Post[]>([]);
@@ -77,10 +82,10 @@ const loadPosts = async ($state: any) => {
   }
 };
 const reloadPosts = () => {
-  console.log("reloadPosts");
+  console.log("reload起來");
   page.value = 1;
   posts.value = [];
-  loadPosts({ loaded: () => {}, complete: () => {}, error: () => {} });
+  reloadKey.value++;
 };
 </script>
 <style lang=""></style>

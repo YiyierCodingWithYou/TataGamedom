@@ -5,4 +5,9 @@
 </template>
 
 <script setup></script>
-<style></style>
+<style>
+.v-main {
+  background-color: #01010f;
+  color: #f9ee08;
+}
+</style>

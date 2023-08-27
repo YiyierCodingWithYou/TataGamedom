@@ -5,10 +5,18 @@
       :items="items"
       @click:select="openLink"
       select-strategy="single-leaf"
+      theme="dark"
     >
     </v-list>
   </div>
 </template>
+
+<style scoped>
+.v-list {
+  background-color: transparent !important;
+  color: #fff;
+}
+</style>
 
 <script setup lang="ts">
 import { ref, onMounted, defineProps, watch, computed } from "vue";

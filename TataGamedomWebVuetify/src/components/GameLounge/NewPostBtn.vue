@@ -148,4 +148,8 @@ const postNewPost = () => {
   min-height: 200px;
   max-height: 300px;
 }
+
+>>> .quill-editor img {
+  max-width: 50%;
+}
 </style>

@@ -1,4 +1,5 @@
 <template>
+  <div class="mt-3">
   <v-expansion-panels v-if="cartData.allowCheckout">
     <v-expansion-panel>
       <v-expansion-panel-title>合計：NT${{ selectedData.totalAmount }}<br />購物車（{{
@@ -7,13 +8,13 @@
       <v-expansion-panel-text>
         <v-sheet v-if="cartData.allowCheckout == true">
           <v-table>
-            <thead class="text-center">
+            <thead class="text-center justify-center align-center">
               <tr>
-                <th></th>
-                <th>商品名稱</th>
-                <th class="text-end">單件價格</th>
-                <th class="text-end">數量</th>
-                <th class="text-end">小計</th>
+                <th class="myTh"></th>
+                <th class="myTh">商品名稱</th>
+                <th class="myTh" >單件價格</th>
+                <th class="myTh">數量</th>
+                <th class="myTh" >小計</th>
               </tr>
             </thead>
 
@@ -77,7 +78,7 @@
     <v-container>
       <v-row>
         <v-col cols="6">
-          <v-card class="mt-3">
+          <v-card class="mt-3 mySheet">
             <v-card-title>✨顧客資料</v-card-title>
             <v-divider></v-divider>
             <v-card-title>姓名</v-card-title>
@@ -89,7 +90,8 @@
           </v-card>
         </v-col>
 
-        <v-col cols="6"><v-card class="mt-3">
+        <v-col cols="6"
+          ><v-card class="mt-3 mySheet">
             <v-card-title>✨收件人資料</v-card-title>
             <v-divider></v-divider>
             <p>已選擇的送貨方式：{{ selectedData.shipMethod.label }}</p>
@@ -185,6 +187,7 @@
       </div>
     </v-container>
   </v-form>
+</div>
 </template>
     
 <script setup>
@@ -458,4 +461,51 @@ const handleSubmit = async () => {
 load();
 </script>
     
-<style></style>
+<style scoped>
+.myComment {
+  background-color: #01010f;
+  color: white
+}
+
+.mySheet {
+  width: 100%;
+  background-color: #01010f;
+  color: #a1dfe9;
+  font-size: 16px
+}
+.v-table {
+  background-color: #01010f;
+  color: white !important;
+  /* border:1px solid #a1dfe9; */
+}
+
+.myTh {
+  text-align: center !important;
+  color: #f9ee08 !important;
+  width: auto;
+}
+
+.myTd {
+  text-align: center !important;
+  justify-items: center !important;
+  align-items: center !important;
+  width: auto;
+}
+
+.myBtn {
+  font-size: 18px;
+  border: 1px solid #a1dfe9;
+  background-color: #01010f;
+  color: #a1dfe9;
+}
+
+.myBtn:hover {
+  background-color: #a1dfe9;
+  color: #01010f;
+  box-shadow: 2px 2px 10px #a1dfe9;
+}
+.textYellow {
+  color: #f9ee08 !important;
+  font-size: 16px;
+}
+</style>
