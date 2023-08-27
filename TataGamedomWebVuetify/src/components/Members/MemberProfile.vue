@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" width="256">
+  <v-card class="mx-auto" width="256" style="background-color:  #01010f;" theme="dark">
     <v-layout>
       <v-navigation-drawer permanent absolute>
         <v-list>
@@ -82,4 +82,8 @@ const gotoOrder = () => {
 
 </script>
     
-<style></style>
+<style>
+.black {
+  background-color: black;
+}
+</style>

@@ -80,7 +80,7 @@ namespace TataGamedomWebAPI.Controllers
 
 				sql += " GROUP BY n.Id, n.Title, n.Content,n.ScheduleDate, b.Name, gc.Name, n.ActiveFlag, ncc.Name,n.CoverImg";
 
-                var queryParams = new { Keyword = $"%{keyword}%" , GamesCategory = $"%{gamesCategory}%" };
+				var queryParams = new { Keyword = $"%{keyword}%" , GamesCategory = $"%{gamesCategory}%" };
                 var news = await conn.QueryAsync<NewsDto>(sql, queryParams);
 
                 int totalCount = news.Count();
@@ -133,6 +133,7 @@ namespace TataGamedomWebAPI.Controllers
       ,[DeleteMemberId]
       ,[DeleteBackendMemberId]
 	  ,M.Name
+	,M.IconImg
   FROM [Tatagamedom].[dbo].[NewsComments]
   left join Members as M on M.ID = NewsComments.MemberID
  where NewsComments.newsid = @Id and NewsComments.ActiveFlag = 1
@@ -251,29 +252,6 @@ AND MemberId = @memberId";
 				return Ok("成功按讚");
 			}
 		}
-
-//		[EnableCors("AllowCookie")]
-//		[HttpDelete("{newsId}/Like")]
-//		public async Task<ActionResult<NewslikesDTO>> DeleteNewsLike(int newsId, NewslikesDTO newslikesDTO)
-//		{
-//			if (_context.News == null)
-//			{
-//				return Problem("Entity set 'AppDbContext.News'  is null.");
-//			}
-//			var account = HttpContext.User.FindFirstValue("MembersAccount");
-//			var user = _context.Members.FirstOrDefault(m => m.Account == account);
-
-//			using (var conn = _context.Database.GetDbConnection())
-//			{
-//				string sql = @"DELETE 
-//FROM NewsLikes
-//WHERE NewsId =　@newsId
-//AND MemberId = @memberId";
-
-//				var news = conn.QueryFirstOrDefault<NewslikesDTO>(sql, new { newsId = newsId, memberId = user.Id });
-//			}
-//			return Ok("取消按讚");
-//		}
 
 
 		private bool NewsExists(int id)
