@@ -72,6 +72,16 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
         _dbContext.Entry(order).State = EntityState.Modified;
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<Order?> GetByIndex(string index)
+    {
+        var order = await _dbContext.Orders
+            .AsNoTracking()
+            .Where(o => o.Index == index)
+            .FirstOrDefaultAsync ();
+
+        return order;
+    }
 }
 
 

@@ -29,11 +29,14 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Uni
     {
         await ValidateRequest(request);
 
-        Models.EFModels.Order? orderTobeUpdated = await _orderRepository.GetByIdAsync(request.Id);
+        Models.EFModels.Order? orderTobeUpdated = await _orderRepository.GetByIndex(request.Index);
         if (orderTobeUpdated == null) 
         {
-            throw new NotFoundException(nameof(orderTobeUpdated),request.Id);
+            throw new NotFoundException(nameof(orderTobeUpdated),request.Index);
         }
+
+        
+
 
         orderTobeUpdated = _mapper.Map(request, orderTobeUpdated);
 

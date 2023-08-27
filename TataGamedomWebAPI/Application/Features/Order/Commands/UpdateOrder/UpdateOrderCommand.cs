@@ -5,7 +5,8 @@ namespace TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder;
 
 public class UpdateOrderCommand : BaseOrder, IRequest<Unit> 
 {
-    public int Id { get; set; }
+    public int? Id { get; set; }
+    public string Index { get; set; } = string.Empty;
     public DateTime? CompletedAt { get; set; } 
     public DateTime? DeliveredAt { get; set; } 
     public string? TrackingNum { get; set; }
