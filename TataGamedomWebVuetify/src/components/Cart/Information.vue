@@ -387,7 +387,7 @@ const checkoutLinePay = async () => {
       "Content-Type": "application/json",
     },
     credentials: "include",
-    body: JSON.stringify({}),
+    body: JSON.stringify({}),  //todo  ShipmentMethodDto
   });
   if (response.ok) {
     const data = await response.json();
@@ -425,7 +425,6 @@ const createOrder = async () => {
 
 const handleSubmit = async () => {
   try {
-    console.log(memberId.value);
     const orderResult = await createOrder();
 
     if (props.selectedData.payment.id == 2) {
