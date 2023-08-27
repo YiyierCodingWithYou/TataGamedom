@@ -1,5 +1,4 @@
 ﻿using MediatR;
-
 namespace TataGamedomWebAPI.Application.Features.Order.Commands.DeleteCarts;
 
 public class DeleteCartsCommand : IRequest<Unit>

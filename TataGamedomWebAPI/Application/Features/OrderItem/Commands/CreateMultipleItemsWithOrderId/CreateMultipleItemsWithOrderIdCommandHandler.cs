@@ -17,11 +17,9 @@ namespace TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultip
 public class CreateMultipleItemsWithOrderIdCommandHandler : IRequestHandler<CreateMultipleItemsWithOrderIdCommand, List<CreateOrderItemResponseDto>>
 {
     private readonly IMapper _mapper;
-    private readonly IOrderRepository _orderRepository;
     private readonly IOrderItemRepository _orderItemRepository;
     private readonly IProductRepository _productRepository;
     private readonly IInventoryItemRepository _inventoryItemRepository;
-	private readonly ICartRepository _cartRepository;
 	private readonly IAppLogger<CreateMultipleItemsWithOrderIdCommandHandler> _logger;
     private readonly IIndexGenerator _indexGenerator;
     private readonly IMediator _mediator;
@@ -38,11 +36,9 @@ public class CreateMultipleItemsWithOrderIdCommandHandler : IRequestHandler<Crea
         IMediator mediator)
     {
         this._mapper = mapper;
-        this._orderRepository = orderRepository;
         this._orderItemRepository = orderItemRepository;
         this._productRepository = productRepository;
         this._inventoryItemRepository = inventoryItemRepository;
-		this._cartRepository = cartRepository;
 		this._logger = logger;
         this._indexGenerator = indexGenerator;
         this._mediator = mediator;
@@ -68,23 +64,12 @@ public class CreateMultipleItemsWithOrderIdCommandHandler : IRequestHandler<Crea
         }
 
         await _orderItemRepository.CreateAsync(orderItemToBeCreatedList);
-        await DeleteCart(request);
 
         _logger.LogInformation("Created multiple order items successfully");
 
         return _mapper.Map<List<CreateOrderItemResponseDto>>(orderItemToBeCreatedList);
     }
 
-    private async Task DeleteCart(CreateMultipleItemsWithOrderIdCommand request)
-	{
-        List<Cart>? cart = await _cartRepository.GetCartListByMemberIdAsync(request.CreateOrderCommand.MemberId);
-		if (cart?.Any() == false)
-		{
-			_logger.LogWarning("購物車不存在");
-			throw new NotFoundException(nameof(cart), request.CreateOrderCommand.MemberId);
-		}
-		await _cartRepository.DeleteAsync(cart!);
-	}
 
 	private async Task AddInventoryIemIdToOrderItem(HashSet<int> soldOutIds, CreateOrderItemCommand createOrderItemCommand, Models.EFModels.OrderItem orderItem)
     {

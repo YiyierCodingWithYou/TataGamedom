@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TataGamedomWebAPI.Application.Features.Order.Commands.CreateOrder;
+using TataGamedomWebAPI.Application.Features.Order.Commands.DeleteCarts;
 using TataGamedomWebAPI.Application.Features.Order.Commands.DeleteOrder;
 using TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder;
 using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderDetails;
@@ -91,7 +92,7 @@ public class OrdersController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{MemberId}")]
+    [HttpDelete("{memberId}/Carts")]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesDefaultResponseType]
