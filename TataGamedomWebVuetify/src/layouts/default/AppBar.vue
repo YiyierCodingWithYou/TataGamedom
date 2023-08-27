@@ -3,13 +3,7 @@
     <v-app-bar-title class="text-light-blue-lighten-5 text-c2">
       <v-slot id="text">
         <div class="d-flex align-center font-comfortaa">
-          <img
-            src="./TataGamdom_Circle.svg"
-            style="height: 35px"
-            class="me-2"
-            alt=""
-            srcset=""
-          />
+          <img src="./TataGamdom_Circle.svg" style="height: 35px" class="me-2" alt="" srcset="" />
           TataGamedom
         </div>
       </v-slot>
@@ -29,12 +23,8 @@
 
     <v-btn v-else color="primary" @click="login">登入</v-btn>
   </v-app-bar>
-  <MemberProfile
-    class="MemberProfile"
-    v-if="showMemberProfile"
-    @close="closeMemberProfile"
-    @mouseleave="showMemberProfile = false"
-  />
+  <MemberProfile class="MemberProfile" v-if="showMemberProfile" @close="closeMemberProfile"
+    @mouseleave="showMemberProfile = false" />
 </template>
 
 <script>
@@ -114,6 +104,7 @@ export default {
   right: 0;
   margin-top: 64px;
 }
+
 img {
   height: 40px;
   width: 40px;
