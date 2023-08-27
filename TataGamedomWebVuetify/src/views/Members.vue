@@ -1,15 +1,9 @@
 <template>
-  <v-tabs fixed-tabs bg-color="white">
-    <v-tab
-      @click="selectedTab = 'MemberDetial'"
-      :active="selectedTab === 'MemberDetial'"
-    >
+  <v-tabs fixed-tabs bg-color="dark">
+    <v-tab @click="selectedTab = 'MemberDetial'" :active="selectedTab === 'MemberDetial'">
       修改資料
     </v-tab>
-    <v-tab
-      @click="selectedTab = 'ChangePwd'"
-      :active="selectedTab === 'ChangePwd'"
-    >
+    <v-tab @click="selectedTab = 'ChangePwd'" :active="selectedTab === 'ChangePwd'">
       修改密碼
     </v-tab>
   </v-tabs>

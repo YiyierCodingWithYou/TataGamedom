@@ -1,9 +1,6 @@
 <template>
   <v-app-bar flat class="bg-tataC2">
-    <v-app-bar-title
-      class="text-light-blue-lighten-5 text-c2 cursor-pointer"
-      @click="link('')"
-    >
+    <v-app-bar-title class="text-light-blue-lighten-5 text-c2 cursor-pointer" @click="link('')">
       <v-slot id="text">
         <div class="d-flex align-center font-comfortaa">
           <img src="./TataGamdom_Circle.svg" style="height: 35px" class="me-2" alt="" srcset="" />
@@ -11,28 +8,13 @@
         </div>
       </v-slot>
     </v-app-bar-title>
-    <v-btn
-      variant="text"
-      rounded="0"
-      class="h-100 pageBtn"
-      @click="link('News')"
-    >
+    <v-btn variant="text" rounded="0" class="h-100 pageBtn" @click="link('News')">
       新聞
     </v-btn>
-    <v-btn
-      variant="text"
-      rounded="0"
-      class="h-100 pageBtn"
-      @click="link('GameLounge')"
-    >
+    <v-btn variant="text" rounded="0" class="h-100 pageBtn" @click="link('GameLounge')">
       論壇
     </v-btn>
-    <v-btn
-      variant="text"
-      rounded="0"
-      class="h-100 pageBtn"
-      @click="link('eCommerce')"
-    >
+    <v-btn variant="text" rounded="0" class="h-100 pageBtn" @click="link('eCommerce')">
       商城
     </v-btn>
     <v-spacer></v-spacer>
@@ -45,25 +27,13 @@
       <!-- <a color="primary" @mouseover="showMemberProfile = true">
         HI {{ name }}
       </a> -->
-      <img :src="iconImg" @mouseover="showMemberProfile = true" />
-      <v-btn
-        variant="text"
-        rounded="0"
-        class="logBtn pageBtn h-100"
-        @click="logout"
-        >登出</v-btn
-      >
+      <img :src="iconImg" @mouseover="showMemberProfile = true" style="margin-top: 10px;" />
+      <v-btn variant="text" rounded="0" class="logBtn pageBtn h-100" style="margin-bottom: 30px;"
+        @click="logout">登出</v-btn>
     </div>
 
-    <v-btn
-      v-else
-      prepend-icon="mdi-login-variant"
-      variant="text"
-      class="h-100 pageBtn logBtn"
-      @click="login"
-      rounded="0"
-      >登入</v-btn
-    >
+    <v-btn v-else prepend-icon="mdi-login-variant" variant="text" class="h-100 pageBtn logBtn" @click="login"
+      rounded="0">登入</v-btn>
   </v-app-bar>
   <MemberProfile class="MemberProfile" v-if="showMemberProfile" @close="closeMemberProfile"
     @mouseleave="showMemberProfile = false" />
@@ -147,12 +117,15 @@ export default {
 .v-btn {
   color: #01010f;
 }
+
 .v-btn:hover {
   color: #f9ee08;
 }
+
 .cursor-pointer {
   cursor: pointer;
 }
+
 .MemberProfile {
   position: fixed;
   z-index: 5;
@@ -184,7 +157,8 @@ img {
   color: #f9ee08;
   background-color: #01010f;
 }
-.pageBtn:hover > .pageBtn {
+
+.pageBtn:hover>.pageBtn {
   color: #f9ee08;
   background-color: #01010f;
 }
