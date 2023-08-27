@@ -1,22 +1,23 @@
 <template>
-  <v-container>
-    <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="center">
-      <v-tab v-for="item in flows" :key="item" :value="item" :disabled="disabledTabs[item]">
-        {{ item }}
-      </v-tab>
-    </v-tabs>
-    <v-window v-model="tab">
-      <v-window-item value="購物車">
-        <CartItem @getreturnSelected="returnSelectedHandler"></CartItem>
-      </v-window-item>
-      <v-window-item value="填寫資料">
-        <Information v-if="selectedData !== undefined" :selectedData="selectedData"></Information>
-      </v-window-item>
-      <v-window-item value="訂單確認">
-        <OrderConfirmation></OrderConfirmation>
-      </v-window-item>
-    </v-window>
-  </v-container>
+  
+    <v-container>
+      <v-tabs v-model="tab" color="#a1dfe9" align-tabs="center">
+        <v-tab v-for="item in flows" :key="item" :value="item" :disabled="disabledTabs[item]">
+          {{ item }}
+        </v-tab>
+      </v-tabs>
+      <v-window v-model="tab">
+        <v-window-item value="購物車">
+          <CartItem @getreturnSelected="returnSelectedHandler"></CartItem>
+        </v-window-item>
+        <v-window-item value="填寫資料">
+          <Information v-if="selectedData !== undefined" :selectedData="selectedData"></Information>
+        </v-window-item>
+        <v-window-item value="訂單確認">
+          <OrderConfirmation></OrderConfirmation>
+        </v-window-item>
+      </v-window>
+    </v-container>
 </template>
 
 <script setup lang="ts">
@@ -57,4 +58,8 @@ onMounted(() => {
 });
 </script>
 
-<style></style>
+<style>
+.v-container {
+  max-width: 90% !important;
+}
+</style>

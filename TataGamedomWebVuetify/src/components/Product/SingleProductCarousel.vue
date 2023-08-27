@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-carousel v-model="currentIndex" hide-delimiters :show-arrows="false" cycle class="singleFullScreen">
+    <v-carousel v-model="currentIndex" hide-delimiters show-arrows="hover" cycle class="singleFullScreen">
       <v-carousel-item v-for="image in productData.productImg" :key="image" :src="imgLink + image" cover>
       </v-carousel-item>
       <v-sheet class="me-auto d-flex justify-center align-center" height="160" style="

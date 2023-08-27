@@ -9,7 +9,6 @@ import RegisterVue from "@/components/Members/Register.vue";
 import Login from "@/components/Members/Login.vue";
 import ForgetPwd from "@/components/Members/ForgetPwd.vue";
 import Orders from "../views/Orders.vue";
-// import OrderDetailsCards from '../views/OrderDetailsCards.vue'
 import SupportHub from '../views/SupportHub.vue'
 import LinePay from '../views/LinePay.vue'
 import ActiveRegister from '@/components/Members/ActiveRegister.vue'
@@ -97,16 +96,6 @@ const routes = [
         name: "Orders",
         component: Orders,
       },
-      // {
-      //   path: '/Orders/:id',
-      //   name: 'OrderDetailsCards',
-      //   component: OrderDetailsCards
-      // },
-      // {
-      //   path: '/OrderItemReturn/:id/:gameChiName',
-      //   name: 'OrderItemReturn',
-      //   component: OrderItemReturn
-      // },
       {
         path: "/SupportHub",
         name: "SupportHub",
@@ -239,4 +228,7 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+router.afterEach((to, from, next) => {
+	window.scrollTo(0, 0);
+});
 export default router;

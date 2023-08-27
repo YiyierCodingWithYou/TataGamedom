@@ -1,49 +1,51 @@
 <template>
   <v-container>
-    <v-sheet v-if="cartData?.cartItems?.length > 0">
+    <v-sheet v-if="cartData?.cartItems?.length > 0" class="mySheet">
       <v-table>
-        <thead class="text-center">
+        <thead class="text-center justify-center align-center">
           <tr>
-            <th></th>
-            <th>商品名稱</th>
-            <th class="text-end">單件價格</th>
-            <th class="text-end">數量</th>
-            <th class="text-end">小計</th>
-            <th class="text-end"></th>
+            <th class="myTh"></th>
+            <th class="myTh">遊戲平台</th>
+            <th class="myTh">商品名稱</th>
+            <th class="myTh">單件價格</th>
+            <th class="myTh">數量</th>
+            <th class="myTh">小計</th>
+            <th class="myTh"></th>
           </tr>
         </thead>
-
         <tbody>
           <tr v-for="item in cartData.cartItems" :key="item.product.id">
-            <td>
-              <img :src="imgLink + item.product.gameCoverImg" height="150" cover />
+            <td class="myTd">
+              <img :src="imgLink + item.product.gameCoverImg" height="100" cover rounded="2" />
             </td>
-            <td>
-              <div>{{ item.product.chiName }}</div>
-              <div>
-                <v-chip class="ma-2" color="cyan" label>
-                  <v-icon start icon="mdi-gamepad-right"></v-icon>
-                  {{ item.product.gamePlatformName }}
-                </v-chip>
-              </div>
+            <td class="myTd">
+              <v-chip color="#a1dfe9" label>
+                <v-icon start icon="mdi-gamepad-right"></v-icon>
+                {{ item.product.gamePlatformName }}
+              </v-chip>
             </td>
-            <td v-if="item.product.price != item.product.specialPrice" class="text-end">
+            <td class="myTd">
+              <div style="text-align: left;">{{ item.product.chiName }}</div>
+            </td>
+            <td v-if="item.product.price != item.product.specialPrice" class="myTd">
               <div>
                 <s>NT$ {{ item.product.price }}</s>
               </div>
               <div>NT$ {{ item.product.specialPrice }}</div>
             </td>
-            <td v-else>NT$ {{ item.product.price }}</td>
-            <td>
-              <v-row>
-                <v-col class="d-flex" cols="3">
-                  <v-btn @click="decreaseQuantity(item)" :max="limit"><v-icon>mdi-minus</v-icon></v-btn>
+            <td v-else class="myTd">NT$ {{ item.product.price }}</td>
+            <td class="myTd">
+              <v-row class="d-flex justify-center align-center">
+                <v-col cols="4" class="d-flex justify-center align-center">
+                  <v-btn @click="decreaseQuantity(item)" :max="limit"
+                    class="plusMinBtn"><v-icon>mdi-minus</v-icon></v-btn>
                 </v-col>
-                <v-col cols="6">
-                  <v-text-field v-model="item.qty" min="0" :max="limit" variant="outlined" readonly></v-text-field>
+                <v-col cols="4" class="d-flex justify-center align-center">
+                  <input type="number" v-model="item.qty" min="0" :max="limit" style="color:#a1dfe9" class="text-center"
+                    readonly />
                 </v-col>
-                <v-col cols="3">
-                  <v-btn @click="increaseQuantity(item)" :max="limit"><v-icon>mdi-plus</v-icon></v-btn>
+                <v-col cols="4" class="d-flex justify-center align-center">
+                  <v-btn @click="increaseQuantity(item)" :max="limit" class="plusMinBtn"><v-icon>mdi-plus</v-icon></v-btn>
                 </v-col>
               </v-row>
             </td>
@@ -53,9 +55,14 @@
             </td>
           </tr>
           <tr>
+            <td colspan="7">
+              <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
+            </td>
+          </tr>
+          <tr>
             <td>優惠活動</td>
             <td>
-              <span class="me-auto" v-for="(item, index) in cartData.distinctCoupons" :key="index">
+              <span v-for="(item, index) in cartData.distinctCoupons" :key="index">
                 {{ item }} {{ cartData.distinctCouponsDescription[index]
                 }}<br />
               </span>
@@ -65,50 +72,52 @@
             <td></td>
             <td></td>
           </tr>
+          <tr>
+            <td colspan="7">
+              <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
+            </td>
+          </tr>
         </tbody>
       </v-table>
       <v-row>
-        <v-col cols="8">
-          <v-card class="mt-3">
-            <v-card-title class="d-flex">選擇送貨及付款方式</v-card-title>
-            <hr />
+        <v-col cols="7">
+          <v-card class="mt-3 mySheet" height="350">
+            <v-card-title class="d-flex">🚛 選擇送貨及付款方式</v-card-title>
+            <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
             <v-card-subtitle>送貨地點</v-card-subtitle>
             <v-select v-model="selectLocation" :items="shipLocation" item-title="label" item-value="item" return-object
-              single-line variant="solo"></v-select>
+              single-line  theme="dark" style="background-colorr:#01010f;color:white"></v-select>
             <v-card-subtitle>送貨方式</v-card-subtitle>
             <v-select v-model="selectShipMethod" :items="shipMethod" item-title="label" item-value="item" return-object
-              single-line variant="solo"></v-select>
+              single-line variant="solo" theme="dark"></v-select>
             <v-card-subtitle>付款方式</v-card-subtitle>
             <v-select v-model="selectPayment" :items="payment" item-title="label" item-value="item" return-object
-              single-line variant="solo"></v-select>
+              single-line variant="solo" theme="dark"></v-select>
           </v-card>
         </v-col>
-        <v-col cols="4">
-          <v-card class="mt-3">
-            <v-card-title class="d-flex">訂單資訊</v-card-title>
-            <hr />
+        <v-col cols="5">
+          <v-card class="mt-3 mySheet" height="350"
+            style="display: flex; flex-direction: column; justify-content: space-between;">
+            <v-card-title class="d-flex">💬 訂單資訊</v-card-title>
+            <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
             <v-card-subtitle>小計：{{ cartData.subTotal }}</v-card-subtitle>
             <v-card-subtitle>運費：{{ freight }}</v-card-subtitle>
             <div v-if="!isLogin">
-              <v-card-subtitle>合計：{{ finalTotal
-              }}</v-card-subtitle>
+              <v-card-subtitle>合計：{{ finalTotal }}</v-card-subtitle>
             </div>
-            <div v-else><v-card-subtitle>合計：{{ cartData.total + freight
-            }}</v-card-subtitle></div>
-            <br />
-            <hr />
-            <br />
-            <div class="d-flex justify-center">
-              <v-btn v-if="isLogin" width="300" color="primary" @click="returnSelectedHandler">前往結帳</v-btn>
-              <v-btn v-else width="300" color="primary" @click="returnLogin">請登入後結帳</v-btn>
-
+            <div v-else>
+              <v-card-subtitle>合計：{{ cartData.total + freight }}</v-card-subtitle>
+            </div>
+            <div style="margin-top: auto;">
+              <v-btn v-if="isLogin" width="100%" class="myBtn" @click="returnSelectedHandler">前往結帳</v-btn>
+              <v-btn v-else width="100%" color="primary" class="myBtn" @click="returnLogin">請登入後結帳</v-btn>
             </div>
           </v-card>
         </v-col>
       </v-row>
     </v-sheet>
-    <v-sheet v-else class="text-center">您的購物車為空，<a href="/eCommerce">點我到商城逛逛！</a></v-sheet>
-
+    <v-sheet v-else class="text-center myComment">您的購物車為空，<a href="/eCommerce"
+        style="color:#a1dfe9">點我到商城逛逛！</a></v-sheet>
   </v-container>
 </template>
     
@@ -521,4 +530,52 @@ updateShipmentOptions();
 calculatePaymentOption();
 </script>
     
-<style></style>
+<style scoped>
+.v-container {
+  max-width: 90% !important;
+}
+
+.myComment {
+  background-color: #01010f;
+  color: white
+}
+
+.mySheet {
+  width: 100%;
+  background-color: #01010f;
+  color:#f9ee08;
+  font-size: 16px
+}
+
+.v-table {
+  background-color: #01010f;
+  color: white !important;
+  /* border:1px solid #a1dfe9; */
+}
+
+.myTh {
+  text-align: center !important;
+  color: #f9ee08 !important;
+  width: auto;
+}
+
+.myTd {
+  text-align: center !important;
+  justify-items: center !important;
+  align-items: center !important;
+  width: auto;
+}
+
+.myBtn {
+  font-size: 18px;
+  border: 1px solid #a1dfe9;
+  background-color: #01010f;
+  color: #a1dfe9;
+}
+
+.myBtn:hover {
+  background-color: #a1dfe9;
+  color: #01010f;
+  box-shadow: 2px 2px 10px #a1dfe9;
+}
+</style>

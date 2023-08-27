@@ -1,11 +1,7 @@
 <template>
-  <input
-    type="text"
-    v-model="keyword"
-    @keyup.enter="inputHandler"
-    class="form-control"
-    placeholder="請輸入產品名稱"
-  />
+  <v-text-field v-model="keyword" @keyup.enter="inputHandler" density="compact" placeholder="請輸入產品名稱" append-inner-icon="mdi-magnify"
+  variant="plain">
+  </v-text-field>
 </template>
     
 <script setup>
@@ -18,9 +14,8 @@ const emit = defineEmits(["searchInput"]);
 const inputHandler = () => {
   //引發事件 子將資料傳給父
   emit("searchInput", keyword.value);
-  keyword.value="";
+  keyword.value = "";
 };
 </script>
     
-<style>
-</style>
+<style></style>

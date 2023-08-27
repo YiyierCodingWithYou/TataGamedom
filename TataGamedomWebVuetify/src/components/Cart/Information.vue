@@ -387,8 +387,9 @@ const spotHandler = async (value) => {
   branch.value = "";
   spotList.value = [];
   createOrderCommand.value.toAddress = datas.address;
-  createOrderCommand.value.shipmentMethodId = props.selectedData.shipMethod.id;
+  createOrderCommand.value.ShipmemtMethodId = props.selectedData.shipMethod.id;
   createOrderCommand.value.recipientName = buyerName;
+  createOrderCommand.value.shippingFee = props.selectedData.freight;
 };
 
 const handleFillRecipient = () => {
@@ -497,7 +498,7 @@ const checkoutLinePay = async () => {
   });
   if (response.ok) {
     const data = await response.json();
-    console.log(data);
+    sessionStorage.setItem("totalAmount", props.selectedData.totalAmount);
     window.location = data.info.paymentUrl.web;
   } else {
     console.log(response);
@@ -531,11 +532,6 @@ const createOrder = async () => {
 
 const handleSubmit = async () => {
   try {
-    const orderResult = await createOrder();
-    payload.value.receiverName = buyerName.value;
-    payload.value.MerchantTradeNo = orderResult[0].orderIndex;
-    console.log(payload.value);
-    createLogisticsOrder(payload.value);
     if (props.selectedData.payment.id == 2) {
       await checkoutECPay();
       ecpayForm.value.submit();
@@ -544,10 +540,35 @@ const handleSubmit = async () => {
     } else {
       router.push({ name: "Cart", query: { paymentSuccess: "true" } });
     }
+
+    // todo  => Confirm
+    const orderResult = await createOrder();
+    payload.value.receiverName = buyerName.value;
+    payload.value.MerchantTradeNo = orderResult[0].orderIndex;
+    createLogisticsOrder(payload.value);
   } catch (error) {
     console.error("Error:", error);
   }
 };
+
+// const handleSubmit = async () => {
+//   try {
+//     const orderResult = await createOrder();
+//     payload.value.receiverName = buyerName.value;
+//     payload.value.MerchantTradeNo = orderResult[0].orderIndex;
+//     createLogisticsOrder(payload.value);
+//     if (props.selectedData.payment.id == 2) {
+//       await checkoutECPay();
+//       ecpayForm.value.submit();
+//     } else if (props.selectedData.payment.id == 1) {
+//       await checkoutLinePay();
+//     } else {
+//       router.push({ name: "Cart", query: { paymentSuccess: "true" } });
+//     }
+//   } catch (error) {
+//     console.error("Error:", error);
+//   }
+// };
 
 load();
 </script>

@@ -1,12 +1,12 @@
 <template>
-  <NewPostBtn @postComplete="reloadPosts"></NewPostBtn>
+  <NewPostBtn @postComplete="reload"></NewPostBtn>
   <PostCard
     v-for="post in posts"
     :key="post.postId"
     :post="post"
-    @deletePost="reloadPosts(true)"
+    @deletePost="reload"
   ></PostCard>
-  <InfiniteLoading @infinite="loadPosts" ref="infiniteLoading">
+  <InfiniteLoading @infinite="loadPosts" :key="reloadKey" ref="infiniteLoading">
     <template #complete>
       <p class="text-center">已經看完所有貼文🦦</p>
     </template>
@@ -59,10 +59,6 @@ interface Post {
   comments: Comment[];
 }
 
-const page = ref<number>(1);
-const baseaddress = "https://localhost:7081/api/";
-const posts = ref<Post[]>([]);
-const route = useRoute();
 const props = defineProps({
   memberAccount: {
     type: String,
@@ -77,31 +73,17 @@ const props = defineProps({
     default: "",
   },
 });
+
+const baseaddress = "https://localhost:7081/api/";
+const page = ref<number>(1);
+const posts = ref<Post[]>([]);
+const route = useRoute();
 const store = useStore();
 const infiniteLoading = ref<any>(null);
-
-const reloadPosts = (refresh) => {
-  console.log("reloadPosts");
-  loadPosts({
-    reset: true,
-  });
-  setTimeout(() => {
-    infiniteLoading.value?.state?.loaded();
-    loadPosts({});
-  }, 30);
-  if (refresh) {
-    store.commit("aboutRefresh");
-  }
-};
-
 const keyword = computed(() => store.state.GameLoungeStore.keyword);
+const reloadKey = ref(0);
 
 const loadPosts = async ($state: any) => {
-  if ($state.reset) {
-    page.value = 1;
-    posts.value = [];
-    return;
-  }
   try {
     const response = await fetch(
       `${baseaddress}Posts?page=${page.value}&keyword=${keyword.value}&memberAccount=${props.memberAccount}&boardId=${props.boardId}`,
@@ -109,23 +91,35 @@ const loadPosts = async ($state: any) => {
         credentials: "include",
       }
     );
-    const datas: Post[] = await response.json();
+    console.log(response);
 
-    if (datas.length) {
-      posts.value = [...posts.value, ...datas];
-    } else {
+    const datas = await response.json();
+
+    if (datas.length === 0) {
       $state.complete();
+    } else {
+      posts.value.push(...datas);
+      $state.loaded();
+      page.value++;
     }
-    page.value++; // 每次加載完，頁數加1
+    console.log(page.value);
   } catch (error) {
     console.error("Error loading posts:", error);
-    $state.error(); // 如果加載出錯，告訴組件加載出錯
+    $state.error();
   }
+};
+
+const reload = () => {
+  console.log("reload起來");
+  page.value = 1;
+  posts.value = [];
+  reloadKey.value++;
 };
 
 watch(keyword, (newVal, oldVal) => {
   if (newVal !== oldVal) {
-    reloadPosts(true);
+    console.log("keyword changed 我要reload");
+    reload();
   }
 });
 </script>
