@@ -90,4 +90,15 @@ public class OrdersController : ControllerBase
         await _mediator.Send(command);
         return NoContent();
     }
+
+    [HttpDelete("{MemberId}")]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesDefaultResponseType]
+    public async Task<ActionResult> DeleteCarts(int memberId)
+    {
+        var command = new DeleteCartsCommand { MemberId = memberId };
+        await _mediator.Send(command);
+        return NoContent();
+    }
 }

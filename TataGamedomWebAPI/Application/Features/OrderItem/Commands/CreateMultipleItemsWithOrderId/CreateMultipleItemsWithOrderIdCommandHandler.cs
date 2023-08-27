@@ -57,7 +57,6 @@ public class CreateMultipleItemsWithOrderIdCommandHandler : IRequestHandler<Crea
 
         foreach (var createOrderItemCommand in request.CreateOrderItemCommandList)
         {
-
             var orderItem = _mapper.Map<Models.EFModels.OrderItem>(createOrderItemCommand);
 
             orderItem.OrderId = responseOrderId;
@@ -71,14 +70,14 @@ public class CreateMultipleItemsWithOrderIdCommandHandler : IRequestHandler<Crea
         await _orderItemRepository.CreateAsync(orderItemToBeCreatedList);
         await DeleteCart(request);
 
-        _logger.LogInformation("Created multiple order items and Delete Cart successfully");
+        _logger.LogInformation("Created multiple order items successfully");
 
         return _mapper.Map<List<CreateOrderItemResponseDto>>(orderItemToBeCreatedList);
     }
 
     private async Task DeleteCart(CreateMultipleItemsWithOrderIdCommand request)
 	{
-		var cart = await _cartRepository.GetCartListByMemberIdAsync(request.CreateOrderCommand.MemberId);
+        List<Cart>? cart = await _cartRepository.GetCartListByMemberIdAsync(request.CreateOrderCommand.MemberId);
 		if (cart?.Any() == false)
 		{
 			_logger.LogWarning("購物車不存在");
