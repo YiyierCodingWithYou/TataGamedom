@@ -45,6 +45,8 @@ public partial class Order
 
     public string? MaskedCreditCardNumber { get; set; }
 
+    public string? CreditCardBrand { get; set; }
+
     public virtual Member Member { get; set; } = null!;
 
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();

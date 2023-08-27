@@ -757,6 +757,7 @@ public partial class AppDbContext : DbContext
 
             entity.Property(e => e.CompletedAt).HasColumnType("datetime");
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.CreditCardBrand).HasMaxLength(20);
             entity.Property(e => e.DeliveredAt).HasColumnType("datetime");
             entity.Property(e => e.Index).HasMaxLength(30);
             entity.Property(e => e.LinePayTransactionId).HasMaxLength(30);
@@ -832,6 +833,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.CompletedAt).HasColumnType("datetime");
             entity.Property(e => e.Index).HasMaxLength(50);
             entity.Property(e => e.IssuedAt).HasColumnType("datetime");
+            entity.Property(e => e.LinePayRefundTransactionId).HasMaxLength(25);
             entity.Property(e => e.Reason).HasMaxLength(500);
 
             entity.HasOne(d => d.OrderItem).WithOne(p => p.OrderItemReturn)
