@@ -14,9 +14,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in cartData.cartItems" :key="item.product.id">
+          <tr v-for="item in cartData.cartItems" :key="item.product.id" class="mb-3">
             <td class="myTd">
-              <img :src="imgLink + item.product.gameCoverImg" height="100" cover rounded="2" />
+              <img :src="imgLink + item.product.gameCoverImg" height="100" cover />
             </td>
             <td class="myTd">
               <v-chip color="#a1dfe9" label>
@@ -81,35 +81,40 @@
       </v-table>
       <v-row>
         <v-col cols="7">
-          <v-card class="mt-3 mySheet" height="350">
+          <v-card class="mt-3 mySheet" height="430">
             <v-card-title class="d-flex">🚛 選擇送貨及付款方式</v-card-title>
             <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
-            <v-card-subtitle>送貨地點</v-card-subtitle>
+            <v-card-title class="textYellow">送貨地點</v-card-title>
             <v-select v-model="selectLocation" :items="shipLocation" item-title="label" item-value="item" return-object
-              single-line  theme="dark" style="background-colorr:#01010f;color:white"></v-select>
-            <v-card-subtitle>送貨方式</v-card-subtitle>
+              single-line theme="dark" style="background-colorr:#01010f;color:white"></v-select>
+            <v-card-title class="textYellow">送貨方式</v-card-title>
             <v-select v-model="selectShipMethod" :items="shipMethod" item-title="label" item-value="item" return-object
-              single-line variant="solo" theme="dark"></v-select>
-            <v-card-subtitle>付款方式</v-card-subtitle>
+              single-line theme="dark" style="background-colorr:#01010f;color:white"></v-select>
+            <v-card-title class="textYellow">付款方式</v-card-title>
             <v-select v-model="selectPayment" :items="payment" item-title="label" item-value="item" return-object
-              single-line variant="solo" theme="dark"></v-select>
+              single-line theme="dark" style="background-colorr:#01010f;color:white"></v-select>
           </v-card>
         </v-col>
         <v-col cols="5">
-          <v-card class="mt-3 mySheet" height="350"
+          <v-card class="mt-3 mySheet" height="430"
             style="display: flex; flex-direction: column; justify-content: space-between;">
             <v-card-title class="d-flex">💬 訂單資訊</v-card-title>
             <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
-            <v-card-subtitle>小計：{{ cartData.subTotal }}</v-card-subtitle>
-            <v-card-subtitle>運費：{{ freight }}</v-card-subtitle>
+            <v-card-title class="textYellow">小計：{{ cartData.subTotal }}</v-card-title>
+            <v-card-title class="textYellow">運費：{{ freight }}</v-card-title>
             <div v-if="!isLogin">
-              <v-card-subtitle>合計：{{ finalTotal }}</v-card-subtitle>
+              <v-card-title class="textYellow">合計：{{ finalTotal }}</v-card-title>
             </div>
             <div v-else>
-              <v-card-subtitle>合計：{{ cartData.total + freight }}</v-card-subtitle>
+              <v-card-title class="textYellow">合計：{{ cartData.total + freight }}</v-card-title>
+            </div>
+            <div class="d-flex align-center justify-end">
+              <div style="margin-left: auto;">
+                <img src="https://localhost:7081/Files/Uploads/icons/tataUserIcon.jpg" alt="" height="150">
+              </div>
             </div>
             <div style="margin-top: auto;">
-              <v-btn v-if="isLogin" width="100%" class="myBtn" @click="returnSelectedHandler">前往結帳</v-btn>
+              <v-btn v-if="isLogin" width="100%" class="myBtn mb-5" @click="returnSelectedHandler">前往結帳</v-btn>
               <v-btn v-else width="100%" color="primary" class="myBtn" @click="returnLogin">請登入後結帳</v-btn>
             </div>
           </v-card>
@@ -543,7 +548,7 @@ calculatePaymentOption();
 .mySheet {
   width: 100%;
   background-color: #01010f;
-  color:#f9ee08;
+  color: #a1dfe9;
   font-size: 16px
 }
 
@@ -577,5 +582,10 @@ calculatePaymentOption();
   background-color: #a1dfe9;
   color: #01010f;
   box-shadow: 2px 2px 10px #a1dfe9;
+}
+
+.textYellow {
+  color: #f9ee08 !important;
+  font-size: 16px;
 }
 </style>
