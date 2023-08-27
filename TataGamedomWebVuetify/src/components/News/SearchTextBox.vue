@@ -1,5 +1,5 @@
 <template>
-  <input type="search" v-model="keyword" style="color:white" @change="inputHandler" class="form-control"
+  <input type="search" v-model="keyword" style="color:white;" @change="inputHandler" class="form-control"
     placeholder="請輸入關鍵字" />
 </template>
     

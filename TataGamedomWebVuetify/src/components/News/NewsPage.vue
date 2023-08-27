@@ -11,7 +11,7 @@
               <v-chip class="ma-2 f9ee08">#{{ newsData.name }} </v-chip>
               {{ (newsData.scheduleDate) }}
               <hr>
-              <img style="height: 550px; width: 1170px" :src="img + newsData.coverImg" alt="">
+              <img style="height: 550px; width: 100%" :src="img + newsData.coverImg" alt="">
               <br>
               <v-html>{{ newsData.content }}</v-html>
             </div>
@@ -60,21 +60,21 @@
 
         <v-col cols="4" style="position: absolute; left: 71%; max-width: 550px">
           <v-sheet rounded="lg" min-height="100" style="background-color: #01010f;" theme="dark">
-            <h1>關鍵字搜尋</h1>
+            <h1 class="blue">關鍵字搜尋</h1>
             <SearchTextBox class="mt-2" @searchInput="inputHandler"></SearchTextBox>
           </v-sheet>
         </v-col>
 
         <v-col cols="4" class="gameclass">
           <v-sheet rounded="lg" min-height="400" style="background-color: #01010f;" theme="dark">
-            <h1>遊戲類別</h1>
+            <h1 class="blue">遊戲類別</h1>
             <NewsGameClass @classificationInput="classificationHandler" class="mt-10"></NewsGameClass>
           </v-sheet>
         </v-col>
 
         <v-col cols="4" class="hotnews">
           <v-sheet rounded="lg" min-height="500" style="background-color: #01010f;" theme="dark">
-            <h1 class="">熱門新聞</h1>
+            <h1 class="blue">熱門新聞</h1>
             <HotNews></HotNews>
           </v-sheet>
         </v-col>
@@ -139,8 +139,11 @@ const onSubmit = async () => {
     )
     .then((res) => {
       console.log(res);
-
       alert("發表留言成功");
+      window.scrollTo({
+        top: 1500,
+        behavior: "smooth",
+      });
     })
     .catch((error) => {
       console.log("ERRRRR", error.response.data);
@@ -237,9 +240,9 @@ const relativeTime = (datetime) => {
   color: black
 }
 
-.v-main {
+/* .v-main {
   padding-top: 0;
-}
+} */
 
 .comment-container {
   display: flex;
@@ -256,5 +259,9 @@ const relativeTime = (datetime) => {
 
 .comment-text {
   flex: 1;
+}
+
+.blue {
+  color: #a1dfe9
 }
 </style>
