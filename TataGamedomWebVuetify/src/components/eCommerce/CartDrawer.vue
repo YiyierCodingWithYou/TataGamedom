@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn class="ma-2" color="orange-darken-2" icon="mdi-cart-outline" @click.stop="toggleDrawer"></v-btn>
+    <v-btn class="ma-2" color="#a1dfe9" icon="mdi-cart-outline" @click.stop="toggleDrawer"></v-btn>
     <v-navigation-drawer v-model="drawer" :rail="rail" permanent location="right" class="w-25" ref="drawerRef"
       @click.stop>
       <div v-if="cartItems?.length > 0" class="cart-container">
