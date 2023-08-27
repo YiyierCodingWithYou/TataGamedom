@@ -224,6 +224,7 @@ const buyerPhone = ref("");
 const buyerEmail = ref("");
 const payload = ref({});
 const createOrderCommand = ref({});
+const memberId = ref();
 const createOrderItemCommandList = [];
 
 const rules = {
@@ -343,6 +344,7 @@ const getMember = async () => {
   name.value = datas.name;
   email.value = datas.email;
   createOrderCommand.value.memberId = datas.id;
+  memberId.value = datas.id;
 };
 
 const checkoutECPay = async () => {
@@ -362,6 +364,7 @@ const checkoutECPay = async () => {
   }
 };
 
+
 const createLogisticsOrder = async (payload) => {
   {
     try {
@@ -375,6 +378,7 @@ const createLogisticsOrder = async (payload) => {
     };
   }
 };
+
 
 const checkoutLinePay = async () => {
   const response = await fetch(`https://localhost:7081/api/LinePay/Create`, {
@@ -421,17 +425,23 @@ const createOrder = async () => {
 
 const handleSubmit = async () => {
   try {
+    console.log(memberId.value);
+    const orderResult = await createOrder();
+
     if (props.selectedData.payment.id == 2) {
       await checkoutECPay();
       ecpayForm.value.submit();
+
     } else if (props.selectedData.payment.id == 1) {
+      //給Index
       await checkoutLinePay();
+
     } else {
       router.push({ name: "Cart", query: { paymentSuccess: "true" } });
     }
 
-    // todo  => Confirm
-    const orderResult = await createOrder();
+    await store.dispatch('deleteCartsByMemberId', memberId.value);
+
     payload.value.MerchantTradeNo = orderResult[0].orderIndex;
     payload.value.OrderId = orderResult[0].orderId;
     await createLogisticsOrder(payload.value);

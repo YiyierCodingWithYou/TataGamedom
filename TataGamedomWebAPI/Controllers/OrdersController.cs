@@ -92,7 +92,7 @@ public class OrdersController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{memberId}/Carts")]
+    [HttpDelete("Carts/{memberId}")]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesDefaultResponseType]
