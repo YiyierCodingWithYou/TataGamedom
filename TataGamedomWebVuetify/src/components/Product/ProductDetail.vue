@@ -12,7 +12,8 @@
           <v-col cols="6">
             <div class="d-flex flex-column mt-3 whiteText">
               <div class="d-flex text-h5 mb-2 ml-3 justify-between" style="justify-content: space-between;color:#a1dfe9">
-                ✨{{ productData.chiName }} <div v-if="productData.isVirtual" style="font-size: 14px; color:#f9ee08">　　※虛擬商品</div>
+                ✨{{ productData.chiName }} <div v-if="productData.isVirtual" style="font-size: 14px; color:#f9ee08">
+                  ※虛擬商品</div>
               </div>
               <v-divider class="border-opacity-100 mb-2" color="#a1dfe9"></v-divider>
               <div class="text-h5 ml-3" style="color:#a1dfe9">
@@ -40,7 +41,8 @@
                     </v-btn>
                   </v-col>
                   <v-col cols="4" class="d-flex justify-center align-center">
-                    <input type="number" v-model="quantity" min="1" :max="limit"  style="color:#a1dfe9" class="text-center" readonly />
+                    <input type="number" v-model="quantity" min="1" :max="limit" style="color:#a1dfe9" class="text-center"
+                      readonly />
                   </v-col>
                   <v-col cols="4" class="d-flex justify-center align-center">
                     <v-btn icon @click="increaseQuantity" v-model="quantity" class="plusMinBtn">
@@ -73,7 +75,8 @@
           </div>
           <div class="d-flex ma-5">
             <div v-for="item in productData.classification" :key="item">
-              <v-chip class="mr-2" @click="classificationHandler(item)" style="background-color: #f9ee08;color:#01010f;">#{{ item }}</v-chip>
+              <v-chip class="mr-2" @click="classificationHandler(item)"
+                style="background-color: #f9ee08;color:#01010f;">#{{ item }}</v-chip>
             </div>
           </div>
           <div class="d-flex justify-center align-center">
@@ -81,14 +84,15 @@
             <span class="me-auto">({{ productData.commentCount }})</span>
             <v-btn class="myBtn" @click="toBoard">前往討論版</v-btn>
           </div>
-          <v-card v-for="item in productData.gameComments" :key="item" class="mt-5 myCard whiteText justify-center align-center">
+          <v-card v-for="item in productData.gameComments" :key="item"
+            class="mt-5 myCard whiteText justify-center align-center">
             <v-card-item>
-              <v-card-title class="mt-2 mb-2" style="color:#a1dfe9" >{{ item.memberName }}</v-card-title>
-             
+              <v-card-title class="mt-2 mb-2" style="color:#a1dfe9">{{ item.memberName }}</v-card-title>
+
               <v-card-subtitle class="mb-2">發表於 {{ relativeTime(item.createdTime) }}</v-card-subtitle>
               <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
             </v-card-item>
-            
+
             <v-card-text class="myContent"> {{ item.content }} </v-card-text>
             <v-rating v-model="item.score" density="compact" color="yellow" readonly class="ml-3 mb-3"></v-rating>
           </v-card>
@@ -205,61 +209,43 @@ const Add2Cart = async (productId) => {
       });
     }
     alert(result.message);
-    autoToggleDrawer(); // 設置計時器來自動關閉抽屜
-  }
-
-
-  quantityNum.value = parseInt(quantity.value)
-
-  if (!store.state.isLoggedIn) {
+    autoToggleDrawer();
+  } else {
     let localCart = localStorage.getItem("localCart");
     if (localCart) {
       localCart = JSON.parse(localCart);
     } else {
       localCart = [];
     }
-    const existingProduct = localCart.find(
-      (item) => item.productId === productId
-    );
+    quantityNum.value = parseInt(quantity.value)
+    const existingProduct = localCart.find(item => item.productId === productId);
     if (existingProduct) {
       totalQuantity = quantityNum.value + existingProduct.qty;
       if (totalQuantity > limit.value) {
         alert("所選數量加上購物車中現有數量超過庫存限制！");
         return;
       }
-      console.log("exqty=" + existingProduct.qty);
-      console.log("quantityNum.value=" + quantityNum.value);
       existingProduct.qty += quantityNum.value;
-      console.log("exqty=" + existingProduct.qty);
-      localStorage.setItem("localCart", JSON.stringify(localCart));
-    }
-    else {
+    } else {
       localCart.push({ productId, qty: quantityNum.value });
     }
-    autoToggleDrawer(); // 設置計時器來自動關閉抽屜
+
+    localStorage.setItem("localCart", JSON.stringify(localCart));
+    autoToggleDrawer();
     alert("已成功加入購物車！");
   }
 };
 
-
-
 const autoToggleDrawer = () => {
-  console.log("我該還沒開ㄌ" + drawer.value);
   openDrawerFromParent();
-  console.log("我該開ㄌ" + drawer.value);
   setTimeout(() => {
-    console.log("我準備關ㄌ" + drawer.value);
     closeDrawer();
-    console.log("我該關ㄌ" + drawer.value);
   }, 1000);
 };
 
 const openDrawerFromParent = () => {
   drawerComponent.value.drawerContent();
   drawer.value = true;
-
-  console.log("我開ㄌ3");
-
 };
 
 const closeDrawer = () => {

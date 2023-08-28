@@ -38,15 +38,18 @@
             <td class="myTd">
               <v-row class="d-flex justify-center align-center">
                 <v-col cols="4" class="d-flex justify-center align-center">
-                  <v-btn @click="decreaseQuantity(item)" :max="limit"
-                    class="plusMinBtn"><v-icon>mdi-minus</v-icon></v-btn>
+                  <v-btn @click="decreaseQuantity(item)" class="plusMinBtn">
+                    <v-icon>mdi-minus</v-icon>
+                  </v-btn>
                 </v-col>
                 <v-col cols="4" class="d-flex justify-center align-center">
-                  <input type="number" v-model="item.qty" min="0" :max="limit" style="color:#a1dfe9" class="text-center"
+                  <input type="number" :value="item.qty" min="0" :max="limit" style="color:#a1dfe9" class="text-center"
                     readonly />
                 </v-col>
                 <v-col cols="4" class="d-flex justify-center align-center">
-                  <v-btn @click="increaseQuantity(item)" :max="limit" class="plusMinBtn"><v-icon>mdi-plus</v-icon></v-btn>
+                  <v-btn @click="increaseQuantity(item)" class="plusMinBtn">
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
                 </v-col>
               </v-row>
             </td>
@@ -291,6 +294,17 @@ const getCart = async () => {
   cartData.value = datas;
   cartItems.value = datas.cartItems;
   total.value = datas.total;
+
+  hasVirtualItem.value = false;
+  hasPhysicalItem.value = false;
+
+  for (const cartItem of cartItems.value) {
+    if (cartItem.product.isVirtual) {
+      hasVirtualItem.value = true;
+    } else {
+      hasPhysicalItem.value = true;
+    }
+  }
 }
 
 watch(
@@ -464,6 +478,7 @@ const fetchQuantityLimit = async (productId) => {
   );
   const datas = await response.json();
   limit.value = datas;
+  console.log(limit.value);
 };
 
 const increaseQuantity = async (item) => {
@@ -479,6 +494,7 @@ const increaseQuantity = async (item) => {
       }
     )
       .then((response) => {
+        console.log(item.qty);
         loadData();
       })
       .catch((error) => {
@@ -574,7 +590,6 @@ calculatePaymentOption();
 <style scoped>
 .v-container {
   max-width: 90% !important;
-
 }
 
 .myComment {
@@ -592,14 +607,12 @@ calculatePaymentOption();
 .v-table {
   background-color: #01010f;
   color: white !important;
-  /* border:none; */
 }
 
 .myTh {
   text-align: center !important;
   color: #f9ee08 !important;
   width: auto;
-  /* border:none; */
 }
 
 .myTd {
@@ -607,7 +620,6 @@ calculatePaymentOption();
   justify-items: center !important;
   align-items: center !important;
   width: auto;
-  /* border:none; */
 }
 
 .myBtn {
@@ -626,5 +638,13 @@ calculatePaymentOption();
 .textYellow {
   color: #f9ee08 !important;
   font-size: 16px;
+}
+
+.v-table td {
+  border-bottom: none !important;
+}
+
+.v-table th {
+  border-bottom: none !important;
 }
 </style>

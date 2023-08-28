@@ -2,45 +2,45 @@
   <div>
     <v-btn class="ma-2" color="#a1dfe9" icon="mdi-cart-outline" @click.stop="toggleDrawer"></v-btn>
     <div class="shopContainer">
-    <v-navigation-drawer v-model="drawer" :rail="rail" permanent location="right" class="w-25" ref="drawerRef"
-      @click.stop>
-      <div v-if="cartItems?.length > 0" class="cart-container">
-        <div class="cart-content whiteText">
-          <div v-for="item in cartItems" :key="item.product.id" class="mt-3">
-            <div class="d-flex">
-              <img :src="imgLink + item.product.gameCoverImg" width="150" cover class="ml-3" />
-              <div class="d-flex flex-column flex-grow-1">
-                <div class="d-flex justify-between align-center">
-                  <div>
-                    <v-chip class="ml-3 justify-center d-flex" color="#f9ee08">
-                      <v-icon start icon="mdi-gamepad-right"></v-icon>
-                      {{ item.product.gamePlatformName }}
-                    </v-chip>
+      <v-navigation-drawer v-model="drawer" :rail="rail" permanent location="right" class="w-25" ref="drawerRef"
+        @click.stop>
+        <div v-if="cartItems?.length > 0" class="cart-container">
+          <div class="cart-content whiteText">
+            <div v-for="item in cartItems" :key="item.product.id" class="mt-3">
+              <div class="d-flex">
+                <img :src="imgLink + item.product.gameCoverImg" width="150" cover class="ml-3" />
+                <div class="d-flex flex-column flex-grow-1">
+                  <div class="d-flex justify-between align-center">
+                    <div>
+                      <v-chip class="ml-3 justify-center d-flex" color="#f9ee08">
+                        <v-icon start icon="mdi-gamepad-right"></v-icon>
+                        {{ item.product.gamePlatformName }}
+                      </v-chip>
+                    </div>
+                  </div>
+                  <div class="ml-3">
+                    {{ item.product.chiName }}
+                  </div>
+                  <div class="d-flex align-center justify-between">
+                    <div class="me-auto ml-3">
+                      {{ item.qty }} × NT$ {{ item.product.specialPrice }}
+                    </div>
+                    <div @click.stop="deleteProduct(item.product.id)">
+                      <v-icon class="mr-3">mdi-trash-can</v-icon>
+                    </div>
                   </div>
                 </div>
-                <div class="ml-3">
-                  {{ item.product.chiName }}
-                </div>
-                <div class="d-flex align-center justify-between">
-                  <div class="me-auto ml-3">
-                    {{ item.qty }} × NT$ {{ item.product.specialPrice }}
-                  </div>
-                  <div @click.stop="deleteProduct(item.product.id)">
-                    <v-icon class="mr-3">mdi-trash-can</v-icon>
-                  </div>
-                </div>
-              </div>             
+              </div>
+              <v-divider class="border-opacity-75 mt-3" color="#f9ee08"></v-divider>
             </div>
-            <v-divider class="border-opacity-75 mt-3" color="#f9ee08"></v-divider>
+          </div>
+          <div class="checkout-button">
+            <v-btn @click.stop="checkout" class="myBtn">訂單結帳</v-btn>
           </div>
         </div>
-        <div class="checkout-button">
-          <v-btn @click.stop="checkout" class="myBtn">訂單結帳</v-btn>
-        </div>
-      </div>
-      <div v-else>您的購物車是空的</div>
-    </v-navigation-drawer>
-  </div>
+        <div v-else>您的購物車是空的</div>
+      </v-navigation-drawer>
+    </div>
   </div>
 </template>
   
@@ -199,14 +199,13 @@ defineExpose({
 </script>
   
 <style>
-
 .cart-container {
   display: flex;
   flex-direction: column;
   height: calc(100dvh - 64px);
-  background-color: #01010f ;
+  background-color: #01010f;
   color: #a1dfe9;
-  border:1px solid #f9ee08;
+  border: 1px solid #f9ee08;
 }
 
 .cart-content {
@@ -224,6 +223,7 @@ defineExpose({
   background-color: #01010f;
   color: #f9ee08;
 }
+
 .whiteText {
   color: white;
 }
