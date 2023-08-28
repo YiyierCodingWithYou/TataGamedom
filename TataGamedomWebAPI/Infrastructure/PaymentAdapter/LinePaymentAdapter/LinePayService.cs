@@ -233,6 +233,10 @@ public class LinePayService : ILinePayService
         {
             shippingCost = 60;
         }
+        if (request.ShipmentMethod == "gameCode")
+        {
+            shippingCost = 0;
+        }
         else
         {
             shippingCost = 80;
