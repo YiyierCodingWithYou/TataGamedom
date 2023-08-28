@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
+using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnListByOrderId;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.EFModels;
 
@@ -37,11 +38,7 @@ public class OrderItemReturnRepository : GenericRepository<OrderItemReturn>, IOr
 
     public async Task<List<int>> GetOrderItemIdList(int orderId)
     {
-        return await _dbContext.OrderItemReturns
-            .AsNoTracking()
-            .Where(r => r.OrderItem.OrderId == orderId)
-            .Select(r => r.OrderItemId)
-            .ToListAsync();
+        return await GetOrderItemIsReturnedIdList(orderId);
     }
 
     public async Task<bool> IsStatusCompletedOrReturned(int orderItemId)
@@ -50,6 +47,39 @@ public class OrderItemReturnRepository : GenericRepository<OrderItemReturn>, IOr
         
         return orderStatusCode == (int)OrderStatus.Completed || 
             orderStatusCode == (int)OrderStatus.ReturnProcessing;
+    }
+
+    public async Task<List<OrderItemReturnDto>> GetListByOrderId(int orderId)
+    {
+        var returnedIdList = await GetOrderItemIsReturnedIdList(orderId);
+
+        var orderItemReturnList = await _dbContext.OrderItemReturns
+            .AsNoTracking()
+            .Where(r => returnedIdList.Contains(r.OrderItemId))
+            .Select(r => new OrderItemReturnDto 
+            {
+                Id = r.Id,
+                OrderItemId = r.OrderItemId,
+                Reason = r.Reason,
+                IssuedAt = r.IssuedAt,
+                CompletedAt = r.CompletedAt,
+                IsRefunded = r.IsRefunded,
+                IsReturned = r.IsReturned,
+                IsResellable = r.IsResellable,
+                LinePayRefundTransactionId = r.LinePayRefundTransactionId
+            })
+            .ToListAsync();
+
+        return orderItemReturnList;
+    }
+
+    private async Task<List<int>> GetOrderItemIsReturnedIdList(int orderId)
+    {
+        return await _dbContext.OrderItemReturns
+            .AsNoTracking()
+            .Where(r => r.OrderItem.OrderId == orderId)
+            .Select(r => r.OrderItemId)
+            .ToListAsync();
     }
 }
 
