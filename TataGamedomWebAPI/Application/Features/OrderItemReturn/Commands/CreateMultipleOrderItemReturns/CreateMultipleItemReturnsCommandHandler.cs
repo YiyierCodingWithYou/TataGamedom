@@ -92,7 +92,8 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
                 $"退款時間{response.Info.RefundTransactionDate}，" +
                 $"退款編號{response.Info.RefundTransactionId}");
 
-            // todo update該退貨品項成已退款，如果退款失敗，顯示待退款
+            // todo update 該退貨品項成已退款並加入退款序號，如果退款失敗，顯示待退款
+            // 退款單狀態 => 如果皆為虛擬且退款成功 => 已完成   ; 如果有實體 => 退款成續處理中 => 退貨完成 => 退款 => 已完成  ， 目前先做1  (放到後台處理)
         };
     }
 
