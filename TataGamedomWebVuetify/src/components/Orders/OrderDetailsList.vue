@@ -94,9 +94,7 @@ export default {
     };
 
     onMounted(() => {
-      console.log("DetailsList Test => order from getter:", order.value);
-      // console.log("orderId prop:", props.orderId);
-      // console.log("Direct order from state:", store.state.OrderStore.orders);
+      console.log("DetailsList.vue => order from getter:", order.value);
     });
 
     return {
