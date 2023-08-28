@@ -1,6 +1,4 @@
-﻿using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemList;
-
-namespace TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnList;
+﻿namespace TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnListByOrderId;
 
 public class OrderItemReturnDto
 {
@@ -24,8 +22,5 @@ public class OrderItemReturnDto
 
     public string? LinePayRefundTransactionId { get; set; }
 
-
-    public required OrderItemDto OrderItem { get; set; }
-
-
 }
+
