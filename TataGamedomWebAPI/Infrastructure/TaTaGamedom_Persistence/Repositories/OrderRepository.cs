@@ -38,7 +38,9 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
                 CreatedAt = o.CreatedAt,
                 SentAt = o.SentAt,
                 DeliveredAt = o.DeliveredAt,
-                Total = o.OrderItems.Select(oi => oi.ProductPrice).Sum() + o.ShippingFee,
+                Total = o.ShippingFee.HasValue? 
+                    o.OrderItems.Select(oi => oi.ProductPrice).Sum() + o.ShippingFee : 
+                    o.OrderItems.Select(oi => oi.ProductPrice).Sum(),
                 OrderStatusCodeName = o.OrderStatus.Name,
                 OrderIndex = o.Index,
                 OrderCompletedAt = o.CompletedAt,
