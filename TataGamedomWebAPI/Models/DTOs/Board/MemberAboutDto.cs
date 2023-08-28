@@ -20,6 +20,7 @@ namespace TataGamedomWebAPI.Models.DTOs.Board
 	public class FollowerDto
 	{
 		public int? Id { get; set; }
+		public string? Account { get; set; }
 		public string? Name { get; set; }
 		public string? AboutMe { get; set; }
 		public string? IconURL { get; set; }
