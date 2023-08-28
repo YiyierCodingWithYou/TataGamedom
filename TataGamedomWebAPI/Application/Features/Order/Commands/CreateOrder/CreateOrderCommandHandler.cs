@@ -58,7 +58,5 @@ namespace TataGamedomWebAPI.Application.Features.Order.Commands.CreateOrder
             int maxOrderId = await _orderRepository.GetMaxId();
             orderTobeCreated.Index = _indexGenerator.GetOrderIndex(orderTobeCreated, maxOrderId);
         }
-
-
     }
 }
