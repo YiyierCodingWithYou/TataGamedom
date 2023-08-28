@@ -4,7 +4,7 @@ using TataGamedomWebAPI.Application.Contracts.Persistence;
 
 namespace TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnListByOrderId;
 
-public class GetOrderItemReturnListQueryByOrderIdHandler : IRequestHandler<GetOrderItemReturnListByOrderIdQuery, List<int>>
+public class GetOrderItemReturnListQueryByOrderIdHandler : IRequestHandler<GetOrderItemReturnListByOrderIdQuery, List<OrderItemReturnDto>>
 {
     private readonly IOrderItemReturnRepository _orderItemReturnRepository;
     private readonly IAppLogger<GetOrderItemReturnListQueryByOrderIdHandler> _logger;
@@ -17,11 +17,12 @@ public class GetOrderItemReturnListQueryByOrderIdHandler : IRequestHandler<GetOr
         this._logger = logger;
     }
 
-    public async Task<List<int>> Handle(GetOrderItemReturnListByOrderIdQuery request, CancellationToken cancellationToken)
+    public async Task<List<OrderItemReturnDto>> Handle(GetOrderItemReturnListByOrderIdQuery request, CancellationToken cancellationToken)
     {
-        List<int> orderItemIdList = await _orderItemReturnRepository.GetOrderItemIdList(request.OrderId);
-        
-        _logger.LogInformation("orderItemId list was retreive successfully");
-        return orderItemIdList;
+
+        List<OrderItemReturnDto> orderItemList = await _orderItemReturnRepository.GetListByOrderId(request.OrderId);
+
+        _logger.LogInformation("已根據訂單編號取得對應退貨單資訊");
+        return orderItemList;
     }
 }
