@@ -1,19 +1,35 @@
 <template>
   <v-dialog v-model="dialog" activator="parent" width="auto">
-    <div class="text-subtitle-2 mb-2">Default</div>
+    <div class="text-subtitle-2 mb-2">退款紀錄</div>
     <v-expansion-panels>
       <v-expansion-panel
-        v-for="i in 3"
-        :key="i"
-        title="Item"
-        text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-      ></v-expansion-panel>
+        v-for="item in props.orderItemReturnList"
+        :key="item.id"
+      >
+        <!-- <div>退貨單編號: {{ item.id }}</div> -->
+        <div>退貨單編號: {{ item.Index }}</div>
+        <div>退款狀態: {{ item.isRefunded ? "已退款" : "未退款" }}</div>
+        <div>退貨狀態: {{ item.isReturned ? "已退貨" : "未退貨" }}</div>
+        <div>申請退款時間: {{ item.issuedAt }}</div>
+        <div v-if="item.completedAt">完成退款時間: {{ item.completedAt }}</div>
+        <div>LinePay退款編號: {{ item.linePayRefundTransactionId }}</div>
+        <div>原訂單品項編號: {{ item.orderItemId }}</div>
+        <br />
+      </v-expansion-panel>
     </v-expansion-panels>
   </v-dialog>
 </template>
 
-<script>
+<script setup>
+import { ref, defineProps } from "vue";
 
+const props = defineProps({
+  orderItemReturnList: {
+    type: Array,
+    required: true,
+  },
+});
+const dialog = ref(false);
 </script>
 
 <style></style>

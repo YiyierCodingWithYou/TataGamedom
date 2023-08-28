@@ -1,7 +1,27 @@
 <template>
   <v-dialog v-model="dialog" activator="parent" width="auto">
     <v-spacer></v-spacer>
-    <v-sheet width="1000" class="mx-auto">
+
+    <v-sheet width="1200" class="mx-auto">
+      <v-btn
+        class="ma-12"
+        variant="text"
+        icon="mdi-package-variant-closed-remove"
+        color="blue-grey-darken-2"
+        size="x-large"
+        v-if="orderItemReturnList"
+      >
+        退款紀錄查詢
+        <v-icon size="x-large">
+          {{ "mdi-package-variant-closed-remove" }}
+        </v-icon>
+        <RefundRecordList
+          activator="parent"
+          width="auto"
+          :orderItemReturnList="orderItemReturnList"
+        />
+      </v-btn>
+
       <v-form validate-on="submit lazy" @submit.prevent="submit">
         <div class="d-flex pa-4 justify-center">
           <v-checkbox
@@ -75,6 +95,7 @@
 <script>
 import { ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
+import RefundRecordList from "./RefundRecordList.vue";
 
 export default {
   name: "OrderItemReturn",
@@ -84,15 +105,18 @@ export default {
       required: true,
     },
   },
-
+  components: {
+    RefundRecordList,
+  },
   setup(props) {
     const store = useStore();
     const order = computed(() => store.getters.getOrderById(props.orderId));
     const orderDetails = computed(() => {
       return store.getters.getOrderDetailsById(props.orderId);
     });
-    const orderItemIdReturnList = computed(() => {
-      return store.getters.getOrderItemIdReturnList(props.orderId);
+    const orderItemReturnList = computed(() => {
+      return store.getters.getorderItemReturnList(props.orderId);
+      console.log(orderItemReturnList);
     });
 
     //dialog
@@ -121,8 +145,8 @@ export default {
     });
 
     const isIdInReturnList = (orderItemId) => {
-      if (orderItemIdReturnList.value) {
-        return orderItemIdReturnList.value.includes(orderItemId);
+      if (orderItemReturnList.value) {
+        return orderItemReturnList.value.includes(orderItemId);
       }
       return false;
     };
@@ -131,7 +155,7 @@ export default {
       if (hasOrderDetails.value) {
         initializeCheckBox();
       }
-      store.dispatch("fetchOrderItemIdReturnList", props.orderId);
+      store.dispatch("fetchorderItemReturnList", props.orderId);
       console.log("OrderItemReturn.vue => order from getter:", order.value);
     });
 
@@ -189,7 +213,7 @@ export default {
     return {
       order,
       orderDetails,
-      orderItemIdReturnList,
+      orderItemReturnList,
       dialog,
       selectAll,
       loading,
