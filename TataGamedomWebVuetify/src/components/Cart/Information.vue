@@ -444,7 +444,9 @@ const createLogisticsOrder = async (payload) => {
 };
 
 const handleSubmit = async () => {
-  createOrderCommand.value.toAddress = address;
+  if (address.value) {
+    createOrderCommand.value.toAddress = address;
+  }
   createOrderCommand.value.ShipmentMethodId = props.selectedData.shipMethod.id;
   createOrderCommand.value.PaymentStatusId =
     props.selectedData.shipMethod.id == 2 || 4 || 6 ? 2 : null;  //純取貨 => 已付款
@@ -463,8 +465,8 @@ const handleSubmit = async () => {
     } else if (props.selectedData.payment.id == 1) {
 
       const CreatePaymentRequestDto = {
-        OrderIndex: orderResult[0].orderIndex
-        //shipmentMethod:   todo 從CartItem取寄送方式
+        OrderIndex: orderResult[0].orderIndex,
+        shipmentMethod: props.selectedData.shipMethod.method
       };
       console.log(CreatePaymentRequestDto.OrderIndex);
       await checkoutLinePay(CreatePaymentRequestDto);
