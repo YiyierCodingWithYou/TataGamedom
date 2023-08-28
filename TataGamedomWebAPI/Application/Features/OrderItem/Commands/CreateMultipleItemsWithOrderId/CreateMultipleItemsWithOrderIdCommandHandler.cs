@@ -2,14 +2,8 @@
 using MediatR;
 using TataGamedomWebAPI.Application.Contracts.Logging;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
-using TataGamedomWebAPI.Application.Exceptions;
-using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderDetails;
 using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleOrderItems;
 using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateOrderItem;
-using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemList;
-using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemListByAccount;
-using TataGamedomWebAPI.Infrastructure;
-using TataGamedomWebAPI.Models.EFModels;
 using TataGamedomWebAPI.Models.Interfaces;
 
 namespace TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleItemsWithOrderId;

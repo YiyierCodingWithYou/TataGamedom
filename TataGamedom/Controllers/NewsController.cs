@@ -27,7 +27,7 @@ namespace TataGamedom.Controllers
 			using (var con = new SqlConnection(_connstr))
 			{
 				string sql = @"SELECT n.Id, n.Title, n.ScheduleDate, b.Name AS BackendMemberName,ncc.Name as NewsCategoryName,
-            COUNT(nv.MemberId) AS ViewCount, COUNT(nl.MemberId) AS LikeCount, n.ActiveFlag
+            COUNT(nv.MemberId)/2 AS ViewCount, COUNT( DISTINCT  nl.MemberId) AS LikeCount, n.ActiveFlag
             FROM news AS n
             JOIN BackendMembers AS b ON b.Id = n.BackendMemberId 
 			LEFT JOIN NewsCategoryCodes AS ncc ON ncc.Id = n.NewsCategoryId
@@ -315,6 +315,7 @@ namespace TataGamedom.Controllers
 		private string SaveFile(HttpPostedFileBase file1)
 		{
 			var path = Server.MapPath("~/Files/NewsImages");
+			
 
 			var helper = new UploadFileHelper(new GuidRenameProvider(),
 											new RequiredValidator(), // 必需上傳檔案
