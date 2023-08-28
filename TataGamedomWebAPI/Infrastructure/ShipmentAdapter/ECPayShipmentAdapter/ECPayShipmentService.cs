@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Specialized;
 using System.Net;
 using System.Security.Cryptography;
@@ -6,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Web;
 using TataGamedomWebAPI.Application.Exceptions;
+using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderDetails;
 using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request;
 using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request.LogisticsSelection;
 using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.Dtos.Request.QueryLogisticsTradeInfo;
@@ -20,11 +23,17 @@ public class ECPayShipmentService
     private readonly string BaseAPIUrl = "https://logistics-stage.ecpay.com.tw/Express";
 
     private static readonly HttpClient _httpClient;
+    private readonly IMediator _mediator;
+
     static ECPayShipmentService()
     {
         _httpClient = new HttpClient();
     }
 
+    public ECPayShipmentService(IMediator mediator)
+    {
+        this._mediator = mediator;
+    }
 
     #region 開啟物流選擇頁(url)
     public async Task<string> SendLogisticsSelectionRequest(LogisticsSelectionRawDataDto logisticsSelection)
@@ -81,40 +90,59 @@ public class ECPayShipmentService
     // 成功: 1| Response參數
     // 失敗: 0| ErrorMessage
     // 交易訊息代碼 105000___ 自訂錯誤代碼
-    public async Task<Dictionary<string, string>> SendLogisticsOrderForPickUpRequest(LogisticsOrderRequestDto order)
+    public async Task<Dictionary<string, string>> SendLogisticsOrderForPickUpRequest(LogisticsOrderRequestDto shipmentOrder)
     {
-        using FormUrlEncodedContent content = new FormUrlEncodedContent(ComputeOrderRequestData(order));
+
+        OrderDetailsDto orderCreated = await _mediator.Send(new GetOrderDetailQuery(shipmentOrder.OrderId));
+        shipmentOrder.ReceiverName = orderCreated.RecipientName!;
+        shipmentOrder.ReceiverCellPhone = orderCreated.ReceiverCellPhone!;
+        shipmentOrder.ReceiverEmail = orderCreated.ReceiverEmail!;
+        if (orderCreated.ShipmentMethodId == (int)LogisticsMethod.UNIMARTOnDelivery ||
+            orderCreated.ShipmentMethodId == (int)LogisticsMethod.FAMIPayOnDelivery ||
+            orderCreated.ShipmentMethodId == (int)LogisticsMethod.BlackCatOnDelivery) 
+        { 
+            shipmentOrder.IsCollection = "Y";
+            shipmentOrder.CollectionAmount = (int)shipmentOrder.GoodsAmount;
+        } 
+
+        using FormUrlEncodedContent content = new FormUrlEncodedContent(ComputeOrderRequestData(shipmentOrder));
         HttpResponseMessage response = await _httpClient.PostAsync($"{BaseAPIUrl}/Create", content);
         string responseBody = await response.Content.ReadAsStringAsync();
+
+
+
+        //TODO => 如果失敗，ThrowExceptionIfCheckMacValueNotMatch不拋出例外，而是將訂單update成待處理 => UI界面使無法查詢
+        //根據訂單主檔既有資料 => 重新向綠界建物流訂單 => 成功了再update成處理中
 
         ThrowExceptionIfBadRequest(response, responseBody);
 
         NameValueCollection responseValues = HttpUtility.ParseQueryString(responseBody.Split('|')[1]);
         Dictionary<string, string> data = responseValues.AllKeys.ToDictionary(k => k!, k => responseValues[k]!);
 
-        ThrowExceptionIfCheckMacValueNotMatch(responseValues, data);    //加入OrderId後再打開
-
+        //ThrowExceptionIfCheckMacValueNotMatch(responseValues, data);  todo
+        
         return data;
     }
 
-    private Dictionary<string, string> ComputeOrderRequestData(LogisticsOrderRequestDto order)
+    private Dictionary<string, string> ComputeOrderRequestData(LogisticsOrderRequestDto shipmentOrder)
     {
         var orderDict = new Dictionary<string, string>
         {
-            { "MerchantID", order.MerchantID },
-            { "MerchantTradeNo", order.MerchantTradeNo },   //目前從前端傳回新建訂單的OrderIndex
-            { "MerchantTradeDate", order.MerchantTradeDate},
-            { "LogisticsType", order.LogisticsType},
-            { "LogisticsSubType", order.LogisticsSubType},  //B2C接受參數: FAMI、UNIMART、HILIFE、UNIMARTFREEZE
-            { "GoodsAmount", order.GoodsAmount.ToString() },
-            { "SenderName", order.SenderName},
-            { "SenderCellPhone ", order.SenderCellPhone},
-            { "ReceiverName", order.ReceiverName },
-            { "ReceiverCellPhone", order.ReceiverCellPhone },   //todo 從購物車取memberInfo
-            { "ReceiverEmail", order.ReceiverEmail }, // todo?
-            { "ServerReplyURL", order.ServerReplyURL},//localhost:3000/Orders" }, //todo ngrok
-            { "ReceiverStoreID", order.ReceiverStoreID },// 7-ELEVEN 超商：131386 7-ELEVEN 超商冷凍店取：896539 全家：006598 OK：1328
-            //{ "ClientReplyURL", ""},  可以導覽前端頁面，目前採幕後建物流訂單，先不填。 todo => 寫一個有值的給LinePay用，目前LinePay沒物流
+            { "MerchantID", shipmentOrder.MerchantID },
+            { "MerchantTradeNo", shipmentOrder.MerchantTradeNo },   //目前從前端傳回新建訂單的OrderIndex
+            { "MerchantTradeDate", shipmentOrder.MerchantTradeDate},
+            { "LogisticsType", shipmentOrder.LogisticsType},
+            { "LogisticsSubType", shipmentOrder.LogisticsSubType},  //B2C接受參數: FAMI、UNIMART、HILIFE、UNIMARTFREEZE
+            { "GoodsAmount", shipmentOrder.GoodsAmount.ToString() },
+            { "SenderName", shipmentOrder.SenderName},
+            { "SenderCellPhone ", shipmentOrder.SenderCellPhone},
+            { "ReceiverName", shipmentOrder.ReceiverName },
+            { "ReceiverCellPhone", shipmentOrder.ReceiverCellPhone },   //todo 從購物車取memberInfo
+            { "ReceiverEmail", shipmentOrder.ReceiverEmail }, // todo?
+            { "ServerReplyURL", shipmentOrder.ServerReplyURL},//localhost:3000/Orders" }, //todo ngrok
+            { "ReceiverStoreID", shipmentOrder.ReceiverStoreID },// 7-ELEVEN 超商：131386 7-ELEVEN 超商冷凍店取：896539 全家：006598 OK：1328
+            { "IsCollection", shipmentOrder.IsCollection},
+            { "CollectionAmount", shipmentOrder.CollectionAmount.ToString()}
         };
 
         orderDict["CheckMacValue"] = GetCheckMacValue(orderDict);

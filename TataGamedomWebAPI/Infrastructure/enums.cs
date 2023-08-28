@@ -39,4 +39,14 @@
         PercentDiscount = 1,
         DirectDiscount = 2
     }
+
+    enum LogisticsMethod
+    {
+        UNIMARTOnDelivery = 1,
+        UNIMARTPurePickup = 2,
+        FAMIPayOnDelivery = 3,
+        FAMIPurePickup = 4,
+        BlackCatOnDelivery = 5,
+        BlackCatPurePickup = 6
+    }
 }

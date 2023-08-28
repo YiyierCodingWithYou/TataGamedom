@@ -50,7 +50,7 @@ namespace TataGamedomWebAPI.Controllers
 				Id = query.Id,
 				Account = query.Account,
 				Name = query.Name,
-				IconURL = query.IconImg,
+				IconURL = $"https://localhost:7081/Files/Uploads/Icons/{query.IconImg}",
 				AboutMe = query.AboutMe,
 				IsFollowing = _simpleHelper.MemberIsFollower(loginId, memberId),
 				IsFollowingYou = _simpleHelper.MemberIsFollowed(loginId, memberId),
@@ -61,7 +61,8 @@ namespace TataGamedomWebAPI.Controllers
 				{
 					Id = x.FollowerMemberId,
 					Name = x.FollowerMember.Name,
-					IconURL = x.FollowerMember.IconImg,
+					Account = x.FollowerMember.Account,
+					IconURL = $"https://localhost:7081/Files/Uploads/Icons/{x.FollowerMember.IconImg}",
 					IsFollowing = _simpleHelper.MemberIsFollowed(loginId, x.FollowerMemberId ?? 0),
 					IsFollowingYou = _simpleHelper.MemberIsFollower(loginId, x.FollowerMemberId ?? 0),
 				}).ToList(),
@@ -69,7 +70,8 @@ namespace TataGamedomWebAPI.Controllers
 				{
 					Id = x.FollowedMemberId,
 					Name = x.FollowedMember.Name,
-					IconURL = x.FollowedMember.IconImg,
+					Account = x.FollowedMember.Account,
+					IconURL = $"https://localhost:7081/Files/Uploads/Icons/{x.FollowedMember.IconImg}",
 					IsFollowing = _simpleHelper.MemberIsFollowed(loginId, x.FollowedMemberId ?? 0),
 					IsFollowingYou = _simpleHelper.MemberIsFollower(loginId, x.FollowedMemberId ?? 0),
 				}).ToList(),

@@ -104,7 +104,7 @@ namespace TataGamedomWebAPI.Controllers
 
 			if (!string.IsNullOrWhiteSpace(keyword))
 			{
-				query = query.Where(p => p.Content.Contains(keyword));
+				query = query.Where(p => p.Content.Contains(keyword) || p.Title.Contains(keyword));
 			}
 
 			if (postId.HasValue)
@@ -261,7 +261,7 @@ namespace TataGamedomWebAPI.Controllers
 				PostId = c.PostId,
 				ActiveFlag = c.ActiveFlag
 			})
-				.OrderByDescending(c => c.DateTime)
+				.OrderBy(c => c.DateTime)
 				.ToList();
 
 			foreach (var comment in comments)

@@ -19,7 +19,7 @@ public class GetOrderItemListByOrderIdQueryHandler : IRequestHandler<GetOrderIte
 
     public async Task<List<OrderItemWithDetailsDto>> Handle(GetOrderItemListByOrderIdQuery request, CancellationToken cancellationToken)
     {
-        List<OrderItemWithDetailsDto> response = await _orderItemRepository.GetListByAccountWithDetailsAsync(request.orderId);
+        List<OrderItemWithDetailsDto> response = await _orderItemRepository.GetListByAccountWithDetailsAsync(request.OrderId);
         
         foreach (var orderItem in response) 
         {

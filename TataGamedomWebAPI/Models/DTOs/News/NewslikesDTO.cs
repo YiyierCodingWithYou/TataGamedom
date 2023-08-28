@@ -10,6 +10,8 @@
 
 		public string? Name { get; set; } = null!;
 
+		public string? IconImg { get; set; }
+
 		public string Content { get; set; } = null!;
 
 		public bool ActiveFlag { get; set; }

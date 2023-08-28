@@ -129,7 +129,7 @@ namespace TataGamedomWebAPI.Controllers
 							Account = payload.Email,
 							Birthday = new DateTime(1970, 01, 01),
 							RegistrationDate = DateTime.Now,
-							Phone = "",
+							Phone = "0987654321",
 							IconImg = "tataUserIcon.jpg",
 							IsConfirmed = true,
 							ActiveFlag = true,
@@ -156,61 +156,6 @@ namespace TataGamedomWebAPI.Controllers
 			}
 		}
 
-
-
-		//public class CredentialModel
-		//{
-		//	public string Credential { get; set; }
-		//}
-
-		//// POST: api/Members/GoogleLogin
-		//[EnableCors("AllowCookie")]
-		//[HttpPost("GoogleLogin")]
-		//public async Task<IActionResult> GoogleLogin([FromBody] CredentialModel model)
-		//{
-		//	try
-		//	{
-		//		var settings = new GoogleJsonWebSignature.ValidationSettings
-		//		{
-		//			Audience = new List<string> { _configuration["GoogleApiClientId"] }
-		//		};
-		//		Console.WriteLine(_configuration["GoogleApiClientId"]);
-
-		//		var payload = await GoogleJsonWebSignature.ValidateAsync(model.Credential, settings);
-
-		//		if (payload != null)
-		//		{
-		//			return Ok(new { message = "登入成功", user = payload });
-		//		}
-		//		else
-		//		{
-		//			return BadRequest(new { message = "Google登入驗證失敗" });
-		//		}
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		return BadRequest(new { message = "登入失敗", error = ex.Message });
-		//	}
-		//}
-
-
-
-		private void ClearReturnToRoute()
-		{
-			var returnToRoute = HttpContext.Request.Headers["ReturnToRoute"].ToString();
-			if (!string.IsNullOrEmpty(returnToRoute))
-			{
-				HttpContext.Response.Headers.Remove("ReturnToRoute");
-				Response.Cookies.Append("ReturnToRoute", returnToRoute, new CookieOptions
-				{
-					HttpOnly = true,
-					Expires = DateTime.UtcNow.AddMinutes(-1) // Expire immediately
-				});
-			}
-		}
-
-
-
 		[Authorize]
 		[EnableCors("AllowCookie")]
 		[HttpDelete("Logout")]
@@ -225,16 +170,6 @@ namespace TataGamedomWebAPI.Controllers
 			return "未登入";
 		}
 
-		//// GET: api/Members
-		//[HttpGet]
-		//public async Task<ActionResult<IEnumerable<Member>>> GetMembers()
-		//{
-		//  if (_context.Members == null)
-		//  {
-		//      return NotFound();
-		//  }
-		//    return await _context.Members.ToListAsync();
-		//}
 
 		// GET: api/Members/
 		[EnableCors("AllowCookie")]

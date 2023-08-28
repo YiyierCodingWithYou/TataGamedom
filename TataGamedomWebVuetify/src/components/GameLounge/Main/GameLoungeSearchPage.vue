@@ -18,6 +18,7 @@
         :style="{
           backgroundImage: `url(${no1.bgImg})`,
         }"
+        @click="goToBoard(no1.value)"
       >
         <p class="sheet-text text-h3 font-weight-black" v-html="no1.title"></p>
       </v-sheet>
@@ -26,12 +27,14 @@
         border
         rounded
         :style="{ backgroundImage: `url(${no2.bgImg})` }"
+        @click="goToBoard(no2.value)"
       >
         <p class="sheet-text text-h3 font-weight-black" v-html="no2.title"></p>
       </v-sheet>
       <v-sheet
         class="sheet sheet3"
         :style="{ backgroundImage: `url(${no3.bgImg})` }"
+        @click="goToBoard(no3.value)"
         border
         rounded
       >
@@ -44,12 +47,20 @@
 <script setup>
 import axios from "axios";
 import { ref, reactive, computed, onMounted } from "vue";
-
+import { useRoute, useRouter } from "vue-router";
 const data = ref([]);
 const topFiveItems = ref([]);
 const no1 = ref({});
 const no2 = ref({});
 const no3 = ref({});
+
+const router = useRouter();
+const goToBoard = (id) => {
+  router.push({
+    name: "GameLoungeBoard",
+    params: { boardId: id },
+  });
+};
 
 const fetchData = () => {
   axios
@@ -92,13 +103,12 @@ onMounted(() => {
   fetchData();
 });
 </script>
-<style>
+<style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Zen+Antique&display=swap");
 
 .font-digi {
   font-family: "Digi-font" !important;
 }
-
 .size1 {
   font-size: 4rem !important;
 }

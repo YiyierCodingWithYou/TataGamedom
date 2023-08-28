@@ -2,13 +2,10 @@
   <div>
     <ul>
       <li v-for="classification in classifications" :key="classification.name">
-        <button
-          @click.prevent="classificationHandler(classification.name)"
-          :class="{
-            'link-like-button': true,
-            'selected-item': selectedClassification === classification.name,
-          }"
-        >
+        <button @click.prevent="classificationHandler(classification.name)" :class="{
+          'link-like-button': true,
+          'selected-item': selectedClassification === classification.name,
+        }">
           {{ classification.name }}
         </button>
       </li>
@@ -43,7 +40,11 @@ const classificationHandler = (name) => {
 </script>
 
 <style>
+ul {
+  list-style: none;
+}
+
 .selected-item {
-  background-color: #ffbf5d;
+  background-color: #f9ee08;
 }
 </style>

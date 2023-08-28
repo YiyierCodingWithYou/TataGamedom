@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <default-bar></default-bar>
-    <default-view style="margin-top: 64px"></default-view>
+    <default-view></default-view>
   </v-app>
 </template>
 
@@ -18,9 +18,11 @@ import DefaultView from "./View.vue";
   font-family: "Silkscreen", cursive;
   font-weight: 700;
 }
+
 .font-IBM {
   font-family: "IBM Plex Sans JP", sans-serif;
 }
+
 .font-digit {
   font-family: "Digi-font";
 }

@@ -79,6 +79,18 @@ const OrderStore = {
                 console.log('Failed to post order item returns:', error.message);
             }
         },
+        async deleteCartsByMemberId({ commit }, memberId) {
+            try {
+                const response = await axios.delete(`${BASE_URL}/api/Orders/Carts/${memberId}`)
+                if (response.status === 202 || response.status === 204) {
+                    console.log('購物車已清空');
+                }
+
+            } catch (error) {
+                console.log(memberId)
+                console.log('清空購物車失敗', error.message)
+            }
+        }
     }
 };
 

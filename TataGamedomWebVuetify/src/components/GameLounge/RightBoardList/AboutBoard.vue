@@ -4,6 +4,9 @@
     <v-card-item>
       <v-card-title>{{ boardData?.name }}</v-card-title>
     </v-card-item>
+    <v-card-subtitle>
+      <span class="me-1" v-if="boardData?.isMod">你是版主</span>
+    </v-card-subtitle>
     <v-card-text>
       <div class="d-flex justify-center align-items-center my-4">
         <v-btn v-if="!boardData?.isFollowed" @click="followAction">
@@ -44,7 +47,7 @@
         :value="item.value"
         :text="item"
         color="primary"
-        @click="openLink(item.value)"
+        @click="openProductLink(item.value)"
       >
         <template v-slot:prepend>
           <v-icon icon="mdi-flag"></v-icon>
@@ -52,11 +55,20 @@
 
         <v-list-item-title v-text="item.text"></v-list-item-title>
       </v-list-item>
+      <v-list-subheader>本版版主</v-list-subheader>
+    </v-list>
+    <v-list
+      item-props
+      v-if="modsList.length > 0"
+      :items="modsList"
+      @click:select="openLink"
+      density="compact"
+    >
     </v-list>
   </v-card>
 </template>
 <script setup lang="ts">
-import { ref, reactive, onMounted, defineProps, watch, computed } from "vue";
+import { ref, reactive, onMounted, watch, computed } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -77,6 +89,7 @@ interface BoardData {
 const boardData = ref<BoardData>();
 const iconUrl = ref("");
 const productData = ref<any>([]);
+const modsList = ref<any>([]);
 
 const props = defineProps({
   boardId: {
@@ -104,6 +117,14 @@ const getBoardData = async () => {
         return {
           value: item.id,
           text: item.platformName,
+        };
+      });
+      modsList.value = boardData.value?.mods.map((item) => {
+        return {
+          value: item.account,
+          title: item.name,
+          subtitle: item.account,
+          prependAvatar: item.iconUrl,
         };
       });
     })
@@ -146,6 +167,12 @@ const favoriteAction = async () => {
       console.log(err);
     });
 };
+const openLink = (e) => {
+  router.push({
+    name: "GameLoungeAccount",
+    params: { account: e.id },
+  });
+};
 
 onMounted(() => {
   getBoardData();
@@ -160,12 +187,31 @@ watch(count, (newValue, oldValue) => {
 
 //set link
 const router = useRouter();
-const openLink = (id) => {
+const openProductLink = (id) => {
   console.log(id);
   router.push({
     name: "SingleProduct",
     params: { productId: id },
   });
 };
+const openAccountLink = (account) => {
+  router.push({
+    name: "GameLoungeAccount",
+    params: { account: account },
+  });
+};
 </script>
-<style lang=""></style>
+<style scoped>
+.v-card {
+  background-color: transparent !important;
+  box-shadow: 0px 0px 10px 2px #a1dfe9 !important;
+}
+
+.v-list {
+  background-color: transparent !important;
+}
+.v-list-item:hover {
+  background-color: #f9ee08;
+  color: #01010f;
+}
+</style>

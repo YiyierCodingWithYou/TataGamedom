@@ -1,6 +1,14 @@
 <template>
-  <v-list item-props :items="items" @click:select="openLink"> </v-list>
+  <v-list item-props :items="items" @click:select="openLink" theme="dark">
+  </v-list>
 </template>
+
+<style scoped>
+.v-list {
+  background-color: transparent !important;
+  color: #fff;
+}
+</style>
 
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from "vue";
@@ -118,8 +126,6 @@ watch(count, (newValue, oldValue) => {
 const router = useRouter();
 
 const openLink = (e) => {
-  console.log(e.id);
-
   if (e.id !== undefined && e.id !== "search") {
     router.push({
       name: "GameLoungeBoard",
