@@ -19,6 +19,10 @@ public partial class Order
 
     public DateTime CreatedAt { get; set; }
 
+    public DateTime? SentAt { get; set; }
+
+    public DateTime? DeliveredAt { get; set; }
+
     public DateTime? CompletedAt { get; set; }
 
     public int? ShipmentMethodId { get; set; }
@@ -27,15 +31,21 @@ public partial class Order
 
     public string? ToAddress { get; set; }
 
-    public DateTime? SentAt { get; set; }
-
-    public DateTime? DeliveredAt { get; set; }
-
     public string? TrackingNum { get; set; }
 
-    public string? ContactEmails { get; set; }
+    public string? ReceiverEmail { get; set; }
 
     public decimal? ShippingFee { get; set; }
+
+    public string? ReceiverCellPhone { get; set; }
+
+    public string? LinePayTransactionId { get; set; }
+
+    public DateTime? PaidAt { get; set; }
+
+    public string? MaskedCreditCardNumber { get; set; }
+
+    public string? CreditCardBrand { get; set; }
 
     public virtual Member Member { get; set; } = null!;
 
@@ -45,7 +55,7 @@ public partial class Order
 
     public virtual PaymentStatusCode PaymentStatus { get; set; } = null!;
 
-    public virtual ShipmemtMethod? ShipmentMethod { get; set; }
+    public virtual ShipmentMethod? ShipmentMethod { get; set; }
 
     public virtual ShipmentStatusesCode? ShipmentStatus { get; set; }
 }

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto mt-16" color="white" max-width="600" title="更改密碼">
+  <v-card class="mx-auto mt-16" max-width="600" title="更改密碼">
     <v-container>
       <v-text-field v-model="originalPassword" :append-inner-icon="originalPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
         color="primary" label="舊密碼" :type="originalPasswordVisible ? 'text' : 'password'" variant="underlined"
@@ -16,7 +16,7 @@
         新密碼需與確認密碼相符
       </p>
 
-      <v-btn color="success" @click="onSubmit" style="left: 220px">
+      <v-btn color="yellow" @click="onSubmit" style="left: 220px">
         修改密碼
         <v-icon icon="mdi-chevron-right" end></v-icon>
       </v-btn>

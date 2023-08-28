@@ -18,7 +18,7 @@ public class OrderDto
 
     public DateTime? CompletedAt { get; set; }
 
-    public int ShipmemtMethodId { get; set; }
+    public int ShipmentMethodId { get; set; }
 
     public string? RecipientName { get; set; }
 

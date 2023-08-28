@@ -2,5 +2,5 @@
 
 public class PaymentRefundRequestDto
 {
-    public int refundAmount { get; set; }
+    public int RefundAmount { get; set; }
 }

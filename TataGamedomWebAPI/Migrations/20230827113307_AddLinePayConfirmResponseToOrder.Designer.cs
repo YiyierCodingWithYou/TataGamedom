@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TataGamedomWebAPI.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using TataGamedomWebAPI.Infrastructure.Data;
 namespace TataGamedomWebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230827113307_AddLinePayConfirmResponseToOrder")]
+    partial class AddLinePayConfirmResponseToOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1263,10 +1266,6 @@ namespace TataGamedomWebAPI.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
 
-                    b.Property<string>("CreditCardBrand")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
                     b.Property<DateTime?>("DeliveredAt")
                         .HasColumnType("datetime");
 
@@ -1413,10 +1412,6 @@ namespace TataGamedomWebAPI.Migrations
 
                     b.Property<DateTime>("IssuedAt")
                         .HasColumnType("datetime");
-
-                    b.Property<string>("LinePayRefundTransactionId")
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
 
                     b.Property<int>("OrderItemId")
                         .HasColumnType("int");
