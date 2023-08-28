@@ -29,5 +29,7 @@
 		public bool ActiveFlag { get; set; }
 
 		public DateTime? LastOnlineTime { get; set; }
+
+		public string? AboutMe { get; set; }
 	}
 }

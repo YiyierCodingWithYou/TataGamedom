@@ -202,7 +202,9 @@ namespace TataGamedomWebAPI.Controllers
 				Phone = user.Phone,
 				IconImg = user.IconImg,
 				ActiveFlag = user.ActiveFlag,
-				LastOnlineTime = DateTime.Now 
+				LastOnlineTime = DateTime.Now,
+				AboutMe = user.AboutMe
+
 			};
 			return Ok(memberDto);
 		}
@@ -224,6 +226,7 @@ namespace TataGamedomWebAPI.Controllers
 			// 更新 member 物件的屬性
 			user.Name = memberDto.Name;
 			user.Phone = memberDto.Phone;
+			user.AboutMe = memberDto.AboutMe;
 			if (!string.IsNullOrEmpty(iconImgFileName))
 			{
 				user.IconImg = iconImgFileName;

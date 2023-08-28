@@ -73,6 +73,7 @@ namespace TataGamedomWebAPI.Controllers
 					Id = m.ModeratorMemberId,
 					Account = m.ModeratorMember.Account,
 					Name = m.ModeratorMember.Name,
+					IconUrl = $"https://localhost:7081/Files/Uploads/Icons/{m.ModeratorMember.IconImg}"
 				}),
 				ProductLinks = b.Game.Products.Select(p => new ProducLinkDto
 				{
