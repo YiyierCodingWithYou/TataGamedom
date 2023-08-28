@@ -34,8 +34,7 @@
                   <v-chip class="f9ee08 mb-2 me-2">#{{ item.name }}</v-chip>
                   　{{ relativeTime(item.scheduleDate) }}　　
                   <v-icon class="mb-1">mdi-eye </v-icon>
-                  Views {{ item.viewCount }}　　 {{ item.likeCount }}個人說
-
+                  Views {{ item.viewCount }}　　 {{ item.likeCount }}個人說👍
                   <div
                     v-html="truncateAndEllipsis(item.content, 150)"
                     class="mt-5"
