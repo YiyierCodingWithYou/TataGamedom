@@ -5,6 +5,7 @@ using TataGamedomWebAPI.Application.Contracts.PaymentService;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
 using TataGamedomWebAPI.Application.Exceptions;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.CreateOrderItemReturn;
+using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.UpdateOrderItemReturn.UpdateAfterLinePayRefund;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnList;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.PaymentRefund;
@@ -22,6 +23,7 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
     private readonly IIndexGenerator _indexGenerator;
     private readonly ILinePayService _linePayService;
     private readonly IAppLogger<CreateMultipleItemReturnsCommandHandler> _logger;
+    private readonly IMediator _mediator;
 
     public CreateMultipleItemReturnsCommandHandler(
         IMapper mapper,
@@ -30,7 +32,8 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
         IOrderItemReturnRepository orderItemReturnRepository,
         IIndexGenerator indexGenerator,
         ILinePayService linePayService,
-        IAppLogger<CreateMultipleItemReturnsCommandHandler> logger
+        IAppLogger<CreateMultipleItemReturnsCommandHandler> logger,
+        IMediator mediator
         )
     {
         this._mapper = mapper;
@@ -40,6 +43,7 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
         this._indexGenerator = indexGenerator;
         this._linePayService = linePayService;
         this._logger = logger;
+        this._mediator = mediator;
     }
 
     public async Task<List<OrderItemReturnDto>> Handle(CreateMultipleItemReturnsCommand request, CancellationToken cancellationToken)
@@ -60,7 +64,7 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
         await _orderItemReturnRepository.CreateAsync(orderItemReturnToBeCreatedList);
         await _orderRepository.UpdateOrderStatusAfterReturn(request.CreateOrderItemReturnCommandList.FirstOrDefault()!.OrderItemId);
 
-        _logger.LogInformation("Created multiple items to return successfully");
+        _logger.LogInformation("Created multiple items to return successfully");    
 
         List<OrderItemReturnDto> orderItemReturnList = _mapper.Map<List<OrderItemReturnDto>>(orderItemReturnToBeCreatedList);
 
@@ -94,6 +98,16 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
 
             // todo update 該退貨品項成已退款並加入退款序號，如果退款失敗，顯示待退款
             // 退款單狀態 => 如果皆為虛擬且退款成功 => 已完成   ; 如果有實體 => 退款成續處理中 => 退貨完成 => 退款 => 已完成  ， 目前先做1  (放到後台處理)
+            foreach (var orderItemReturn in orderItemReturnList) 
+            {
+                await _mediator.Send(new UpdateAfterLinePayRefund
+                {
+                    Id = orderItemId,
+                    IsRefunded = true,
+                    CompletedAt = DateTime.Now,
+                    LinePayRefundTransactionId = response.Info.RefundTransactionId.ToString(),
+                });
+            }
         };
     }
 

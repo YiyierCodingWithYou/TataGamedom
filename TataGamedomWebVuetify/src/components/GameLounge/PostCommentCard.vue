@@ -9,7 +9,7 @@
     >
       <v-card-item v-if="comment.activeFlag">
         <v-card-subtitle>
-          <span class="memberInfo">
+          <span class="memberInfo" @click="linkTo('account', comment.memberAccount)">
             {{ comment.memberName }} ( {{ comment.memberAccount }} )
           </span>
         </v-card-subtitle>
@@ -72,10 +72,12 @@
 .comment {
   border: 1px solid #a1dfe9;
 }
+
 .yellowOutline {
   border: 1px solid #f9ee08;
   box-shadow: 1px 1px 5px 2px rgba(249, 238, 8, 0.5);
 }
+
 .material-symbols-rounded {
   font-variation-settings: "FILL" 1, "wght" 200, "GRAD" 0, "opsz" 24;
 }
@@ -87,6 +89,7 @@
 .voted {
   color: #f9ee08;
 }
+
 .voted:hover {
   transform: scale(1.1);
   color: #a1dfe9;
@@ -101,10 +104,12 @@
 .v-card-text {
   font-size: 1.1rem;
 }
+
 .v-card-text img {
   max-width: 100%;
   height: auto;
 }
+
 .v-card-subtitle {
   opacity: 1;
 }
@@ -113,6 +118,7 @@
   color: #f9ee08 !important;
   cursor: pointer;
 }
+
 .boardInfo:hover {
   color: #a1dfe9 !important;
   cursor: pointer;
@@ -123,6 +129,8 @@
 import { reactive, ref, watch, defineEmits, defineProps } from "vue";
 import { formatDistanceToNow } from "date-fns";
 import { zhTW } from "date-fns/locale";
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 interface Comment {
   commentContent: string;
@@ -179,8 +187,7 @@ const vote = async (
 ) => {
   try {
     const response = await fetch(
-      `${baseAddress}${
-        type === "post" ? "Posts" : "PostComments"
+      `${baseAddress}${type === "post" ? "Posts" : "PostComments"
       }/${voteCommentId}/Vote/${upOrDown}`,
       {
         method: "PUT",
@@ -234,6 +241,21 @@ const newComment = async (commentId: number, postId: number) => {
     } catch {
       alert(":<");
     }
+  }
+};
+
+const linkTo = (boardOrAccount, value) => {
+  if (boardOrAccount === "board") {
+    router.push({
+      name: "GameLoungeBoard",
+      params: { boardId: value },
+    });
+  }
+  if (boardOrAccount === "account") {
+    router.push({
+      name: "GameLoungeAccount",
+      params: { account: value },
+    });
   }
 };
 </script>
