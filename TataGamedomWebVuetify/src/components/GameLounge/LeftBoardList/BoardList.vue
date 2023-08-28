@@ -126,8 +126,6 @@ watch(count, (newValue, oldValue) => {
 const router = useRouter();
 
 const openLink = (e) => {
-  console.log(e.id);
-
   if (e.id !== undefined && e.id !== "search") {
     router.push({
       name: "GameLoungeBoard",
