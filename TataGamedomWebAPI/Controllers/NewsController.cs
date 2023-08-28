@@ -78,7 +78,7 @@ namespace TataGamedomWebAPI.Controllers
 					}
 				}
 
-				sql += " GROUP BY n.Id, n.Title, n.Content,n.ScheduleDate, b.Name, gc.Name, n.ActiveFlag, ncc.Name,n.CoverImg";
+				sql += " GROUP BY n.Id, n.Title, n.Content,n.ScheduleDate, b.Name, gc.Name, n.ActiveFlag, ncc.Name,n.CoverImg ORDER BY N.ScheduleDate DESC";
 
 				var queryParams = new { Keyword = $"%{keyword}%" , GamesCategory = $"%{gamesCategory}%" };
                 var news = await conn.QueryAsync<NewsDto>(sql, queryParams);
