@@ -9,11 +9,14 @@ public class OrderWithDeatilsDto
 
     public DateTime CreatedAt { get; set; }
 
+    public DateTime? SentAt { get; set; }
+
+    public DateTime? DeliveredAt { get; set; }
+
     public decimal? Total { get; set; }
 
     public required string OrderStatusCodeName { get; set; }
 
-    //
     public required string OrderIndex { get; set; }
 
     public DateTime? OrderCompletedAt { get; set; }

@@ -14,10 +14,11 @@ namespace TataGamedomWebAPI.Controllers
 	[ApiController]
 	public class ECPayController : ControllerBase
 	{
-		private readonly ECPayShipmentService _shipmentService;
-        public ECPayController()
+        private readonly ECPayShipmentService _eCPayShipmentService;
+
+        public ECPayController(ECPayShipmentService eCPayShipmentService)
         {
-            _shipmentService = new ECPayShipmentService();
+            _eCPayShipmentService = eCPayShipmentService;
         }
 
         [HttpPost("Create")]
@@ -78,9 +79,8 @@ namespace TataGamedomWebAPI.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult> RedirectToLogisticsSelection(LogisticsSelectionRawDataDto logisticsSelection)
         {
-            var fileUrl = await _shipmentService.SendLogisticsSelectionRequest(logisticsSelection);
+            var fileUrl = await _eCPayShipmentService.SendLogisticsSelectionRequest(logisticsSelection);
             return Ok(new { url = fileUrl });
-            //return Ok(await _shipmentService.SendLogisticsSelectionRequest(logisticsSelection));
         }
 
         [HttpPost("LogisticsOrder")]
@@ -88,7 +88,7 @@ namespace TataGamedomWebAPI.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult> CreateLogisticsOrderForPickUp(LogisticsOrderRequestDto order) 
 		{
-			return Ok(await _shipmentService.SendLogisticsOrderForPickUpRequest(order));
+			return Ok(await _eCPayShipmentService.SendLogisticsOrderForPickUpRequest(order));
 		}
 
         [HttpPost("LogisticsTradeInfo")]
@@ -96,7 +96,7 @@ namespace TataGamedomWebAPI.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult> QueryLogisticsTradeInfo(QueryLogisticsTradeInfoDto tradeInfo)
         {
-            return Ok(await _shipmentService.SendLogisticsTradeInfoQueryRequest(tradeInfo));
+            return Ok(await _eCPayShipmentService.SendLogisticsTradeInfoQueryRequest(tradeInfo));
         }
     }
 

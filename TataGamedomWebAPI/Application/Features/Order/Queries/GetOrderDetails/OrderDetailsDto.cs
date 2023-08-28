@@ -18,11 +18,17 @@ public class OrderDetailsDto
 
     public DateTime? CompletedAt { get; set; }
 
-    public int ShipmemtMethodId { get; set; }
+    public int ShipmentMethodId { get; set; }
 
     public string? RecipientName { get; set; }
 
     public required string ToAddress { get; set; }
+
+    public string? ReceiverEmail { get; set; }
+
+    public decimal? ShippingFee { get; set; }
+
+    public string? ReceiverCellPhone { get; set; }
 
     public DateTime? SentAt { get; set; }
 

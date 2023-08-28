@@ -1,5 +1,6 @@
 ﻿using TataGamedomWebAPI.Application.Contracts.Logging;
 using TataGamedomWebAPI.Infrastructure.Logging;
+using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.ECPayShipmentAdapter;
 
 namespace TataGamedomWebAPI.Infrastructure;
 
@@ -11,6 +12,7 @@ public static class InfrastructureServicesRegistration
 
         services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
         services.AddSignalR();
+        services.AddScoped<ECPayShipmentService>();
         services.AddCors(options =>
         {
             options.AddDefaultPolicy(

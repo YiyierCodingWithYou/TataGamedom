@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using MediatR;
 using TataGamedomWebAPI.Application.Contracts.Logging;
+using TataGamedomWebAPI.Application.Contracts.PaymentService;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
 using TataGamedomWebAPI.Application.Exceptions;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.CreateOrderItemReturn;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnList;
-using TataGamedomWebAPI.Models.EFModels;
+using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter;
+using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.PaymentRefund;
+using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Response.PaymentRefund;
 using TataGamedomWebAPI.Models.Interfaces;
 
 namespace TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.CreateMultipleOrderItemReturns;
@@ -17,6 +20,7 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
     private readonly IOrderItemRepository _orderItemRepository;
     private readonly IOrderItemReturnRepository _orderItemReturnRepository;
     private readonly IIndexGenerator _indexGenerator;
+    private readonly ILinePayService _linePayService;
     private readonly IAppLogger<CreateMultipleItemReturnsCommandHandler> _logger;
 
     public CreateMultipleItemReturnsCommandHandler(
@@ -25,6 +29,7 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
         IOrderItemRepository orderItemRepository,
         IOrderItemReturnRepository orderItemReturnRepository,
         IIndexGenerator indexGenerator,
+        ILinePayService linePayService,
         IAppLogger<CreateMultipleItemReturnsCommandHandler> logger
         )
     {
@@ -33,6 +38,7 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
         this._orderItemRepository = orderItemRepository;
         this._orderItemReturnRepository = orderItemReturnRepository;
         this._indexGenerator = indexGenerator;
+        this._linePayService = linePayService;
         this._logger = logger;
     }
 
@@ -56,7 +62,39 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
 
         _logger.LogInformation("Created multiple items to return successfully");
 
-        return _mapper.Map<List<OrderItemReturnDto>>(orderItemReturnToBeCreatedList);        
+        List<OrderItemReturnDto> orderItemReturnList = _mapper.Map<List<OrderItemReturnDto>>(orderItemReturnToBeCreatedList);
+
+        await CallLinePayRefundAPI(orderItemReturnList);
+
+        return orderItemReturnList;
+    }
+
+    private async Task CallLinePayRefundAPI(List<OrderItemReturnDto> orderItemReturnList)
+    {
+        //todo 如果是實體商品，要已退貨才能退款
+
+        int orderItemId = orderItemReturnList.First().OrderItemId;
+        Models.EFModels.OrderItem? orderItem = await _orderItemRepository.GetByIdAsync(orderItemId);
+        string? linePayTransitionId = await _orderRepository.GetLinePayTransitionId(orderItem?.OrderId);
+
+        if (linePayTransitionId != null)
+        {
+            decimal refundAmount = 0;
+            foreach (var item in orderItemReturnList)
+            {
+                refundAmount += await _orderItemRepository.GetPriceById(item.OrderItemId);
+            }
+
+            PaymentRefundResponseDto response = await _linePayService.RefundPayment(linePayTransitionId, new PaymentRefundRequestDto { RefundAmount = (int)refundAmount });
+            _logger.LogInformation(
+                $"LinePay退款，交易編號{linePayTransitionId}，" +
+                $"執行結果{response.ReturnMessage}，" +
+                $"退款時間{response.Info.RefundTransactionDate}，" +
+                $"退款編號{response.Info.RefundTransactionId}");
+
+            // todo update 該退貨品項成已退款並加入退款序號，如果退款失敗，顯示待退款
+            // 退款單狀態 => 如果皆為虛擬且退款成功 => 已完成   ; 如果有實體 => 退款成續處理中 => 退貨完成 => 退款 => 已完成  ， 目前先做1  (放到後台處理)
+        };
     }
 
     private async Task GenerateIndex(Models.EFModels.OrderItemReturn orderItemReturn)

@@ -23,5 +23,7 @@ public partial class OrderItemReturn
 
     public bool IsResellable { get; set; }
 
+    public string? LinePayRefundTransactionId { get; set; }
+
     public virtual OrderItem OrderItem { get; set; } = null!;
 }
