@@ -4,26 +4,33 @@
     class="post mb-3"
     :data-id="post.postId"
     v-if="post.activeFlag"
+    :class="post.isAuthor ? 'yellowOutline' : ''"
   >
     <v-card-item>
       <v-card-title>{{ post.title }}</v-card-title>
-      <v-card-subtitle
-        >{{ post.memberAccount }}
-        <span class="ms-auto"> @{{ post.boardName }}</span></v-card-subtitle
-      >
+      <v-card-subtitle>
+        <span class="memberInfo" @click="linkTo('account', post.memberAccount)">
+          {{ post.memberName }} ( {{ post.memberAccount }} )
+        </span>
+        <span class="boardInfo ms-auto" @click="linkTo('board', post.boardId)">
+          @ {{ post.boardName }}</span
+        >
+      </v-card-subtitle>
     </v-card-item>
     <v-card-text class="post-text" v-html="post.postContent"> </v-card-text>
     <v-card-actions>
       <v-btn
         @click="vote('post', post.postId, 'Up', post.postId)"
-        :color="post.voted === 'Up' ? 'red' : 'blue-grey-lighten-4'"
-        >❤️ <span>{{ post.voteUp }}</span>
+        :class="post.voted === 'Up' ? 'voted' : 'not-voted'"
+        ><span class="material-symbols-rounded"> thumb_up </span
+        ><span>{{ post.voteUp }}</span>
       </v-btn>
 
       <v-btn
         @click="vote('post', post.postId, 'Down', post.postId)"
-        :color="post.voted === 'Down' ? 'black' : 'blue-grey-lighten-4'"
-        >💀<span>{{ post.voteDown }}</span>
+        :class="post.voted === 'Down' ? 'voted' : 'not-voted'"
+        ><span class="material-symbols-rounded"> thumb_down </span
+        ><span>{{ post.voteDown }}</span>
       </v-btn>
 
       <v-btn @click="showCommentsInput">
@@ -75,6 +82,53 @@
     </div>
   </v-card>
 </template>
+<style>
+.material-symbols-rounded {
+  font-variation-settings: "FILL" 1, "wght" 200, "GRAD" 0, "opsz" 24;
+}
+
+.post {
+  box-shadow: 0px 1px 10px 1px #a1dfe9;
+  background-color: transparent;
+}
+.yellowOutline {
+  border: 1px solid #f9ee08;
+}
+
+.voted {
+  color: #f9ee08;
+}
+.voted:hover {
+  transform: scale(1.1);
+  color: #a1dfe9;
+}
+
+.not-voted:hover {
+  opacity: 1;
+  transform: scale(1.1);
+  color: #f9ee08;
+}
+
+.v-card-text {
+  font-size: 1.1rem;
+}
+.v-card-text img {
+  max-width: 100%;
+  height: auto;
+}
+.v-card-subtitle {
+  opacity: 1;
+}
+
+.memberInfo:hover {
+  color: #f9ee08 !important;
+  cursor: pointer;
+}
+.boardInfo:hover {
+  color: #a1dfe9 !important;
+  cursor: pointer;
+}
+</style>
 
 <script setup lang="ts">
 import { ref, reactive, computed, watchEffect, onMounted } from "vue";
@@ -82,6 +136,7 @@ import { formatDistanceToNow } from "date-fns";
 import { zhTW } from "date-fns/locale";
 import editPostBtn from "./EditPostBtn.vue";
 import PostCommentCard from "./PostCommentCard.vue";
+import { useRouter } from "vue-router";
 
 interface Comment {
   commentContent: string;
@@ -123,6 +178,22 @@ const props = defineProps(["post"]);
 const post = ref<Post>(props.post);
 const comments = ref<Comment[]>([]);
 const hasComments = computed(() => comments.value.length > 0);
+const router = useRouter();
+
+const linkTo = (boardOrAccount, value) => {
+  if (boardOrAccount === "board") {
+    router.push({
+      name: "GameLoungeBoard",
+      params: { boardId: value },
+    });
+  }
+  if (boardOrAccount === "account") {
+    router.push({
+      name: "GameLoungeAccount",
+      params: { account: value },
+    });
+  }
+};
 
 watchEffect(() => {
   comments.value = post.value.comments || [];
@@ -227,19 +298,3 @@ const newComment = async (postId: number) => {
   }
 };
 </script>
-<style>
-.post {
-  border-color: rgba(250, 112, 0, 0.1);
-  box-shadow: 2px 2px 2px 2px rgba(250, 112, 0, 0.05);
-  background-color: black;
-}
-.comment {
-  border-color: rgba(64, 64, 64, 0.1);
-  background-color: rgba(64, 64, 64, 0.03);
-}
-
-.v-card-text img {
-  max-width: 100%;
-  height: auto;
-}
-</style>
