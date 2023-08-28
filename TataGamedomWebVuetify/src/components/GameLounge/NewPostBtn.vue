@@ -1,7 +1,12 @@
 <template>
   <v-dialog v-model="dialog" v-if="IsLoggedIn" persistent width="auto">
     <template v-slot:activator="{ props }">
-      <v-btn color="warning" v-bind="props" class="ma-2"> 發新貼文 </v-btn>
+      <v-btn
+        v-bind="props"
+        icon="mdi-plus"
+        size="x-large"
+        class="plusBtn"
+      ></v-btn>
     </template>
     <v-form @submit.prevent="postNewPost">
       <v-card>
@@ -48,6 +53,7 @@
 <script setup lang="">
 import { ref, defineProps, defineEmits, computed, onMounted } from "vue";
 import { QuillEditor } from "@vueup/vue-quill";
+import { useRoute } from "vue-router";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import ImageUploader from "quill-image-uploader";
 import axios from "axios";
@@ -62,6 +68,7 @@ const dialog = ref(false);
 const IsLoggedIn = computed(() => store.state.isLoggedIn);
 const boardId = ref(0);
 const boardList = ref([]);
+const route = useRoute();
 
 const handleSelection = (selectedBoard) => {
   boardId.value = selectedBoard;
@@ -128,7 +135,6 @@ const postNewPost = () => {
       withCredentials: true,
     })
     .then((res) => {
-      alert(res);
       alert("發文成功");
       title.value = "";
       editor.value = "";
@@ -139,9 +145,27 @@ const postNewPost = () => {
       console.error("Error:", err);
     });
 };
+
+if (route.params.boardId !== undefined) {
+  boardId.value = +route.params.boardId;
+}
 </script>
 
 <style scoped>
+.plusBtn {
+  background-color: black;
+  box-shadow: 0px 0px 10px 2px #a1dfe9 !important;
+  position: fixed;
+  bottom: 20px;
+  right: 25%;
+  z-index: 999;
+}
+
+.plusBtn:hover {
+  background-color: #f5f5f5;
+  color: black;
+}
+
 >>> .quill-editor {
   resize: vertical;
   overflow: auto;

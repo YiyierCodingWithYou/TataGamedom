@@ -22,6 +22,7 @@
         </v-card-subtitle>
 
         <v-card-subtitle> 優惠: //Todo </v-card-subtitle>
+        <v-card-subtitle> 序號: //Todo </v-card-subtitle>
 
         <v-card-subtitle>
           類型: {{ orderItem.productIsVirtual === true ? "序號" : "遊戲片" }}

@@ -53,5 +53,12 @@ public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepos
         return await _dbContext.OrderItems.AnyAsync(o => o.Id == orderItemId);
     }
 
+    public async Task<decimal> GetPriceById(int orderItemId)
+    {
+        return await _dbContext.OrderItems
+            .Where(o => o.Id == orderItemId)
+            .Select(o => o.ProductPrice)
+            .SingleAsync();
+    }
 }
 

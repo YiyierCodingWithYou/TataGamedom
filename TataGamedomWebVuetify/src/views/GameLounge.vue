@@ -135,6 +135,9 @@ if (account.value !== undefined || boardId.value !== undefined) {
   isSearch.value = true;
   tab.value = 3;
 }
+if (account.value === undefined && boardId.value === undefined && isLogin) {
+  tab.value = 2;
+}
 if (account.value !== undefined) {
   isSearchAccount.value = true;
 }

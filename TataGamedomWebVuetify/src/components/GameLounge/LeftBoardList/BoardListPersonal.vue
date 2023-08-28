@@ -27,9 +27,11 @@ import { useStore } from "vuex";
 const items = ref<item>([]);
 const allItems = ref<item>([]);
 const topFiveItems = ref<item>([]);
+const modItems = ref<item>([]);
 const noFavo = ref<item>([]);
 const noFollow = ref<item>([]);
 const data = ref<boardData>([]);
+const data2 = ref<boardData>([]);
 const router = useRouter();
 const props = defineProps({
   memberAccount: {
@@ -87,6 +89,9 @@ const fetchData = () => {
       noFavo.value = [];
       noFollow.value = [];
       data.value = res.data;
+      data2.value = structuredClone(res.data);
+      console.log(data2.value);
+
       allItems.value = data.value.map((data) => {
         return {
           title: data.name,
@@ -112,6 +117,20 @@ const fetchData = () => {
         })
         .slice(0, 5);
 
+      modItems.value = data.value
+        .filter((item) => item.isMod)
+        .map((data) => {
+          return {
+            title: data.name,
+            value: data.id,
+            prependAvatar: data.boardHeaderCoverImgUrl,
+            height: "75px",
+            rounded: "shaped",
+          };
+        });
+
+      console.log(modItems.value);
+
       if (topFiveItems.value.length === 0) {
         noFavo.value = {
           title: "尚未有最愛🎮趕緊加入✨",
@@ -126,6 +145,13 @@ const fetchData = () => {
           height: "100px",
         };
       }
+
+      if (modItems.value.length > 0) {
+        items.value = items.value
+          .concat(headerItem("subheader", "✨版主巢穴"))
+          .concat(modItems.value);
+      }
+
       items.value = items.value
         .concat(headerItem("header", "🕹️熱門最愛"))
         .concat(topFiveItems.value)
