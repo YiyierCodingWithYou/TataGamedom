@@ -3,15 +3,31 @@
     <v-container>
       <v-row class="mt-10">
         <v-col cols="12" md="6">
-          <v-text-field v-model="name" :rules="nameRules" label="姓名" required></v-text-field>
+          <v-text-field
+            v-model="name"
+            :rules="nameRules"
+            label="姓名"
+            required
+          ></v-text-field>
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-text-field v-model="phone" :rules="phoneRules" :counter="10" label="手機" required></v-text-field>
+          <v-text-field
+            v-model="phone"
+            :rules="phoneRules"
+            :counter="10"
+            label="手機"
+            required
+          ></v-text-field>
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-text-field v-model="email" label="E-mail" required readonly></v-text-field>
+          <v-text-field
+            v-model="email"
+            label="E-mail"
+            required
+            readonly
+          ></v-text-field>
         </v-col>
 
         <v-col cols="12" md="6">
@@ -19,18 +35,33 @@
           </v-text-field>
         </v-col>
 
-        <v-col cols="12" md="12">About Me
-          <QuillEditor :modules="modules" :toolbar="toolbarOptions" class="quill-editor" contentType="html"
-            v-model:content="editor" />
+        <v-col cols="12" md="12"
+          >About Me
+          <QuillEditor
+            :modules="modules"
+            :toolbar="toolbarOptions"
+            class="quill-editor"
+            contentType="html"
+            v-model:content="editor"
+          />
         </v-col>
 
         <v-col cols="12" md="12" style="margin-top: 50px">
-          <v-file-input label="上傳頭像" variant="filled" prepend-icon="mdi-camera" @change="uploadImage"></v-file-input>
+          <v-file-input
+            label="上傳頭像"
+            variant="filled"
+            prepend-icon="mdi-camera"
+            @change="uploadImage"
+          ></v-file-input>
         </v-col>
         <img style="height: 300px; width: 300px" :src="img + iconImg" />
       </v-row>
     </v-container>
-    <v-btn color="yellow" @click="onClick" style="margin-left: 45%;margin-bottom: 10px;">
+    <v-btn
+      color="yellow"
+      @click="onClick"
+      style="margin-left: 45%; margin-bottom: 10px"
+    >
       確認修改
     </v-btn>
   </v-form>
@@ -85,6 +116,8 @@ const loadMember = async () => {
   birthday.value = relativeTime(datas.birthday);
   phone.value = datas.phone;
   iconImg.value = datas.iconImg;
+  editor.value = datas.aboutMe;
+
   //iconImg.value = imageUrl;
   console.log("123132", datas);
 };
@@ -135,6 +168,7 @@ const onClick = async () => {
         iconImg: iconImg.value,
         account: account.value,
         email: email.value,
+        aboutMe: editor.value,
         //birthday: birthday.value,
       },
       {
