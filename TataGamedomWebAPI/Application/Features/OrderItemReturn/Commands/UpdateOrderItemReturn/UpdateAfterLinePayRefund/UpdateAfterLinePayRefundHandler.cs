@@ -32,7 +32,7 @@ public class UpdateAfterLinePayRefundHandler : IRequestHandler<UpdateAfterLinePa
         orderItemReturnToBeUpdated = _mapper.Map(request, orderItemReturnToBeUpdated);
         await _orderItemReturnRepository.UpdateAsync(orderItemReturnToBeUpdated);
 
-        _logger.LogInformation("LinePay退款資訊已新增至訂單");
+        _logger.LogInformation("第三方金流退款資訊已新增至退貨單，並更改狀態為已退款");
 
         return Unit.Value;
 
