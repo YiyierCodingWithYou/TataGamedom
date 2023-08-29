@@ -14,4 +14,6 @@ public class OrderItemWithDetailsDto
 
     public bool ProductIsVirtual { get; set; }
 
+    public string? InventoryItemGameKey { get; set; }
+
 }

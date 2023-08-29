@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.CreateOrderItemReturn;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.UpdateOrderItemReturn;
+using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.UpdateOrderItemReturn.UpdateAfterLinePayRefund;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnDetails;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnList;
 using TataGamedomWebAPI.Models.EFModels;
@@ -16,5 +17,6 @@ public class OrderItemReturnProfile : Profile
         CreateMap<CreateOrderItemReturnCommand, OrderItemReturn>();
         CreateMap<UpdateOrderItemReturnCommand, OrderItemReturn>();
         CreateMap<CreateOrderItemReturnCommand, OrderItemReturnDto>();
+        //CreateMap<UpdateAfterLinePayRefund, OrderItemReturn>().ForMember(dest => dest.Id, opt => opt.Ignore());
     }
 }

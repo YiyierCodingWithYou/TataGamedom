@@ -2,7 +2,7 @@
 
 namespace TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.UpdateOrderItemReturn.UpdateAfterLinePayRefund;
 
-public class UpdateAfterLinePayRefund : IRequest<Unit>
+public class UpdateAfterLinePayRefundDto : IRequest<Unit>
 {
     public int Id { get; set; }
 
