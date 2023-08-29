@@ -102,7 +102,7 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
     {
         //目前皆執行LinePay退款並更新狀態，若新增其他金流退款需拆開
         decimal refundAmount = await GetRefundTotal(orderItemReturnList);
-        PaymentRefundResponseDto response = await ExcuteLinePayRefund(orderItemReturnList, refundAmount);
+        PaymentRefundResponseDto? response = await ExcuteLinePayRefund(orderItemReturnList, refundAmount);
         await UpdateRefundStatusAndTransactionId(orderItemReturnList, response);
     }
 
@@ -117,23 +117,27 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
         return refundAmount;
     }
 
-    private async Task<PaymentRefundResponseDto> ExcuteLinePayRefund(List<OrderItemReturnDto> orderItemReturnList, decimal refundAmount)
+    private async Task<PaymentRefundResponseDto?> ExcuteLinePayRefund(List<OrderItemReturnDto> orderItemReturnList, decimal refundAmount)
     {
         var orderItem = await _orderItemRepository.GetByIdAsync(orderItemReturnList.First().OrderItemId);
 
         string? linePayTransitionId = await _orderRepository.GetLinePayTransitionId(orderItem?.OrderId);
 
-        PaymentRefundResponseDto response = await _linePayService.RefundPayment(linePayTransitionId, new PaymentRefundRequestDto { RefundAmount = (int)refundAmount });
+        if (linePayTransitionId != null) 
+        {
+            PaymentRefundResponseDto response = await _linePayService.RefundPayment(linePayTransitionId, new PaymentRefundRequestDto { RefundAmount = (int)refundAmount });
 
-        _logger.LogInformation(
-            $"LinePay退款，交易編號{linePayTransitionId}，" +
-            $"執行結果{response.ReturnMessage}，" +
-            $"退款時間{response.Info.RefundTransactionDate}，" +
-            $"退款編號{response.Info.RefundTransactionId}");
-        return response;
+            _logger.LogInformation(
+                $"LinePay退款，交易編號{linePayTransitionId}，" +
+                $"執行結果{response.ReturnMessage}，" +
+                $"退款時間{response.Info.RefundTransactionDate}，" +
+                $"退款編號{response.Info.RefundTransactionId}");
+            return response;
+        }
+        return null;
     }
 
-    private async Task UpdateRefundStatusAndTransactionId(List<OrderItemReturnDto> orderItemReturnList, PaymentRefundResponseDto response)
+    private async Task UpdateRefundStatusAndTransactionId(List<OrderItemReturnDto> orderItemReturnList, PaymentRefundResponseDto? response)
     {
         // todo update 該退貨品項成已退款並加入退款序號，如果退款失敗，顯示待退款
         // todo 退款單狀態 => 如果皆為虛擬且退款成功 => 已完成   ; 如果有實體 => 退款處理中 => 退貨完成 => 退款 => 已完成
@@ -142,13 +146,12 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
         {
             await _mediator.Send(new UpdateAfterLinePayRefund
             {
-                Id = orderItemReturn.OrderItemId,
+                Id = orderItemReturn.Id,
                 IsRefunded = true,
                 CompletedAt = DateTime.Now,
-                LinePayRefundTransactionId = response.Info.RefundTransactionId.ToString(),
+                LinePayRefundTransactionId = response?.Info.RefundTransactionId.ToString(),
                 //如果其他第三方支付也有退款編號，加在這裡
             });
         }
     }
-
 }

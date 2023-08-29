@@ -29,7 +29,18 @@ public class UpdateAfterLinePayRefundHandler : IRequestHandler<UpdateAfterLinePa
         {
             throw new NotFoundException(nameof(orderItemReturnToBeUpdated), request.Id);
         }
-        orderItemReturnToBeUpdated = _mapper.Map(request, orderItemReturnToBeUpdated);
+
+        //orderItemReturnToBeUpdated = _mapper.Map(request, orderItemReturnToBeUpdated);
+
+
+    //        public bool IsRefunded { get; set; }
+
+    //public DateTime? CompletedAt { get; set; }
+
+    //public string? LinePayRefundTransactionId { get; set; }
+   // orderItemReturnToBeUpdated.IsRefunded
+
+
         await _orderItemReturnRepository.UpdateAsync(orderItemReturnToBeUpdated);
 
         _logger.LogInformation("第三方金流退款資訊已新增至退貨單，並更改狀態為已退款");

@@ -22,8 +22,6 @@ public class OrderProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
         CreateMap<UpdateLinePayInfoCommand, Order>()
-            .ForMember(dest => dest.Id, opt => opt.Ignore());
-
-        
+            .ForMember(dest => dest.Id, opt => opt.Ignore());  
     }
 }
