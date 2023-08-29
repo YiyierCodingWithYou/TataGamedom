@@ -3,6 +3,7 @@ using TataGamedomWebAPI.Application.Contracts.Persistence;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnListByOrderId;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.EFModels;
+using static Dapper.SqlMapper;
 
 namespace TataGamedomWebAPI.Infrastructure.TaTaGamedom_Persistence.Repositories;
 
@@ -80,6 +81,15 @@ public class OrderItemReturnRepository : GenericRepository<OrderItemReturn>, IOr
             .Where(r => r.OrderItem.OrderId == orderId)
             .Select(r => r.OrderItemId)
             .ToListAsync();
+    }
+
+    public async Task UpdatePartialAsync(OrderItemReturn orderItemReturnToBeUpdated)
+    {
+        _dbContext.Entry(orderItemReturnToBeUpdated).Property(e => e.IsRefunded).IsModified = true;
+        _dbContext.Entry(orderItemReturnToBeUpdated).Property(e => e.CompletedAt).IsModified = true;
+        _dbContext.Entry(orderItemReturnToBeUpdated).Property(e => e.LinePayRefundTransactionId).IsModified = true;
+
+        await _dbContext.SaveChangesAsync();
     }
 }
 

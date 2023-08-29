@@ -13,5 +13,6 @@ public interface IOrderItemReturnRepository : IGenericRepository<OrderItemReturn
     Task<List<int>> GetOrderItemIdList(int orderId);
     Task<bool> IsStatusCompletedOrReturned(int orderItemId);
     Task<List<OrderItemReturnDto>> GetListByOrderId(int orderId);
+    Task UpdatePartialAsync(OrderItemReturn orderItemReturnToBeUpdated);
 }
 
