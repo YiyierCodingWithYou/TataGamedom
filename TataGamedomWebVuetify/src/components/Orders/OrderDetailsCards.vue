@@ -43,7 +43,6 @@
         <v-card-subtitle v-if="orderItem.inventoryItemGameKey">
           序號: {{ orderItem.inventoryItemGameKey }}</v-card-subtitle
         >
-
         <v-card-subtitle>
           類型: {{ orderItem.productIsVirtual === true ? "序號" : "遊戲片" }}
         </v-card-subtitle>

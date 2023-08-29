@@ -40,16 +40,14 @@
               <v-checkbox-btn
                 v-model="orderDetail.enabled"
                 class="pe-2"
-                :disabled="
-                  !isOrderCompleted || isIdInReturnList(orderDetail.id)
-                "
+                :disabled="!isOrderCompleted || isItemReturned(orderDetail.id)"
                 :indeterminate="!isOrderCompleted"
               >
               </v-checkbox-btn>
               <v-chip
                 class="ma-5"
                 color="pink"
-                v-show="isIdInReturnList(orderDetail.id)"
+                v-show="isItemReturned(orderDetail.id)"
                 ><v-icon start icon="mdi-tag-off"></v-icon>已退貨</v-chip
               >
               <v-text-field
@@ -114,10 +112,6 @@ export default {
     const orderDetails = computed(() => {
       return store.getters.getOrderDetailsById(props.orderId);
     });
-    const orderItemReturnList = computed(() => {
-      return store.getters.getorderItemReturnList(props.orderId);
-      console.log(orderItemReturnList);
-    });
 
     //dialog
     const dialog = ref(false);
@@ -144,26 +138,29 @@ export default {
       );
     });
 
-    const isIdInReturnList = (orderItemId) => {
-      if (orderItemReturnList.value) {
-        return orderItemReturnList.value.includes(orderItemId);
-      }
-      return false;
-    };
+    // 取得退貨表單 & 判斷是否已退貨
+    const orderItemReturnList = computed(() => {
+      return store.getters.getorderItemReturnList(props.orderId);
+    });
 
     onMounted(() => {
       if (hasOrderDetails.value) {
         initializeCheckBox();
       }
       store.dispatch("fetchorderItemReturnList", props.orderId);
-      console.log("OrderItemReturn.vue => order from getter:", order.value);
     });
+
+    const isItemReturned = (orderItemId) => {
+      return orderItemReturnList.value.some(
+        (item) => item.orderItemId === orderItemId
+      );
+    };
 
     const selectAll = ref(false);
     watch(selectAll, (newValue) => {
       if (hasOrderDetails.value) {
         orderDetails.value.forEach((detail) => {
-          if (!isIdInReturnList(detail.id)) detail.enabled = newValue;
+          if (!isItemReturned(detail.id)) detail.enabled = newValue;
         });
       }
     });
@@ -220,7 +217,7 @@ export default {
       isOrderCompleted,
       submit,
       closeDialog,
-      isIdInReturnList,
+      isItemReturned,
       initializeCheckBox,
     };
   },

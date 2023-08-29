@@ -8,6 +8,7 @@ using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.UpdateOrde
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnDetails;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnList;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnListByOrderId;
+using OrderItemReturnDto = TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnList.OrderItemReturnDto;
 
 namespace TataGamedomWebAPI.Controllers;
 
@@ -62,7 +63,7 @@ public class OrderItemReturnsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Post(CreateMultipleItemReturnsCommand orderItemReturnList)
     {
-        List<Application.Features.OrderItemReturn.Queries.GetOrderItemReturnList.OrderItemReturnDto> response = await _mediator.Send(orderItemReturnList);
+        List<OrderItemReturnDto> response = await _mediator.Send(orderItemReturnList);
         return Ok(response);
     }
 
