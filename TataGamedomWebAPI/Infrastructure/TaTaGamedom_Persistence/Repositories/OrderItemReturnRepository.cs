@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
+using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.UpdateOrderItemReturn.UpdateAfterLinePayRefund;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnListByOrderId;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.EFModels;
@@ -60,6 +61,7 @@ public class OrderItemReturnRepository : GenericRepository<OrderItemReturn>, IOr
             .Select(r => new OrderItemReturnDto 
             {
                 Id = r.Id,
+                Index = r.Index!,
                 OrderItemId = r.OrderItemId,
                 Reason = r.Reason,
                 IssuedAt = r.IssuedAt,
@@ -83,17 +85,15 @@ public class OrderItemReturnRepository : GenericRepository<OrderItemReturn>, IOr
             .ToListAsync();
     }
 
-    public async Task UpdatePartialAsync(OrderItemReturn orderItemReturnToBeUpdated)
+    public async Task UpdatePartialAsync(UpdateAfterLinePayRefundDto orderItemReturnToBeUpdated)
     {
-        //_dbContext.Entry(orderItemReturnToBeUpdated).Property(e => e.IsRefunded).IsModified = true;
-        //_dbContext.Entry(orderItemReturnToBeUpdated).Property(e => e.CompletedAt).IsModified = true;
-        //_dbContext.Entry(orderItemReturnToBeUpdated).Property(e => e.LinePayRefundTransactionId).IsModified = true;
-        var orderItemReturm = await _dbContext.OrderItemReturns
-            .Where(o => o.Id == orderItemReturnToBeUpdated.Id)
-            .Select(o => o.IsRefunded == orderItemReturnToBeUpdated.IsRefunded)
-            .FirstOrDefaultAsync();
+        var orderItemReturn = await _dbContext.OrderItemReturns.Where(o => o.Id == orderItemReturnToBeUpdated.Id).FirstOrDefaultAsync();
 
-        
+        orderItemReturn!.IsRefunded = orderItemReturnToBeUpdated.IsRefunded;
+        orderItemReturn.CompletedAt = orderItemReturnToBeUpdated.CompletedAt;
+        orderItemReturn.LinePayRefundTransactionId = orderItemReturnToBeUpdated?.LinePayRefundTransactionId;
+
+        _dbContext.Entry(orderItemReturn).State = EntityState.Modified;
         await _dbContext.SaveChangesAsync();
     }
 }

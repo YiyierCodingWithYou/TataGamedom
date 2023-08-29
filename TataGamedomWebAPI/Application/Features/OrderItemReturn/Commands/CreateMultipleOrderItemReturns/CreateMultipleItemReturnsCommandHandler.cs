@@ -144,7 +144,7 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
 
         foreach (var orderItemReturn in orderItemReturnList)
         {
-            await _mediator.Send(new UpdateAfterLinePayRefund
+            await _mediator.Send(new UpdateAfterLinePayRefundDto
             {
                 Id = orderItemReturn.Id,
                 IsRefunded = true,

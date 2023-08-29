@@ -2,12 +2,9 @@
   <v-dialog v-model="dialog" activator="parent" width="auto">
     <div class="text-subtitle-2 mb-2">退款紀錄</div>
     <v-expansion-panels>
-      <v-expansion-panel
-        v-for="item in props.orderItemReturnList"
-        :key="item.id"
-      >
+      <v-expansion-panel v-for="item in props.orderItemReturnList" :key="item.id">
         <!-- <div>退貨單編號: {{ item.id }}</div> -->
-        <div>退貨單編號: {{ item.Index }}</div>
+        <div>退貨單編號: {{ item.index }}</div>
         <div>退款狀態: {{ item.isRefunded ? "已退款" : "未退款" }}</div>
         <div>退貨狀態: {{ item.isReturned ? "已退貨" : "未退貨" }}</div>
         <div>申請退款時間: {{ item.issuedAt }}</div>

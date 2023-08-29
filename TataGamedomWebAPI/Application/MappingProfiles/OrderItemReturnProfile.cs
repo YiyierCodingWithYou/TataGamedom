@@ -17,6 +17,6 @@ public class OrderItemReturnProfile : Profile
         CreateMap<CreateOrderItemReturnCommand, OrderItemReturn>();
         CreateMap<UpdateOrderItemReturnCommand, OrderItemReturn>();
         CreateMap<CreateOrderItemReturnCommand, OrderItemReturnDto>();
-        CreateMap<UpdateAfterLinePayRefund, OrderItemReturn>().ForMember(dest => dest.Id, opt => opt.Ignore());
+        //CreateMap<UpdateAfterLinePayRefund, OrderItemReturn>().ForMember(dest => dest.Id, opt => opt.Ignore());
     }
 }
