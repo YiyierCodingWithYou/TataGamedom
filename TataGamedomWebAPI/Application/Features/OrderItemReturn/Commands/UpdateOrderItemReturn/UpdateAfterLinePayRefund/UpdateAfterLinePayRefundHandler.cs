@@ -24,13 +24,13 @@ public class UpdateAfterLinePayRefundHandler : IRequestHandler<UpdateAfterLinePa
 
     public async Task<Unit> Handle(UpdateAfterLinePayRefund request, CancellationToken cancellationToken)
     {
-        var orderItemReturnToBeUpdated = await _orderItemReturnRepository.GetByIdAsync(request.Id);
-        if (orderItemReturnToBeUpdated == null) 
-        {
-            throw new NotFoundException(nameof(orderItemReturnToBeUpdated), request.Id);
-        }
+        //var orderItemReturnToBeUpdated = await _orderItemReturnRepository.GetByIdAsync(request.Id);
+        //if (orderItemReturnToBeUpdated == null) 
+        //{
+        //    throw new NotFoundException(nameof(orderItemReturnToBeUpdated), request.Id);
+        //}
 
-        orderItemReturnToBeUpdated = _mapper.Map(request, orderItemReturnToBeUpdated);
+        //orderItemReturnToBeUpdated = _mapper.Map(request, orderItemReturnToBeUpdated);
 
 
         await _orderItemReturnRepository.UpdatePartialAsync(orderItemReturnToBeUpdated);

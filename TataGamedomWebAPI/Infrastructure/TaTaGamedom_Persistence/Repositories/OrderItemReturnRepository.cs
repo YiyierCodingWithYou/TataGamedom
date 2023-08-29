@@ -85,10 +85,15 @@ public class OrderItemReturnRepository : GenericRepository<OrderItemReturn>, IOr
 
     public async Task UpdatePartialAsync(OrderItemReturn orderItemReturnToBeUpdated)
     {
-        _dbContext.Entry(orderItemReturnToBeUpdated).Property(e => e.IsRefunded).IsModified = true;
-        _dbContext.Entry(orderItemReturnToBeUpdated).Property(e => e.CompletedAt).IsModified = true;
-        _dbContext.Entry(orderItemReturnToBeUpdated).Property(e => e.LinePayRefundTransactionId).IsModified = true;
+        //_dbContext.Entry(orderItemReturnToBeUpdated).Property(e => e.IsRefunded).IsModified = true;
+        //_dbContext.Entry(orderItemReturnToBeUpdated).Property(e => e.CompletedAt).IsModified = true;
+        //_dbContext.Entry(orderItemReturnToBeUpdated).Property(e => e.LinePayRefundTransactionId).IsModified = true;
+        var orderItemReturm = await _dbContext.OrderItemReturns
+            .Where(o => o.Id == orderItemReturnToBeUpdated.Id)
+            .Select(o => o.IsRefunded == orderItemReturnToBeUpdated.IsRefunded)
+            .FirstOrDefaultAsync();
 
+        
         await _dbContext.SaveChangesAsync();
     }
 }
