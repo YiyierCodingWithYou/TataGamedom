@@ -25,7 +25,8 @@ public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepos
                 GameGameCoverImg = oi.Product!.Game!.GameCoverImg,
                 GameChiName = oi.Product.Game.ChiName,
                 DiscountedPrice = oi.ProductPrice,
-                ProductIsVirtual = oi.Product.IsVirtual
+                ProductIsVirtual = oi.Product.IsVirtual,
+                InventoryItemGameKey = oi.InventoryItem.GameKey  
             })
             .ToListAsync();
 
