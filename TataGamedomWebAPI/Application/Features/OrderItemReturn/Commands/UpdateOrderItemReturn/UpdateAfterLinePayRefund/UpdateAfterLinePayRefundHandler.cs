@@ -6,7 +6,7 @@ using TataGamedomWebAPI.Application.Exceptions;
 
 namespace TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.UpdateOrderItemReturn.UpdateAfterLinePayRefund;
 
-public class UpdateAfterLinePayRefundHandler : IRequestHandler<UpdateAfterLinePayRefund, Unit>
+public class UpdateAfterLinePayRefundHandler : IRequestHandler<UpdateAfterLinePayRefundDto, Unit>
 {
     private readonly IMapper _mapper;
     private readonly IOrderItemReturnRepository _orderItemReturnRepository;
@@ -22,17 +22,12 @@ public class UpdateAfterLinePayRefundHandler : IRequestHandler<UpdateAfterLinePa
         this._logger = logger;
     }
 
-    public async Task<Unit> Handle(UpdateAfterLinePayRefund request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdateAfterLinePayRefundDto request, CancellationToken cancellationToken)
     {
-        var orderItemReturnToBeUpdated = await _orderItemReturnRepository.GetByIdAsync(request.Id);
-        if (orderItemReturnToBeUpdated == null) 
-        {
-            throw new NotFoundException(nameof(orderItemReturnToBeUpdated), request.Id);
-        }
-        orderItemReturnToBeUpdated = _mapper.Map(request, orderItemReturnToBeUpdated);
-        await _orderItemReturnRepository.UpdateAsync(orderItemReturnToBeUpdated);
 
-        _logger.LogInformation("LinePay退款資訊已新增至訂單");
+        await _orderItemReturnRepository.UpdatePartialAsync(request);
+
+        _logger.LogInformation("第三方金流退款資訊已新增至退貨單，並更改狀態為已退款");
 
         return Unit.Value;
 

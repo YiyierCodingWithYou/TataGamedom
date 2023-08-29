@@ -1,4 +1,5 @@
 ﻿using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemDetails;
+using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.UpdateOrderItemReturn.UpdateAfterLinePayRefund;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnListByOrderId;
 using TataGamedomWebAPI.Models.EFModels;
 
@@ -13,5 +14,6 @@ public interface IOrderItemReturnRepository : IGenericRepository<OrderItemReturn
     Task<List<int>> GetOrderItemIdList(int orderId);
     Task<bool> IsStatusCompletedOrReturned(int orderItemId);
     Task<List<OrderItemReturnDto>> GetListByOrderId(int orderId);
+    Task UpdatePartialAsync(UpdateAfterLinePayRefundDto orderItemReturnToBeUpdated);
 }
 

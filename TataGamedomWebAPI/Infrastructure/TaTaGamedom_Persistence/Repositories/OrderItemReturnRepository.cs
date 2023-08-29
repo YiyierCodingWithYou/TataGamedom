@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
+using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.UpdateOrderItemReturn.UpdateAfterLinePayRefund;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnListByOrderId;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Models.EFModels;
+using static Dapper.SqlMapper;
 
 namespace TataGamedomWebAPI.Infrastructure.TaTaGamedom_Persistence.Repositories;
 
@@ -59,6 +61,7 @@ public class OrderItemReturnRepository : GenericRepository<OrderItemReturn>, IOr
             .Select(r => new OrderItemReturnDto 
             {
                 Id = r.Id,
+                Index = r.Index!,
                 OrderItemId = r.OrderItemId,
                 Reason = r.Reason,
                 IssuedAt = r.IssuedAt,
@@ -80,6 +83,18 @@ public class OrderItemReturnRepository : GenericRepository<OrderItemReturn>, IOr
             .Where(r => r.OrderItem.OrderId == orderId)
             .Select(r => r.OrderItemId)
             .ToListAsync();
+    }
+
+    public async Task UpdatePartialAsync(UpdateAfterLinePayRefundDto orderItemReturnToBeUpdated)
+    {
+        var orderItemReturn = await _dbContext.OrderItemReturns.Where(o => o.Id == orderItemReturnToBeUpdated.Id).FirstOrDefaultAsync();
+
+        orderItemReturn!.IsRefunded = orderItemReturnToBeUpdated.IsRefunded;
+        orderItemReturn.CompletedAt = orderItemReturnToBeUpdated.CompletedAt;
+        orderItemReturn.LinePayRefundTransactionId = orderItemReturnToBeUpdated?.LinePayRefundTransactionId;
+
+        _dbContext.Entry(orderItemReturn).State = EntityState.Modified;
+        await _dbContext.SaveChangesAsync();
     }
 }
 

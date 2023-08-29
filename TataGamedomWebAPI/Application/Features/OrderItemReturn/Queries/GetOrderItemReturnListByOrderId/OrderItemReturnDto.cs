@@ -4,7 +4,7 @@ public class OrderItemReturnDto
 {
     public int Id { get; set; }
 
-    public string? Index { get; set; }
+    public string Index { get; set; } = string.Empty;
 
     public int OrderItemId { get; set; }
 
