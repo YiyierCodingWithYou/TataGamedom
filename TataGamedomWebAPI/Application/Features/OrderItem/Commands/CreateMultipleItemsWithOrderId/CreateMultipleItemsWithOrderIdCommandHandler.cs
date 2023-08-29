@@ -46,7 +46,7 @@ public class CreateMultipleItemsWithOrderIdCommandHandler : IRequestHandler<Crea
         int responseOrderId = await _mediator.Send(request.CreateOrderCommand);
 
         foreach (var createOrderItemCommand in request.CreateOrderItemCommandList)
-        {
+        {   
             var orderItem = _mapper.Map<Models.EFModels.OrderItem>(createOrderItemCommand);
 
             orderItem.OrderId = responseOrderId;
