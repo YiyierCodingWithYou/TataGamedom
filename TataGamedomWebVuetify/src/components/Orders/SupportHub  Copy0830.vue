@@ -1,63 +1,68 @@
 <template>
-  <nav>
-    <div>
-      <h1><strong>Tata</strong>客服中心</h1>
-      <v-container>
-        <div class="container-sm mt-20">
-          <div class="mx-5">
-            <Message
-              v-for="(message, index) in messages"
-              :key="index"
-              :name="message.account"
-              :photoUrl="''"
-              :senderAccount="true"
-            >
-              {{ message.account }}: {{ message.content }}
-            </Message>
-          </div>
-        </div>
+  <v-container>
+    <div class="row">&nbsp;</div>
 
-        <!-- todo 移除 -->
-        <v-text-field
-          label="Sender"
-          hide-details="auto"
-          v-model="senderAccount"
-          placeholder="請輸入姓名"
-        ></v-text-field>
-        <!--  -->
+    <!-- todo 移除 -->
+    <v-text-field
+      label="Sender"
+      :rules="rules"
+      hide-details="auto"
+      v-model="senderAccount"
+      placeholder="請輸入姓名"
+    ></v-text-field>
+    <!--  -->
 
-        <v-text-field
-          label="Message"
-          hide-details="auto"
-          v-model="chatMessage"
-          placeholder="你的訊息"
-          :disabled="isButtonDisabled"
-          @keyup.enter="sendMessage"
-        ></v-text-field>
+    <v-text-field
+      label="Message"
+      :rules="rules"
+      hide-details="auto"
+      v-model="chatMessage"
+      placeholder="你的訊息"
+      :disabled="isButtonDisabled"
+      @keyup.enter="sendMessage"
+    ></v-text-field>
 
-        <v-col cols="auto">
-          <v-btn
-            density="compact"
-            icon="mdi-plus"
-            :disabled="isButtonDisabled"
-            @click.prevent="sendMessage"
-            value="Send Message"
-          ></v-btn>
-        </v-col>
-      </v-container>
+    <v-col cols="auto">
+      <v-btn
+        density="compact"
+        icon="mdi-plus"
+        :disabled="isButtonDisabled"
+        @click.prevent="sendMessage"
+        value="Send Message"
+      ></v-btn>
+    </v-col>
+
+    <!-- Message After-->
+
+    <!-- -->
+
+    <!-- Message before-->
+    <div class="row">
+      <div class="col-12">
+        <hr />
+      </div>
     </div>
-  </nav>
+    <div class="row">
+      <div class="col-6">
+        <ul>
+          <li v-for="(message, index) in messages" :key="index">
+            {{ message.account }} : {{ message.content }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!--  -->
+  </v-container>
 </template>
   
 <script>
 import { ref, onMounted, onUnmounted } from "vue";
 import * as signalR from "@microsoft/signalr";
 
-import SendIcon from "./SendIcon.vue";
 import Message from "./Message.vue";
 
 export default {
-  components: { Message, SendIcon },
+  components: { Message },
 
   setup() {
     const senderAccount = ref("");
