@@ -6,9 +6,9 @@ namespace TataGamedomWebAPI.Infrastructure.RealTimeServices;
 
 public class ChatHub : Hub<IChatService>
 {
-    public async Task SendMessageToAll(string account, string messageContent) 
+    public async Task SendMessageToAll(string account, string messageContent, string memberName) 
     {
-        await Clients.All.ReceiveMessage(account, messageContent);
+        await Clients.All.ReceiveMessage(account, messageContent, memberName);
     }
 }
 

@@ -8,12 +8,12 @@ namespace TataGamedomWebAPI.Controllers;
 [EnableCors("AllowAny")]
 [Route("api/[controller]")]
 [ApiController]
-public class ChatsController : ControllerBase
+public class ChatRoomController : ControllerBase
 {
 
     private readonly IMediator _mediator;
 
-    public ChatsController(IMediator mediator)
+    public ChatRoomController(IMediator mediator)
     {
         this._mediator = mediator;
     }

@@ -5,44 +5,23 @@
       <v-container>
         <div class="container-sm mt-20">
           <div class="mx-5">
-            <Message
-              v-for="(message, index) in messages"
-              :key="index"
-              :name="message.account"
-              :photoUrl="''"
-              :senderAccount="true"
-            >
-              {{ message.account }}: {{ message.content }}
+            <Message v-for="(message, index) in messages" :key="index" :name="message.account" :photoUrl="''"
+              :senderAccount="true">
+              {{ message.memberName }}: {{ message.content }}
             </Message>
           </div>
         </div>
 
         <!-- todo 移除 -->
-        <v-text-field
-          label="Sender"
-          hide-details="auto"
-          v-model="senderAccount"
-          placeholder="請輸入姓名"
-        ></v-text-field>
+        <v-text-field label="Sender" hide-details="auto" v-model="senderAccount" placeholder="請輸入姓名"></v-text-field>
         <!--  -->
 
-        <v-text-field
-          label="Message"
-          hide-details="auto"
-          v-model="chatMessage"
-          placeholder="你的訊息"
-          :disabled="isButtonDisabled"
-          @keyup.enter="sendMessage"
-        ></v-text-field>
+        <v-text-field label="Message" hide-details="auto" v-model="chatMessage" placeholder="你的訊息"
+          :disabled="isButtonDisabled" @keyup.enter="sendMessage"></v-text-field>
 
         <v-col cols="auto">
-          <v-btn
-            density="compact"
-            icon="mdi-plus"
-            :disabled="isButtonDisabled"
-            @click.prevent="sendMessage"
-            value="Send Message"
-          ></v-btn>
+          <v-btn density="compact" icon="mdi-plus" :disabled="isButtonDisabled" @click.prevent="sendMessage"
+            value="Send Message"></v-btn>
         </v-col>
       </v-container>
     </div>
@@ -52,6 +31,8 @@
 <script>
 import { ref, onMounted, onUnmounted } from "vue";
 import * as signalR from "@microsoft/signalr";
+import axios from 'axios';
+
 
 import SendIcon from "./SendIcon.vue";
 import Message from "./Message.vue";
@@ -65,14 +46,32 @@ export default {
     const isButtonDisabled = ref(false);
     const messages = ref([]);
 
+    //API Get
+    const memberAndChatInfo = ref({});
+    const fetchMemberAndChatInfo = async () => {
+      try {
+        const response = await axios.get(
+          'https://localhost:7081/api/ChatRoom/MemberAndChatInfo', { withCredentials: true }
+        );
+        memberAndChatInfo.value = response.data;
+        console.log(memberAndChatInfo.value);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+
+    // SignalR
     let connectionToChatHub = new signalR.HubConnectionBuilder()
       .withUrl("https://localhost:7081/ChatHub")
       .build();
 
-    // SignalR
     onMounted(() => {
       connectionToChatHub.start().catch((err) => console.error(err.toString()));
       connectionToChatHub.on("ReceiveMessage", receiveMessageHandler);
+
+      //API
+      fetchMemberAndChatInfo();
     });
 
     onUnmounted(() => {
@@ -80,13 +79,13 @@ export default {
       connectionToChatHub.stop();
     });
 
-    const receiveMessageHandler = (account, content) => {
-      messages.value.push({ account, content });
+    const receiveMessageHandler = (account, content, memberName) => {
+      messages.value.push({ account, content, memberName });
     };
 
     const sendMessage = () => {
       connectionToChatHub
-        .send("SendMessageToAll", senderAccount.value, chatMessage.value)
+        .send("SendMessageToAll", senderAccount.value, chatMessage.value, memberAndChatInfo.value.memberName)
         .catch((err) => console.error(err.toString()));
       chatMessage.value = "";
     };
@@ -98,6 +97,7 @@ export default {
       isButtonDisabled,
       messages,
       sendMessage,
+      memberAndChatInfo
     };
   },
 };

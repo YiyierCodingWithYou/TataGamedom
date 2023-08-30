@@ -2,5 +2,6 @@
 
 public interface IChatService
 {
-   Task ReceiveMessage(string account, string messageContent);
+   Task ReceiveMessage(string account, string messageContent, string memberName);
+
 }
