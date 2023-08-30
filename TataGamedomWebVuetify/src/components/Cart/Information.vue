@@ -1,92 +1,94 @@
 <template>
   <div class="mt-3">
-    <v-expansion-panels v-if="cartData.allowCheckout">
-      <v-expansion-panel>
-        <v-expansion-panel-title class="myPanel">
-          <v-spacer></v-spacer>合計：NT${{ selectedData.totalAmount }}
-          <br />
-          購物車（{{ count }}件）<v-spacer></v-spacer>
-        </v-expansion-panel-title>
-        <v-expansion-panel-text>
-          <v-sheet v-if="cartData.allowCheckout == true">
-            <v-table>
-              <thead class="text-center justify-center align-center">
-                <tr>
-                  <th class="myTh"></th>
-                  <th class="myTh">遊戲平台</th>
-                  <th class="myTh">商品名稱</th>
-                  <th class="myTh">單件價格</th>
-                  <th class="myTh">數量</th>
-                  <th class="myTh">小計</th>
-                </tr>
-              </thead>
+    <div class="d-flex justify-center">
+      <v-expansion-panels v-if="cartData.allowCheckout">
+        <v-expansion-panel>
+          <v-expansion-panel-title class="myPanel">
+            <v-spacer></v-spacer>合計：NT${{ selectedData.totalAmount }}
+            <br />
+            購物車（{{ count }}件）<v-spacer></v-spacer>
+          </v-expansion-panel-title>
+          <v-expansion-panel-text>
+            <v-sheet v-if="cartData.allowCheckout == true">
+              <v-table>
+                <thead class="text-center justify-center align-center">
+                  <tr>
+                    <th class="myTh tdImg"></th>
+                    <th class="myTh tdPlatform">遊戲平台</th>
+                    <th class="myTh">商品名稱</th>
+                    <th class="myTh">單件價格</th>
+                    <th class="myTh">數量</th>
+                    <th class="myTh">小計</th>
+                  </tr>
+                </thead>
 
-              <tbody>
-                <tr v-for="item in cartItems" :key="item.product.id">
-                  <td class="myTd">
-                    <img :src="imgLink + item.product.gameCoverImg" height="100" cover />
-                  </td>
-                  <td class="myTd">
-                    <v-chip color="#a1dfe9" label>
-                      <v-icon start icon="mdi-gamepad-right"></v-icon>
-                      {{ item.product.gamePlatformName }}
-                    </v-chip>
-                    <div v-if="item.product.isVirtual" style="font-size: 12px;">※虛擬商品</div>
-                  </td>
-                  <td class="myTd">
-                    <div>{{ item.product.chiName }}</div>
-                  </td>
-                  <td v-if="item.product.price != item.product.specialPrice" class="myTd">
-                    <div>
-                      <s>NT${{ item.product.price }}</s>
-                    </div>
-                    <div>NTS{{ item.product.specialPrice }}</div>
-                  </td>
-                  <td class="myTd" v-else>NT${{ item.product.price }}</td>
-                  <td class="myTd">
-                    {{ item.qty }}
-                  </td>
-                  <td class="myTd" v-text="item.subTotal"></td>
-                </tr>
-                <tr>
-                  <td colspan="7">
-                    <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
-                  </td>
-                </tr>
-                <tr>
-                  <td>優惠活動</td>
-                  <td>
-                    <span class="me-auto" v-for="(item, index) in cartData.distinctCoupons" :key="index">
-                      {{ item }} {{ cartData.distinctCouponsDescription[index]
-                      }}<br />
-                    </span>
-                  </td>
-                  <td></td>
-                  <td></td>
-                  <td class="text-center">運費：<br />總計：</td>
-                  <td class="text-center">
-                    NT$ {{ selectedData.freight }}<br />NT$ {{
-                      selectedData.totalAmount
-                    }}
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="7">
-                    <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
-                  </td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                <tbody>
+                  <tr v-for="item in cartItems" :key="item.product.id">
+                    <td class="myTd tdImg">
+                      <img :src="imgLink + item.product.gameCoverImg" height="100" cover />
+                    </td>
+                    <td class="myTd tdPlatform">
+                      <v-chip color="#a1dfe9" label>
+                        <v-icon start icon="mdi-gamepad-right"></v-icon>
+                        {{ item.product.gamePlatformName }}
+                      </v-chip>
+                      <div v-if="item.product.isVirtual" style="font-size: 12px;">※虛擬商品</div>
+                    </td>
+                    <td class="myTd">
+                      <div>{{ item.product.chiName }}</div>
+                    </td>
+                    <td v-if="item.product.price != item.product.specialPrice" class="myTd">
+                      <div>
+                        <s>NT${{ item.product.price }}</s>
+                      </div>
+                      <div>NTS{{ item.product.specialPrice }}</div>
+                    </td>
+                    <td class="myTd" v-else>NT${{ item.product.price }}</td>
+                    <td class="myTd">
+                      {{ item.qty }}
+                    </td>
+                    <td class="myTd" v-text="item.subTotal"></td>
+                  </tr>
+                  <tr>
+                    <td colspan="7">
+                      <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
+                    </td>
+                  </tr>
+                  <tr class="text-center justify-center align-center">
+                    <td></td>
+                    <td></td>
+                    <td>優惠活動</td>
+                    <td class="justify-center align-center">
+                      <p class="text-left" v-for="(item, index) in cartData.distinctCoupons" :key="index">
+                        {{ item }} {{ cartData.distinctCouponsDescription[index]
+                        }}<br />
+                      </p>
+                    </td>
+                    <td>運費：<br />總計：</td>
+                    <td class="text-left">
+                      NT$ {{ selectedData.freight }}<br />NT$ {{
+                        selectedData.totalAmount
+                      }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="7">
+                      <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
 
-                </tr>
-              </tbody>
-            </v-table>
-          </v-sheet>
-        </v-expansion-panel-text>
-      </v-expansion-panel>
-    </v-expansion-panels>
+                  </tr>
+                </tbody>
+              </v-table>
+            </v-sheet>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
+    </div>
     <v-form v-model="valid" v-if="cartData.allowCheckout">
       <v-container>
         <v-row>
@@ -95,11 +97,14 @@
               <v-card-title>✨顧客資料</v-card-title>
               <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
               <v-card-title class="textYellow">姓名</v-card-title>
-              <v-text-field v-model="name" variant="solo" required density="compact"></v-text-field>
+              <v-text-field v-model="name" variant="underlined" required density="compact"
+                class="ml-5 textWhite"></v-text-field>
               <v-card-title class="textYellow">電話號碼</v-card-title>
-              <v-text-field density="compact" v-model="phoneNumber" variant="solo" required></v-text-field>
+              <v-text-field density="compact" v-model="phoneNumber" variant="underlined" required
+                class="ml-5 textWhite"></v-text-field>
               <v-card-title class="textYellow">E-mail</v-card-title>
-              <v-text-field density="compact" v-model="email" variant="solo" readonly class="mb-5"></v-text-field>
+              <v-text-field density="compact" v-model="email" variant="underlined" readonly
+                class="mb-5 ml-5 textWhite"></v-text-field>
               <p class="ml-3" style="color:white">已選擇的送貨方式：{{ selectedData.shipMethod.label }}</p>
               <v-checkbox v-model="fillRecipient" @input="handleFillRecipient" label="收件人資料與顧客資料相同"></v-checkbox>
             </v-card>
@@ -110,16 +115,15 @@
               <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
 
               <v-card-title class="textYellow">收件人名稱</v-card-title>
-              <v-text-field density="compact" v-model="buyerName" :rules="[rules.required]" hide-details="auto"
-                variant="solo" required></v-text-field>
-              <v-card-subtitle class="mb-5">請填入收件人真實姓名，以確保順利收件</v-card-subtitle>
+              <v-text-field density="compact" v-model="buyerName" :rules="[commonRules.required]" hide-details="auto"
+                variant="underlined" required class="ml-5 textWhite"></v-text-field>
+              <v-card-subtitle class="mb-5" style="color:grey">請填入收件人真實姓名，以確保順利收件</v-card-subtitle>
               <v-card-title class="textYellow">收件人電話號碼</v-card-title>
-              <v-text-field density="compact" v-model="buyerPhone" :rules="[rules.required]" hide-details="auto"
-                variant="solo" required class="mb-5"></v-text-field>
+              <v-text-field density="compact" v-model="buyerPhone" :rules="[commonRules.required]" hide-details="auto"
+                variant="underlined" required class="mb-5 ml-5 textWhite"></v-text-field>
               <v-card-title class="textYellow">E-mail</v-card-title>
-              <v-text-field density="compact" v-model="buyerEmail" :rules="[rules.required, rules.email]"
-                hide-details="auto" variant="solo" required></v-text-field>
-              <v-divider></v-divider>
+              <v-text-field density="compact" v-model="buyerEmail" :rules="[commonRules.required, commonRules.email]"
+                hide-details="auto" variant="underlined" required class="ml-5 textWhite"></v-text-field>
               <div v-if="selectedData.shipMethod.id == 1 ||
                 selectedData.shipMethod.id == 2
                 ">
@@ -127,7 +131,7 @@
                   <img src="https://localhost:7081/Files/Uploads/seven-eleven.png" width="30" />
                   選擇門市
                 </p>
-                <div v-if="singleSpot && singleSpot.storeNumber" class="mb-5 ml-3 mb-3">
+                <div v-if="singleSpot && singleSpot.storeNumber" class="mb-5 ml-5 mb-3">
                   <p style="color:white">門市編號：{{ singleSpot.storeNumber }}</p>
                   <p style="color:white">門市名稱：{{ singleSpot.storeName }}</p>
                   <p style="color:white">門市地址：{{ singleSpot.address }}</p>
@@ -137,34 +141,44 @@
                     <template v-slot:activator="{ props }">
                       <v-btn class="myBtn" v-bind="props"> 搜尋門市 </v-btn>
                     </template>
-                    <v-card width="850" height="500">
+                    <v-card width="750" height="600" class="mySheet justify-center ml-3">
+                      <v-card-title class="text-center" style="font-size: 26px;">✨7-11 門市選擇</v-card-title>
+                      <v-divider class="border-opacity-75 mb-2 w-75 mx-auto" color="#f9ee08"></v-divider>
                       <v-row class="d-flex">
                         <v-col cols="10" class="d-flex">
                           <v-card-title>以路名查詢：</v-card-title>
-                          <v-text-field v-model="keyword" single-line variant="solo" label="請輸入道路名稱"></v-text-field>
+                          <v-text-field v-model="keyword" single-line variant="underline" class="align-center"
+                            style="background-colorr:#01010f;color:white" label="請輸入道路名稱"
+                            density="compact"></v-text-field>
                         </v-col>
                         <v-col cols="10" class="d-flex">
                           <v-card-title>以門市查詢：</v-card-title>
-                          <v-text-field v-model="branch" single-line variant="solo" label="請輸入門市名稱"></v-text-field>
+                          <v-text-field v-model="branch" single-line variant="underline" class="align-center"
+                            style="background-colorr:#01010f;color:white" label="請輸入門市名稱"
+                            density="compact"></v-text-field>
                         </v-col>
-                        <v-col cols="6" class="d-flex">
+                        <v-col cols="12" class="d-flex">
                           <v-card-title>以縣市查詢：</v-card-title>
                           <v-select v-model="city" :items="cityList" item-value="item" return-object single-line
-                            variant="solo" label="---"></v-select>
-                          <v-col cols="2" @click="spotSearch"><v-btn>搜尋</v-btn></v-col>
+                            theme="dark" style="background-colorr:#01010f;color:white" density="compact"
+                            class="align-center"></v-select>
+                          <v-spacer></v-spacer>
+                          <v-btn class="myBtn mr-6 mb-3" @click="spotSearch">搜尋</v-btn>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col cols="11" class="d-flex">
                           <v-card-title>請選擇門市：</v-card-title>
                           <v-select v-if="spotList && spotList.length" v-model="spot" :items="spotList"
-                            :item-title="displayItem" item-value="id" single-line variant="solo"></v-select>
+                            :item-title="displayItem" item-value="id" single-line theme="dark"
+                            style="background-colorr:#01010f;color:white" label="---" density="compact"
+                            class="align-center" :rules="[commonRules.required]" required></v-select>
                         </v-col>
                       </v-row>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="green-darken-1" variant="text" @click="dialog = false">
+                        <v-btn class="myBtn mb-3" @click="dialog = false">
                           取消
                         </v-btn>
-                        <v-btn color="green-darken-1" variant="text" @click="spotHandler(spot)">
+                        <v-btn class="myBtn mr-5 mb-3" @click="spotHandler(spot)">
                           確認
                         </v-btn>
                       </v-card-actions>
@@ -188,7 +202,7 @@
 
               <p v-else>
                 <v-card-title>地址</v-card-title>
-                <v-text-field v-model="address" density="compact" :rules="[rules.required]" hide-details="auto"
+                <v-text-field v-model="address" density="compact" :rules="[commonRules.required]" hide-details="auto"
                   variant="solo" required></v-text-field>
               </p>
             </v-card>
@@ -211,10 +225,12 @@ import { ref, defineProps, computed, watch } from "vue";
 import Payment from "@/components/Cart/Payment.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
+
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
 const dialog = ref(false);
+const valid = ref(false);
 const cartData = ref({});
 const cartItems = ref([]);
 const imgLink = "https://localhost:7081/Files/Uploads/";
@@ -253,7 +269,7 @@ const toEcommerce = () => {
   });
 }
 
-const rules = {
+const commonRules = {
   required: (value) => !!value || "此欄位必填",
   email: (value) => {
     const pattern =
@@ -445,44 +461,49 @@ const createLogisticsOrder = async (payload) => {
 
 const handleSubmit = async () => {
   if (address.value) {
-    createOrderCommand.value.toAddress = address;
-  }
-  createOrderCommand.value.ShipmentMethodId = props.selectedData.shipMethod.id;
-  createOrderCommand.value.PaymentStatusId =
-    props.selectedData.shipMethod.id == 2 || 4 || 6 ? 2 : null;  //純取貨 => 已付款
-  // createOrderCommand.value.OrderStatusId = 4   => todo 皆為虛擬則為已完成
-  createOrderCommand.value.RecipientName = buyerName;
-  createOrderCommand.value.ReceiverEmail = buyerEmail;
-  createOrderCommand.value.ReceiverCellPhone = buyerPhone;
-  createOrderCommand.value.ShippingFee = props.selectedData.freight;
-  try {
-    const orderResult = await createOrder();
-
-    if (props.selectedData.payment.id == 2) {
-      await checkoutECPay();
-      ecpayForm.value.submit();
-
-    } else if (props.selectedData.payment.id == 1) {
-
-      const CreatePaymentRequestDto = {
-        OrderIndex: orderResult[0].orderIndex,
-        shipmentMethod: props.selectedData.shipMethod.method
-      };
-      console.log(CreatePaymentRequestDto.OrderIndex);
-      await checkoutLinePay(CreatePaymentRequestDto);
-
-    } else {
-      router.push({ name: "Cart", query: { paymentSuccess: "true" } });
+      createOrderCommand.value.toAddress = address;
     }
+  if (valid.value) {
+    createOrderCommand.value.ShipmentMethodId = props.selectedData.shipMethod.id;
+    createOrderCommand.value.PaymentStatusId =
+      props.selectedData.shipMethod.id == 2 || 4 || 6 ? 2 : null;  //純取貨 => 已付款
+    // createOrderCommand.value.OrderStatusId = 4   => todo 皆為虛擬則為已完成
+    createOrderCommand.value.RecipientName = buyerName;
+    createOrderCommand.value.ReceiverEmail = buyerEmail;
+    createOrderCommand.value.ReceiverCellPhone = buyerPhone;
+    createOrderCommand.value.ShippingFee = props.selectedData.freight;
+    try {
+      const orderResult = await createOrder();
 
-    await store.dispatch('deleteCartsByMemberId', memberId.value);
+      if (props.selectedData.payment.id == 2) {
+        await checkoutECPay();
+        ecpayForm.value.submit();
 
-    payload.value.MerchantTradeNo = orderResult[0].orderIndex;
-    payload.value.OrderId = orderResult[0].orderId;
-    await createLogisticsOrder(payload.value);
-  } catch (error) {
-    console.error("Error:", error);
+      } else if (props.selectedData.payment.id == 1) {
+
+        const CreatePaymentRequestDto = {
+          OrderIndex: orderResult[0].orderIndex,
+          shipmentMethod: props.selectedData.shipMethod.method
+        };
+        console.log(CreatePaymentRequestDto.OrderIndex);
+        await checkoutLinePay(CreatePaymentRequestDto);
+
+      } else {
+        router.push({ name: "Cart", query: { paymentSuccess: "true" } });
+      }
+
+      await store.dispatch('deleteCartsByMemberId', memberId.value);
+
+      payload.value.MerchantTradeNo = orderResult[0].orderIndex;
+      payload.value.OrderId = orderResult[0].orderId;
+      await createLogisticsOrder(payload.value);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  } else {
+    alert("請完整填寫收件人資訊！");
   }
+
 };
 
 load();
@@ -504,7 +525,6 @@ load();
 .v-table {
   background-color: #01010f;
   color: white !important;
-  /* border:1px solid #a1dfe9; */
 }
 
 .myTh {
@@ -548,6 +568,16 @@ load();
 
 .myPanel {
   font-size: 18px;
-
 }
-</style>
+
+.textWhite {
+  color: white;
+}
+
+.tdPlatform {
+  width: 120px !important;
+}
+
+.tdImg {
+  width: 250px !important
+}</style>

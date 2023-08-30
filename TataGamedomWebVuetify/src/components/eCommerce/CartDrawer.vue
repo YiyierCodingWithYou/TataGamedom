@@ -68,8 +68,6 @@ const drawer = computed({
   }
 })
 
-
-
 const router = useRouter();
 const drawerRef = ref(null);
 const isLogin = computed(() => store.state.isLoggedIn);
@@ -87,7 +85,6 @@ onUnmounted(() => {
 });
 
 const outsideClickListener = (event) => {
-  // 檢查被點擊的元素是否是抽屜或其子元素
   if ((!drawerRef.value?.$el.contains(event.target)) && drawer.value) {
     closeDrawer();
   }

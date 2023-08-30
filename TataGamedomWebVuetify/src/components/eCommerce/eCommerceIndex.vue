@@ -251,12 +251,10 @@ const autoToggleDrawer = () => {
 const openDrawerFromParent = () => {
   drawerComponent.value.drawerContent();
   drawer.value = true;
-  console.log('func:openDrawerFromParent');
 };
 
 const closeDrawer = () => {
   drawer.value = false;
-  console.log('func:closeDrawer');
 };
 
 onMounted(() => {
