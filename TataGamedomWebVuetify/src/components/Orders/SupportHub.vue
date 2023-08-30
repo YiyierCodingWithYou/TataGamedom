@@ -13,10 +13,10 @@
         </div>
 
         <!-- todo 移除 -->
-        <v-text-field label="Sender" hide-details="auto" v-model="senderAccount" placeholder="請輸入姓名"></v-text-field>
+        <!-- <v-text-field label="Sender" hide-details="auto" v-model="senderAccount" placeholder="請輸入姓名"></v-text-field> -->
         <!--  -->
 
-        <v-text-field label="Message" hide-details="auto" v-model="chatMessage" placeholder="你的訊息"
+        <v-text-field label="輸入訊息" hide-details="auto" v-model="chatMessage" placeholder="你的訊息"
           :disabled="isButtonDisabled" @keyup.enter="sendMessage"></v-text-field>
 
         <v-col cols="auto">
@@ -85,14 +85,15 @@ export default {
 
     const sendMessage = () => {
       connectionToChatHub
-        .send("SendMessageToAll", senderAccount.value, chatMessage.value, memberAndChatInfo.value.memberName)
+        // .send("SendMessageToAll", senderAccount.value, chatMessage.value, memberAndChatInfo.value.memberName)
+        .send("SendMessageToAll", memberAndChatInfo.value.memberAccount, chatMessage.value, memberAndChatInfo.value.memberName)
         .catch((err) => console.error(err.toString()));
       chatMessage.value = "";
     };
     //
 
     return {
-      senderAccount,
+      //senderAccount,
       chatMessage,
       isButtonDisabled,
       messages,
