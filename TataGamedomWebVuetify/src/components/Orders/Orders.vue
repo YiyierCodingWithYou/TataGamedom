@@ -125,7 +125,11 @@
                         color="blue-grey-darken-2"
                         size="x-large"
                       >
-                        <v-icon @click="" v-bind="props" size="x-large">
+                        <v-icon
+                          @click="navigateToSupportHub"
+                          v-bind="props"
+                          size="x-large"
+                        >
                           {{ "mdi-chat-alert-outline" }}
                         </v-icon>
                       </v-btn>
@@ -170,6 +174,7 @@ import { ref, nextTick, onMounted, computed } from "vue";
 import { zhTW } from "date-fns/locale";
 import { format } from "date-fns";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import OrderDetailsCards from "./OrderDetailsCards.vue";
 import OrderDetailsList from "./OrderDetailsList.vue";
 import OrderItemReturnDialog from "./OrderItemReturnDialog.vue";
@@ -219,6 +224,12 @@ export default {
         .join("<br>");
     };
 
+    // SupportHub
+    const router = useRouter();
+    const navigateToSupportHub = () => {
+      router.push({ name: "SupportHub" });
+    };
+
     onMounted(() => {
       store.dispatch("fetchOrders");
     });
@@ -230,6 +241,7 @@ export default {
       toggleOrderDetail,
       relativeTime,
       combinedGameAndType,
+      navigateToSupportHub,
     };
   },
 };

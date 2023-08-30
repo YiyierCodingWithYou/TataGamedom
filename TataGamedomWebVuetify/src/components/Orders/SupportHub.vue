@@ -44,19 +44,14 @@
         </ul>
       </div>
     </div>
-    <RedirectToLogisticsSelection_Url_btn />
   </v-container>
 </template>
   
 <script>
 import { ref, onMounted, onUnmounted } from "vue";
 import * as signalR from "@microsoft/signalr";
-import RedirectToLogisticsSelection_Url_btn from "@/components/ECpay/RedirectToLogisticsSelection_Url.vue";
 
 export default {
-  components: {
-    RedirectToLogisticsSelection_Url_btn,
-  },
   setup() {
     const senderAccount = ref("");
     const chatMessage = ref("");
