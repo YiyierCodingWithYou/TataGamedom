@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TataGamedomWebAPI.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using TataGamedomWebAPI.Infrastructure.Data;
 namespace TataGamedomWebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230830071142_updateChatMessage")]
+    partial class updateChatMessage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -419,29 +422,22 @@ namespace TataGamedomWebAPI.Migrations
 
             modelBuilder.Entity("TataGamedomWebAPI.Models.EFModels.ChatMessage", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("Content")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
 
-                    b.Property<int>("MemberId")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int?>("MemberId")
+                        .HasColumnType("int");
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("ChatMessages");
+                    b.ToTable("ChatMessage", (string)null);
                 });
 
             modelBuilder.Entity("TataGamedomWebAPI.Models.EFModels.Coupon", b =>
@@ -2241,9 +2237,8 @@ namespace TataGamedomWebAPI.Migrations
             modelBuilder.Entity("TataGamedomWebAPI.Models.EFModels.ChatMessage", b =>
                 {
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "Member")
-                        .WithMany("ChatMessages")
+                        .WithMany()
                         .HasForeignKey("MemberId")
-                        .IsRequired()
                         .HasConstraintName("FK_ChatMessage_Members");
 
                     b.Navigation("Member");
@@ -3107,8 +3102,6 @@ namespace TataGamedomWebAPI.Migrations
                     b.Navigation("BucketLogModeratorMembers");
 
                     b.Navigation("Carts");
-
-                    b.Navigation("ChatMessages");
 
                     b.Navigation("GameComments");
 
