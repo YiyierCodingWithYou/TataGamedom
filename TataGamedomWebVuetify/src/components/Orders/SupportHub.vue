@@ -2,6 +2,7 @@
   <v-container>
     <div class="row">&nbsp;</div>
 
+    <!-- todo 移除 -->
     <v-text-field
       label="Sender"
       :rules="rules"
@@ -9,6 +10,7 @@
       v-model="senderAccount"
       placeholder="請輸入姓名"
     ></v-text-field>
+    <!--  -->
 
     <v-text-field
       label="Message"
