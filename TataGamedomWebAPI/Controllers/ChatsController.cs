@@ -16,7 +16,6 @@ public class ChatsController : ControllerBase
     public ChatsController(IMediator mediator)
     {
         this._mediator = mediator;
-
     }
 
     [HttpGet("MemberAndChatInfo")]
