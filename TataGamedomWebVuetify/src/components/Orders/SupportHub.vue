@@ -6,14 +6,10 @@
         <v-divider></v-divider>
         <v-container>
           <div class="container-sm mt-20">
-            <!-- <div class="mx-5">
-              <Message v-for="(message, index) in messages" :key="index" :name="message.memberName">
-                {{ message.content }}
-              </Message>
-            </div> -->
-            <v-virtual-scroll :items="messages" height="400" item-height="50">
+            <v-virtual-scroll :items="messages" height="900">
               <template v-slot="{ item, index }">
-                <Message :key="index" :name="item.memberName">
+                <Message :key="index" :name="item.memberName"
+                  :isSenderAccountMine="item.senderAccount === memberAndChatInfo.memberAccount">
                   {{ item.content }}
                 </Message>
               </template>
@@ -22,7 +18,7 @@
 
           <div class="fixed-bottom-container">
             <v-text-field label="傳給哪個帳號" hide-details="auto" v-model="receiverAccount" placeholder="傳給誰"
-              :disabled="isButtonDisabled" append-icon="mdi"></v-text-field>
+              append-icon="mdi"></v-text-field>
 
             <v-text-field label="輸入訊息" v-model="chatMessage" placeholder="你的訊息" type="text" no-details outlined
               append-icon="mdi-comment-multiple-outline" @keyup.enter="sendPrivateMessage"
@@ -38,7 +34,6 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import * as signalR from "@microsoft/signalr";
 import axios from "axios";
-
 import SendIcon from "./SendIcon.vue";
 import Message from "./Message.vue";
 
@@ -48,7 +43,6 @@ export default {
   setup() {
     const chatMessage = ref("");
     const receiverAccount = ref("");
-    const isButtonDisabled = ref(false);
     const messages = ref([]);
 
     //API Get
@@ -146,7 +140,6 @@ export default {
     return {
       chatMessage,
       receiverAccount,
-      isButtonDisabled,
       messages,
       sendMessage,
       sendPrivateMessage,
