@@ -1,41 +1,45 @@
 <template>
-  <nav>
-    <div>
-      <h1><strong>Tata</strong>客服中心</h1>
-      <v-container>
-        <div class="container-sm mt-20">
-          <div class="mx-5">
-            <Message
-              v-for="(message, index) in messages"
-              :key="index"
-              :name="message.memberName"
-            >
-              {{ message.content }}
-            </Message>
+  <v-container>
+    <nav>
+      <div>
+        <h1>Tata客服中心</h1>
+        <v-container>
+          <div class="container-sm mt-20">
+            <div class="mx-5">
+              <Message
+                v-for="(message, index) in messages"
+                :key="index"
+                :name="message.memberName"
+              >
+                {{ message.content }}
+              </Message>
+            </div>
           </div>
-        </div>
 
-        <v-text-field
-          label="輸入訊息"
-          hide-details="auto"
-          v-model="chatMessage"
-          placeholder="你的訊息"
-          :disabled="isButtonDisabled"
-          @keyup.enter="sendPrivateMessage"
-        ></v-text-field>
-
-        <v-col cols="auto">
-          <v-btn
-            density="compact"
-            icon="mdi-plus"
+          <v-text-field
+            label="傳給哪個帳號"
+            hide-details="auto"
+            v-model="receiverAccount"
+            placeholder="傳給誰"
             :disabled="isButtonDisabled"
-            @click.prevent="sendPrivateMessage"
-            value="Send Message"
-          ></v-btn>
-        </v-col>
-      </v-container>
-    </div>
-  </nav>
+            append-icon="mdi"
+          ></v-text-field>
+
+          <v-text-field
+            label="輸入訊息"
+            v-model="chatMessage"
+            placeholder="你的訊息"
+            type="text"
+            no-details
+            outlined
+            append-icon="mdi-comment-multiple-outline"
+            @keyup.enter="sendPrivateMessage"
+            @click:append="sendPrivateMessage"
+          ></v-text-field>
+        </v-container>
+      </div>
+    </nav>
+  </v-container>
 </template>
   
 <script>
@@ -51,6 +55,7 @@ export default {
 
   setup() {
     const chatMessage = ref("");
+    const receiverAccount = ref("");
     const isButtonDisabled = ref(false);
     const messages = ref([]);
 
@@ -109,13 +114,15 @@ export default {
     const receivePrivateMessageHandler = (
       senderAccount,
       content,
+      memberName,
       receiverAccount
     ) => {
-      console.log("test receivePrivateMessageHandler");
-
-      if (receiverAccount == memberAndChatInfo.value.memberAccount) {
-        messages.value.push({ senderAccount, content, receiverAccount });
-      }
+      messages.value.push({
+        senderAccount,
+        content,
+        memberName,
+        receiverAccount,
+      });
     };
 
     const sendMessage = () => {
@@ -131,13 +138,14 @@ export default {
     };
 
     const sendPrivateMessage = () => {
-      const receiverAccount = "apalan60@gmail.com";
+      //const receiverAccount = "apalan60@gmail.com"; //v-if  => 只要登錄的不是後台人員，receiverAccount就不能設定
       connectionToChatHub
         .invoke(
           "SendPrivateMessage",
           memberAndChatInfo.value.memberAccount,
           chatMessage.value,
-          receiverAccount //demo receiverAccount
+          memberAndChatInfo.value.memberName,
+          receiverAccount.value
         )
         .catch((err) => console.error(err.toString()));
       chatMessage.value = "";
@@ -145,6 +153,7 @@ export default {
 
     return {
       chatMessage,
+      receiverAccount,
       isButtonDisabled,
       messages,
       sendMessage,

@@ -12,14 +12,12 @@ public class ChatHub : Hub<IChatService>
         await Clients.All.ReceiveMessage(account, messageContent, memberName);
     }
 
-    public async Task SendPrivateMessage(string senderAccount, string messageContent, string receiverAccount )
+    public async Task SendPrivateMessage(string senderAccount, string messageContent, string memberName, string receiverAccount )
     {
         if (Context.User.Identity.IsAuthenticated && Context.User.Identity.Name == senderAccount)
         {
-            Console.WriteLine($"IsAuthenticated: {Context.User.Identity.IsAuthenticated}, UserName: {Context.User.Identity.Name}");
-
-            await Clients.User(receiverAccount).ReceivePrivateMessage(senderAccount, messageContent, receiverAccount);
-            await Clients.User(receiverAccount).ReceivePrivateMessage(senderAccount, messageContent, receiverAccount);
+            await Clients.User(senderAccount).ReceivePrivateMessage(senderAccount, messageContent, memberName, receiverAccount);
+            await Clients.User(receiverAccount).ReceivePrivateMessage(senderAccount, messageContent, memberName, receiverAccount);
         }
     }
 
