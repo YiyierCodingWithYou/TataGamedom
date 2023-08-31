@@ -8,7 +8,7 @@
           <div class="container-sm mt-20">
             <v-virtual-scroll :items="messages" height="900">
               <template v-slot="{ item, index }">
-                <Message :key="index" :name="item.memberName"
+                <Message :key="index" :name="item.memberName" :photoUrl="memberAndChatInfo.memberIconImg"
                   :isSenderAccountMine="item.senderAccount === memberAndChatInfo.memberAccount">
                   {{ item.content }}
                 </Message>
