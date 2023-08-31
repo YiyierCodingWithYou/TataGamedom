@@ -54,6 +54,7 @@ const loadData = async () => {
     const datas = await response.json();
     product.value = datas;
     totalPages.value = datas.totalPages;
+    productId.value = parseInt(route.params.productId, 10);
 };
 loadData();
 

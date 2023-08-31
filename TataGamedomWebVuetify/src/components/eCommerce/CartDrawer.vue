@@ -76,8 +76,8 @@ const cartItems = ref([]);
 const imgLink = "https://localhost:7081/Files/Uploads/";
 
 const unitExchange = (x) => {
-      return 'NT$ ' + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
+  return 'NT$ ' + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 onMounted(() => {
   window.addEventListener("click", outsideClickListener);

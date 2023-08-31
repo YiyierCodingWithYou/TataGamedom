@@ -39,7 +39,8 @@ namespace TataGamedomWebAPI.Controllers
 				{ "ClientBackURL", $"{website}/Cart?paymentSuccess=true" },
 				{ "MerchantID",  "3002607"},
 				{ "PaymentType",  "aio"},
-				{ "ChoosePayment",  "ALL"},
+				{ "ChoosePayment",  "Credit"},
+				//{ "IgnorePayment ","#WebATM#ATM#CVS#BARCODE#TWQR"},
 				{ "EncryptType",  "1"},
 				//{"OrderResultURL", "https://4601-61-222-34-1.ngrok-free.app/cart" }
 			};

@@ -19,16 +19,19 @@
                 <v-btn-toggle v-model="inputPlatform" rounded="0.5" group
                   style="border:2px solid #fbf402; color:#fbf402 !important;" @update:model-value="sortPlatform"
                   color="#fbf402">
-                  <v-btn :class="{ 'myBtn': true, 'selectedBtn': inputPlatform === '' }" value="" rounded="0"> 所有遊戲 </v-btn>
+                  <v-btn :class="{ 'myBtn': true, 'selectedBtn': inputPlatform === '' }" value="" rounded="0"> 所有遊戲
+                  </v-btn>
                   <v-btn :class="{ 'myBtn': true, 'selectedBtn': inputPlatform === 'PC' }" value="PC"> PC </v-btn>
                   <v-btn :class="{ 'myBtn': true, 'selectedBtn': inputPlatform === 'PS4' }" value="PS4"> PS4 </v-btn>
-                  <v-btn :class="{ 'myBtn': true, 'selectedBtn': inputPlatform === 'Switch' }" value="Switch" rounded="0"> Switch
+                  <v-btn :class="{ 'myBtn': true, 'selectedBtn': inputPlatform === 'Switch' }" value="Switch" rounded="0">
+                    Switch
                   </v-btn>
                 </v-btn-toggle>
               </v-col>
               <v-col cols="4">
-                <v-select v-model="select" :items="items" item-title="label" item-value="item" item-color="#f9ee08"  bg-color="#01010f" persistent-hint
-                  return-object single-line @update:model-value="sortItems" theme="dark">
+                <v-select v-model="select" :items="items" item-title="label" item-value="item" item-color="#f9ee08"
+                  bg-color="#01010f" persistent-hint return-object single-line @update:model-value="sortItems"
+                  theme="dark">
                 </v-select>
               </v-col>
             </div>
@@ -38,19 +41,22 @@
                 <v-card height="410" class="myCard ma-1" density="compact">
                   <v-img class="align-end text-white pointer" height="200" :src="img + product.gameCoverImg" cover
                     @click="GetSingleProduct(product.id)"></v-img>
-                    <v-divider class="border-opacity-100" color="#a1dfe9"></v-divider>
+                  <v-divider class="border-opacity-100" color="#a1dfe9"></v-divider>
                   <div class="d-flex justify-center align-center mt-2">
-                    <v-chip class="mt-1 mr-1 d-flex justify-center" style="background-color:transparent; font-size: 12px;" label>
+                    <v-chip class="mt-1 mr-1 d-flex justify-center" style="background-color:transparent; font-size: 12px;"
+                      label>
                       <v-icon start icon="mdi-gamepad-right "></v-icon>
                       {{ product.gamePlatformName }}
                     </v-chip>
-                    <div class="mt-1 justify-center text-center pointer" @click="GetSingleProduct(product.id)" style="color:white">
-                      {{ product.chiName }}<span v-if="product.isVirtual"><v-icon size="x-small" color="#fbf402" icon="mdi-information" class="ml-1"></v-icon></span>
+                    <div class="mt-1 justify-center text-center pointer" @click="GetSingleProduct(product.id)"
+                      style="color:white">
+                      {{ product.chiName }}<span v-if="product.isVirtual"><v-icon size="x-small" color="#fbf402"
+                          icon="mdi-information" class="ml-1"></v-icon></span>
                     </div>
                   </div>
                   <v-card-text class="d-flex justify-center">
                     <div v-if="product.price != product.specialPrice">
-                      <span style="color:grey; font-size: 16px;"><s>{{unitExchange(product.price) }}</s>　</span>
+                      <span style="color:grey; font-size: 16px;"><s>{{ unitExchange(product.price) }}</s>　</span>
                       <span style="font-size: 20px; color:white">{{ unitExchange(product.specialPrice) }}</span>
                     </div>
                     <div v-else>
@@ -121,8 +127,8 @@ const inputPlatform = ref("");
 const API = "https://localhost:7081/api/";
 
 const unitExchange = (x) => {
-      return 'NT$ ' + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
+  return 'NT$ ' + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 const loadProducts = async () => {
   const response = await fetch(
@@ -149,7 +155,11 @@ const once = (func) => {
 //處理單筆商品頁傳來的參數
 const searchOnce = once(function () {
   if (typeof route.query.classificationChosen !== "undefined") {
-    classification.value = route.query.classificationChosen;
+    if (route.query.classificationChosen === '所有遊戲') {     
+      classification.value = "";
+    } else {
+      classification.value = route.query.classificationChosen;
+    }
   }
   if (typeof route.query.keywordInput !== "undefined") {
     keyword.value = route.query.keywordInput;
@@ -222,7 +232,7 @@ const Add2Cart = async (productId) => {
         name: "Login",
       });
     }
-    Swal.fire('成功！', result.message , 'success');
+    Swal.fire('成功！', result.message, 'success');
     autoToggleDrawer();
   } else {
     let localCart = localStorage.getItem("localCart");
@@ -240,7 +250,7 @@ const Add2Cart = async (productId) => {
       localCart.push({ productId, qty: 1 });
     }
     localStorage.setItem("localCart", JSON.stringify(localCart));
-    Swal.fire('成功！', '商品已加入購物車' , 'success');
+    Swal.fire('成功！', '商品已加入購物車', 'success');
   }
   autoToggleDrawer();
 
@@ -294,39 +304,44 @@ const GetSingleProduct = async (productId) => {
   background-color: #fbf402;
   color: #01010f !important;
 }
-.myCard{
-  background-color:#01010f;
-  color:#fbf402;
-  box-shadow:2px 2px 10px #a1dfe9;
+
+.myCard {
+  background-color: #01010f;
+  color: #fbf402;
+  box-shadow: 2px 2px 10px #a1dfe9;
   border-radius: 2%;
   border: 2px inset #a1dfe9;
-  font-size:18px
+  font-size: 18px
 }
-.myCard:hover{
+
+.myCard:hover {
   transform: scale(1.05);
   transition: all 0.2s ease-in-out;
 }
-.add2cart{
+
+.add2cart {
   font-size: 18px;
-  border:1px solid #a1dfe9;
-  color:#a1dfe9;
+  border: 1px solid #a1dfe9;
+  color: #a1dfe9;
 }
-.add2cart:hover{
-  background-color:#a1dfe9;
-  color:#01010f;
-  box-shadow:2px 2px 10px #a1dfe9;
+
+.add2cart:hover {
+  background-color: #a1dfe9;
+  color: #01010f;
+  box-shadow: 2px 2px 10px #a1dfe9;
 }
-.v-img{
-  border:#a1dfe9 !important;
+
+.v-img {
+  border: #a1dfe9 !important;
 }
+
 .myDraw {
   position: fixed;
   bottom: 20px;
   right: 20px;
   z-index: 20;
 }
-.pointer{
-  cursor: pointer;
-}
 
-</style>
+.pointer {
+  cursor: pointer;
+}</style>
