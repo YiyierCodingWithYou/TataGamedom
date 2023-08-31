@@ -1,40 +1,20 @@
 <template>
-  <v-card class="mx-auto mt-16" max-width="600" title="更改密碼">
+  <v-card class="mx-auto mt-16" style=" box-shadow: 2px 2px 10px #a1dfe9;background-color: #01010f;" max-width="600"
+    title="更改密碼">
     <v-container>
-      <v-text-field
-        v-model="originalPassword"
-        :append-inner-icon="originalPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary"
-        label="舊密碼"
-        :type="originalPasswordVisible ? 'text' : 'password'"
-        variant="underlined"
-        @click:append-inner="originalPasswordVisible = !originalPasswordVisible"
-      ></v-text-field>
+      <v-text-field v-model="originalPassword" :append-inner-icon="originalPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary" label="舊密碼" :type="originalPasswordVisible ? 'text' : 'password'" variant="underlined"
+        @click:append-inner="originalPasswordVisible = !originalPasswordVisible"></v-text-field>
 
-      <v-text-field
-        v-model="createPassword"
-        :append-inner-icon="createPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary"
-        label="新密碼"
-        :type="createPasswordVisible ? 'text' : 'password'"
-        variant="underlined"
-        @click:append-inner="createPasswordVisible = !createPasswordVisible"
-      ></v-text-field>
+      <v-text-field v-model="createPassword" :append-inner-icon="createPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary" :rules="createPasswordRules" label="新密碼" :type="createPasswordVisible ? 'text' : 'password'"
+        variant="underlined" @click:append-inner="createPasswordVisible = !createPasswordVisible"></v-text-field>
 
-      <v-text-field
-        v-model="confirmPassword"
-        :append-inner-icon="confirmPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary"
-        label="確認密碼"
-        :type="confirmPasswordVisible ? 'text' : 'password'"
-        variant="underlined"
-        @click:append-inner="confirmPasswordVisible = !confirmPasswordVisible"
-      ></v-text-field>
-      <p v-if="createPassword !== confirmPassword" class="password-mismatch">
-        新密碼需與確認密碼相符
-      </p>
+      <v-text-field v-model="confirmPassword" :append-inner-icon="confirmPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary" :rules="confirmPasswordRules" label="確認密碼" :type="confirmPasswordVisible ? 'text' : 'password'"
+        variant="underlined" @click:append-inner="confirmPasswordVisible = !confirmPasswordVisible"></v-text-field>
 
-      <v-btn color="yellow" @click="onSubmit" style="left: 220px">
+      <v-btn color="yellow" @click="onSubmit" style="left: 200px">
         修改密碼
         <v-icon icon="mdi-chevron-right" end></v-icon>
       </v-btn>
@@ -52,7 +32,6 @@ import { format } from "date-fns";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import ImageUploader from "quill-image-uploader";
-//import { VDatePicker } from "vuetify/labs/VDatePicker";
 
 //const member = ref([]);
 const valid = ref(false);
@@ -98,64 +77,20 @@ onMounted(() => {
   loadMember();
 });
 
-//上傳圖片
-async function uploadImage(event) {
-  const file = event.target.files[0];
-  if (!file) {
-    return;
-  }
+const createPasswordRules = ref([
+  (value) => {
+    if (!value) return "請輸入密碼";
+    if (value.length < 8) return "請輸入8個字以上的大小寫英文和數字";
+  },
+]);
 
-  const folderName = "Icons";
-  const formData = new FormData();
-  formData.append("file", file);
+const confirmPasswordRules = ref([
+  (value) => {
+    if (!value) return "請輸入確認密碼";
+    if (value !== createPassword.value) return "兩次密碼不相符";
+  },
+]);
 
-  try {
-    const response = await axios.post(
-      `https://localhost:7081/api/Common/uploadImage/${folderName}`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-
-    //用來/分割上傳的連結(只取最後的XXXX.JPG)
-    const parts = response.data.split("/");
-    iconImg.value = parts[parts.length - 1];
-    console.log("上傳成功", iconImg.value);
-  } catch (error) {
-    console.error("上傳失敗", error);
-  }
-}
-
-//確認修改
-const onClick = async () => {
-  axios
-    .put(
-      `https://localhost:7081/api/Members?iconImgFileName=${iconImg.value}`,
-      {
-        name: name.value,
-        phone: phone.value,
-        iconImg: iconImg.value,
-        account: account.value,
-        email: email.value,
-        //birthday: birthday.value,
-      },
-      {
-        withCredentials: true,
-      }
-    )
-    .then((res) => {
-      console.log(res);
-      alert("資料修改成功");
-      store.commit("SET_UPDATEIMG", iconImg.value);
-    })
-    .catch((err) => {
-      console.log(err);
-      alert("資料修改失敗");
-    });
-};
 
 //登出
 const logout = async () => {

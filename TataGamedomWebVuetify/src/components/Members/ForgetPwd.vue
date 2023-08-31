@@ -1,22 +1,15 @@
 <template>
-  <H2>偶忘記密碼ㄌ</H2>
-  <v-sheet width="300" class="mx-auto">
-    <v-form fast-fail @submit.prevent="submitForm">
-      <v-text-field
-        v-model="account"
-        label="帳號"
-        :rules="accountRules"
-      ></v-text-field>
+  <v-card class="mx-auto mt-10 TATA" width="500">
+    <v-sheet width="400" class="mx-auto my-5" theme="black">
+      <v-form fast-fail @submit.prevent="submitForm">
+        <v-text-field v-model="account" label="帳號" :rules="accountRules"></v-text-field>
 
-      <v-text-field
-        v-model="email"
-        label="email"
-        :rules="emailRules"
-      ></v-text-field>
+        <v-text-field v-model="email" class="mt-5" label="email" :rules="emailRules"></v-text-field>
 
-      <v-btn type="submit" block class="mt-2 bg-yellow">確認</v-btn>
-    </v-form>
-  </v-sheet>
+        <v-btn type="submit" block class="mt-2 bg-yellow">確認</v-btn>
+      </v-form>
+    </v-sheet>
+  </v-card>
 </template>
     
 <script >
@@ -36,7 +29,6 @@ export default {
         if (!value) return "請輸入信箱";
         if (/[\u4e00-\u9fa5]/.test(value)) return "信箱格式不正確";
         if (value.includes("@") && /.+@.+\..+/.test(value)) return true;
-
         return "信箱格式不正確";
       },
     ],
@@ -68,4 +60,8 @@ export default {
 };
 </script>
     
-<style></style>
+<style>
+.TATA {
+  border: 1px #f9ee08 solid;
+}
+</style>

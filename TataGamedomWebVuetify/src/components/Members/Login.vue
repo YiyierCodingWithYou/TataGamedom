@@ -1,13 +1,13 @@
 <template>
   <div>
-    <v-card class="mx-auto pa-12 pb-8 mt-16" elevation="8" max-width="448" rounded="lg"
-      style="background-color: black; color: white">
+    <v-card class="mx-auto pa-10 pb-5 mt-16" elevation="8" max-width="448" rounded="lg"
+      style="background-color: #01010f; border: 1px solid #a1dfe9 ; color: white">
       <div class="text-subtitle-1 text-medium-emphasis text-white">帳號</div>
 
       <v-text-field v-model="account" density="compact" placeholder="請輸入帳號" prepend-inner-icon="mdi-account-outline"
         variant="outlined"></v-text-field>
 
-      <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
+      <div class="text-subtitle-1 mt-3 text-medium-emphasis d-flex align-center justify-space-between">
         密碼
 
         <a class="text-caption text-decoration-none text-blue" href="#" rel="noopener noreferrer" @click="ForgetPwd">
@@ -22,7 +22,7 @@
         {{ errorMsg }}
       </div>
 
-      <v-btn block class="mb-8 mt-5" color="blue" size="large" variant="tonal" @click="onSubmit">
+      <v-btn block class="my-5" color="blue" size="large" variant="tonal" @click="onSubmit">
         登入
       </v-btn>
 
@@ -31,7 +31,7 @@
           立即註冊 <v-icon icon="mdi-chevron-right"></v-icon>
         </a>
       </v-card-text>
-      <GoogleLogin :callback="callback" prompt></GoogleLogin>
+      <GoogleLogin :callback="callback" prompt style="margin-left: 20%;"></GoogleLogin>
     </v-card>
   </div>
 </template>
