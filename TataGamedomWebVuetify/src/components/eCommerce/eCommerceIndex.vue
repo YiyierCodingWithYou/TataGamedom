@@ -40,21 +40,21 @@
                     @click="GetSingleProduct(product.id)"></v-img>
                     <v-divider class="border-opacity-100" color="#a1dfe9"></v-divider>
                   <div class="d-flex justify-center align-center mt-2">
-                    <v-chip class="mt-1 d-flex justify-center" style="background-color:transparent; font-size: 12px;" label>
-                      <v-icon start icon="mdi-gamepad-right"></v-icon>
+                    <v-chip class="mt-1 mr-1 d-flex justify-center" style="background-color:transparent; font-size: 12px;" label>
+                      <v-icon start icon="mdi-gamepad-right "></v-icon>
                       {{ product.gamePlatformName }}
                     </v-chip>
                     <div class="mt-1 justify-center text-center pointer" @click="GetSingleProduct(product.id)" style="color:white">
-                      {{ product.chiName }}
+                      {{ product.chiName }}<span v-if="product.isVirtual"><v-icon size="x-small" color="#fbf402" icon="mdi-information" class="ml-1"></v-icon></span>
                     </div>
                   </div>
                   <v-card-text class="d-flex justify-center">
                     <div v-if="product.price != product.specialPrice">
-                      <span style="color:grey; font-size: 16px;"><s>${{ product.price }}</s>　</span>
-                      <span style="font-size: 20px; color:white">${{ product.specialPrice }}</span>
+                      <span style="color:grey; font-size: 16px;"><s>{{unitExchange(product.price) }}</s>　</span>
+                      <span style="font-size: 20px; color:white">{{ unitExchange(product.specialPrice) }}</span>
                     </div>
                     <div v-else>
-                      <div style="font-size: 20px; color:white">${{ product.price }}</div>
+                      <div style="font-size: 20px; color:white">{{ unitExchange(product.price) }}</div>
                     </div>
                   </v-card-text>
 
@@ -86,6 +86,7 @@ import SideBar from "@/components/eCommerce/SideBar.vue";
 import { useRoute, useRouter } from "vue-router";
 import CartDrawer from "@/components/eCommerce/CartDrawer.vue";
 import store from "@/store";
+import Swal from 'sweetalert2';
 
 const router = useRouter();
 const route = useRoute();
@@ -118,6 +119,10 @@ const items = ref([
 
 const inputPlatform = ref("");
 const API = "https://localhost:7081/api/";
+
+const unitExchange = (x) => {
+      return 'NT$ ' + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
 const loadProducts = async () => {
   const response = await fetch(
@@ -217,7 +222,7 @@ const Add2Cart = async (productId) => {
         name: "Login",
       });
     }
-    alert(result.message);
+    Swal.fire('成功！', result.message , 'success');
     autoToggleDrawer();
   } else {
     let localCart = localStorage.getItem("localCart");
@@ -235,7 +240,7 @@ const Add2Cart = async (productId) => {
       localCart.push({ productId, qty: 1 });
     }
     localStorage.setItem("localCart", JSON.stringify(localCart));
-    alert('已成功加入購物車！')
+    Swal.fire('成功！', '商品已加入購物車' , 'success');
   }
   autoToggleDrawer();
 
@@ -251,12 +256,10 @@ const autoToggleDrawer = () => {
 const openDrawerFromParent = () => {
   drawerComponent.value.drawerContent();
   drawer.value = true;
-  console.log('func:openDrawerFromParent');
 };
 
 const closeDrawer = () => {
   drawer.value = false;
-  console.log('func:closeDrawer');
 };
 
 onMounted(() => {
@@ -299,7 +302,10 @@ const GetSingleProduct = async (productId) => {
   border: 2px inset #a1dfe9;
   font-size:18px
 }
-
+.myCard:hover{
+  transform: scale(1.05);
+  transition: all 0.2s ease-in-out;
+}
 .add2cart{
   font-size: 18px;
   border:1px solid #a1dfe9;
@@ -308,7 +314,7 @@ const GetSingleProduct = async (productId) => {
 .add2cart:hover{
   background-color:#a1dfe9;
   color:#01010f;
-  box-shadow:2px 2px 10px #a1dfe9
+  box-shadow:2px 2px 10px #a1dfe9;
 }
 .v-img{
   border:#a1dfe9 !important;
