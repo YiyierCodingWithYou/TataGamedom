@@ -23,10 +23,10 @@
                   </div>
                   <div class="d-flex align-center justify-between">
                     <div class="me-auto ml-3">
-                      {{ item.qty }} × NT$ {{ item.product.specialPrice }}
+                      {{ item.qty }} × {{ unitExchange(item.product.specialPrice) }}
                     </div>
                     <div @click.stop="deleteProduct(item.product.id)">
-                      <v-icon class="mr-3">mdi-trash-can</v-icon>
+                      <v-icon class="mr-3" style="cursor: pointer;">mdi-trash-can</v-icon>
                     </div>
                   </div>
                 </div>
@@ -38,7 +38,7 @@
             <v-btn @click.stop="checkout" class="myBtn">訂單結帳</v-btn>
           </div>
         </div>
-        <div v-else>您的購物車是空的</div>
+        <div class="text-center mt-5" v-else>您的購物車是空的</div>
       </v-navigation-drawer>
     </div>
   </div>
@@ -75,6 +75,9 @@ const rail = ref(true);
 const cartItems = ref([]);
 const imgLink = "https://localhost:7081/Files/Uploads/";
 
+const unitExchange = (x) => {
+      return 'NT$ ' + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
 onMounted(() => {
   window.addEventListener("click", outsideClickListener);
@@ -182,13 +185,6 @@ const deleteProduct = async (productId) => {
     }
   }
 };
-
-
-
-// onMounted(() => {
-//   getCart();
-// });
-
 
 defineExpose({
   drawerContent

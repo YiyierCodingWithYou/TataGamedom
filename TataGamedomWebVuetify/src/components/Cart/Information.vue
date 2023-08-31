@@ -4,7 +4,7 @@
       <v-expansion-panels v-if="cartData.allowCheckout">
         <v-expansion-panel>
           <v-expansion-panel-title class="myPanel">
-            <v-spacer></v-spacer>合計：NT${{ selectedData.totalAmount }}
+            <v-spacer></v-spacer>合計：{{ unitExchange(selectedData.totalAmount) }}
             <br />
             購物車（{{ count }}件）<v-spacer></v-spacer>
           </v-expansion-panel-title>
@@ -39,15 +39,15 @@
                     </td>
                     <td v-if="item.product.price != item.product.specialPrice" class="myTd">
                       <div>
-                        <s>NT${{ item.product.price }}</s>
+                        <s>{{ unitExchange(item.product.price) }}</s>
                       </div>
-                      <div>NTS{{ item.product.specialPrice }}</div>
+                      <div>{{ unitExchange(item.product.specialPrice) }}</div>
                     </td>
-                    <td class="myTd" v-else>NT${{ item.product.price }}</td>
+                    <td class="myTd" v-else>{{ unitExchange(item.product.price) }}</td>
                     <td class="myTd">
                       {{ item.qty }}
                     </td>
-                    <td class="myTd" v-text="item.subTotal"></td>
+                    <td class="myTd">{{ unitExchange(item.subTotal) }}</td>
                   </tr>
                   <tr>
                     <td colspan="7">
@@ -66,8 +66,8 @@
                     </td>
                     <td>運費：<br />總計：</td>
                     <td class="text-left">
-                      NT$ {{ selectedData.freight }}<br />NT$ {{
-                        selectedData.totalAmount
+                      {{ unitExchange(selectedData.freight) }}<br />{{
+                        unitExchange(selectedData.totalAmount)
                       }}
                     </td>
                   </tr>
@@ -225,6 +225,7 @@ import { ref, defineProps, computed, watch } from "vue";
 import Payment from "@/components/Cart/Payment.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
+import Swal from 'sweetalert2';
 
 const store = useStore();
 const router = useRouter();
@@ -267,6 +268,10 @@ const toEcommerce = () => {
   router.push({
     name: "eCommerce",
   });
+}
+
+const unitExchange = (x) => {
+  return 'NT$ ' + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 const commonRules = {
@@ -501,7 +506,7 @@ const handleSubmit = async () => {
       console.error("Error:", error);
     }
   } else {
-    alert("請完整填寫收件人資訊！");
+    Swal.fire('', '未完整填寫收件人資訊' , 'warning');
   }
 
 };

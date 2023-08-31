@@ -23,10 +23,10 @@
                   productData.couponDescription[index] }}<br /></p>
               </div>
               <p class="ml-3 mb-3" style="font-size: 20px; color:white"
-                v-if="productData.specialPrice === productData.price">${{ productData.price
+                v-if="productData.specialPrice === productData.price">{{ unitExchange(productData.price)
                 }}</p>
-              <p class="ml-3 mb-3" v-else><s style="font-size: 16px; color:grey">${{ productData.price }}</s><span
-                  style="font-size: 20px; color:white">　${{ productData.specialPrice }}</span></p>
+              <p class="ml-3 mb-3" v-else><s style="font-size: 16px; color:grey">{{ unitExchange(productData.price) }}</s><span
+                  style="font-size: 20px; color:white">　{{ unitExchange(productData.specialPrice) }}</span></p>
               <div class="d-flex align-center mb-3">
                 <v-rating v-model="productData.score" class="ma-2 d-flex me-auto" density="compact" half-increments
                   readonly style="color:#f9ee08" size="small"></v-rating>
@@ -133,6 +133,7 @@ import { format } from "date-fns";
 import { zhTW } from "date-fns/locale";
 import store from "@/store";
 import CartDrawer from "@/components/eCommerce/CartDrawer.vue";
+import Swal from 'sweetalert2';
 
 const router = useRouter();
 const props = defineProps({ productData: Object });
@@ -179,12 +180,16 @@ const decreaseQuantity = () => {
   }
 };
 
+const unitExchange = (x) => {
+      return 'NT$ ' + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
 //加入購物車
 const Add2Cart = async (productId) => {
   let totalQuantity = quantity.value;
 
   if (quantity.value > limit.value) {
-    alert("所選數量超過庫存限制！");
+    Swal.fire('加入購物車失敗！', '所選數量超過庫存限制' , 'error');
     return;
   } else {
     const response = await fetch(`https://localhost:7081/api/Carts/GetSingleProductQuantity?productId=${productId}`, {
@@ -197,7 +202,7 @@ const Add2Cart = async (productId) => {
     totalQuantity = quantity.value + result
     console.log(totalQuantity);
     if (totalQuantity > limit.value) {
-      alert("所選數量加上購物車中現有數量超過庫存限制！");
+      Swal.fire('加入購物車失敗！', '所選數量加上購物車中現有數量超過庫存限制' , 'error');
       return;
     }
   }
@@ -219,7 +224,7 @@ const Add2Cart = async (productId) => {
         name: "Login",
       });
     }
-    alert(result.message);
+    Swal.fire('成功！', result.message , 'success');
     emit("drawerInput", result.message);
   } else {
     let localCart = localStorage.getItem("localCart");
@@ -233,7 +238,7 @@ const Add2Cart = async (productId) => {
     if (existingProduct) {
       totalQuantity = quantityNum.value + existingProduct.qty;
       if (totalQuantity > limit.value) {
-        alert("所選數量加上購物車中現有數量超過庫存限制！");
+        Swal.fire('加入購物車失敗！', '所選數量加上購物車中現有數量超過庫存限制' , 'error');
         return;
       }
       existingProduct.qty += quantityNum.value;
@@ -241,7 +246,7 @@ const Add2Cart = async (productId) => {
       localCart.push({ productId, qty: quantityNum.value });
     }
     localStorage.setItem("localCart", JSON.stringify(localCart));
-    alert("已成功加入購物車！");
+    Swal.fire('成功！', '商品已加入購物車' , 'success');
     emit("drawerInput", "已成功加入購物車！");
   }
 };
