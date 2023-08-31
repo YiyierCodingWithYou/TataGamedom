@@ -1,13 +1,6 @@
 <template>
-  <v-card
-    style="background-color: #01010f; box-shadow: 2px 2px 10px #a1dfe9"
-    theme="dark"
-    class="mx-auto mt-5"
-    width="400"
-    v-for="item in news"
-    :key="item.id"
-    @click="GotoNewsPage(item.id)"
-  >
+  <v-card style="background-color: #01010f; box-shadow: 2px 2px 10px #a1dfe9" theme="dark" class="mx-auto mt-5"
+    width="400" v-for="item in news" :key="item.id" @click="GotoNewsPage(item.id)">
     <div class="d-flex">
       <img style="height: 200px; width: 400px" :src="img + item.coverImg" />
     </div>
@@ -45,6 +38,7 @@ const loadNewstop5 = async () => {
   const response = await fetch("https://localhost:7081/api/News/HotNews");
   const data = await response.json();
   news.value = data;
+  console.log("HOTNEWS", news);
   // console.log(data);
 };
 

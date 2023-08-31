@@ -1,19 +1,6 @@
 <template>
-  <v-carousel
-    hide-delimiters
-    show-arrows="hover"
-    cycle
-    interval="3000"
-    v-model="currentIndex"
-    style="height: 500px"
-  >
-    <v-carousel-item
-      v-for="item in news"
-      :key="item.id"
-      :src="img + item.coverImg"
-      cover
-      @click="GotoNewsPage(item.id)"
-    >
+  <v-carousel hide-delimiters show-arrows="hover" cycle interval="3000" v-model="currentIndex" style="height: 500px">
+    <v-carousel-item v-for="item in news" :key="item.id" :src="img + item.coverImg" cover @click="GotoNewsPage(item.id)">
       <div class="title" style="cursor: pointer">
         <p class="titleword">{{ item.title }}</p>
       </div>
@@ -62,6 +49,9 @@ const GotoNewsPage = async (newsId) => {
     name: "NewsPage",
     params: { newsId: newsId },
   });
+  window.scrollTo({
+    top: 500,
+  });
 };
 </script>
     
@@ -81,5 +71,9 @@ const GotoNewsPage = async (newsId) => {
   align-items: center;
   display: flex;
   height: 100%;
+}
+
+.v-responsive__content {
+  cursor: pointer;
 }
 </style>
