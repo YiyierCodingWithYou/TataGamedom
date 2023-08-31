@@ -12,7 +12,7 @@ public class ChatHub : Hub<IChatService>
 
     public async Task SendPrivateMessage(string senderAccount, string messageContent, string receiverAccount )
     {
-        await Clients.All.ReceivePrivateMessage(senderAccount, messageContent, receiverAccount);
+        await Clients.User(receiverAccount).ReceivePrivateMessage(senderAccount, messageContent, receiverAccount);
     }
 }
 
