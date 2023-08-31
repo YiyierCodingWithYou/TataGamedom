@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Microsoft.Identity.Client;
 using TataGamedomWebAPI.Application.Contracts.ChatService;
 
 namespace TataGamedomWebAPI.Infrastructure.RealTimeServices;
@@ -10,5 +9,11 @@ public class ChatHub : Hub<IChatService>
     {
         await Clients.All.ReceiveMessage(account, messageContent, memberName);
     }
+
+    public async Task SendPrivateMessage(string senderAccount, string messageContent, string receiverAccount )
+    {
+        await Clients.All.ReceivePrivateMessage(senderAccount, messageContent, receiverAccount);
+    }
 }
+
 

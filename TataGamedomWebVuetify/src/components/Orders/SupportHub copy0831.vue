@@ -17,13 +17,24 @@
           </div>
         </div>
 
+        <!-- todo 移除 -->
+        <!-- <v-text-field label="Sender" hide-details="auto" v-model="senderAccount" placeholder="請輸入姓名"></v-text-field> -->
+        <!--  -->
+
+        <v-text-field
+          label="傳給誰"
+          hide-details="auto"
+          v-model="receiverAccount"
+          placeholder="將訊息傳給:"
+        ></v-text-field>
+
         <v-text-field
           label="輸入訊息"
           hide-details="auto"
           v-model="chatMessage"
           placeholder="你的訊息"
           :disabled="isButtonDisabled"
-          @keyup.enter="sendMessage"
+          @keyup.enter="sendPrivateMessage"
         ></v-text-field>
 
         <v-col cols="auto">
@@ -31,7 +42,7 @@
             density="compact"
             icon="mdi-plus"
             :disabled="isButtonDisabled"
-            @click.prevent="sendMessage"
+            @click.prevent="sendPrivateMessage"
             value="Send Message"
           ></v-btn>
         </v-col>
@@ -52,7 +63,8 @@ export default {
   components: { Message, SendIcon },
 
   setup() {
-    const senderAccount = ref("");
+    //const senderAccount = ref("");
+    const receiverAccount = ref("");
     const chatMessage = ref("");
     const isButtonDisabled = ref(false);
     const messages = ref([]);
@@ -105,10 +117,11 @@ export default {
         .catch((err) => console.error(err.toString()));
       chatMessage.value = "";
     };
-    //
 
     return {
+      //senderAccount,
       chatMessage,
+      receiverAccount,
       isButtonDisabled,
       messages,
       sendMessage,
