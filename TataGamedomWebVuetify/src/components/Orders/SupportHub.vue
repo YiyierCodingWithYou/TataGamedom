@@ -8,11 +8,9 @@
             <Message
               v-for="(message, index) in messages"
               :key="index"
-              :name="message.account"
-              :photoUrl="''"
-              :senderAccount="true"
+              :name="message.memberName"
             >
-              {{ message.memberName }}: {{ message.content }}
+              {{ message.content }}
             </Message>
           </div>
         </div>
@@ -23,7 +21,7 @@
           v-model="chatMessage"
           placeholder="你的訊息"
           :disabled="isButtonDisabled"
-          @keyup.enter="sendMessage"
+          @keyup.enter="sendPrivateMessage"
         ></v-text-field>
 
         <v-col cols="auto">
@@ -31,7 +29,7 @@
             density="compact"
             icon="mdi-plus"
             :disabled="isButtonDisabled"
-            @click.prevent="sendMessage"
+            @click.prevent="sendPrivateMessage"
             value="Send Message"
           ></v-btn>
         </v-col>
@@ -52,7 +50,6 @@ export default {
   components: { Message, SendIcon },
 
   setup() {
-    const senderAccount = ref("");
     const chatMessage = ref("");
     const isButtonDisabled = ref(false);
     const messages = ref([]);
@@ -74,12 +71,26 @@ export default {
 
     // SignalR
     let connectionToChatHub = new signalR.HubConnectionBuilder()
-      .withUrl("https://localhost:7081/ChatHub")
+      .withUrl("https://localhost:7081/ChatHub", {
+        skipNegotiation: true,
+        transport: signalR.HttpTransportType.WebSockets,
+      })
       .build();
 
     onMounted(() => {
-      connectionToChatHub.start().catch((err) => console.error(err.toString()));
+      connectionToChatHub
+        .start()
+        .then(() => {
+          console.log("Connection started");
+        })
+        .catch((err) => console.error(err.toString()));
+
       connectionToChatHub.on("ReceiveMessage", receiveMessageHandler);
+
+      connectionToChatHub.on(
+        "ReceivePrivateMessage",
+        receivePrivateMessageHandler
+      );
 
       //API
       fetchMemberAndChatInfo();
@@ -87,11 +98,24 @@ export default {
 
     onUnmounted(() => {
       connectionToChatHub.off("ReceiveMessage", receiveMessageHandler);
+      connectionToChatHub.off("ReceivePrivateMessage", receiveMessageHandler);
       connectionToChatHub.stop();
     });
 
     const receiveMessageHandler = (account, content, memberName) => {
       messages.value.push({ account, content, memberName });
+    };
+
+    const receivePrivateMessageHandler = (
+      senderAccount,
+      content,
+      receiverAccount
+    ) => {
+      console.log("test receivePrivateMessageHandler");
+
+      if (receiverAccount == memberAndChatInfo.value.memberAccount) {
+        messages.value.push({ senderAccount, content, receiverAccount });
+      }
     };
 
     const sendMessage = () => {
@@ -105,13 +129,26 @@ export default {
         .catch((err) => console.error(err.toString()));
       chatMessage.value = "";
     };
-    //
+
+    const sendPrivateMessage = () => {
+      const receiverAccount = "apalan60@gmail.com";
+      connectionToChatHub
+        .invoke(
+          "SendPrivateMessage",
+          memberAndChatInfo.value.memberAccount,
+          chatMessage.value,
+          receiverAccount //demo receiverAccount
+        )
+        .catch((err) => console.error(err.toString()));
+      chatMessage.value = "";
+    };
 
     return {
       chatMessage,
       isButtonDisabled,
       messages,
       sendMessage,
+      sendPrivateMessage,
       memberAndChatInfo,
     };
   },
