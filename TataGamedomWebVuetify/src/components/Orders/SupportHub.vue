@@ -3,39 +3,31 @@
     <nav>
       <div>
         <h1>Tata客服中心</h1>
+        <v-divider></v-divider>
         <v-container>
           <div class="container-sm mt-20">
-            <div class="mx-5">
-              <Message
-                v-for="(message, index) in messages"
-                :key="index"
-                :name="message.memberName"
-              >
+            <!-- <div class="mx-5">
+              <Message v-for="(message, index) in messages" :key="index" :name="message.memberName">
                 {{ message.content }}
               </Message>
-            </div>
+            </div> -->
+            <v-virtual-scroll :items="messages" height="400" item-height="50">
+              <template v-slot="{ item, index }">
+                <Message :key="index" :name="item.memberName">
+                  {{ item.content }}
+                </Message>
+              </template>
+            </v-virtual-scroll>
           </div>
 
-          <v-text-field
-            label="傳給哪個帳號"
-            hide-details="auto"
-            v-model="receiverAccount"
-            placeholder="傳給誰"
-            :disabled="isButtonDisabled"
-            append-icon="mdi"
-          ></v-text-field>
+          <div class="fixed-bottom-container">
+            <v-text-field label="傳給哪個帳號" hide-details="auto" v-model="receiverAccount" placeholder="傳給誰"
+              :disabled="isButtonDisabled" append-icon="mdi"></v-text-field>
 
-          <v-text-field
-            label="輸入訊息"
-            v-model="chatMessage"
-            placeholder="你的訊息"
-            type="text"
-            no-details
-            outlined
-            append-icon="mdi-comment-multiple-outline"
-            @keyup.enter="sendPrivateMessage"
-            @click:append="sendPrivateMessage"
-          ></v-text-field>
+            <v-text-field label="輸入訊息" v-model="chatMessage" placeholder="你的訊息" type="text" no-details outlined
+              append-icon="mdi-comment-multiple-outline" @keyup.enter="sendPrivateMessage"
+              @click:append="sendPrivateMessage"></v-text-field>
+          </div>
         </v-container>
       </div>
     </nav>
@@ -164,5 +156,13 @@ export default {
 };
 </script>
   
-<style scoped></style>
+<style scoped>
+.fixed-bottom-container {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  background-color: gray;
+  z-index: 1000;
+}
+</style>
   
