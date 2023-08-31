@@ -15,8 +15,10 @@
                     </v-col>
                     <v-col cols="9">
                         <v-sheet rounded="lg" color="transparent">
+                            <CartDrawer v-model="drawer" class="myDraw" ref="drawerComponent"></CartDrawer>
                             <ProductDetail v-if="product !== undefined" :productData="product" class="justify-center"
-                                @commentSucceed="reload" @paginationInput="paginationHandler"></ProductDetail>
+                                @commentSucceed="reload" @paginationInput="paginationHandler" @drawerInput="drawerHandler">
+                            </ProductDetail>
                         </v-sheet>
                     </v-col>
                 </v-row>
@@ -34,8 +36,10 @@ import ProductDetail from "@/components/Product/ProductDetail.vue";
 import { defineEmits } from "vue";
 import SideBar from "@/components/eCommerce/SideBar.vue";
 import { watch } from "vue";
+import CartDrawer from "@/components/eCommerce/CartDrawer.vue";
 
-
+const drawer = ref(false);
+const drawerComponent = ref(null)
 const route = useRoute();
 const router = useRouter();
 const productId = ref(parseInt(route.params.productId, 10));
@@ -95,6 +99,30 @@ watch(productId, (newVal, oldVal) => {
     }
 });
 
+const drawerHandler = (value) => {
+    if (value === "已成功加入購物車！") {
+        autoToggleDrawer();
+    }
+}
+
+const autoToggleDrawer = () => {
+    openDrawerFromParent();
+    setTimeout(() => {
+        closeDrawer();
+    }, 1000);
+};
+
+const openDrawerFromParent = () => {
+    drawerComponent.value.drawerContent();
+    drawer.value = true;
+    console.log('func:openDrawerFromParent');
+};
+
+const closeDrawer = () => {
+    drawer.value = false;
+    console.log('func:closeDrawer');
+};
+
 onMounted(() => {
     loadData();
 });
@@ -110,4 +138,10 @@ onMounted(() => {
     color: #f9ee08;
 }
 
+.myDraw {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 20;
+}
 </style>

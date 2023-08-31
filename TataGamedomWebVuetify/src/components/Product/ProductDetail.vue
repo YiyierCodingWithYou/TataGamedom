@@ -1,7 +1,6 @@
 <template>
   <div>
     <v-row>
-      <CartDrawer v-model="drawer" ref="drawerComponent" class="myDraw"></CartDrawer>
       <v-container class="d-flex flex-no-wrap">
         <v-row>
           <v-col cols="6">
@@ -24,10 +23,10 @@
                   productData.couponDescription[index] }}<br /></p>
               </div>
               <p class="ml-3 mb-3" style="font-size: 20px; color:white"
-                v-if="productData.specialPrice === productData.price">${{ productData.price
+                v-if="productData.specialPrice === productData.price">{{ unitExchange(productData.price)
                 }}</p>
-              <p class="ml-3 mb-3" v-else><s style="font-size: 16px; color:grey">${{ productData.price }}</s><span
-                  style="font-size: 20px; color:white">　${{ productData.specialPrice }}</span></p>
+              <p class="ml-3 mb-3" v-else><s style="font-size: 16px; color:grey">{{ unitExchange(productData.price) }}</s><span
+                  style="font-size: 20px; color:white">　{{ unitExchange(productData.specialPrice) }}</span></p>
               <div class="d-flex align-center mb-3">
                 <v-rating v-model="productData.score" class="ma-2 d-flex me-auto" density="compact" half-increments
                   readonly style="color:#f9ee08" size="small"></v-rating>
@@ -134,8 +133,8 @@ import { format } from "date-fns";
 import { zhTW } from "date-fns/locale";
 import store from "@/store";
 import CartDrawer from "@/components/eCommerce/CartDrawer.vue";
+import Swal from 'sweetalert2';
 
-const drawer = ref(false);
 const router = useRouter();
 const props = defineProps({ productData: Object });
 const quantity = ref(1);
@@ -147,8 +146,8 @@ const bookmark = ref(null);
 const star = ref(0);
 const comment = ref("");
 const API = "https://localhost:7081/api/";
-const drawerComponent = ref(null)
 const quantityNum = ref(0)
+const emit = defineEmits(["paginationInput", "drawerInput"]);
 
 watch(props, (newProps) => {
   if (newProps.productData.id) {
@@ -181,15 +180,32 @@ const decreaseQuantity = () => {
   }
 };
 
+const unitExchange = (x) => {
+      return 'NT$ ' + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
 //加入購物車
 const Add2Cart = async (productId) => {
-  if (quantity.value > limit.value) {
-    alert("所選數量超過庫存限制！");
-    return;
-  }
-
   let totalQuantity = quantity.value;
 
+  if (quantity.value > limit.value) {
+    Swal.fire('加入購物車失敗！', '所選數量超過庫存限制' , 'error');
+    return;
+  } else {
+    const response = await fetch(`https://localhost:7081/api/Carts/GetSingleProductQuantity?productId=${productId}`, {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    let result = await response.json();
+    totalQuantity = quantity.value + result
+    console.log(totalQuantity);
+    if (totalQuantity > limit.value) {
+      Swal.fire('加入購物車失敗！', '所選數量加上購物車中現有數量超過庫存限制' , 'error');
+      return;
+    }
+  }
   if (store.state.isLoggedIn) {
     const response = await fetch(`${API}Carts`, {
       method: "POST",
@@ -208,8 +224,8 @@ const Add2Cart = async (productId) => {
         name: "Login",
       });
     }
-    alert(result.message);
-    autoToggleDrawer();
+    Swal.fire('成功！', result.message , 'success');
+    emit("drawerInput", result.message);
   } else {
     let localCart = localStorage.getItem("localCart");
     if (localCart) {
@@ -222,34 +238,17 @@ const Add2Cart = async (productId) => {
     if (existingProduct) {
       totalQuantity = quantityNum.value + existingProduct.qty;
       if (totalQuantity > limit.value) {
-        alert("所選數量加上購物車中現有數量超過庫存限制！");
+        Swal.fire('加入購物車失敗！', '所選數量加上購物車中現有數量超過庫存限制' , 'error');
         return;
       }
       existingProduct.qty += quantityNum.value;
     } else {
       localCart.push({ productId, qty: quantityNum.value });
     }
-
     localStorage.setItem("localCart", JSON.stringify(localCart));
-    autoToggleDrawer();
-    alert("已成功加入購物車！");
+    Swal.fire('成功！', '商品已加入購物車' , 'success');
+    emit("drawerInput", "已成功加入購物車！");
   }
-};
-
-const autoToggleDrawer = () => {
-  openDrawerFromParent();
-  setTimeout(() => {
-    closeDrawer();
-  }, 1000);
-};
-
-const openDrawerFromParent = () => {
-  drawerComponent.value.drawerContent();
-  drawer.value = true;
-};
-
-const closeDrawer = () => {
-  drawer.value = false;
 };
 
 const relativeTime = (datetime) => {
@@ -263,7 +262,7 @@ const relativeTime = (datetime) => {
   return formattedDate;
 };
 
-const emit = defineEmits(["paginationInput"]);
+
 const returnComments = () => {
   nextTick(() => {
     if (bookmark.value) {
