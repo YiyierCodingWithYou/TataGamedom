@@ -10,7 +10,7 @@
       <div class="text-subtitle-1 mt-3 text-medium-emphasis d-flex align-center justify-space-between">
         密碼
 
-        <a class="text-caption text-decoration-none text-blue" href="#" rel="noopener noreferrer" @click="ForgetPwd">
+        <a class="text-caption text-decoration-none text-blue" @click="ForgetPwd">
           忘記密碼?</a>
       </div>
 
@@ -27,7 +27,8 @@
       </v-btn>
 
       <v-card-text class="text-center">
-        <a class="text-blue text-decoration-none" href="#" rel="noopener noreferrer" @click="goToRegister">
+        <a class="text-blue text-decoration-none" rel="noopener noreferrer"
+          @click="this.$router.push('/Members/Register')">
           立即註冊 <v-icon icon="mdi-chevron-right"></v-icon>
         </a>
       </v-card-text>
@@ -40,6 +41,7 @@
 import axios from "axios";
 //import ForgetPwd from "./ForgetPwd.vue";
 import GoogleLogin from "../Members/GoogleLogin.vue";
+import { useRouter } from "vue-router";
 export default {
   components: {
     GoogleLogin,
@@ -116,7 +118,7 @@ export default {
         });
     },
     goToRegister() {
-      this.$router.push("/members/register");
+      this.$router.push("/Members/Register");
     },
     ForgetPwd() {
       this.$router.push("/members/ForgetPwd");
