@@ -31,7 +31,7 @@ public class ChatHub : Hub<IChatService>
         {
             string sendAt = DateTime.Now.ToString("HH:mm");
 
-            await Clients.User(senderAccount).ReceivePrivateMessage(senderAccount, messageContent, memberName, receiverAccount, sendAt, receiverChatInfo?.MemberIconImg);  //讓發訊息的收到收訊息的人的照片
+            await Clients.User(senderAccount).ReceivePrivateMessage(senderAccount, messageContent, memberName, receiverAccount, sendAt, receiverChatInfo?.MemberIconImg);  //讓發訊息的人，收到收訊息的人的照片
 
             await Clients.User(receiverAccount).ReceivePrivateMessage(senderAccount, messageContent, memberName, receiverAccount, sendAt, senderChatInfo?.MemberIconImg);  //相反
         }
