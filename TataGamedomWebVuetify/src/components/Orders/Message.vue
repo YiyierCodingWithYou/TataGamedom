@@ -3,8 +3,8 @@
     :class="['message-wrapper', isSenderAccountMine ? 'right' : 'left']"
     class=""
   >
-    <!-- <span class="message-author" v-if="!isSenderAccountMine"> -->
     <span class="message-author">
+      <!-- <span class="message-author"> -->
       <v-avatar size="75" class="avatar">
         <v-img :src="photoUrl" cover></v-img
       ></v-avatar>
@@ -23,9 +23,17 @@
 export default {
   props: {
     name: { type: String, default: "" },
-    photoUrl: { type: String, default: "" },
+    recevierPhotoUrl: { type: String, default: "" },
+    senderPhotoUrl: { type: String, default: "" },
     sendAt: { type: String, default: "" },
     isSenderAccountMine: { type: Boolean, default: false },
+  },
+  computed: {
+    photoUrl() {
+      return this.isSenderAccountMine
+        ? this.senderPhotoUrl
+        : this.recevierPhotoUrl;
+    },
   },
 };
 </script>

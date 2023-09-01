@@ -11,7 +11,8 @@
                 <Message
                   :key="index"
                   :name="item.memberName"
-                  :photoUrl="memberAndChatInfo.memberIconImg"
+                  :senderPhotoUrl="memberAndChatInfo.memberIconImg"
+                  :recevierPhotoUrl="item.receiverIconImg"
                   :sendAt="item.sendAt"
                   :isSenderAccountMine="
                     item.senderAccount === memberAndChatInfo.memberAccount
