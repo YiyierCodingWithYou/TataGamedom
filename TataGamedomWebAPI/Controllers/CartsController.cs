@@ -41,8 +41,6 @@ namespace TataGamedomWebAPI.Controllers
 
 			if (user == null)
 			{
-				//未登入取得購物車的方法
-				//todo
 				return NotFound("請先登入會員");
 			}
 			var currentTime = DateTime.Now;
