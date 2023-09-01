@@ -87,7 +87,6 @@ namespace TataGamedomWebAPI.Controllers
                 int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
                 news = news.Skip(pageSize * (page - 1)).Take(pageSize);
-	
 
                 return new NewsListDto { News = news, TotalPage = totalPages };
             }
@@ -122,8 +121,9 @@ namespace TataGamedomWebAPI.Controllers
                 {
                     return NotFound();
                 }
-				// 查詢留言
-				string sqlcomments = @"SELECT  NewsComments.[Id]
+
+                // 查詢留言
+                string sqlcomments = @"SELECT  NewsComments.[Id]
       ,[NewsId]
       ,[Content]
       ,[Time]
@@ -142,7 +142,6 @@ ORDER BY Time DESC";
 
               
 				news.NewsComments = comments;
-				news.FormatedScheduleDate = news.ScheduleDate.ToString("yyyy年MM月dd日 HH:mm");
 
 				var memberId = 1;
 				if(!string.IsNullOrEmpty(User.FindFirstValue("Membersid")))
@@ -159,7 +158,6 @@ values(@NewsId, @MemberId, getdate())";
 
 				var views = await conn.QueryAsync<NewsViewsDTO>(newsviews, new { NewsId = id ,MemberId = memberId});
 				
-
 
 				return Ok(news);
 			}

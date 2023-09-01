@@ -1,24 +1,27 @@
 <template>
-  <v-carousel
-    hide-delimiters
-    show-arrows="hover"
-    cycle
-    interval="3000"
-    v-model="currentIndex"
-    style="height: 500px"
-  >
-    <v-carousel-item
-      v-for="item in news"
-      :key="item.id"
-      :src="img + item.coverImg"
-      cover
-      @click="GotoNewsPage(item.id)"
-    >
+  <v-carousel hide-delimiters show-arrows="hover" cycle interval="3000" v-model="currentIndex" style="height: 500px">
+    <v-carousel-item v-for="item in news" :key="item.id" :src="img + item.coverImg" cover @click="GotoNewsPage(item.id)">
       <div class="title" style="cursor: pointer">
         <p class="titleword">{{ item.title }}</p>
       </div>
     </v-carousel-item>
   </v-carousel>
+
+  <!-- <div>
+    <v-carousel
+      show-arrows="hover"
+      cycle
+      interval="3000"
+      v-model="currentIndex"
+    >
+      <v-carousel-item
+        v-for="item in news"
+        :src="img + item.coverImg"
+        :key="item.id"
+        cover
+      ></v-carousel-item>
+    </v-carousel>
+  </div> -->
 </template>
     
 
