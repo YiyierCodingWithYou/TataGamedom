@@ -8,6 +8,7 @@ using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.UpdateOrde
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnDetails;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnList;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnListByOrderId;
+using OrderItemReturnDto = TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnList.OrderItemReturnDto;
 
 namespace TataGamedomWebAPI.Controllers;
 
@@ -24,7 +25,7 @@ public class OrderItemReturnsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Application.Features.OrderItemReturn.Queries.GetOrderItemReturnList.OrderItemReturnDto>>> Get()
+    public async Task<ActionResult<List<OrderItemReturnDto>>> Get()
     {
         var orderItemReturn = await _mediator.Send(new GetOrderItemReturnListQuery());
         return Ok(orderItemReturn);
@@ -32,17 +33,17 @@ public class OrderItemReturnsController : ControllerBase
 
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Application.Features.OrderItemReturn.Queries.GetOrderItemReturnList.OrderItemReturnDto>> Get(int id)
+    public async Task<ActionResult<OrderItemReturnDto>> Get(int id)
     {
         var orderItemReturns = await _mediator.Send(new GetOrderItemReturnDetailsQuery(id));
         return Ok(orderItemReturns);
     }
 
     [HttpGet("ItemIdList/{orderId}")]
-    public async Task<ActionResult<Application.Features.OrderItemReturn.Queries.GetOrderItemReturnList.OrderItemReturnDto>> GetOrderItemIdReturnList(int orderId)
+    public async Task<ActionResult<OrderItemReturnDto>> GetOrderItemReturnList(int orderId)
     {
-        var orderItemIdList = await _mediator.Send(new GetOrderItemReturnListByOrderIdQuery(orderId));
-        return Ok(orderItemIdList);
+        var orderItemList = await _mediator.Send(new GetOrderItemReturnListByOrderIdQuery(orderId));
+        return Ok(orderItemList);
     }
 
     [HttpPost]
@@ -62,7 +63,7 @@ public class OrderItemReturnsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Post(CreateMultipleItemReturnsCommand orderItemReturnList)
     {
-        List<Application.Features.OrderItemReturn.Queries.GetOrderItemReturnList.OrderItemReturnDto> response = await _mediator.Send(orderItemReturnList);
+        List<OrderItemReturnDto> response = await _mediator.Send(orderItemReturnList);
         return Ok(response);
     }
 

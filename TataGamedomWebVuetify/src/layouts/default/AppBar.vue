@@ -51,6 +51,9 @@
       @click="link('Cart')"
     ></v-btn>
 
+    <div v-if="$store.state.isLoggedIn" class="mx-2">
+      <img :src="iconImg" @mouseover="showMemberProfile = true" style="margin-top: 0px;" />
+    </div>
     <div v-if="$store.state.isLoggedIn" class="h-100 pageBtn">
       <!-- <a color="primary" @mouseover="showMemberProfile = true">
         HI {{ name }}
