@@ -58,5 +58,4 @@ const callback = async (response) => {
 };
 </script>
     
-<style>
-</style>
+<style></style>
