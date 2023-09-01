@@ -79,6 +79,7 @@
 import axios from "axios";
 //import ForgetPwd from "./ForgetPwd.vue";
 import GoogleLogin from "../Members/GoogleLogin.vue";
+import { useRouter } from "vue-router";
 export default {
   components: {
     GoogleLogin,
