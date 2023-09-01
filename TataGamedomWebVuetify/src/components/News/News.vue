@@ -5,25 +5,42 @@
       <v-row>
         <!-- <v-col cols="9" v-for="(item, index) in news" :key="item.id" :offset="index == 0 ? index : 3"> -->
         <v-col cols="9" v-for="item in news" :key="item.id">
-          <v-sheet min-height="100" rounded="lg" style="background-color: #01010f; box-shadow: 2px 2px 10px #a1dfe9"
-            theme="dark">
+          <v-sheet
+            min-height="100"
+            rounded="lg"
+            style="background-color: #01010f; box-shadow: 2px 2px 10px #a1dfe9"
+            theme="dark"
+          >
             <v-card-item>
               <div class="d-flex">
-                <img style="
-                    width: 400px;
-                    height: 225px;
-                    object-fit: cover;
-                    cursor: pointer;
-                  " :src="img + item.coverImg" @click="GotoNewsPage(item.id)" />
+                <div style="width: 400px; height: 230px">
+                  <img
+                    style="
+                      width: 400px;
+                      height: 230px;
+                      object-fit: contain;
+                      cursor: pointer;
+                    "
+                    :src="img + item.coverImg"
+                    @click="GotoNewsPage(item.id)"
+                  />
+                </div>
                 <div class="ms-5">
-                  <div class="text-h4 mb-2 blue" style="cursor: pointer" @click="GotoNewsPage(item.id)">
+                  <div
+                    class="text-h4 mb-2 blue"
+                    style="cursor: pointer"
+                    @click="GotoNewsPage(item.id)"
+                  >
                     {{ item.title }}
                   </div>
                   <v-chip class="f9ee08 mb-2 me-2">#{{ item.name }}</v-chip>
                   　{{ relativeTime(item.scheduleDate) }}　　
                   <v-icon class="mb-1">mdi-eye </v-icon>
                   Views {{ item.viewCount }}　　 {{ item.likeCount }}個人說👍
-                  <div v-html="truncateAndEllipsis(item.content, 150)" class="mt-5"></div>
+                  <div
+                    v-html="truncateAndEllipsis(item.content, 150)"
+                    class="mt-5"
+                  ></div>
                   <div style="color: gray; margin-top: 20px"></div>
                 </div>
               </div>
@@ -32,22 +49,44 @@
         </v-col>
 
         <v-col cols="4" style="position: absolute; left: 71%; max-width: 550px">
-          <v-sheet rounded="lg" min-height="100" style="background-color: #01010f; color: white" theme=" dark">
+          <v-sheet
+            rounded="lg"
+            min-height="100"
+            style="background-color: #01010f; color: white"
+            theme=" dark"
+          >
             <h1 class="blue">關鍵字搜尋</h1>
-            <SearchTextBox class="mt-2" style="background-color: #01010f" @searchInput="inputHandler">
+            <SearchTextBox
+              class="mt-2"
+              style="background-color: #01010f"
+              @searchInput="inputHandler"
+            >
             </SearchTextBox>
           </v-sheet>
         </v-col>
 
         <v-col cols="4" class="gameclass">
-          <v-sheet rounded="lg" min-height="400" style="background-color: #01010f" theme="dark">
+          <v-sheet
+            rounded="lg"
+            min-height="400"
+            style="background-color: #01010f"
+            theme="dark"
+          >
             <h1 class="blue">遊戲類別</h1>
-            <NewsGameClass @classificationInput="classificationHandler" class="mt-10"></NewsGameClass>
+            <NewsGameClass
+              @classificationInput="classificationHandler"
+              class="mt-10"
+            ></NewsGameClass>
           </v-sheet>
         </v-col>
 
         <v-col cols="4" class="hotnews">
-          <v-sheet rounded="lg" min-height="500" style="background-color: #01010f" theme="dark">
+          <v-sheet
+            rounded="lg"
+            min-height="500"
+            style="background-color: #01010f"
+            theme="dark"
+          >
             <h1 class="blue">熱門新聞</h1>
             <HotNews></HotNews>
           </v-sheet>
@@ -55,8 +94,12 @@
       </v-row>
     </v-container>
     <div class="text-center">
-      <v-pagination v-model="thePage" :length="totalPages" :total-visible="5"
-        @update:model-value="clickHandler"></v-pagination>
+      <v-pagination
+        v-model="thePage"
+        :length="totalPages"
+        :total-visible="5"
+        @update:model-value="clickHandler"
+      ></v-pagination>
     </div>
   </v-main>
 </template>
@@ -168,7 +211,6 @@ const searchOnce = once(function () {
   if (typeof route.query.keyword !== "undefined") {
     keyword.value = route.query.keyword;
   }
-
 });
 
 const relativeTime = (datetime) => {
