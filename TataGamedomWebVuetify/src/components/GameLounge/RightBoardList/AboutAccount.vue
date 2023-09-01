@@ -109,7 +109,6 @@ import FollowList from "@/components/GameLounge/RightBoardList/FollowList.vue";
 import { ref, reactive, onMounted } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
-import { data } from "cheerio/lib/api/attributes";
 import { useStore } from "vuex";
 
 interface MemberData {
