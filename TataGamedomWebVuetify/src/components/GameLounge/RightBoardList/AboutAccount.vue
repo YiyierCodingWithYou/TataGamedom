@@ -110,6 +110,7 @@ import { ref, reactive, onMounted } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { data } from "cheerio/lib/api/attributes";
+import { useStore } from "vuex";
 
 interface MemberData {
   id: number;
@@ -123,6 +124,7 @@ interface MemberData {
   followingCounting: number;
 }
 
+const store = useStore();
 const memberData = ref<MemberData>();
 const iconUrl = ref("");
 const props = defineProps({
@@ -180,7 +182,15 @@ const followAction = async () => {
         withCredentials: true,
       }
     )
-    .then((res) => {
+    .then(async (res) => {
+      if (!memberData.value.isFollowing) {
+        await store.dispatch("sendNotification", {
+          account: props.memberAccount,
+          loginMember: store.state.account,
+          message: "追蹤了你",
+          postId: 0,
+        });
+      }
       dataKey.value = dataKey.value + 1;
       getMemberData();
     })
