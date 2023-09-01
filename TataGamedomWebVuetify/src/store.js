@@ -3,8 +3,8 @@ import OrderStore from "./components/Orders/OrderStore";
 import ECpayStore from "./components/ECpay/ECpayStore";
 import LinePayStore from "./components/LinePay/LinePayStore";
 import GameLoungeStore from "./components/GameLounge/GameLoungeStore";
-
-const img = "https://localhost:7081/Files/Uploads/Icons/"
+import NotificationStore from "./components/GameLounge/NotificationStore";
+const img = "https://localhost:7081/Files/Uploads/Icons/";
 const store = createStore({
   //類似namespace
   modules: {
@@ -12,6 +12,7 @@ const store = createStore({
     ECpayStore,
     LinePayStore,
     GameLoungeStore,
+    NotificationStore,
   },
   state: {
     isLoggedIn: null,

@@ -1,103 +1,198 @@
 <template>
   <v-container>
-    <div class="row">&nbsp;</div>
+    <nav>
+      <div>
+        <h1>Tata客服中心</h1>
+        <v-divider></v-divider>
+        <v-container>
+          <div class="container-sm mt-20">
+            <v-virtual-scroll :items="messages" height="650">
+              <template v-slot="{ item, index }">
+                <Message
+                  :key="index"
+                  :name="item.memberName"
+                  :senderPhotoUrl="memberAndChatInfo.memberIconImg"
+                  :recevierPhotoUrl="item.receiverIconImg"
+                  :sendAt="item.sendAt"
+                  :isSenderAccountMine="
+                    item.senderAccount === memberAndChatInfo.memberAccount
+                  "
+                >
+                  {{ item.content }}
+                </Message>
+              </template>
+            </v-virtual-scroll>
+          </div>
 
-    <v-text-field
-      label="Sender"
-      :rules="rules"
-      hide-details="auto"
-      v-model="senderAccount"
-      placeholder="請輸入姓名"
-    ></v-text-field>
+          <div class="fixed-bottom-container">
+            <v-text-field
+              label="傳給哪個帳號"
+              hide-details="auto"
+              v-model="receiverAccount"
+              placeholder="傳給誰"
+              append-icon="mdi"
+            ></v-text-field>
 
-    <v-text-field
-      label="Message"
-      :rules="rules"
-      hide-details="auto"
-      v-model="chatMessage"
-      placeholder="你的訊息"
-      :disabled="isButtonDisabled"
-      @keyup.enter="sendMessage"
-    ></v-text-field>
-
-    <v-col cols="auto">
-      <v-btn
-        density="compact"
-        icon="mdi-plus"
-        :disabled="isButtonDisabled"
-        @click.prevent="sendMessage"
-        value="Send Message"
-      ></v-btn>
-    </v-col>
-
-    <div class="row">
-      <div class="col-12">
-        <hr />
+            <v-text-field
+              label="輸入訊息"
+              v-model="chatMessage"
+              placeholder="你的訊息"
+              type="text"
+              no-details
+              outlined
+              append-icon="mdi-comment-multiple-outline"
+              @keyup.enter="sendPrivateMessage"
+              @click:append="sendPrivateMessage"
+            ></v-text-field>
+          </div>
+        </v-container>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <ul>
-          <li v-for="(message, index) in messages" :key="index">
-            {{ message.account }} : {{ message.content }}
-          </li>
-        </ul>
-      </div>
-    </div>
-    <RedirectToLogisticsSelection_Url_btn />
+    </nav>
   </v-container>
 </template>
   
 <script>
 import { ref, onMounted, onUnmounted } from "vue";
 import * as signalR from "@microsoft/signalr";
-import RedirectToLogisticsSelection_Url_btn from "@/components/ECpay/RedirectToLogisticsSelection_Url.vue";
+import axios from "axios";
+import SendIcon from "./SendIcon.vue";
+import Message from "./Message.vue";
 
 export default {
-  components: {
-    RedirectToLogisticsSelection_Url_btn,
-  },
+  components: { Message, SendIcon },
+
   setup() {
-    const senderAccount = ref("");
     const chatMessage = ref("");
-    const isButtonDisabled = ref(false);
+    const receiverAccount = ref("");
     const messages = ref([]);
 
+    //API Get
+    const memberAndChatInfo = ref({});
+    const fetchMemberAndChatInfo = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:7081/api/ChatRoom/MemberAndChatInfo",
+          { withCredentials: true }
+        );
+        memberAndChatInfo.value = response.data;
+        console.log("發訊息的人的資訊", memberAndChatInfo.value);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    // SignalR
     let connectionToChatHub = new signalR.HubConnectionBuilder()
-      .withUrl("https://localhost:7081/ChatHub")
+      .withUrl("https://localhost:7081/ChatHub", {
+        skipNegotiation: true,
+        transport: signalR.HttpTransportType.WebSockets,
+      })
       .build();
 
     onMounted(() => {
-      connectionToChatHub.start().catch((err) => console.error(err.toString()));
+      connectionToChatHub
+        .start()
+        .then(() => {
+          console.log("Connection started");
+        })
+        .catch((err) => console.error(err.toString()));
+
       connectionToChatHub.on("ReceiveMessage", receiveMessageHandler);
+
+      connectionToChatHub.on(
+        "ReceivePrivateMessage",
+        receivePrivateMessageHandler
+      );
+
+      //API
+      fetchMemberAndChatInfo();
     });
 
     onUnmounted(() => {
       connectionToChatHub.off("ReceiveMessage", receiveMessageHandler);
+      connectionToChatHub.off("ReceivePrivateMessage", receiveMessageHandler);
       connectionToChatHub.stop();
     });
 
-    const receiveMessageHandler = (account, content) => {
-      messages.value.push({ account, content });
+    const receiveMessageHandler = (
+      account,
+      content,
+      memberName,
+      sendAt,
+      receiverIconImg
+    ) => {
+      messages.value.push({
+        account,
+        content,
+        memberName,
+        sendAt,
+        receiverIconImg,
+      });
+    };
+
+    const receivePrivateMessageHandler = (
+      senderAccount,
+      content,
+      memberName,
+      receiverAccount,
+      sendAt,
+      receiverIconImg
+    ) => {
+      messages.value.push({
+        senderAccount,
+        content,
+        memberName,
+        receiverAccount,
+        sendAt,
+        receiverIconImg,
+      });
     };
 
     const sendMessage = () => {
       connectionToChatHub
-        .send("SendMessageToAll", senderAccount.value, chatMessage.value)
+        .send(
+          "SendMessageToAll",
+          memberAndChatInfo.value.memberAccount,
+          chatMessage.value,
+          memberAndChatInfo.value.memberName
+        )
+        .catch((err) => console.error(err.toString()));
+      chatMessage.value = "";
+    };
+
+    const sendPrivateMessage = () => {
+      //const receiverAccount = "apalan60@gmail.com"; //v-if  => 只要登錄的不是後台人員，receiverAccount就不能設定
+      connectionToChatHub
+        .invoke(
+          "SendPrivateMessage",
+          memberAndChatInfo.value.memberAccount,
+          chatMessage.value,
+          memberAndChatInfo.value.memberName,
+          receiverAccount.value
+        )
         .catch((err) => console.error(err.toString()));
       chatMessage.value = "";
     };
 
     return {
-      senderAccount,
       chatMessage,
-      isButtonDisabled,
+      receiverAccount,
       messages,
       sendMessage,
+      sendPrivateMessage,
+      memberAndChatInfo,
     };
   },
 };
 </script>
   
-<style scoped></style>
+<style scoped>
+.fixed-bottom-container {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  background-color: gray;
+  z-index: 1000;
+}
+</style>
   

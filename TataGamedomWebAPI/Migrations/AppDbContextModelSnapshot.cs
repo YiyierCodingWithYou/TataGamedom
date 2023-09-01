@@ -40,7 +40,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Announce__3214EC07E9AD234E");
+                        .HasName("PK__Announce__3214EC07EA18C016");
 
                     b.ToTable("Announcement", (string)null);
                 });
@@ -59,7 +59,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Approval__3214EC0729D71086");
+                        .HasName("PK__Approval__3214EC074C226787");
 
                     b.ToTable("ApprovalStatusCodes");
                 });
@@ -114,7 +114,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("datetime");
 
                     b.HasKey("Id")
-                        .HasName("PK__BackendM__3214EC0780AC3355");
+                        .HasName("PK__BackendM__3214EC072584FB50");
 
                     b.HasIndex("BackendMembersRoleId");
 
@@ -135,7 +135,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id")
-                        .HasName("PK__BackendM__3214EC075F957BE6");
+                        .HasName("PK__BackendM__3214EC07FDE6893A");
 
                     b.ToTable("BackendMembersPermissionsCodes");
                 });
@@ -155,7 +155,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__BackendM__3214EC079BBBF0AE");
+                        .HasName("PK__BackendM__3214EC07D45AEC4A");
 
                     b.HasIndex("BackendMemberPermissionId");
 
@@ -178,7 +178,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id")
-                        .HasName("PK__BackendM__3214EC07F873DD27");
+                        .HasName("PK__BackendM__3214EC078B6CB23B");
 
                     b.ToTable("BackendMembersRolesCodes");
                 });
@@ -213,13 +213,63 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Boards__3214EC07329A44EB");
+                        .HasName("PK__Boards__3214EC0761FD7D22");
 
                     b.HasIndex("CreatedBackendMemberId");
 
                     b.HasIndex("GameId");
 
                     b.ToTable("Boards");
+                });
+
+            modelBuilder.Entity("TataGamedomWebAPI.Models.EFModels.BoardNotification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("(getdate())");
+
+                    b.Property<bool>("IsReaded")
+                        .HasColumnType("bit")
+                        .HasColumnName("isReaded");
+
+                    b.Property<string>("Link")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime?>("ReadTime")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("RecipientMemberId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RelationMemberId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RelationPostId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id")
+                        .HasName("PK__BoardNot__3214EC0748936389");
+
+                    b.HasIndex("RecipientMemberId");
+
+                    b.HasIndex("RelationMemberId");
+
+                    b.HasIndex("RelationPostId");
+
+                    b.ToTable("BoardNotifications");
                 });
 
             modelBuilder.Entity("TataGamedomWebAPI.Models.EFModels.BoardsModerator", b =>
@@ -243,7 +293,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("datetime");
 
                     b.HasKey("Id")
-                        .HasName("PK__BoardsMo__3214EC070C64C1B9");
+                        .HasName("PK__BoardsMo__3214EC07F00B997F");
 
                     b.HasIndex("BoardId");
 
@@ -290,7 +340,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__BoardsMo__3214EC07776C656E");
+                        .HasName("PK__BoardsMo__3214EC07AADD5607");
 
                     b.HasIndex("ApprovalStatusId");
 
@@ -315,20 +365,17 @@ namespace TataGamedomWebAPI.Migrations
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(200)");
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("City")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("StoreName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("StoreNumber")
                         .IsRequired()
@@ -377,7 +424,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("datetime");
 
                     b.HasKey("Id")
-                        .HasName("PK__BucketLo__3214EC077EE12514");
+                        .HasName("PK__BucketLo__3214EC07C9ABCABA");
 
                     b.HasIndex("BackendMmemberId");
 
@@ -408,7 +455,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__Carts__3214EC07C40BFBE8");
+                        .HasName("PK__Carts__3214EC078E14EBF0");
 
                     b.HasIndex("MemberId");
 
@@ -419,27 +466,29 @@ namespace TataGamedomWebAPI.Migrations
 
             modelBuilder.Entity("TataGamedomWebAPI.Models.EFModels.ChatMessage", b =>
                 {
-                    b.Property<int?>("BackendMemberId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Content")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("Id")
+                    b.Property<DateTime?>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("(getdate())");
+
+                    b.Property<int>("MemberId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MemberId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime");
-
-                    b.HasIndex("BackendMemberId");
+                    b.HasKey("Id");
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("ChatMessage", (string)null);
+                    b.ToTable("ChatMessages");
                 });
 
             modelBuilder.Entity("TataGamedomWebAPI.Models.EFModels.Coupon", b =>
@@ -491,7 +540,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__Coupons__3214EC07FF2D136B");
+                        .HasName("PK__Coupons__3214EC075CD04BDE");
 
                     b.HasIndex("CreatedBackendMemberId");
 
@@ -517,7 +566,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__CouponsP__3214EC07DD5DC5A2");
+                        .HasName("PK__CouponsP__3214EC073DC40B9C");
 
                     b.HasIndex("CouponId");
 
@@ -540,7 +589,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(30)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Discount__3214EC079C378CCE");
+                        .HasName("PK__Discount__3214EC07AC2D9EA2");
 
                     b.ToTable("DiscountTypeCodes");
                 });
@@ -566,7 +615,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__FAQ__3214EC07614C899C");
+                        .HasName("PK__FAQ__3214EC07FA1D62E6");
 
                     b.HasIndex("IssueTypeId");
 
@@ -617,7 +666,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("datetime");
 
                     b.HasKey("Id")
-                        .HasName("PK__Games__3214EC078BAEC25E");
+                        .HasName("PK__Games__3214EC07B53506EC");
 
                     b.HasIndex("CreatedBackendMemberId");
 
@@ -641,7 +690,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__GameClas__3214EC07D7845EF0");
+                        .HasName("PK__GameClas__3214EC0761104BF6");
 
                     b.HasIndex("GameClassificationId");
 
@@ -664,7 +713,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(10)");
 
                     b.HasKey("Id")
-                        .HasName("PK__GameClas__3214EC07B56DDF94");
+                        .HasName("PK__GameClas__3214EC07584A953C");
 
                     b.ToTable("GameClassificationsCodes");
                 });
@@ -704,7 +753,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("tinyint");
 
                     b.HasKey("Id")
-                        .HasName("PK__GameComm__3214EC07DDEB32B4");
+                        .HasName("PK__GameComm__3214EC07E30BB237");
 
                     b.HasIndex("DeleteBackendMemberId");
 
@@ -730,7 +779,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("varchar(10)");
 
                     b.HasKey("Id")
-                        .HasName("PK__GamePlat__3214EC0730FA21EB");
+                        .HasName("PK__GamePlat__3214EC07FAA8C7FB");
 
                     b.ToTable("GamePlatformsCodes");
                 });
@@ -762,13 +811,13 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__Inventor__3214EC07923A7932");
+                        .HasName("PK__Inventor__3214EC075A19205E");
 
                     b.HasIndex("ProductId");
 
                     b.HasIndex("StockInSheetId");
 
-                    b.HasIndex(new[] { "Index" }, "UQ__Inventor__9A5B62292F47BB4A")
+                    b.HasIndex(new[] { "Index" }, "UQ__Inventor__9A5B6229CD5F4232")
                         .IsUnique();
 
                     b.ToTable("InventoryItems");
@@ -803,7 +852,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__Issues__3214EC0721609CFC");
+                        .HasName("PK__Issues__3214EC07E4ED33A4");
 
                     b.HasIndex("IssueTypeId");
 
@@ -827,7 +876,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id")
-                        .HasName("PK__IssueSta__3214EC0765E1F5D1");
+                        .HasName("PK__IssueSta__3214EC07B4FCEC40");
 
                     b.ToTable("IssueStatusCodes");
                 });
@@ -845,7 +894,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id")
-                        .HasName("PK__IssueTyp__3214EC0799F19FF2");
+                        .HasName("PK__IssueTyp__3214EC07FF2FD873");
 
                     b.ToTable("IssueTypesCodes");
                 });
@@ -916,7 +965,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("datetime");
 
                     b.HasKey("Id")
-                        .HasName("PK__Members__3214EC07112A0E72");
+                        .HasName("PK__Members__3214EC0736F3FBB5");
 
                     b.ToTable("Members");
                 });
@@ -963,7 +1012,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("datetime");
 
                     b.HasKey("Id")
-                        .HasName("PK__MemberPr__3214EC0771A30F39");
+                        .HasName("PK__MemberPr__3214EC0798123D46");
 
                     b.HasIndex("MemberId");
 
@@ -990,7 +1039,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__MembersB__3214EC07DA83D7F8");
+                        .HasName("PK__MembersB__3214EC0722C26A0F");
 
                     b.HasIndex("BoardId");
 
@@ -1045,7 +1094,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id")
-                        .HasName("PK__News__3214EC0787BD3004");
+                        .HasName("PK__News__3214EC075CD020AF");
 
                     b.HasIndex("BackendMemberId");
 
@@ -1072,7 +1121,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id")
-                        .HasName("PK__NewsCate__3214EC07905E4A6D");
+                        .HasName("PK__NewsCate__3214EC07BC09FB35");
 
                     b.ToTable("NewsCategoryCodes");
                 });
@@ -1113,7 +1162,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("datetime");
 
                     b.HasKey("Id")
-                        .HasName("PK__NewsComm__3214EC07515E7128");
+                        .HasName("PK__NewsComm__3214EC07729D7C3C");
 
                     b.HasIndex("DeleteBackendMemberId");
 
@@ -1144,7 +1193,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("datetime");
 
                     b.HasKey("Id")
-                        .HasName("PK__NewsLike__3214EC0740267417");
+                        .HasName("PK__NewsLike__3214EC07044AA50B");
 
                     b.HasIndex("MemberId");
 
@@ -1171,7 +1220,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("datetime");
 
                     b.HasKey("Id")
-                        .HasName("PK__NewsView__3214EC07B5842579");
+                        .HasName("PK__NewsView__3214EC079FD7F871");
 
                     b.HasIndex("MemberId");
 
@@ -1203,7 +1252,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Newslett__3214EC07B846C1D3");
+                        .HasName("PK__Newslett__3214EC07F878E2D2");
 
                     b.HasIndex("BackendMemberId");
 
@@ -1240,7 +1289,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__Newslett__3214EC074CBDBCE9");
+                        .HasName("PK__Newslett__3214EC070FD16253");
 
                     b.HasIndex("AddresseeMemberId");
 
@@ -1453,7 +1502,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__OrderIte__3214EC07B33CBCA7");
+                        .HasName("PK__OrderIte__3214EC0702F3CDE8");
 
                     b.HasIndex("CouponId");
 
@@ -1476,7 +1525,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(15)");
 
                     b.HasKey("Id")
-                        .HasName("PK__OrderSta__3214EC075F549049");
+                        .HasName("PK__OrderSta__3214EC07E2D61407");
 
                     b.ToTable("OrderStatusCodes");
                 });
@@ -1495,7 +1544,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(15)");
 
                     b.HasKey("Id")
-                        .HasName("PK__PaymentS__3214EC0765B81A5B");
+                        .HasName("PK__PaymentS__3214EC0730C62161");
 
                     b.ToTable("PaymentStatusCodes");
                 });
@@ -1516,8 +1565,8 @@ namespace TataGamedomWebAPI.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(1500)
-                        .HasColumnType("nvarchar(1500)");
+                        .HasMaxLength(2500)
+                        .HasColumnType("nvarchar(2500)");
 
                     b.Property<DateTime>("Datetime")
                         .HasColumnType("datetime");
@@ -1542,7 +1591,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Posts__3214EC07F15C6972");
+                        .HasName("PK__Posts__3214EC07A3E1B90E");
 
                     b.HasIndex("BoardId");
 
@@ -1593,7 +1642,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__PostComm__3214EC07400CC101");
+                        .HasName("PK__PostComm__3214EC07FCFA855B");
 
                     b.HasIndex("DeleteBackendMemberId");
 
@@ -1644,7 +1693,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__PostComm__3214EC0782150AB6");
+                        .HasName("PK__PostComm__3214EC07C7D0AFF2");
 
                     b.HasIndex("MemberId");
 
@@ -1676,7 +1725,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id")
-                        .HasName("PK__PostComm__3214EC07DC2373CD");
+                        .HasName("PK__PostComm__3214EC0753FBD51E");
 
                     b.HasIndex("MemberId");
 
@@ -1705,7 +1754,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__PostEdit__3214EC07774665DF");
+                        .HasName("PK__PostEdit__3214EC0769ED29F0");
 
                     b.HasIndex("PostId");
 
@@ -1748,7 +1797,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__PostRepo__3214EC07A7F1263E");
+                        .HasName("PK__PostRepo__3214EC073E0745F0");
 
                     b.HasIndex("MemberId");
 
@@ -1780,7 +1829,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id")
-                        .HasName("PK__PostUpDo__3214EC07937F75DF");
+                        .HasName("PK__PostUpDo__3214EC079587D452");
 
                     b.HasIndex("MemberId");
 
@@ -1838,7 +1887,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(1500)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Products__3214EC07916D4DB4");
+                        .HasName("PK__Products__3214EC0767EFA990");
 
                     b.HasIndex("CreatedBackendMemberId");
 
@@ -1850,7 +1899,7 @@ namespace TataGamedomWebAPI.Migrations
 
                     b.HasIndex("ProductStatusId");
 
-                    b.HasIndex(new[] { "Index" }, "UQ__Products__9A5B622984F05647")
+                    b.HasIndex(new[] { "Index" }, "UQ__Products__9A5B6229472FA608")
                         .IsUnique();
 
                     b.ToTable("Products");
@@ -1872,7 +1921,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__ProductI__3214EC073EB6B989");
+                        .HasName("PK__ProductI__3214EC07407D9158");
 
                     b.HasIndex("ProductId");
 
@@ -1893,7 +1942,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(5)");
 
                     b.HasKey("Id")
-                        .HasName("PK__ProductS__3214EC07DB83691D");
+                        .HasName("PK__ProductS__3214EC070F37D389");
 
                     b.ToTable("ProductStatusCodes");
                 });
@@ -1920,7 +1969,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__Replies__3214EC074B9A9A83");
+                        .HasName("PK__Replies__3214EC07481E6804");
 
                     b.HasIndex("BackendMemberId");
 
@@ -1946,9 +1995,9 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Shipmemt__3214EC0763A0B057");
+                        .HasName("PK__Shipment__3214EC077102F5EE");
 
-                    b.HasIndex(new[] { "Name" }, "UQ__Shipmemt__737584F6BB624A36")
+                    b.HasIndex(new[] { "Name" }, "UQ__Shipment__737584F6B6AF7673")
                         .IsUnique();
 
                     b.ToTable("ShipmentMethods");
@@ -1968,7 +2017,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(15)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Shipment__3214EC076EA9FEAE");
+                        .HasName("PK__Shipment__3214EC07D1AF6803");
 
                     b.ToTable("ShipmentStatusesCodes");
                 });
@@ -1991,7 +2040,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__Standard__3214EC07A40D737B");
+                        .HasName("PK__Standard__3214EC07B64BCAE2");
 
                     b.HasIndex("ProductId");
 
@@ -2027,13 +2076,13 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__StockInS__3214EC07A41062FC");
+                        .HasName("PK__StockInS__3214EC07D2A8A9A6");
 
                     b.HasIndex("StockInStatusId");
 
                     b.HasIndex("SupplierId");
 
-                    b.HasIndex(new[] { "Index" }, "UQ__StockInS__9A5B6229BFDC8634")
+                    b.HasIndex(new[] { "Index" }, "UQ__StockInS__9A5B6229E7D883F6")
                         .IsUnique();
 
                     b.ToTable("StockInSheets");
@@ -2052,7 +2101,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id")
-                        .HasName("PK__StockInS__3214EC0731E1574F");
+                        .HasName("PK__StockInS__3214EC07949296B8");
 
                     b.ToTable("StockInStatusCodes");
                 });
@@ -2079,7 +2128,7 @@ namespace TataGamedomWebAPI.Migrations
                         .HasColumnType("nvarchar(15)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Supplier__3214EC071E0ECE7A");
+                        .HasName("PK__Supplier__3214EC07E28E979C");
 
                     b.ToTable("Suppliers");
                 });
@@ -2090,7 +2139,7 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("BackendMembers")
                         .HasForeignKey("BackendMembersRoleId")
                         .IsRequired()
-                        .HasConstraintName("FK__BackendMe__Backe__31B762FC");
+                        .HasConstraintName("FK__BackendMe__Backe__245D67DE");
 
                     b.Navigation("BackendMembersRole");
                 });
@@ -2101,13 +2150,13 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("BackendMembersRolePermissions")
                         .HasForeignKey("BackendMemberPermissionId")
                         .IsRequired()
-                        .HasConstraintName("FK__BackendMe__Backe__339FAB6E");
+                        .HasConstraintName("FK__BackendMe__Backe__2645B050");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.BackendMembersRolesCode", "BackendMembersRole")
                         .WithMany("BackendMembersRolePermissions")
                         .HasForeignKey("BackendMembersRoleId")
                         .IsRequired()
-                        .HasConstraintName("FK__BackendMe__Backe__32AB8735");
+                        .HasConstraintName("FK__BackendMe__Backe__25518C17");
 
                     b.Navigation("BackendMemberPermission");
 
@@ -2120,16 +2169,41 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("Boards")
                         .HasForeignKey("CreatedBackendMemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__Boards__CreatedB__3493CFA7");
+                        .HasConstraintName("FK__Boards__CreatedB__2A164134");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Game", "Game")
                         .WithMany("Boards")
                         .HasForeignKey("GameId")
-                        .HasConstraintName("FK__Boards__GameId__3587F3E0");
+                        .HasConstraintName("FK__Boards__GameId__2B0A656D");
 
                     b.Navigation("CreatedBackendMember");
 
                     b.Navigation("Game");
+                });
+
+            modelBuilder.Entity("TataGamedomWebAPI.Models.EFModels.BoardNotification", b =>
+                {
+                    b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "RecipientMember")
+                        .WithMany("BoardNotificationRecipientMembers")
+                        .HasForeignKey("RecipientMemberId")
+                        .IsRequired()
+                        .HasConstraintName("FK__BoardNoti__Recip__2739D489");
+
+                    b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "RelationMember")
+                        .WithMany("BoardNotificationRelationMembers")
+                        .HasForeignKey("RelationMemberId")
+                        .HasConstraintName("FK__BoardNoti__Relat__282DF8C2");
+
+                    b.HasOne("TataGamedomWebAPI.Models.EFModels.Post", "RelationPost")
+                        .WithMany("BoardNotifications")
+                        .HasForeignKey("RelationPostId")
+                        .HasConstraintName("FK__BoardNoti__Relat__14E61A24");
+
+                    b.Navigation("RecipientMember");
+
+                    b.Navigation("RelationMember");
+
+                    b.Navigation("RelationPost");
                 });
 
             modelBuilder.Entity("TataGamedomWebAPI.Models.EFModels.BoardsModerator", b =>
@@ -2138,13 +2212,13 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("BoardsModerators")
                         .HasForeignKey("BoardId")
                         .IsRequired()
-                        .HasConstraintName("FK__BoardsMod__Board__367C1819");
+                        .HasConstraintName("FK__BoardsMod__Board__2BFE89A6");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "ModeratorMember")
                         .WithMany("BoardsModerators")
                         .HasForeignKey("ModeratorMemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__BoardsMod__Moder__37703C52");
+                        .HasConstraintName("FK__BoardsMod__Moder__2CF2ADDF");
 
                     b.Navigation("Board");
 
@@ -2156,24 +2230,24 @@ namespace TataGamedomWebAPI.Migrations
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.ApprovalStatusCode", "ApprovalStatus")
                         .WithMany("BoardsModeratorsApplications")
                         .HasForeignKey("ApprovalStatusId")
-                        .HasConstraintName("FK__BoardsMod__Appro__3864608B");
+                        .HasConstraintName("FK__BoardsMod__Appro__2DE6D218");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.BackendMember", "BackendMember")
                         .WithMany("BoardsModeratorsApplications")
                         .HasForeignKey("BackendMemberId")
-                        .HasConstraintName("FK__BoardsMod__Backe__395884C4");
+                        .HasConstraintName("FK__BoardsMod__Backe__2EDAF651");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Board", "Board")
                         .WithMany("BoardsModeratorsApplications")
                         .HasForeignKey("BoardId")
                         .IsRequired()
-                        .HasConstraintName("FK__BoardsMod__Board__3A4CA8FD");
+                        .HasConstraintName("FK__BoardsMod__Board__2FCF1A8A");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "Member")
                         .WithMany("BoardsModeratorsApplications")
                         .HasForeignKey("MemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__BoardsMod__Membe__3B40CD36");
+                        .HasConstraintName("FK__BoardsMod__Membe__30C33EC3");
 
                     b.Navigation("ApprovalStatus");
 
@@ -2189,24 +2263,24 @@ namespace TataGamedomWebAPI.Migrations
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.BackendMember", "BackendMmember")
                         .WithMany("BucketLogs")
                         .HasForeignKey("BackendMmemberId")
-                        .HasConstraintName("FK__BucketLog__Backe__3C34F16F");
+                        .HasConstraintName("FK__BucketLog__Backe__31B762FC");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Board", "Board")
                         .WithMany("BucketLogs")
                         .HasForeignKey("BoardId")
                         .IsRequired()
-                        .HasConstraintName("FK__BucketLog__Board__3D2915A8");
+                        .HasConstraintName("FK__BucketLog__Board__32AB8735");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "BucketMember")
                         .WithMany("BucketLogBucketMembers")
                         .HasForeignKey("BucketMemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__BucketLog__Bucke__3E1D39E1");
+                        .HasConstraintName("FK__BucketLog__Bucke__339FAB6E");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "ModeratorMember")
                         .WithMany("BucketLogModeratorMembers")
                         .HasForeignKey("ModeratorMemberId")
-                        .HasConstraintName("FK__BucketLog__Moder__3F115E1A");
+                        .HasConstraintName("FK__BucketLog__Moder__3493CFA7");
 
                     b.Navigation("BackendMmember");
 
@@ -2223,13 +2297,13 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("Carts")
                         .HasForeignKey("MemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__Carts__MemberId__40058253");
+                        .HasConstraintName("FK__Carts__MemberId__3587F3E0");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Product", "Product")
                         .WithMany("Carts")
                         .HasForeignKey("ProductId")
                         .IsRequired()
-                        .HasConstraintName("FK__Carts__ProductId__40F9A68C");
+                        .HasConstraintName("FK__Carts__ProductId__367C1819");
 
                     b.Navigation("Member");
 
@@ -2238,17 +2312,11 @@ namespace TataGamedomWebAPI.Migrations
 
             modelBuilder.Entity("TataGamedomWebAPI.Models.EFModels.ChatMessage", b =>
                 {
-                    b.HasOne("TataGamedomWebAPI.Models.EFModels.BackendMember", "BackendMember")
-                        .WithMany()
-                        .HasForeignKey("BackendMemberId")
-                        .HasConstraintName("FK_ChatMessage_BackendMembers");
-
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "Member")
-                        .WithMany()
+                        .WithMany("ChatMessages")
                         .HasForeignKey("MemberId")
+                        .IsRequired()
                         .HasConstraintName("FK_ChatMessage_Members");
-
-                    b.Navigation("BackendMember");
 
                     b.Navigation("Member");
                 });
@@ -2259,18 +2327,18 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("CouponCreatedBackendMembers")
                         .HasForeignKey("CreatedBackendMemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__Coupons__Created__43D61337");
+                        .HasConstraintName("FK__Coupons__Created__3864608B");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.DiscountTypeCode", "DiscountType")
                         .WithMany("Coupons")
                         .HasForeignKey("DiscountTypeId")
                         .IsRequired()
-                        .HasConstraintName("FK__Coupons__Discoun__44CA3770");
+                        .HasConstraintName("FK__Coupons__Discoun__395884C4");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.BackendMember", "ModifiedBackendMember")
                         .WithMany("CouponModifiedBackendMembers")
                         .HasForeignKey("ModifiedBackendMemberId")
-                        .HasConstraintName("FK__Coupons__Modifie__45BE5BA9");
+                        .HasConstraintName("FK__Coupons__Modifie__3A4CA8FD");
 
                     b.Navigation("CreatedBackendMember");
 
@@ -2285,13 +2353,13 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("CouponsProducts")
                         .HasForeignKey("CouponId")
                         .IsRequired()
-                        .HasConstraintName("FK__CouponsPr__Coupo__46B27FE2");
+                        .HasConstraintName("FK__CouponsPr__Coupo__3B40CD36");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Product", "Product")
                         .WithMany("CouponsProducts")
                         .HasForeignKey("ProductId")
                         .IsRequired()
-                        .HasConstraintName("FK__CouponsPr__Produ__47A6A41B");
+                        .HasConstraintName("FK__CouponsPr__Produ__3C34F16F");
 
                     b.Navigation("Coupon");
 
@@ -2303,7 +2371,7 @@ namespace TataGamedomWebAPI.Migrations
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.IssueTypesCode", "IssueType")
                         .WithMany("Faqs")
                         .HasForeignKey("IssueTypeId")
-                        .HasConstraintName("FK__FAQ__IssueTypeId__489AC854");
+                        .HasConstraintName("FK__FAQ__IssueTypeId__3D2915A8");
 
                     b.Navigation("IssueType");
                 });
@@ -2314,12 +2382,12 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("GameCreatedBackendMembers")
                         .HasForeignKey("CreatedBackendMemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__Games__CreatedBa__4E53A1AA");
+                        .HasConstraintName("FK__Games__CreatedBa__42E1EEFE");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.BackendMember", "ModifiedBackendMember")
                         .WithMany("GameModifiedBackendMembers")
                         .HasForeignKey("ModifiedBackendMemberId")
-                        .HasConstraintName("FK__Games__ModifiedB__4F47C5E3");
+                        .HasConstraintName("FK__Games__ModifiedB__43D61337");
 
                     b.Navigation("CreatedBackendMember");
 
@@ -2332,13 +2400,13 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("GameClassificationGames")
                         .HasForeignKey("GameClassificationId")
                         .IsRequired()
-                        .HasConstraintName("FK__GameClass__GameC__498EEC8D");
+                        .HasConstraintName("FK__GameClass__GameC__3E1D39E1");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Game", "Game")
                         .WithMany("GameClassificationGames")
                         .HasForeignKey("GameId")
                         .IsRequired()
-                        .HasConstraintName("FK__GameClass__GameI__4A8310C6");
+                        .HasConstraintName("FK__GameClass__GameI__3F115E1A");
 
                     b.Navigation("Game");
 
@@ -2350,19 +2418,19 @@ namespace TataGamedomWebAPI.Migrations
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.BackendMember", "DeleteBackendMember")
                         .WithMany("GameComments")
                         .HasForeignKey("DeleteBackendMemberId")
-                        .HasConstraintName("FK__GameComme__Delet__4B7734FF");
+                        .HasConstraintName("FK__GameComme__Delet__40058253");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Game", "Game")
                         .WithMany("GameComments")
                         .HasForeignKey("GameId")
                         .IsRequired()
-                        .HasConstraintName("FK__GameComme__GameI__4C6B5938");
+                        .HasConstraintName("FK__GameComme__GameI__40F9A68C");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "Member")
                         .WithMany("GameComments")
                         .HasForeignKey("MemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__GameComme__Membe__4D5F7D71");
+                        .HasConstraintName("FK__GameComme__Membe__41EDCAC5");
 
                     b.Navigation("DeleteBackendMember");
 
@@ -2377,13 +2445,13 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("InventoryItems")
                         .HasForeignKey("ProductId")
                         .IsRequired()
-                        .HasConstraintName("FK__Inventory__Produ__503BEA1C");
+                        .HasConstraintName("FK__Inventory__Produ__44CA3770");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.StockInSheet", "StockInSheet")
                         .WithMany("InventoryItems")
                         .HasForeignKey("StockInSheetId")
                         .IsRequired()
-                        .HasConstraintName("FK__Inventory__Stock__51300E55");
+                        .HasConstraintName("FK__Inventory__Stock__45BE5BA9");
 
                     b.Navigation("Product");
 
@@ -2395,17 +2463,17 @@ namespace TataGamedomWebAPI.Migrations
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.IssueTypesCode", "IssueType")
                         .WithMany("Issues")
                         .HasForeignKey("IssueTypeId")
-                        .HasConstraintName("FK__Issues__IssueTyp__5224328E");
+                        .HasConstraintName("FK__Issues__IssueTyp__46B27FE2");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "Member")
                         .WithMany("Issues")
                         .HasForeignKey("MemberId")
-                        .HasConstraintName("FK__Issues__MemberId__531856C7");
+                        .HasConstraintName("FK__Issues__MemberId__47A6A41B");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.IssueStatusCode", "StatusNavigation")
                         .WithMany("Issues")
                         .HasForeignKey("Status")
-                        .HasConstraintName("FK__Issues__Status__540C7B00");
+                        .HasConstraintName("FK__Issues__Status__489AC854");
 
                     b.Navigation("IssueType");
 
@@ -2437,13 +2505,13 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("MemberProductViews")
                         .HasForeignKey("MemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__MemberPro__Membe__56E8E7AB");
+                        .HasConstraintName("FK__MemberPro__Membe__4B7734FF");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Product", "Product")
                         .WithMany("MemberProductViews")
                         .HasForeignKey("ProductId")
                         .IsRequired()
-                        .HasConstraintName("FK__MemberPro__Produ__57DD0BE4");
+                        .HasConstraintName("FK__MemberPro__Produ__4C6B5938");
 
                     b.Navigation("Member");
 
@@ -2456,13 +2524,13 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("MembersBoards")
                         .HasForeignKey("BoardId")
                         .IsRequired()
-                        .HasConstraintName("FK__MembersBo__Board__58D1301D");
+                        .HasConstraintName("FK__MembersBo__Board__4D5F7D71");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "Member")
                         .WithMany("MembersBoards")
                         .HasForeignKey("MemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__MembersBo__Membe__59C55456");
+                        .HasConstraintName("FK__MembersBo__Membe__4E53A1AA");
 
                     b.Navigation("Board");
 
@@ -2475,23 +2543,23 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("NewsBackendMembers")
                         .HasForeignKey("BackendMemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__News__BackendMem__5AB9788F");
+                        .HasConstraintName("FK__News__BackendMem__4F47C5E3");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.BackendMember", "DeleteBackendMember")
                         .WithMany("NewsDeleteBackendMembers")
                         .HasForeignKey("DeleteBackendMemberId")
-                        .HasConstraintName("FK__News__DeleteBack__5BAD9CC8");
+                        .HasConstraintName("FK__News__DeleteBack__503BEA1C");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Game", "Games")
                         .WithMany("News")
                         .HasForeignKey("GamesId")
-                        .HasConstraintName("FK__News__GamesId__5CA1C101");
+                        .HasConstraintName("FK__News__GamesId__51300E55");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.NewsCategoryCode", "NewsCategory")
                         .WithMany("News")
                         .HasForeignKey("NewsCategoryId")
                         .IsRequired()
-                        .HasConstraintName("FK__News__NewsCatego__5D95E53A");
+                        .HasConstraintName("FK__News__NewsCatego__5224328E");
 
                     b.Navigation("BackendMember");
 
@@ -2507,24 +2575,24 @@ namespace TataGamedomWebAPI.Migrations
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.BackendMember", "DeleteBackendMember")
                         .WithMany("NewsComments")
                         .HasForeignKey("DeleteBackendMemberId")
-                        .HasConstraintName("FK__NewsComme__Delet__5F7E2DAC");
+                        .HasConstraintName("FK__NewsComme__Delet__540C7B00");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "DeleteMember")
                         .WithMany("NewsCommentDeleteMembers")
                         .HasForeignKey("DeleteMemberId")
-                        .HasConstraintName("FK__NewsComme__Delet__5E8A0973");
+                        .HasConstraintName("FK__NewsComme__Delet__531856C7");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "Member")
                         .WithMany("NewsCommentMembers")
                         .HasForeignKey("MemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__NewsComme__Membe__607251E5");
+                        .HasConstraintName("FK__NewsComme__Membe__55009F39");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.News", "News")
                         .WithMany("NewsComments")
                         .HasForeignKey("NewsId")
                         .IsRequired()
-                        .HasConstraintName("FK__NewsComme__NewsI__6166761E");
+                        .HasConstraintName("FK__NewsComme__NewsI__55F4C372");
 
                     b.Navigation("DeleteBackendMember");
 
@@ -2541,13 +2609,13 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("NewsLikes")
                         .HasForeignKey("MemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__NewsLikes__Membe__65370702");
+                        .HasConstraintName("FK__NewsLikes__Membe__59C55456");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.News", "News")
                         .WithMany("NewsLikes")
                         .HasForeignKey("NewsId")
                         .IsRequired()
-                        .HasConstraintName("FK__NewsLikes__NewsI__662B2B3B");
+                        .HasConstraintName("FK__NewsLikes__NewsI__5AB9788F");
 
                     b.Navigation("Member");
 
@@ -2560,13 +2628,13 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("NewsViews")
                         .HasForeignKey("MemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__NewsViews__Membe__671F4F74");
+                        .HasConstraintName("FK__NewsViews__Membe__5BAD9CC8");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.News", "News")
                         .WithMany("NewsViews")
                         .HasForeignKey("NewsId")
                         .IsRequired()
-                        .HasConstraintName("FK__NewsViews__NewsI__681373AD");
+                        .HasConstraintName("FK__NewsViews__NewsI__5CA1C101");
 
                     b.Navigation("Member");
 
@@ -2578,7 +2646,7 @@ namespace TataGamedomWebAPI.Migrations
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.BackendMember", "BackendMember")
                         .WithMany("Newsletters")
                         .HasForeignKey("BackendMemberId")
-                        .HasConstraintName("FK__Newslette__Backe__6442E2C9");
+                        .HasConstraintName("FK__Newslette__Backe__58D1301D");
 
                     b.Navigation("BackendMember");
                 });
@@ -2589,12 +2657,12 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("NewsletterLogs")
                         .HasForeignKey("AddresseeMemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__Newslette__Addre__625A9A57");
+                        .HasConstraintName("FK__Newslette__Addre__56E8E7AB");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Newsletter", "Newsletter")
                         .WithMany("NewsletterLogs")
                         .HasForeignKey("NewsletterId")
-                        .HasConstraintName("FK__Newslette__Newsl__634EBE90");
+                        .HasConstraintName("FK__Newslette__Newsl__57DD0BE4");
 
                     b.Navigation("AddresseeMember");
 
@@ -2686,7 +2754,7 @@ namespace TataGamedomWebAPI.Migrations
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Coupon", "Coupon")
                         .WithMany("OrderItemsCoupons")
                         .HasForeignKey("CouponId")
-                        .HasConstraintName("FK__OrderItem__Coupo__6CD828CA");
+                        .HasConstraintName("FK__OrderItem__Coupo__6166761E");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.OrderItem", "OrderItem")
                         .WithMany("OrderItemsCoupons")
@@ -2705,23 +2773,23 @@ namespace TataGamedomWebAPI.Migrations
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Board", "Board")
                         .WithMany("Posts")
                         .HasForeignKey("BoardId")
-                        .HasConstraintName("FK__Posts__BoardId__00DF2177");
+                        .HasConstraintName("FK__Posts__BoardId__756D6ECB");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.BackendMember", "DeleteBackendMember")
                         .WithMany("Posts")
                         .HasForeignKey("DeleteBackendMemberId")
-                        .HasConstraintName("FK__Posts__DeleteBac__01D345B0");
+                        .HasConstraintName("FK__Posts__DeleteBac__76619304");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "DeleteMember")
                         .WithMany("PostDeleteMembers")
                         .HasForeignKey("DeleteMemberId")
-                        .HasConstraintName("FK__Posts__DeleteMem__02C769E9");
+                        .HasConstraintName("FK__Posts__DeleteMem__7755B73D");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "Member")
                         .WithMany("PostMembers")
                         .HasForeignKey("MemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__Posts__MemberId__03BB8E22");
+                        .HasConstraintName("FK__Posts__MemberId__7849DB76");
 
                     b.Navigation("Board");
 
@@ -2737,29 +2805,29 @@ namespace TataGamedomWebAPI.Migrations
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.BackendMember", "DeleteBackendMember")
                         .WithMany("PostComments")
                         .HasForeignKey("DeleteBackendMemberId")
-                        .HasConstraintName("FK__PostComme__Delet__7755B73D");
+                        .HasConstraintName("FK__PostComme__Delet__6BE40491");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "DeleteMember")
                         .WithMany("PostCommentDeleteMembers")
                         .HasForeignKey("DeleteMemberId")
-                        .HasConstraintName("FK__PostComme__Delet__76619304");
+                        .HasConstraintName("FK__PostComme__Delet__6AEFE058");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Member", "Member")
                         .WithMany("PostCommentMembers")
                         .HasForeignKey("MemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__PostComme__Membe__7849DB76");
+                        .HasConstraintName("FK__PostComme__Membe__6CD828CA");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.PostComment", "Parent")
                         .WithMany("InverseParent")
                         .HasForeignKey("ParentId")
-                        .HasConstraintName("FK__PostComme__Paren__793DFFAF");
+                        .HasConstraintName("FK__PostComme__Paren__6DCC4D03");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Post", "Post")
                         .WithMany("PostComments")
                         .HasForeignKey("PostId")
                         .IsRequired()
-                        .HasConstraintName("FK__PostComme__PostI__7A3223E8");
+                        .HasConstraintName("FK__PostComme__PostI__6EC0713C");
 
                     b.Navigation("DeleteBackendMember");
 
@@ -2778,18 +2846,18 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("PostCommentReports")
                         .HasForeignKey("MemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__PostComme__Membe__73852659");
+                        .HasConstraintName("FK__PostComme__Membe__681373AD");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.PostComment", "PostComment")
                         .WithMany("PostCommentReports")
                         .HasForeignKey("PostCommentId")
                         .IsRequired()
-                        .HasConstraintName("FK__PostComme__PostC__74794A92");
+                        .HasConstraintName("FK__PostComme__PostC__690797E6");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.BackendMember", "ReviewerBackenMember")
                         .WithMany("PostCommentReports")
                         .HasForeignKey("ReviewerBackenMemberId")
-                        .HasConstraintName("FK__PostComme__Revie__756D6ECB");
+                        .HasConstraintName("FK__PostComme__Revie__69FBBC1F");
 
                     b.Navigation("Member");
 
@@ -2804,13 +2872,13 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("PostCommentUpDownVotes")
                         .HasForeignKey("MemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__PostComme__Membe__7B264821");
+                        .HasConstraintName("FK__PostComme__Membe__6FB49575");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.PostComment", "PostComment")
                         .WithMany("PostCommentUpDownVotes")
                         .HasForeignKey("PostCommentId")
                         .IsRequired()
-                        .HasConstraintName("FK__PostComme__PostC__7C1A6C5A");
+                        .HasConstraintName("FK__PostComme__PostC__70A8B9AE");
 
                     b.Navigation("Member");
 
@@ -2823,7 +2891,7 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("PostEditLogs")
                         .HasForeignKey("PostId")
                         .IsRequired()
-                        .HasConstraintName("FK__PostEditL__PostI__7D0E9093");
+                        .HasConstraintName("FK__PostEditL__PostI__719CDDE7");
 
                     b.Navigation("Post");
                 });
@@ -2834,18 +2902,18 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("PostReports")
                         .HasForeignKey("MemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__PostRepor__Membe__7E02B4CC");
+                        .HasConstraintName("FK__PostRepor__Membe__72910220");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Post", "Post")
                         .WithMany("PostReports")
                         .HasForeignKey("PostId")
                         .IsRequired()
-                        .HasConstraintName("FK__PostRepor__PostI__7EF6D905");
+                        .HasConstraintName("FK__PostRepor__PostI__73852659");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.BackendMember", "ReviewerBackenMember")
                         .WithMany("PostReports")
                         .HasForeignKey("ReviewerBackenMemberId")
-                        .HasConstraintName("FK__PostRepor__Revie__7FEAFD3E");
+                        .HasConstraintName("FK__PostRepor__Revie__74794A92");
 
                     b.Navigation("Member");
 
@@ -2860,13 +2928,13 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("PostUpDownVotes")
                         .HasForeignKey("MemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__PostUpDow__Membe__04AFB25B");
+                        .HasConstraintName("FK__PostUpDow__Membe__793DFFAF");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Post", "Post")
                         .WithMany("PostUpDownVotes")
                         .HasForeignKey("PostId")
                         .IsRequired()
-                        .HasConstraintName("FK__PostUpDow__PostI__05A3D694");
+                        .HasConstraintName("FK__PostUpDow__PostI__7A3223E8");
 
                     b.Navigation("Member");
 
@@ -2879,29 +2947,29 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("ProductCreatedBackendMembers")
                         .HasForeignKey("CreatedBackendMemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__Products__Create__078C1F06");
+                        .HasConstraintName("FK__Products__Create__7C1A6C5A");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Game", "Game")
                         .WithMany("Products")
                         .HasForeignKey("GameId")
-                        .HasConstraintName("FK__Products__GameId__0880433F");
+                        .HasConstraintName("FK__Products__GameId__7D0E9093");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.GamePlatformsCode", "GamePlatform")
                         .WithMany("Products")
                         .HasForeignKey("GamePlatformId")
                         .IsRequired()
-                        .HasConstraintName("FK__Products__GamePl__09746778");
+                        .HasConstraintName("FK__Products__GamePl__7E02B4CC");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.BackendMember", "ModifiedBackendMember")
                         .WithMany("ProductModifiedBackendMembers")
                         .HasForeignKey("ModifiedBackendMemberId")
-                        .HasConstraintName("FK__Products__Modifi__0A688BB1");
+                        .HasConstraintName("FK__Products__Modifi__7EF6D905");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.ProductStatusCode", "ProductStatus")
                         .WithMany("Products")
                         .HasForeignKey("ProductStatusId")
                         .IsRequired()
-                        .HasConstraintName("FK__Products__Produc__0B5CAFEA");
+                        .HasConstraintName("FK__Products__Produc__7FEAFD3E");
 
                     b.Navigation("CreatedBackendMember");
 
@@ -2920,7 +2988,7 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("ProductImages")
                         .HasForeignKey("ProductId")
                         .IsRequired()
-                        .HasConstraintName("FK__ProductIm__Produ__0697FACD");
+                        .HasConstraintName("FK__ProductIm__Produ__7B264821");
 
                     b.Navigation("Product");
                 });
@@ -2930,12 +2998,12 @@ namespace TataGamedomWebAPI.Migrations
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.BackendMember", "BackendMember")
                         .WithMany("Replies")
                         .HasForeignKey("BackendMemberId")
-                        .HasConstraintName("FK__Replies__Backend__0C50D423");
+                        .HasConstraintName("FK__Replies__Backend__00DF2177");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Issue", "Issue")
                         .WithMany("Replies")
                         .HasForeignKey("IssueId")
-                        .HasConstraintName("FK__Replies__IssueId__0D44F85C");
+                        .HasConstraintName("FK__Replies__IssueId__01D345B0");
 
                     b.Navigation("BackendMember");
 
@@ -2948,7 +3016,7 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("StandardProducts")
                         .HasForeignKey("ProductId")
                         .IsRequired()
-                        .HasConstraintName("FK__StandardP__Produ__0E391C95");
+                        .HasConstraintName("FK__StandardP__Produ__02C769E9");
 
                     b.Navigation("Product");
                 });
@@ -2959,13 +3027,13 @@ namespace TataGamedomWebAPI.Migrations
                         .WithMany("StockInSheets")
                         .HasForeignKey("StockInStatusId")
                         .IsRequired()
-                        .HasConstraintName("FK__StockInSh__Stock__0F2D40CE");
+                        .HasConstraintName("FK__StockInSh__Stock__03BB8E22");
 
                     b.HasOne("TataGamedomWebAPI.Models.EFModels.Supplier", "Supplier")
                         .WithMany("StockInSheets")
                         .HasForeignKey("SupplierId")
                         .IsRequired()
-                        .HasConstraintName("FK__StockInSh__Suppl__10216507");
+                        .HasConstraintName("FK__StockInSh__Suppl__04AFB25B");
 
                     b.Navigation("StockInStatus");
 
@@ -3102,6 +3170,10 @@ namespace TataGamedomWebAPI.Migrations
 
             modelBuilder.Entity("TataGamedomWebAPI.Models.EFModels.Member", b =>
                 {
+                    b.Navigation("BoardNotificationRecipientMembers");
+
+                    b.Navigation("BoardNotificationRelationMembers");
+
                     b.Navigation("BoardsModerators");
 
                     b.Navigation("BoardsModeratorsApplications");
@@ -3111,6 +3183,8 @@ namespace TataGamedomWebAPI.Migrations
                     b.Navigation("BucketLogModeratorMembers");
 
                     b.Navigation("Carts");
+
+                    b.Navigation("ChatMessages");
 
                     b.Navigation("GameComments");
 
@@ -3196,6 +3270,8 @@ namespace TataGamedomWebAPI.Migrations
 
             modelBuilder.Entity("TataGamedomWebAPI.Models.EFModels.Post", b =>
                 {
+                    b.Navigation("BoardNotifications");
+
                     b.Navigation("PostComments");
 
                     b.Navigation("PostEditLogs");
