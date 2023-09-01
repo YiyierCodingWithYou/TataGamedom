@@ -1,8 +1,9 @@
 ﻿using MediatR;
 using TataGamedomWebAPI.Application.Contracts.Logging;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
+using TataGamedomWebAPI.Application.Features.SupportHub.Queries.GetInfoAndMessage.Receiver;
 
-namespace TataGamedomWebAPI.Application.Features.SupportHub.Queries.GetInfoAndMessage;
+namespace TataGamedomWebAPI.Application.Features.SupportHub.Queries.GetInfoAndMessage.Sender;
 
 public class GetInfoAndMessageQueryHandler : IRequestHandler<GetInfoAndMessageQuery, MemberAndChatInfoDto?>
 {
@@ -10,7 +11,7 @@ public class GetInfoAndMessageQueryHandler : IRequestHandler<GetInfoAndMessageQu
 
     public GetInfoAndMessageQueryHandler(IMemberRepository memberRepository)
     {
-        this._memberRepository = memberRepository;
+        _memberRepository = memberRepository;
     }
     public async Task<MemberAndChatInfoDto?> Handle(GetInfoAndMessageQuery request, CancellationToken cancellationToken)
     {
@@ -19,3 +20,4 @@ public class GetInfoAndMessageQueryHandler : IRequestHandler<GetInfoAndMessageQu
         return memberAndChatInfo;
     }
 }
+

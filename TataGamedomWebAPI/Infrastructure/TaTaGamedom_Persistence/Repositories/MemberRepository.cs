@@ -35,12 +35,31 @@ public class MemberRepository : GenericRepository<Member>, IMemberRepository
             {
                 MemberAccount = m.Account,
                 MemberName = m.Name,
-                MemberIconImg = m.IconImg,
+                MemberIconImg = "https://localhost:7081/Files/Uploads/Icons/" + m.IconImg,
                 ChatMessages = chatMessages
             })
             .FirstOrDefaultAsync();
 
         return memberAndChatInfo;
+    }
+
+    public async Task<MemberAndChatInfoDto?> GetMessageReceiverInfo(string receiverAccount)
+    {
+        List<ChatMessageDto> chatMessages = await GetChatMessagesByAccount(receiverAccount);
+
+        MemberAndChatInfoDto? receiverInfo = await _dbContext.Members
+            .AsNoTracking()
+            .Where(m => m.Account == receiverAccount)
+            .Select(m => new MemberAndChatInfoDto
+            {
+                MemberAccount = m.Account,
+                MemberName = m.Name,
+                MemberIconImg = "https://localhost:7081/Files/Uploads/Icons/" + m.IconImg,
+                ChatMessages = chatMessages
+            })
+            .FirstOrDefaultAsync();
+
+        return receiverInfo;
     }
 
     private async Task<List<ChatMessageDto>> GetChatMessagesByAccount(string? account)
@@ -57,5 +76,7 @@ public class MemberRepository : GenericRepository<Member>, IMemberRepository
             })
             .ToListAsync();
     }
+
+
 }
 

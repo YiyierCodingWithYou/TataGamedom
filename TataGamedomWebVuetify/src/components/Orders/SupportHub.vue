@@ -12,6 +12,7 @@
                   :key="index"
                   :name="item.memberName"
                   :photoUrl="memberAndChatInfo.memberIconImg"
+                  :sendAt="item.sendAt"
                   :isSenderAccountMine="
                     item.senderAccount === memberAndChatInfo.memberAccount
                   "
@@ -73,7 +74,7 @@ export default {
           { withCredentials: true }
         );
         memberAndChatInfo.value = response.data;
-        console.log(memberAndChatInfo.value);
+        console.log("發訊息的人的資訊", memberAndChatInfo.value);
       } catch (error) {
         console.error(error);
       }
@@ -112,21 +113,37 @@ export default {
       connectionToChatHub.stop();
     });
 
-    const receiveMessageHandler = (account, content, memberName) => {
-      messages.value.push({ account, content, memberName });
+    const receiveMessageHandler = (
+      account,
+      content,
+      memberName,
+      sendAt,
+      receiverIconImg
+    ) => {
+      messages.value.push({
+        account,
+        content,
+        memberName,
+        sendAt,
+        receiverIconImg,
+      });
     };
 
     const receivePrivateMessageHandler = (
       senderAccount,
       content,
       memberName,
-      receiverAccount
+      receiverAccount,
+      sendAt,
+      receiverIconImg
     ) => {
       messages.value.push({
         senderAccount,
         content,
         memberName,
         receiverAccount,
+        sendAt,
+        receiverIconImg,
       });
     };
 

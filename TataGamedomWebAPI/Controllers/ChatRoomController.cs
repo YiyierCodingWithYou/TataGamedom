@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TataGamedomWebAPI.Application.Features.SupportHub.Queries.GetInfoAndMessage;
+using TataGamedomWebAPI.Application.Features.SupportHub.Queries.GetInfoAndMessage.Sender;
 
 namespace TataGamedomWebAPI.Controllers;
 

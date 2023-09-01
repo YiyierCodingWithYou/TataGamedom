@@ -1,33 +1,71 @@
 <template>
-  <div class="bg-white mt-3">
-    <span v-if="!isSenderAccountMine">{{ name }}</span>
-    <div class="flex" :class="isSenderAccountMine ? 'flex-row-reverse' : ''">
-      <v-avatar class="mt-1" :image="photoUrl" size="40" color=""></v-avatar>
-      <slot />
+  <div
+    :class="['message-wrapper', isSenderAccountMine ? 'right' : 'left']"
+    class=""
+  >
+    <!-- <span class="message-author" v-if="!isSenderAccountMine"> -->
+    <span class="message-author">
+      <v-avatar size="75" class="avatar">
+        <v-img :src="photoUrl" cover></v-img
+      ></v-avatar>
+      <p>{{ name }}</p>
+    </span>
+    <div class="message-content mt-4 mx-2">
+      <div class="message-box">
+        <slot class="text-black" />
+      </div>
+      <span class="message-time">{{ sendAt }}</span>
     </div>
   </div>
 </template>
-  
+
 <script scoped>
 export default {
   props: {
     name: { type: String, default: "" },
     photoUrl: { type: String, default: "" },
+    sendAt: { type: String, default: "" },
     isSenderAccountMine: { type: Boolean, default: false },
   },
 };
 </script>
 
-<style>
-.flex {
+<style scoped>
+.message-wrapper {
   display: flex;
+  margin-top: 12px;
 }
 
-.flex-row-reverse {
+.message-wrapper.right {
   flex-direction: row-reverse;
 }
 
-.bg-white {
-  background: cornsilk;
+.message-author {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.avatar {
+  color: brown;
+  margin-right: 8px;
+}
+
+.message-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.message-box {
+  background-color: cornsilk;
+  color: black !important;
+  padding: 12px;
+  border-radius: 16px;
+}
+
+.message-time {
+  font-size: 10px;
+  align-self: flex-end;
+  margin-top: 4px;
 }
 </style>
