@@ -229,17 +229,17 @@ public class LinePayService : ILinePayService
     {
         int shippingCost = 0;
 
-        if (request.ShipmentMethod != "payFirstAtHome" && request.ShipmentMethod != "payAtHome")
+		if (request.ShipmentMethod == "oversea" || request.ShipmentMethod == "gameCode")
+		{
+			shippingCost = 0;
+		}
+		if (request.ShipmentMethod == "payFirstAtHome" || request.ShipmentMethod == "payAtHome")
         {
-            shippingCost = 60;
-        }
-        if (request.ShipmentMethod == "gameCode")
-        {
-            shippingCost = 0;
+            shippingCost = 80;
         }
         else
         {
-            shippingCost = 80;
+            shippingCost = 60;
         }
 
         int total = amount > 2000 ? amount : amount + shippingCost;
