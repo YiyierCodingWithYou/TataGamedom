@@ -241,7 +241,6 @@ const Add2Cart = async (productId) => {
         name: "Login",
       });
     }
-    Swal.fire('成功！', result.message, 'success');
     emit("drawerInput", result.message);
   } else {
     let localCart = localStorage.getItem("localCart");
@@ -263,7 +262,6 @@ const Add2Cart = async (productId) => {
       localCart.push({ productId, qty: quantityNum.value });
     }
     localStorage.setItem("localCart", JSON.stringify(localCart));
-    Swal.fire('成功！', '商品已加入購物車', 'success');
     emit("drawerInput", "已成功加入購物車！");
   }
 };
