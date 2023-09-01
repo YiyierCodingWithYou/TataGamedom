@@ -1,6 +1,19 @@
 <template>
-  <v-carousel hide-delimiters show-arrows="hover" cycle interval="3000" v-model="currentIndex" style="height: 500px">
-    <v-carousel-item v-for="item in news" :key="item.id" :src="img + item.coverImg" cover @click="GotoNewsPage(item.id)">
+  <v-carousel
+    hide-delimiters
+    show-arrows="hover"
+    cycle
+    interval="3000"
+    v-model="currentIndex"
+    style="height: 500px"
+  >
+    <v-carousel-item
+      v-for="item in news"
+      :key="item.id"
+      :src="img + item.coverImg"
+      cover
+      @click="GotoNewsPage(item.id)"
+    >
       <div class="title" style="cursor: pointer">
         <p class="titleword">{{ item.title }}</p>
       </div>
@@ -66,7 +79,7 @@ const GotoNewsPage = async (newsId) => {
 .titleword {
   color: #a1dfe9;
   display: flex;
-  font-size: 60px;
+  font-size: 50px;
   justify-content: center;
   align-items: center;
   display: flex;
