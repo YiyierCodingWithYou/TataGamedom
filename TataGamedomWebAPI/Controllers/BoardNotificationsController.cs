@@ -29,9 +29,12 @@ namespace TataGamedomWebAPI.Controllers
 		[EnableCors("AllowCookie")]
 		[HttpGet]
         public async Task<ActionResult<IEnumerable<BoardNotificationDto>>> GetBoardNotifications()
-        {
-             
+        {           
 			var account = HttpContext.User.FindFirstValue("MembersAccount");
+            if (account == null)
+            {
+                return null;
+            }
 			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
 			if (_context.BoardNotifications == null)
           {
