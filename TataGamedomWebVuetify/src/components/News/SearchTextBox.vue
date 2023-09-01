@@ -1,12 +1,6 @@
 <template>
-  <input
-    type="search"
-    v-model="keyword"
-    style="padding-left: 5px; color: white"
-    @change="inputHandler"
-    class="form-control"
-    placeholder="請輸入關鍵字"
-  />
+  <input type="search" v-model="keyword" style="padding-left: 5px; color: white" @change="inputHandler"
+    class="mt-5 gb-yellow" placeholder="請輸入關鍵字" />
 </template>
     
 <script setup>
