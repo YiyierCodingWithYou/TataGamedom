@@ -33,6 +33,10 @@ public partial class Member
 
     public string? AboutMe { get; set; }
 
+    public virtual ICollection<BoardNotification> BoardNotificationRecipientMembers { get; set; } = new List<BoardNotification>();
+
+    public virtual ICollection<BoardNotification> BoardNotificationRelationMembers { get; set; } = new List<BoardNotification>();
+
     public virtual ICollection<BoardsModerator> BoardsModerators { get; set; } = new List<BoardsModerator>();
 
     public virtual ICollection<BoardsModeratorsApplication> BoardsModeratorsApplications { get; set; } = new List<BoardsModeratorsApplication>();

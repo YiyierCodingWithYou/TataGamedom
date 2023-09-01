@@ -6,10 +6,18 @@
         <v-divider></v-divider>
         <v-container>
           <div class="container-sm mt-20">
-            <v-virtual-scroll :items="messages" height="900">
+            <v-virtual-scroll :items="messages" height="650">
               <template v-slot="{ item, index }">
-                <Message :key="index" :name="item.memberName" :photoUrl="memberAndChatInfo.memberIconImg"
-                  :isSenderAccountMine="item.senderAccount === memberAndChatInfo.memberAccount">
+                <Message
+                  :key="index"
+                  :name="item.memberName"
+                  :senderPhotoUrl="memberAndChatInfo.memberIconImg"
+                  :recevierPhotoUrl="item.receiverIconImg"
+                  :sendAt="item.sendAt"
+                  :isSenderAccountMine="
+                    item.senderAccount === memberAndChatInfo.memberAccount
+                  "
+                >
                   {{ item.content }}
                 </Message>
               </template>
@@ -17,12 +25,25 @@
           </div>
 
           <div class="fixed-bottom-container">
-            <v-text-field label="傳給哪個帳號" hide-details="auto" v-model="receiverAccount" placeholder="傳給誰"
-              append-icon="mdi"></v-text-field>
+            <v-text-field
+              label="傳給哪個帳號"
+              hide-details="auto"
+              v-model="receiverAccount"
+              placeholder="傳給誰"
+              append-icon="mdi"
+            ></v-text-field>
 
-            <v-text-field label="輸入訊息" v-model="chatMessage" placeholder="你的訊息" type="text" no-details outlined
-              append-icon="mdi-comment-multiple-outline" @keyup.enter="sendPrivateMessage"
-              @click:append="sendPrivateMessage"></v-text-field>
+            <v-text-field
+              label="輸入訊息"
+              v-model="chatMessage"
+              placeholder="你的訊息"
+              type="text"
+              no-details
+              outlined
+              append-icon="mdi-comment-multiple-outline"
+              @keyup.enter="sendPrivateMessage"
+              @click:append="sendPrivateMessage"
+            ></v-text-field>
           </div>
         </v-container>
       </div>
@@ -54,7 +75,7 @@ export default {
           { withCredentials: true }
         );
         memberAndChatInfo.value = response.data;
-        console.log(memberAndChatInfo.value);
+        console.log("發訊息的人的資訊", memberAndChatInfo.value);
       } catch (error) {
         console.error(error);
       }
@@ -93,21 +114,37 @@ export default {
       connectionToChatHub.stop();
     });
 
-    const receiveMessageHandler = (account, content, memberName) => {
-      messages.value.push({ account, content, memberName });
+    const receiveMessageHandler = (
+      account,
+      content,
+      memberName,
+      sendAt,
+      receiverIconImg
+    ) => {
+      messages.value.push({
+        account,
+        content,
+        memberName,
+        sendAt,
+        receiverIconImg,
+      });
     };
 
     const receivePrivateMessageHandler = (
       senderAccount,
       content,
       memberName,
-      receiverAccount
+      receiverAccount,
+      sendAt,
+      receiverIconImg
     ) => {
       messages.value.push({
         senderAccount,
         content,
         memberName,
         receiverAccount,
+        sendAt,
+        receiverIconImg,
       });
     };
 

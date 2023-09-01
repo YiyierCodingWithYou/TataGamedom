@@ -39,7 +39,7 @@ const returnSelectedHandler = (data: object) => {
   selectedData.value = data;
   tab.value = "填寫資料";
   disabledTabs.value["填寫資料"] = false;
-  console.log(selectedData.value);
+  //console.log(selectedData.value);
 };
 
 const handlePaymentComplete = () => {

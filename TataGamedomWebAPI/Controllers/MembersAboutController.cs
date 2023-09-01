@@ -126,9 +126,20 @@ namespace TataGamedomWebAPI.Controllers
 				FollowedMemberId = memberId,
 			};
 
+			var newMemberFollowNotification = new BoardNotification()
+			{
+				RecipientMemberId = memberId,
+				RelationMemberId = loginId,
+				Link = $"/GameLounge/{loginAccount}",
+				Content = $"{loginAccount} 開始關注您！",
+				IsReaded = false,
+				CreateTime = DateTime.Now,
+			};
+
 			try
 			{
 				_context.MemberFollows.Add(newMemberFollow);
+				_context.BoardNotifications.Add(newMemberFollowNotification);
 				await _context.SaveChangesAsync();
 			}
 			catch (Exception e)
@@ -146,7 +157,6 @@ namespace TataGamedomWebAPI.Controllers
 		{
 			var loginAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 			int loginId = _simpleHelper.memberIdByAccount(loginAccount);
-
 			if (loginId == 0)
 			{
 				return NotFound();
