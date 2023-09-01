@@ -1,8 +1,8 @@
 <template>
-  <div class="message">
+  <div class="bg-white mt-3">
     <span v-if="!isSenderAccountMine">{{ name }}</span>
     <div class="flex" :class="isSenderAccountMine ? 'flex-row-reverse' : ''">
-      <v-avatar class="mt-1" image:="photoUrl" size="40" color="red"></v-avatar>
+      <v-avatar class="mt-1" :image="photoUrl" size="40" color=""></v-avatar>
       <slot />
     </div>
   </div>
@@ -25,5 +25,9 @@ export default {
 
 .flex-row-reverse {
   flex-direction: row-reverse;
+}
+
+.bg-white {
+  background: cornsilk;
 }
 </style>

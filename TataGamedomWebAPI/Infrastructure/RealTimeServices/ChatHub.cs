@@ -14,7 +14,7 @@ public class ChatHub : Hub<IChatService>
 
     public async Task SendPrivateMessage(string senderAccount, string messageContent, string memberName, string receiverAccount )
     {
-        if (Context.User.Identity.IsAuthenticated && Context.User.Identity.Name == senderAccount)
+        if (Context?.User?.Identity?.IsAuthenticated == true && Context.User.Identity.Name == senderAccount)
         {
             await Clients.User(senderAccount).ReceivePrivateMessage(senderAccount, messageContent, memberName, receiverAccount);
             await Clients.User(receiverAccount).ReceivePrivateMessage(senderAccount, messageContent, memberName, receiverAccount);
