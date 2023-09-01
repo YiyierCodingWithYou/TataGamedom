@@ -187,6 +187,11 @@ const routes = [
         component: () => import("@/views/GameLounge.vue"),
       },
       {
+        path: "/GameLounge/Board/:boardId/:postId",
+        name: "GameLoungePOST",
+        component: () => import("@/views/GameLounge.vue"),
+      },
+      {
         path: "/GameLounge/:account",
         name: "GameLoungeAccount",
         component: () => import("@/views/GameLounge.vue"),
@@ -226,6 +231,6 @@ router.beforeEach((to, from, next) => {
 });
 
 router.afterEach((to, from, next) => {
-	window.scrollTo(0, 0);
+  window.scrollTo(0, 0);
 });
 export default router;

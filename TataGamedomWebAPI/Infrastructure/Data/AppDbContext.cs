@@ -30,6 +30,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Board> Boards { get; set; }
 
+    public virtual DbSet<BoardNotification> BoardNotifications { get; set; }
+
     public virtual DbSet<BoardsModerator> BoardsModerators { get; set; }
 
     public virtual DbSet<BoardsModeratorsApplication> BoardsModeratorsApplications { get; set; }
@@ -230,6 +232,32 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("FK__Boards__GameId__22751F6C");
         });
 
+        modelBuilder.Entity<BoardNotification>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__BoardNot__3214EC07B93E99E1");
+
+            entity.Property(e => e.Content).HasMaxLength(2000);
+            entity.Property(e => e.CreateTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.IsReaded).HasColumnName("isReaded");
+            entity.Property(e => e.Link).HasMaxLength(1000);
+            entity.Property(e => e.ReadTime).HasColumnType("datetime");
+
+            entity.HasOne(d => d.RecipientMember).WithMany(p => p.BoardNotificationRecipientMembers)
+                .HasForeignKey(d => d.RecipientMemberId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__BoardNoti__Recip__12FDD1B2");
+
+            entity.HasOne(d => d.RelationMember).WithMany(p => p.BoardNotificationRelationMembers)
+                .HasForeignKey(d => d.RelationMemberId)
+                .HasConstraintName("FK__BoardNoti__Relat__13F1F5EB");
+
+            entity.HasOne(d => d.RelationPost).WithMany(p => p.BoardNotifications)
+                .HasForeignKey(d => d.RelationPostId)
+                .HasConstraintName("FK__BoardNoti__Relat__14E61A24");
+        });
+
         modelBuilder.Entity<BoardsModerator>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__BoardsMo__3214EC07E2B49EAC");
@@ -325,7 +353,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Carts__3214EC07DBB283D1");
+            entity.HasKey(e => e.Id).HasName("PK__Carts__3214EC07043F272B");
 
             entity.HasOne(d => d.Member).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.MemberId)
@@ -867,7 +895,7 @@ public partial class AppDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__Posts__3214EC07C26390BD");
 
-            entity.Property(e => e.Content).HasMaxLength(1500);
+            entity.Property(e => e.Content).HasMaxLength(2500);
             entity.Property(e => e.Datetime).HasColumnType("datetime");
             entity.Property(e => e.DeleteDatetime).HasColumnType("datetime");
             entity.Property(e => e.LastEditDatetime).HasColumnType("datetime");

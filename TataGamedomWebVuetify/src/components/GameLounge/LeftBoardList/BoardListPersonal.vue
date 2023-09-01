@@ -117,7 +117,7 @@ const fetchData = () => {
         })
         .slice(0, 5);
 
-      modItems.value = data.value
+      modItems.value = data2.value
         .filter((item) => item.isMod)
         .map((data) => {
           return {

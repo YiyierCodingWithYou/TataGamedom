@@ -26,4 +26,18 @@ import DefaultView from "./View.vue";
 .font-digit {
   font-family: "Digi-font";
 }
+::-webkit-scrollbar {
+  height: 3px;
+  width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#f9ee08 40%, #a1dfe9);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #e5e5e5;
+  border-radius: 8px;
+}
 </style>
