@@ -1,5 +1,7 @@
-﻿using TataGamedomWebAPI.Application.Contracts.Logging;
+﻿using Microsoft.AspNetCore.SignalR;
+using TataGamedomWebAPI.Application.Contracts.Logging;
 using TataGamedomWebAPI.Infrastructure.Logging;
+using TataGamedomWebAPI.Infrastructure.RealTimeServices;
 using TataGamedomWebAPI.Infrastructure.ShipmentAdapter.ECPayShipmentAdapter;
 
 namespace TataGamedomWebAPI.Infrastructure;
@@ -11,7 +13,10 @@ public static class InfrastructureServicesRegistration
         //Todo Email
 
         services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
+        
         services.AddSignalR();
+        services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+
         services.AddScoped<ECPayShipmentService>();
         services.AddCors(options =>
         {

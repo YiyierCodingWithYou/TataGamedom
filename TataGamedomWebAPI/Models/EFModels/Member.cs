@@ -47,6 +47,8 @@ public partial class Member
 
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
+    public virtual ICollection<ChatMessage> ChatMessages { get; set; } = new List<ChatMessage>();
+
     public virtual ICollection<GameComment> GameComments { get; set; } = new List<GameComment>();
 
     public virtual ICollection<Issue> Issues { get; set; } = new List<Issue>();
