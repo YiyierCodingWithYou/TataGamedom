@@ -125,6 +125,7 @@
   <ItemGroup>
     <Folder Include="Application\Features\InventoryItem\Shared\" />
     <Folder Include="Application\Features\OrderItem\Shared\" />
+    <Folder Include="Application\Features\SupportHub\Commands\" />
     <Folder Include="Files\LogisticsSelectionHtml\" />
     <Folder Include="Files\Uploads\PostComment\" />
     <Folder Include="Infrastructure\Data\DapperRepository\" />
