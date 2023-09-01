@@ -4,7 +4,7 @@
   <!-- <AboutAccount></AboutAccount> -->
   <!-- <AboutBoard></AboutBoard> -->
   <!-- <GameLoungeHome></GameLoungeHome> -->
-  <FollowList :data="followData">
+  <!-- <FollowList :data="followData">
     <template #title> 追蹤者 </template>
     <template #clickBtn>
       <v-btn variant="text"> Open Dialog </v-btn>
@@ -15,7 +15,9 @@
     <template #clickBtn>
       <v-btn variant="text"> 你好啦 </v-btn>
     </template>
-  </FollowList>
+  </FollowList> -->
+
+  <Notification />
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
@@ -25,22 +27,25 @@ import AboutAccount from "@/components/GameLounge/RightBoardList/AboutAccount.vu
 import AboutBoard from "@/components/GameLounge/RightBoardList/AboutBoard.vue";
 import GameLoungeHome from "@/components/GameLounge/Main/GameLoungeHome.vue";
 import FollowList from "@/components/GameLounge/RightBoardList/FollowList.vue";
-const followData = ref([{}]);
-followData.value = [
-  {
-    title: "李四",
-    value: "lisi",
-    prependAvatar: "https://cdn.vuetifyjs.com/images/john.png",
-  },
-  {
-    title: "Item #2",
-    value: 2,
-  },
-  {
-    title: "Item #3",
-    value: 3,
-  },
-];
+import Notification from "@/components/GameLounge/Infra/Notification.vue";
+
+// const followData = ref([{}]);
+
+// followData.value = [
+//   {
+//     title: "李四",
+//     value: "lisi",
+//     prependAvatar: "https://cdn.vuetifyjs.com/images/john.png",
+//   },
+//   {
+//     title: "Item #2",
+//     value: 2,
+//   },
+//   {
+//     title: "Item #3",
+//     value: 3,
+//   },
+// ];
 </script>
 
 <style></style>

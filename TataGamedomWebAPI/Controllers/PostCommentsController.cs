@@ -107,7 +107,6 @@ namespace TataGamedomWebAPI.Controllers
 		{
 			var memberAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 			int memberId = _simpleHelper.memberIdByAccount(memberAccount);
-			//int memberId = 3; // 王五 wangwu 測試用
 			if (memberId == 0)
 			{
 				return ApiResult.Fail("沒這個會員");
@@ -122,8 +121,30 @@ namespace TataGamedomWebAPI.Controllers
 				Datetime = DateTime.Now,
 				ActiveFlag = true
 			};
+
+			var boardId = await _context.Posts
+									 .Where(p => p.Id == dto.PostId)
+									 .Select(p => p.BoardId)
+									 .FirstOrDefaultAsync();
+			var PostAuthorId = await _context.Posts
+									 .Where(p => p.Id == dto.PostId)
+									 .Select(p => p.MemberId)
+									 .FirstOrDefaultAsync();
+
+			var newPostCommentNotification = new BoardNotification()
+			{
+				RecipientMemberId = PostAuthorId,
+				RelationMemberId = memberId,
+				RelationPostId = dto.PostId,
+				Link = $"/GameLounge/Board/{boardId}/{dto.PostId}",
+				Content = $"{memberAccount} 回應了您的貼文！",
+				IsReaded = false,
+				CreateTime = DateTime.Now,
+			};
+
 			try
 			{
+				_context.BoardNotifications.Add(newPostCommentNotification);
 				_context.PostComments.Add(newPost);
 				await _context.SaveChangesAsync();
 			}
@@ -160,9 +181,30 @@ namespace TataGamedomWebAPI.Controllers
 				ActiveFlag = true,
 				ParentId = dto.CommentId
 			};
+
+			var boardId = await _context.Posts
+									 .Where(p => p.Id == comment.PostId)
+									 .Select(p => p.BoardId)
+									 .FirstOrDefaultAsync();
+			var CommentAuthorId = await _context.PostComments
+									 .Where(p => p.Id == dto.CommentId)
+									 .Select(p => p.MemberId)
+									 .FirstOrDefaultAsync();
+
+			var newCommentReplyNotification = new BoardNotification()
+			{
+				RecipientMemberId = CommentAuthorId,
+				RelationMemberId = memberId,
+				RelationPostId = comment.PostId,
+				Link = $"/GameLounge/Board/{boardId}/{comment.PostId}",
+				Content = $"{memberAccount} 回應了您的留言！",
+				IsReaded = false,
+				CreateTime = DateTime.Now,
+			};
 			try
 			{
 				_context.PostComments.Add(newPost);
+				_context.BoardNotifications.Add(newCommentReplyNotification);
 				await _context.SaveChangesAsync();
 			}
 			catch (DbUpdateConcurrencyException)
