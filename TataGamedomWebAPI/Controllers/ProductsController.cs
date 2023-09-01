@@ -249,5 +249,15 @@ namespace TataGamedomWebAPI.Controllers
 			return classification;
 		}
 
+		[EnableCors("AllowCookie")]
+		[HttpGet("TrackProducts")]
+		public async Task<IEnumerable<TrackProducDTO>> GetTrackProducts()
+		{
+			var account = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
+			var trackList = _context.
+
+		}
+
 	}
 }
