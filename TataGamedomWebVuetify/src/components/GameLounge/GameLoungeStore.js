@@ -1,5 +1,5 @@
+import * as signalR from "@microsoft/signalr";
 const BASE_URL = "https://localhost:7081";
-
 const GameLoungeStore = {
   state: () => ({
     personalList: [],

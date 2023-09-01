@@ -137,6 +137,7 @@ import { zhTW } from "date-fns/locale";
 import editPostBtn from "./EditPostBtn.vue";
 import PostCommentCard from "./PostCommentCard.vue";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 interface Comment {
   commentContent: string;
@@ -179,6 +180,7 @@ const post = ref<Post>(props.post);
 const comments = ref<Comment[]>([]);
 const hasComments = computed(() => comments.value.length > 0);
 const router = useRouter();
+const store = useStore();
 
 const linkTo = (boardOrAccount, value) => {
   if (boardOrAccount === "board") {
@@ -288,6 +290,12 @@ const newComment = async (postId: number) => {
           postId: postId,
           content: message.value,
         }),
+      });
+      await store.dispatch("sendNotification", {
+        account: post.value.memberAccount,
+        loginMember: store.state.account,
+        message: "回覆了您的貼文",
+        postId: postId,
       });
       let result = await response.json();
       await reloadPost(postId);
