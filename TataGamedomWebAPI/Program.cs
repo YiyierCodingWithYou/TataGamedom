@@ -112,7 +112,7 @@ namespace TataGamedomWebAPI
 
             //SignalR
             app.MapHub<ChatHub>("/ChatHub");
-
+            app.MapHub<NotificationHub>("/NotificationHub");
             app.MapControllers();
 
             app.Run();
