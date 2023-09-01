@@ -93,7 +93,6 @@ const loadNews = async () => {
   news.value = datas.news;
   totalPages.value = datas.totalPage;
   console.log("123132", datas);
-  //console.log("456456", news.value);
 };
 
 onMounted(() => {
@@ -187,8 +186,6 @@ watchEffect(() => {
   searchOnce();
 });
 </script>
-
-
     
 <style>
 .container {
