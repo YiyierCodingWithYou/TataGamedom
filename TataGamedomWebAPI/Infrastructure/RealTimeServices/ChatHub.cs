@@ -8,7 +8,7 @@ using TataGamedomWebAPI.Application.Features.SupportHub.Queries.GetInfoAndMessag
 namespace TataGamedomWebAPI.Infrastructure.RealTimeServices;
 
 public class ChatHub : Hub<IChatService>
-{
+{   
     private readonly IMediator _mediator;
 
     public ChatHub(IMediator mediator)
