@@ -1,64 +1,138 @@
 <template lang="">
-  <v-card
-    v-if="comment"
-    :key="comment.commentId"
-    class="comment ms-5"
-    variant="outlined"
-    :data-comment-id="comment.commentId"
-  >
-    <v-card-item v-if="comment.activeFlag">
-      <v-card-subtitle>{{ comment.memberAccount }}</v-card-subtitle>
-    </v-card-item>
-    <v-card-text> {{ comment.commentContent }} </v-card-text>
-    <v-card-actions>
-      <v-btn
-        @click="vote('comment', comment.commentId, 'Up', comment.postId)"
-        :color="comment.voted === 'Up' ? 'red' : 'blue-grey-lighten-4'"
-        >❤️<span>{{ comment.voteUp }}</span>
-      </v-btn>
-      <v-btn
-        @click="vote('comment', comment.commentId, 'Down', comment.postId)"
-        :color="comment.voted === 'Down' ? 'black' : 'blue-grey-lighten-4'"
-        >💀<span>{{ comment.voteDown }}</span>
-      </v-btn>
-      <v-btn @click="showCommentsInput">
-        <span class="material-symbols-rounded size-20"> chat_bubble </span>
-      </v-btn>
-      <v-btn
-        v-if="comment.isAuthor || comment.isMod"
-        @click="deleteContent('comment', comment.commentId, comment.postId)"
-      >
-        <span class="material-symbols-rounded size-20"> delete </span>
-      </v-btn>
-      <span class="ms-auto text-caption">{{
-        relativeTime(comment.dateTime)
-      }}</span>
-    </v-card-actions>
-    <v-text-field
-      v-show="showCommentInputBool"
-      clearable
-      label="回應"
-      v-model="message"
-      append-inner-icon="mdi-message-processing"
-      @click:append-inner="newComment(comment.commentId, comment.postId)"
-      @keyup.enter="newComment(comment.commentId, comment.postId)"
-    ></v-text-field>
-  </v-card>
-  <div class="ms-5">
-    <PostCommentCard
-      v-if="comment.comments"
-      v-for="comment in comment.comments"
+  <div class="comment" :class="comment.isAuthor ? 'yellowOutline' : ''">
+    <v-card
+      v-if="comment"
       :key="comment.commentId"
-      :comment="comment"
-      @reloadPost="$emit('reloadPost', $event)"
-    ></PostCommentCard>
+      class="commentCard ms-5"
+      variant="outlined"
+      :data-comment-id="comment.commentId"
+    >
+      <v-card-item v-if="comment.activeFlag">
+        <v-card-subtitle>
+          <span class="memberInfo" @click="linkTo('account', comment.memberAccount)">
+            {{ comment.memberName }} ( {{ comment.memberAccount }} )
+          </span>
+        </v-card-subtitle>
+      </v-card-item>
+      <v-card-text> {{ comment.commentContent }} </v-card-text>
+      <v-card-actions>
+        <v-btn
+          @click="vote('comment', comment.commentId, 'Up', comment.postId)"
+          :class="comment.voted === 'Up' ? 'voted' : 'not-voted'"
+          ><span class="material-symbols-rounded"> thumb_up </span>
+
+          <span>{{ comment.voteUp }}</span>
+        </v-btn>
+        <v-btn
+          @click="vote('comment', comment.commentId, 'Down', comment.postId)"
+          :class="comment.voted === 'Down' ? 'voted' : 'not-voted'"
+          ><span class="material-symbols-rounded"> thumb_down </span>
+          <span>{{ comment.voteDown }}</span>
+        </v-btn>
+
+        <v-btn @click="showCommentsInput">
+          <span class="material-symbols-rounded size-20"> chat_bubble </span>
+        </v-btn>
+
+        <v-btn
+          v-if="comment.isAuthor || comment.isMod"
+          @click="deleteContent('comment', comment.commentId, comment.postId)"
+        >
+          <span class="material-symbols-rounded size-20"> delete </span>
+        </v-btn>
+        <span class="ms-auto text-caption">{{
+          relativeTime(comment.dateTime)
+        }}</span>
+      </v-card-actions>
+      <v-text-field
+        v-show="showCommentInputBool"
+        clearable
+        label="回應"
+        v-model="message"
+        append-inner-icon="mdi-message-processing"
+        @click:append-inner="newComment(comment.commentId, comment.postId)"
+        @keyup.enter="newComment(comment.commentId, comment.postId)"
+      ></v-text-field>
+    </v-card>
+    <div>
+      <div class="ms-5">
+        <PostCommentCard
+          v-if="comment.comments"
+          v-for="comment in comment.comments"
+          :key="comment.commentId"
+          :comment="comment"
+          @reloadPost="$emit('reloadPost', $event)"
+        ></PostCommentCard>
+      </div>
+    </div>
   </div>
 </template>
 
+<style scoped>
+.comment {
+  border: 1px solid #a1dfe9;
+}
+
+.yellowOutline {
+  border: 1px solid #f9ee08;
+  box-shadow: 1px 1px 5px 2px rgba(249, 238, 8, 0.5);
+}
+
+.material-symbols-rounded {
+  font-variation-settings: "FILL" 1, "wght" 200, "GRAD" 0, "opsz" 24;
+}
+
+.commentCard {
+  border: none;
+}
+
+.voted {
+  color: #f9ee08;
+}
+
+.voted:hover {
+  transform: scale(1.1);
+  color: #a1dfe9;
+}
+
+.not-voted:hover {
+  opacity: 1;
+  transform: scale(1.1);
+  color: #f9ee08;
+}
+
+.v-card-text {
+  font-size: 1.1rem;
+}
+
+.v-card-text img {
+  max-width: 100%;
+  height: auto;
+}
+
+.v-card-subtitle {
+  opacity: 1;
+}
+
+.memberInfo:hover {
+  color: #f9ee08 !important;
+  cursor: pointer;
+}
+
+.boardInfo:hover {
+  color: #a1dfe9 !important;
+  cursor: pointer;
+}
+</style>
+
 <script setup lang="ts">
-import { reactive, ref, watch, defineEmits, defineProps } from "vue";
+import { reactive, ref, watch } from "vue";
 import { formatDistanceToNow } from "date-fns";
 import { zhTW } from "date-fns/locale";
+import { useRouter } from 'vue-router'
+const router = useRouter()
+import { useStore } from "vuex";
+const store = useStore();
 
 interface Comment {
   commentContent: string;
@@ -115,8 +189,7 @@ const vote = async (
 ) => {
   try {
     const response = await fetch(
-      `${baseAddress}${
-        type === "post" ? "Posts" : "PostComments"
+      `${baseAddress}${type === "post" ? "Posts" : "PostComments"
       }/${voteCommentId}/Vote/${upOrDown}`,
       {
         method: "PUT",
@@ -164,6 +237,12 @@ const newComment = async (commentId: number, postId: number) => {
           content: message.value,
         }),
       });
+      await store.dispatch("sendNotification", {
+        account: props.comment?.memberAccount,
+        loginMember: store.state.account,
+        message: "回覆了您的留言",
+        postId: postId,
+      });
       let result = await response.json();
       emits("reloadPost", postId);
       message.value = "";
@@ -172,5 +251,19 @@ const newComment = async (commentId: number, postId: number) => {
     }
   }
 };
+
+const linkTo = (boardOrAccount, value) => {
+  if (boardOrAccount === "board") {
+    router.push({
+      name: "GameLoungeBoard",
+      params: { boardId: value },
+    });
+  }
+  if (boardOrAccount === "account") {
+    router.push({
+      name: "GameLoungeAccount",
+      params: { account: value },
+    });
+  }
+};
 </script>
-<style lang=""></style>

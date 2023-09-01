@@ -25,7 +25,8 @@ public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepos
                 GameGameCoverImg = oi.Product!.Game!.GameCoverImg,
                 GameChiName = oi.Product.Game.ChiName,
                 DiscountedPrice = oi.ProductPrice,
-                ProductIsVirtual = oi.Product.IsVirtual
+                ProductIsVirtual = oi.Product.IsVirtual,
+                InventoryItemGameKey = oi.InventoryItem.GameKey  
             })
             .ToListAsync();
 
@@ -53,5 +54,12 @@ public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepos
         return await _dbContext.OrderItems.AnyAsync(o => o.Id == orderItemId);
     }
 
+    public async Task<decimal> GetPriceById(int orderItemId)
+    {
+        return await _dbContext.OrderItems
+            .Where(o => o.Id == orderItemId)
+            .Select(o => o.ProductPrice)
+            .SingleAsync();
+    }
 }
 

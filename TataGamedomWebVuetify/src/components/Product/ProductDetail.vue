@@ -1,7 +1,6 @@
 <template>
   <div>
     <v-row>
-      <CartDrawer v-model="drawer" ref="drawerComponent" class="myDraw"></CartDrawer>
       <v-container class="d-flex flex-no-wrap">
         <v-row>
           <v-col cols="6">
@@ -12,7 +11,8 @@
           <v-col cols="6">
             <div class="d-flex flex-column mt-3 whiteText">
               <div class="d-flex text-h5 mb-2 ml-3 justify-between" style="justify-content: space-between;color:#a1dfe9">
-                ✨{{ productData.chiName }} <div v-if="productData.isVirtual" style="font-size: 14px; color:#f9ee08">　　※虛擬商品</div>
+                ✨{{ productData.chiName }} <div v-if="productData.isVirtual" style="font-size: 14px; color:#f9ee08">
+                  ※虛擬商品</div>
               </div>
               <v-divider class="border-opacity-100 mb-2" color="#a1dfe9"></v-divider>
               <div class="text-h5 ml-3" style="color:#a1dfe9">
@@ -23,10 +23,12 @@
                   productData.couponDescription[index] }}<br /></p>
               </div>
               <p class="ml-3 mb-3" style="font-size: 20px; color:white"
-                v-if="productData.specialPrice === productData.price">${{ productData.price
-                }}</p>
-              <p class="ml-3 mb-3" v-else><s style="font-size: 16px; color:grey">${{ productData.price }}</s><span
-                  style="font-size: 20px; color:white">　${{ productData.specialPrice }}</span></p>
+                v-if="productData.specialPrice === productData.price">{{
+                  formattedPrice }}</p>
+              <p class="ml-3 mb-3" v-else-if="productData.specialPrice !== productData.price">
+                <s style="font-size: 16px; color:grey">{{ formattedPrice }}</s>
+                <span style="font-size: 20px; color:white">　{{ formattedSpecialPrice }}</span>
+              </p>
               <div class="d-flex align-center mb-3">
                 <v-rating v-model="productData.score" class="ma-2 d-flex me-auto" density="compact" half-increments
                   readonly style="color:#f9ee08" size="small"></v-rating>
@@ -40,7 +42,8 @@
                     </v-btn>
                   </v-col>
                   <v-col cols="4" class="d-flex justify-center align-center">
-                    <input type="number" v-model="quantity" min="1" :max="limit"  style="color:#a1dfe9" class="text-center" readonly />
+                    <input type="number" v-model="quantity" min="1" :max="limit" style="color:#a1dfe9" class="text-center"
+                      readonly />
                   </v-col>
                   <v-col cols="4" class="d-flex justify-center align-center">
                     <v-btn icon @click="increaseQuantity" v-model="quantity" class="plusMinBtn">
@@ -73,7 +76,8 @@
           </div>
           <div class="d-flex ma-5">
             <div v-for="item in productData.classification" :key="item">
-              <v-chip class="mr-2" @click="classificationHandler(item)" style="background-color: #f9ee08;color:#01010f;">#{{ item }}</v-chip>
+              <v-chip class="mr-2" @click="classificationHandler(item)"
+                style="background-color: #f9ee08;color:#01010f;">#{{ item }}</v-chip>
             </div>
           </div>
           <div class="d-flex justify-center align-center">
@@ -81,14 +85,15 @@
             <span class="me-auto">({{ productData.commentCount }})</span>
             <v-btn class="myBtn" @click="toBoard">前往討論版</v-btn>
           </div>
-          <v-card v-for="item in productData.gameComments" :key="item" class="mt-5 myCard whiteText justify-center align-center">
+          <v-card v-for="item in productData.gameComments" :key="item"
+            class="mt-5 myCard whiteText justify-center align-center">
             <v-card-item>
-              <v-card-title class="mt-2 mb-2" style="color:#a1dfe9" >{{ item.memberName }}</v-card-title>
-             
+              <v-card-title class="mt-2 mb-2" style="color:#a1dfe9">{{ item.memberName }}</v-card-title>
+
               <v-card-subtitle class="mb-2">發表於 {{ relativeTime(item.createdTime) }}</v-card-subtitle>
               <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
             </v-card-item>
-            
+
             <v-card-text class="myContent"> {{ item.content }} </v-card-text>
             <v-rating v-model="item.score" density="compact" color="yellow" readonly class="ml-3 mb-3"></v-rating>
           </v-card>
@@ -124,14 +129,14 @@
 </template>
     
 <script setup>
-import { ref, onMounted, defineProps, watch, defineEmits, nextTick } from "vue";
+import { ref, onMounted, defineProps, watch, defineEmits, nextTick, computed } from "vue";
 import { useRouter } from "vue-router";
 import { format } from "date-fns";
 import { zhTW } from "date-fns/locale";
 import store from "@/store";
 import CartDrawer from "@/components/eCommerce/CartDrawer.vue";
+import Swal from 'sweetalert2';
 
-const drawer = ref(false);
 const router = useRouter();
 const props = defineProps({ productData: Object });
 const quantity = ref(1);
@@ -143,12 +148,27 @@ const bookmark = ref(null);
 const star = ref(0);
 const comment = ref("");
 const API = "https://localhost:7081/api/";
-const drawerComponent = ref(null)
 const quantityNum = ref(0)
+const emit = defineEmits(["paginationInput", "drawerInput"]);
 
 watch(props, (newProps) => {
   if (newProps.productData.id) {
     fetchQuantityLimit();
+  }
+});
+const formattedPrice = computed(() => {
+  if (props.productData.price !== undefined) {
+    return unitExchange(props.productData.price);
+  } else {
+    return '';
+  }
+});
+
+const formattedSpecialPrice = computed(() => {
+  if (props.productData.specialPrice !== undefined) {
+    return unitExchange(props.productData.specialPrice);
+  } else {
+    return '';
   }
 });
 
@@ -177,15 +197,32 @@ const decreaseQuantity = () => {
   }
 };
 
+const unitExchange = (x) => {
+  return 'NT$ ' + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 //加入購物車
 const Add2Cart = async (productId) => {
-  if (quantity.value > limit.value) {
-    alert("所選數量超過庫存限制！");
-    return;
-  }
-
   let totalQuantity = quantity.value;
 
+  if (quantity.value > limit.value) {
+    Swal.fire('加入購物車失敗！', '所選數量超過庫存限制', 'error');
+    return;
+  } else {
+    const response = await fetch(`https://localhost:7081/api/Carts/GetSingleProductQuantity?productId=${productId}`, {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    let result = await response.json();
+    totalQuantity = quantity.value + result
+    console.log(totalQuantity);
+    if (totalQuantity > limit.value) {
+      Swal.fire('加入購物車失敗！', '所選數量加上購物車中現有數量超過庫存限制', 'error');
+      return;
+    }
+  }
   if (store.state.isLoggedIn) {
     const response = await fetch(`${API}Carts`, {
       method: "POST",
@@ -204,66 +241,29 @@ const Add2Cart = async (productId) => {
         name: "Login",
       });
     }
-    alert(result.message);
-    autoToggleDrawer(); // 設置計時器來自動關閉抽屜
-  }
-
-
-  quantityNum.value = parseInt(quantity.value)
-
-  if (!store.state.isLoggedIn) {
+    emit("drawerInput", result.message);
+  } else {
     let localCart = localStorage.getItem("localCart");
     if (localCart) {
       localCart = JSON.parse(localCart);
     } else {
       localCart = [];
     }
-    const existingProduct = localCart.find(
-      (item) => item.productId === productId
-    );
+    quantityNum.value = parseInt(quantity.value)
+    const existingProduct = localCart.find(item => item.productId === productId);
     if (existingProduct) {
       totalQuantity = quantityNum.value + existingProduct.qty;
       if (totalQuantity > limit.value) {
-        alert("所選數量加上購物車中現有數量超過庫存限制！");
+        Swal.fire('加入購物車失敗！', '所選數量加上購物車中現有數量超過庫存限制', 'error');
         return;
       }
-      console.log("exqty=" + existingProduct.qty);
-      console.log("quantityNum.value=" + quantityNum.value);
       existingProduct.qty += quantityNum.value;
-      console.log("exqty=" + existingProduct.qty);
-      localStorage.setItem("localCart", JSON.stringify(localCart));
-    }
-    else {
+    } else {
       localCart.push({ productId, qty: quantityNum.value });
     }
-    autoToggleDrawer(); // 設置計時器來自動關閉抽屜
-    alert("已成功加入購物車！");
+    localStorage.setItem("localCart", JSON.stringify(localCart));
+    emit("drawerInput", "已成功加入購物車！");
   }
-};
-
-
-
-const autoToggleDrawer = () => {
-  console.log("我該還沒開ㄌ" + drawer.value);
-  openDrawerFromParent();
-  console.log("我該開ㄌ" + drawer.value);
-  setTimeout(() => {
-    console.log("我準備關ㄌ" + drawer.value);
-    closeDrawer();
-    console.log("我該關ㄌ" + drawer.value);
-  }, 1000);
-};
-
-const openDrawerFromParent = () => {
-  drawerComponent.value.drawerContent();
-  drawer.value = true;
-
-  console.log("我開ㄌ3");
-
-};
-
-const closeDrawer = () => {
-  drawer.value = false;
 };
 
 const relativeTime = (datetime) => {
@@ -277,7 +277,7 @@ const relativeTime = (datetime) => {
   return formattedDate;
 };
 
-const emit = defineEmits(["paginationInput"]);
+
 const returnComments = () => {
   nextTick(() => {
     if (bookmark.value) {
@@ -331,7 +331,7 @@ const commentSubmit = async () => {
     .then((result) => {
       if (result.message === "發表評論成功") {
         (comment.value = ""), (star.value = 0);
-        alert(result.message);
+        Swal.fire('', result.message, 'success');
         emit("commentSucceed");
         returnComments();
       } else {
@@ -339,7 +339,7 @@ const commentSubmit = async () => {
       }
     })
     .catch((error) => {
-      console.error("Error:", error);
+      Swal.fire('', error.message, 'error');
     });
 };
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TataGamedomWebAPI.Application.Features.Order.Commands.CreateOrder;
+using TataGamedomWebAPI.Application.Features.Order.Commands.DeleteCarts;
 using TataGamedomWebAPI.Application.Features.Order.Commands.DeleteOrder;
 using TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder;
 using TataGamedomWebAPI.Application.Features.Order.Queries.GetOrderDetails;
@@ -69,7 +70,7 @@ public class OrdersController : ControllerBase
     }
 
 
-    [HttpPut("{id}")]
+    [HttpPut("{Index}")]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -87,6 +88,17 @@ public class OrdersController : ControllerBase
     public async Task<ActionResult> Delete(int id)
     {
         var command = new DeleteOrderCommand { Id = id };
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpDelete("Carts/{memberId}")]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesDefaultResponseType]
+    public async Task<ActionResult> DeleteCarts(int memberId)
+    {
+        var command = new DeleteCartsCommand { MemberId = memberId };
         await _mediator.Send(command);
         return NoContent();
     }

@@ -8,7 +8,7 @@
   ></PostCard>
   <InfiniteLoading @infinite="loadPosts" :key="reloadKey" ref="infiniteLoading">
     <template #complete>
-      <p class="text-center">已經看完所有貼文🦦</p>
+      <p class="text-center">看完了，不妨到處逛逛？🦦</p>
     </template>
     <template #spinner>
       <div class="d-flex justify-center align-center">
@@ -76,14 +76,25 @@ const props = defineProps({
 
 const baseaddress = "https://localhost:7081/api/";
 const page = ref<number>(1);
+const postId = ref(0);
 const posts = ref<Post[]>([]);
 const route = useRoute();
 const store = useStore();
 const infiniteLoading = ref<any>(null);
 const keyword = computed(() => store.state.GameLoungeStore.keyword);
 const reloadKey = ref(0);
+postId.value = +route.params.postId;
 
 const loadPosts = async ($state: any) => {
+  if (route.params.postId) {
+    const response = await fetch(`${baseaddress}Posts/${route.params.postId}`, {
+      credentials: "include",
+    });
+    const datas = await response.json();
+    posts.value = [].concat(datas);
+    $state.complete();
+    return;
+  }
   try {
     const response = await fetch(
       `${baseaddress}Posts?page=${page.value}&keyword=${keyword.value}&memberAccount=${props.memberAccount}&boardId=${props.boardId}`,
@@ -91,8 +102,6 @@ const loadPosts = async ($state: any) => {
         credentials: "include",
       }
     );
-    console.log(response);
-
     const datas = await response.json();
 
     if (datas.length === 0) {

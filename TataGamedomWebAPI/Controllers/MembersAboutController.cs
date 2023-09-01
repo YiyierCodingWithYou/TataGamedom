@@ -50,7 +50,7 @@ namespace TataGamedomWebAPI.Controllers
 				Id = query.Id,
 				Account = query.Account,
 				Name = query.Name,
-				IconURL = query.IconImg,
+				IconURL = $"https://localhost:7081/Files/Uploads/Icons/{query.IconImg}",
 				AboutMe = query.AboutMe,
 				IsFollowing = _simpleHelper.MemberIsFollower(loginId, memberId),
 				IsFollowingYou = _simpleHelper.MemberIsFollowed(loginId, memberId),
@@ -61,7 +61,8 @@ namespace TataGamedomWebAPI.Controllers
 				{
 					Id = x.FollowerMemberId,
 					Name = x.FollowerMember.Name,
-					IconURL = x.FollowerMember.IconImg,
+					Account = x.FollowerMember.Account,
+					IconURL = $"https://localhost:7081/Files/Uploads/Icons/{x.FollowerMember.IconImg}",
 					IsFollowing = _simpleHelper.MemberIsFollowed(loginId, x.FollowerMemberId ?? 0),
 					IsFollowingYou = _simpleHelper.MemberIsFollower(loginId, x.FollowerMemberId ?? 0),
 				}).ToList(),
@@ -69,7 +70,8 @@ namespace TataGamedomWebAPI.Controllers
 				{
 					Id = x.FollowedMemberId,
 					Name = x.FollowedMember.Name,
-					IconURL = x.FollowedMember.IconImg,
+					Account = x.FollowedMember.Account,
+					IconURL = $"https://localhost:7081/Files/Uploads/Icons/{x.FollowedMember.IconImg}",
 					IsFollowing = _simpleHelper.MemberIsFollowed(loginId, x.FollowedMemberId ?? 0),
 					IsFollowingYou = _simpleHelper.MemberIsFollower(loginId, x.FollowedMemberId ?? 0),
 				}).ToList(),
@@ -124,9 +126,20 @@ namespace TataGamedomWebAPI.Controllers
 				FollowedMemberId = memberId,
 			};
 
+			var newMemberFollowNotification = new BoardNotification()
+			{
+				RecipientMemberId = memberId,
+				RelationMemberId = loginId,
+				Link = $"/GameLounge/{loginAccount}",
+				Content = $"{loginAccount} 開始關注您！",
+				IsReaded = false,
+				CreateTime = DateTime.Now,
+			};
+
 			try
 			{
 				_context.MemberFollows.Add(newMemberFollow);
+				_context.BoardNotifications.Add(newMemberFollowNotification);
 				await _context.SaveChangesAsync();
 			}
 			catch (Exception e)
@@ -144,7 +157,6 @@ namespace TataGamedomWebAPI.Controllers
 		{
 			var loginAccount = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 			int loginId = _simpleHelper.memberIdByAccount(loginAccount);
-
 			if (loginId == 0)
 			{
 				return NotFound();

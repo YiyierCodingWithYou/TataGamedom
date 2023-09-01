@@ -29,6 +29,8 @@ public partial class Post
 
     public virtual Board? Board { get; set; }
 
+    public virtual ICollection<BoardNotification> BoardNotifications { get; set; } = new List<BoardNotification>();
+
     public virtual BackendMember? DeleteBackendMember { get; set; }
 
     public virtual Member? DeleteMember { get; set; }

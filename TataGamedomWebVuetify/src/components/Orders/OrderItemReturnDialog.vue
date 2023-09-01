@@ -1,7 +1,17 @@
 <template>
   <v-dialog v-model="dialog" activator="parent" width="auto">
     <v-spacer></v-spacer>
-    <v-sheet width="1000" class="mx-auto">
+
+    <v-sheet width="1200" class="mx-auto">
+      <v-btn class="ma-12" variant="text" icon="mdi-package-variant-closed-remove" color="blue-grey-darken-2"
+        size="x-large" v-if="orderItemReturnList">
+        退款紀錄查詢
+        <v-icon size="x-large">
+          {{ "mdi-package-variant-closed-remove" }}
+        </v-icon>
+        <RefundRecordList activator="parent" width="auto" :orderItemReturnList="orderItemReturnList" />
+      </v-btn>
+
       <v-form validate-on="submit lazy" @submit.prevent="submit">
         <div class="d-flex pa-4 justify-center">
           <v-checkbox v-model="selectAll" label="全選/取消" :disabled="!isOrderCompleted"
@@ -13,10 +23,10 @@
         <v-card v-for="orderDetail in orderDetails" :key="orderDetail.id">
           <v-card-text>
             <div class="d-flex pa-4">
-              <v-checkbox-btn v-model="orderDetail.enabled" class="pe-2" :disabled="!isOrderCompleted || isIdInReturnList(orderDetail.id)
-                " :indeterminate="!isOrderCompleted">
+              <v-checkbox-btn v-model="orderDetail.enabled" class="pe-2"
+                :disabled="!isOrderCompleted || isItemReturned(orderDetail.id)" :indeterminate="!isOrderCompleted">
               </v-checkbox-btn>
-              <v-chip class="ma-5" color="pink" v-show="isIdInReturnList(orderDetail.id)"><v-icon start
+              <v-chip class="ma-5" color="pink" v-show="isItemReturned(orderDetail.id)"><v-icon start
                   icon="mdi-tag-off"></v-icon>已退貨</v-chip>
               <v-text-field readonly hide-details label="" variant="underlined" class="flex-grow-1">
                 {{ orderDetail.index }}
@@ -42,6 +52,7 @@
 <script>
 import { ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
+import RefundRecordList from "./RefundRecordList.vue";
 
 export default {
   name: "OrderItemReturn",
@@ -51,15 +62,14 @@ export default {
       required: true,
     },
   },
-
+  components: {
+    RefundRecordList,
+  },
   setup(props) {
     const store = useStore();
     const order = computed(() => store.getters.getOrderById(props.orderId));
     const orderDetails = computed(() => {
       return store.getters.getOrderDetailsById(props.orderId);
-    });
-    const orderItemIdReturnList = computed(() => {
-      return store.getters.getOrderItemIdReturnList(props.orderId);
     });
 
     //dialog
@@ -77,30 +87,39 @@ export default {
       orderDetails.value.forEach((detail) => {
         detail.enabled = false;
       });
-    }
-
-    const isOrderCompleted = computed(() => {
-      return order.value && (order.value.orderStatusCodeName === "已完成" || order.value.orderStatusCodeName === "退貨程序處理中");
-    });
-
-    const isIdInReturnList = (orderItemId) => {
-      if (orderItemIdReturnList.value) {
-        return orderItemIdReturnList.value.includes(orderItemId);
-      }
-      return false;
     };
 
-    onMounted(() => {
-      if (hasOrderDetails.value) { initializeCheckBox() }
-      store.dispatch("fetchOrderItemIdReturnList", props.orderId);
-      console.log("OrderItemReturn Test => order from getter:", order.value);
+    const isOrderCompleted = computed(() => {
+      return (
+        order.value &&
+        (order.value.orderStatusCodeName === "已完成" ||
+          order.value.orderStatusCodeName === "退貨程序處理中")
+      );
     });
+
+    // 取得退貨表單 & 判斷是否已退貨
+    const orderItemReturnList = computed(() => {
+      return store.getters.getorderItemReturnList(props.orderId);
+    });
+
+    onMounted(() => {
+      if (hasOrderDetails.value) {
+        initializeCheckBox();
+      }
+      store.dispatch("fetchorderItemReturnList", props.orderId);
+    });
+
+    const isItemReturned = (orderItemId) => {
+      return orderItemReturnList.value.some(
+        (item) => item.orderItemId === orderItemId
+      );
+    };
 
     const selectAll = ref(false);
     watch(selectAll, (newValue) => {
       if (hasOrderDetails.value) {
         orderDetails.value.forEach((detail) => {
-          if (!isIdInReturnList(detail.id)) detail.enabled = newValue;
+          if (!isItemReturned(detail.id)) detail.enabled = newValue;
         });
       }
     });
@@ -119,10 +138,13 @@ export default {
           reason: detail.reason,
         }));
 
-      const requestData = { createOrderItemReturnCommandList: createOrderItemReturnCommandList.value };
+      const requestData = {
+        createOrderItemReturnCommandList:
+          createOrderItemReturnCommandList.value,
+      };
       const payload = {
         requestData: requestData,
-        orderId: props.orderId
+        orderId: props.orderId,
       };
 
       const timeoutPromise = new Promise((resolve) =>
@@ -130,7 +152,7 @@ export default {
       );
 
       try {
-        console.log(requestData)
+        console.log(requestData);
         await Promise.all([
           store.dispatch("postOrderItemReturns", payload),
           timeoutPromise,
@@ -147,15 +169,15 @@ export default {
     return {
       order,
       orderDetails,
-      orderItemIdReturnList,
+      orderItemReturnList,
       dialog,
       selectAll,
       loading,
       isOrderCompleted,
       submit,
       closeDialog,
-      isIdInReturnList,
-      initializeCheckBox
+      isItemReturned,
+      initializeCheckBox,
     };
   },
 };

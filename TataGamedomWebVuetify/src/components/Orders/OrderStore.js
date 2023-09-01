@@ -6,7 +6,7 @@ const OrderStore = {
     state: () => ({
         orders: [],
         orderDetails: {},
-        orderItemIdReturnList: {},
+        orderItemReturnList: {},
     }),
     getters: {
         getOrderById: (state) => (orderId) => {
@@ -15,8 +15,8 @@ const OrderStore = {
         getOrderDetailsById: (state) => (orderId) => {
             return state.orderDetails[orderId];
         },
-        getOrderItemIdReturnList: (state) => (orderId) => {
-            return state.orderItemIdReturnList[orderId];
+        getorderItemReturnList: (state) => (orderId) => {
+            return state.orderItemReturnList[orderId];
         },
     },
     mutations: {
@@ -27,8 +27,8 @@ const OrderStore = {
         setOrderDetails(state, { orderId, details }) {
             state.orderDetails[orderId] = details;
         },
-        setorderItemIdReturnList(state, { orderId, orderItemIdReturnList }) {
-            state.orderItemIdReturnList[orderId] = orderItemIdReturnList;
+        setorderItemReturnList(state, { orderId, orderItemReturnList }) {
+            state.orderItemReturnList[orderId] = orderItemReturnList;
         },
     },
     actions: {
@@ -49,13 +49,13 @@ const OrderStore = {
                 console.error('Failed to fetch order details:', error.message);
             }
         },
-        async fetchOrderItemIdReturnList({ commit }, orderId) {
+        async fetchorderItemReturnList({ commit }, orderId) {
             try {
                 const response = await axios.get(`${BASE_URL}/api/OrderItemReturns/ItemIdList/${orderId}`);
-                commit('setorderItemIdReturnList', { orderId, orderItemIdReturnList: response.data });
-                console.log("action: fetchOrderItemIdReturnList", response)
+                commit('setorderItemReturnList', { orderId, orderItemReturnList: response.data });
+                console.log("action: fetchorderItemReturnList", response)
             } catch (error) {
-                console.error('Failed to fetch OrderItemIdReturnList :', error.message);
+                console.error('Failed to fetch orderItemReturnList :', error.message);
             }
         },
         async postOrderItemReturns({ commit, dispatch }, payload) {
@@ -72,13 +72,25 @@ const OrderStore = {
                     }
                 );
                 if (response.status === 200) {
-                    await dispatch('fetchOrderItemIdReturnList', orderId);
+                    await dispatch('fetchorderItemReturnList', orderId);
                     await dispatch('fetchOrders');
                 }
             } catch (error) {
                 console.log('Failed to post order item returns:', error.message);
             }
         },
+        async deleteCartsByMemberId({ commit }, memberId) {
+            try {
+                const response = await axios.delete(`${BASE_URL}/api/Orders/Carts/${memberId}`)
+                if (response.status === 202 || response.status === 204) {
+                    console.log('購物車已清空');
+                }
+
+            } catch (error) {
+                console.log(memberId)
+                console.log('清空購物車失敗', error.message)
+            }
+        }
     }
 };
 

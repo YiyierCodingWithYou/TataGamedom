@@ -216,7 +216,7 @@ namespace TataGamedomWebAPI.Controllers
 		.OrderBy(country => country)
 		.ToListAsync();
 
-		return Ok(city);
+			return Ok(city);
 		}
 
 		[HttpGet("Shop")]
@@ -244,6 +244,20 @@ namespace TataGamedomWebAPI.Controllers
 		private bool CartExists(int id)
 		{
 			return (_context.Carts?.Any(e => e.Id == id)).GetValueOrDefault();
+		}
+		[EnableCors("AllowCookie")]
+		[HttpGet("GetSingleProductQuantity")]
+		public async Task<int> GetSingleProductQuantity(int productId)
+		{
+			var account = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
+
+			var productQty = await _context.Carts.FirstOrDefaultAsync(c => c.ProductId == productId);
+			if (productQty == null)
+			{
+				return 0;
+			}
+			return productQty.Quantity;
 		}
 	}
 }

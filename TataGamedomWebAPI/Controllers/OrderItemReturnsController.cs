@@ -1,8 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleOrderItems;
-using TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemDetails;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.CreateMultipleOrderItemReturns;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.CreateOrderItemReturn;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.DeleteOrderItemReturn;
@@ -10,6 +8,7 @@ using TataGamedomWebAPI.Application.Features.OrderItemReturn.Commands.UpdateOrde
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnDetails;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnList;
 using TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnListByOrderId;
+using OrderItemReturnDto = TataGamedomWebAPI.Application.Features.OrderItemReturn.Queries.GetOrderItemReturnList.OrderItemReturnDto;
 
 namespace TataGamedomWebAPI.Controllers;
 
@@ -41,10 +40,10 @@ public class OrderItemReturnsController : ControllerBase
     }
 
     [HttpGet("ItemIdList/{orderId}")]
-    public async Task<ActionResult<OrderItemReturnDto>> GetOrderItemIdReturnList(int orderId)
+    public async Task<ActionResult<OrderItemReturnDto>> GetOrderItemReturnList(int orderId)
     {
-        var orderItemIdList = await _mediator.Send(new GetOrderItemReturnListByOrderIdQuery(orderId));
-        return Ok(orderItemIdList);
+        var orderItemList = await _mediator.Send(new GetOrderItemReturnListByOrderIdQuery(orderId));
+        return Ok(orderItemList);
     }
 
     [HttpPost]

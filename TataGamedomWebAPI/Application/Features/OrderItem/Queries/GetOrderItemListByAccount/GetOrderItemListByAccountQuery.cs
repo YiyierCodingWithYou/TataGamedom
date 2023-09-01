@@ -2,4 +2,4 @@
 
 namespace TataGamedomWebAPI.Application.Features.OrderItem.Queries.GetOrderItemListByAccount;
 
-public record GetOrderItemListByOrderIdQuery(int orderId) : IRequest<List<OrderItemWithDetailsDto>>;
+public record GetOrderItemListByOrderIdQuery(int OrderId) : IRequest<List<OrderItemWithDetailsDto>>;

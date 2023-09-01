@@ -31,8 +31,7 @@ onMounted(() => {
 const emit = defineEmits(["classificationInput"]);
 
 const classificationHandler = (name) => {
-  selectedClassification.value = name;
-  //
+    selectedClassification.value = name;
   emit("classificationInput", name);
 };
 </script>

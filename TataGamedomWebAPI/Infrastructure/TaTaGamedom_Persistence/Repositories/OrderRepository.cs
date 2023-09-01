@@ -29,21 +29,22 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
             .AsNoTracking()
             .Where(o => o.Member.Account == account)
             .Where(o => o.OrderItems.Any())
-            .OrderBy(o => o.OrderStatusId)
-            .ThenByDescending(o => o.CreatedAt)
+            .OrderByDescending(o => o.CreatedAt)
             .Select(o => new OrderWithDeatilsDto
             {
                 Id = o.Id,
                 GameChiName = o.OrderItems.Select(oi => oi.InventoryItem.Product.Game!.ChiName).ToList(),
                 ProductIsVirtual = o.OrderItems.Select(oi => oi.InventoryItem.Product.IsVirtual).ToList(),
                 CreatedAt = o.CreatedAt,
-                Total = o.OrderItems.Select(oi => oi.ProductPrice).Sum() + o.ShippingFee,
+                SentAt = o.SentAt,
+                DeliveredAt = o.DeliveredAt,
+                Total = o.ShippingFee.HasValue? o.OrderItems.Select(oi => oi.ProductPrice).Sum() + o.ShippingFee : o.OrderItems.Select(oi => oi.ProductPrice).Sum(),
                 OrderStatusCodeName = o.OrderStatus.Name,
                 OrderIndex = o.Index,
                 OrderCompletedAt = o.CompletedAt,
                 OrderShipmentMethod = o.ShipmentMethod!.Name,
                 OrderRecipientName = o.RecipientName,
-                ContactEmails = o.ContactEmails,
+                ContactEmails = o.ReceiverEmail,
                 ToAddress = o.ToAddress,
             })
             .ToListAsync();
@@ -72,6 +73,27 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
 
         _dbContext.Entry(order).State = EntityState.Modified;
         await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<Order?> GetByIndex(string index)
+    {
+        var order = await _dbContext.Orders
+            .AsNoTracking()
+            .Where(o => o.Index == index)
+            .FirstOrDefaultAsync ();
+
+        return order;
+    }
+
+    public async Task<string?> GetLinePayTransitionId(int? orderId)
+    {
+        string? linePayTransitionId = await _dbContext.Orders
+            .AsNoTracking()
+            .Where(o => o.Id == orderId)
+            .Select(o => o.LinePayTransactionId)
+            .FirstOrDefaultAsync();
+
+        return linePayTransitionId;
     }
 }
 

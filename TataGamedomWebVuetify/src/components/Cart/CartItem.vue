@@ -30,27 +30,33 @@
             </td>
             <td v-if="item.product.price != item.product.specialPrice" class="myTd">
               <div>
-                <s>NT$ {{ item.product.price }}</s>
+                <s>{{ unitExchange(item.product.price) }}</s>
               </div>
-              <div>NT$ {{ item.product.specialPrice }}</div>
+              <div>{{ unitExchange(item.product.specialPrice) }}</div>
             </td>
-            <td v-else class="myTd">NT$ {{ item.product.price }}</td>
+            <td v-else class="myTd">{{ unitExchange(item.product.price) }}</td>
             <td class="myTd">
               <v-row class="d-flex justify-center align-center">
                 <v-col cols="4" class="d-flex justify-center align-center">
-                  <v-btn @click="decreaseQuantity(item)" :max="limit"
-                    class="plusMinBtn"><v-icon>mdi-minus</v-icon></v-btn>
+                  <v-btn @click="decreaseQuantity(item)" class="plusMinBtn">
+                    <v-icon>mdi-minus</v-icon>
+                  </v-btn>
                 </v-col>
                 <v-col cols="4" class="d-flex justify-center align-center">
-                  <input type="number" v-model="item.qty" min="0" :max="limit" style="color:#a1dfe9" class="text-center"
+                  <input type="number" :value="item.qty" min="0" :max="limit" style="color:#a1dfe9" class="text-center"
                     readonly />
                 </v-col>
                 <v-col cols="4" class="d-flex justify-center align-center">
-                  <v-btn @click="increaseQuantity(item)" :max="limit" class="plusMinBtn"><v-icon>mdi-plus</v-icon></v-btn>
+                  <v-btn @click="increaseQuantity(item)" class="plusMinBtn">
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
                 </v-col>
               </v-row>
             </td>
-            <td class="text-end">NT$ {{ item.subTotal }}{{ item.product.subTotal }}</td>
+            <td class="text-end">
+              <span v-if="item.subTotal">{{ unitExchange(item.subTotal) }}</span>
+              <span v-else>{{ unitExchange(item.product.subTotal) }}</span>
+            </td>
             <td class="text-end">
               <v-icon @click="removeItem(item.product.id)">mdi-cart-remove</v-icon>
             </td>
@@ -101,13 +107,13 @@
             style="display: flex; flex-direction: column; justify-content: space-between;">
             <v-card-title class="d-flex">💬 訂單資訊</v-card-title>
             <v-divider class="border-opacity-75 mb-2" color="#a1dfe9"></v-divider>
-            <v-card-title class="textYellow">小計：{{ cartData.subTotal }}</v-card-title>
-            <v-card-title class="textYellow">運費：{{ freight }}</v-card-title>
+            <v-card-title class="textYellow">小計：{{ unitExchange(cartData.subTotal) }}</v-card-title>
+            <v-card-title class="textYellow">運費：{{ unitExchange(freight) }}</v-card-title>
             <div v-if="!isLogin">
-              <v-card-title class="textYellow">合計：{{ finalTotal }}</v-card-title>
+              <v-card-title class="textYellow">合計：{{ unitExchange(finalTotal) }}</v-card-title>
             </div>
             <div v-else>
-              <v-card-title class="textYellow">合計：{{ cartData.total + freight }}</v-card-title>
+              <v-card-title class="textYellow">合計：{{ unitExchange(cartData.total + freight) }}</v-card-title>
             </div>
             <div class="d-flex align-center justify-end" style="margin-left: auto;">
               <img src="https://localhost:7081/Files/Uploads/icons/tataUserIcon.jpg" alt="" height="150">
@@ -129,6 +135,7 @@
 import { ref, watch, watchEffect, computed, onMounted } from "vue";
 import store from '@/store';
 import { useRouter } from "vue-router";
+import Swal from 'sweetalert2';
 
 onMounted(() => {
   getCart();
@@ -143,6 +150,11 @@ const total = ref(0);
 const freight = ref(0);
 const hasVirtualItem = ref(false);
 const hasPhysicalItem = ref(false);
+
+const unitExchange = (x) => {
+  return 'NT$ ' + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 const finalTotal = computed(() => {
   const computedTotal = cartData.value.subTotal + freight.value
   return computedTotal >= 3000 ? computedTotal - 300 : computedTotal;
@@ -291,6 +303,17 @@ const getCart = async () => {
   cartData.value = datas;
   cartItems.value = datas.cartItems;
   total.value = datas.total;
+
+  hasVirtualItem.value = false;
+  hasPhysicalItem.value = false;
+
+  for (const cartItem of cartItems.value) {
+    if (cartItem.product.isVirtual) {
+      hasVirtualItem.value = true;
+    } else {
+      hasPhysicalItem.value = true;
+    }
+  }
 }
 
 watch(
@@ -464,6 +487,7 @@ const fetchQuantityLimit = async (productId) => {
   );
   const datas = await response.json();
   limit.value = datas;
+  console.log(limit.value);
 };
 
 const increaseQuantity = async (item) => {
@@ -479,6 +503,7 @@ const increaseQuantity = async (item) => {
       }
     )
       .then((response) => {
+        console.log(item.qty);
         loadData();
       })
       .catch((error) => {
@@ -492,7 +517,7 @@ const increaseQuantity = async (item) => {
     if (productIndex !== -1) {
       localCart[productIndex].qty += 1;
     } else {
-      alert('購物車中無此商品！');
+      Swal.fire('錯誤', '購物車中無此商品', 'error');
     }
     localStorage.setItem("localCart", JSON.stringify(localCart));
     console.log(localCart);
@@ -536,34 +561,53 @@ const decreaseQuantity = async (item) => {
 };
 
 const removeItem = async (productId) => {
-  if (store.state.isLoggedIn) {
-    const response = await fetch(
-      `https://localhost:7081/api/Carts?productId=${productId}`,
-      {
-        method: "DELETE",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
+  Swal.fire({
+    title: '確認刪除此商品？',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: ' #a1dfe9',
+    cancelButtonColor: '#f9ee08',
+    cancelButtonText: '取消',
+    confirmButtonText: '確認'
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      if (store.state.isLoggedIn) {
+        const response = await fetch(
+          `https://localhost:7081/api/Carts?productId=${productId}`,
+          {
+            method: "DELETE",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+          .then(() => {
+            getCart();
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      } else {
+        let localCart = JSON.parse(localStorage.getItem("localCart") || "[]");
+        const productIndex = localCart.findIndex(
+          (item) => item.productId === productId
+        );
+        if (productIndex > -1) {
+          localCart.splice(productIndex, 1);
+          localStorage.setItem("localCart", JSON.stringify(localCart));
+          loadData();
+        }
       }
-    )
-      .then(() => {
-        getCart();
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  } else {
-    let localCart = JSON.parse(localStorage.getItem("localCart") || "[]");
-    const productIndex = localCart.findIndex(
-      (item) => item.productId === productId
-    );
-    if (productIndex > -1) {
-      localCart.splice(productIndex, 1);
-      localStorage.setItem("localCart", JSON.stringify(localCart));
-      loadData();
     }
-  }
+  })
+
+
+
+
+
+
+
 };
 
 loadData();
@@ -574,7 +618,6 @@ calculatePaymentOption();
 <style scoped>
 .v-container {
   max-width: 90% !important;
-
 }
 
 .myComment {
@@ -592,14 +635,12 @@ calculatePaymentOption();
 .v-table {
   background-color: #01010f;
   color: white !important;
-  /* border:none; */
 }
 
 .myTh {
   text-align: center !important;
   color: #f9ee08 !important;
   width: auto;
-  /* border:none; */
 }
 
 .myTd {
@@ -607,7 +648,6 @@ calculatePaymentOption();
   justify-items: center !important;
   align-items: center !important;
   width: auto;
-  /* border:none; */
 }
 
 .myBtn {
@@ -626,5 +666,13 @@ calculatePaymentOption();
 .textYellow {
   color: #f9ee08 !important;
   font-size: 16px;
+}
+
+.v-table td {
+  border-bottom: none !important;
+}
+
+.v-table th {
+  border-bottom: none !important;
 }
 </style>

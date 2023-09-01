@@ -1,14 +1,14 @@
 <template>
-  <div class="m-0 p-0">
+  <div class="m-0 p-0 non-scroll">
     <v-tabs
       v-model="tab"
       color="yellow-darken-3"
       bg-color="black"
       align-tabs="center"
     >
-      <v-tab :value="1">🏠</v-tab>
-      <v-tab :value="2" v-if="isLogin">🦦</v-tab>
-      <v-tab :value="3">🔍</v-tab>
+      <v-tab :value="1">🏠巢穴入口</v-tab>
+      <v-tab :value="2" v-if="isLogin">🦦專屬巢穴</v-tab>
+      <v-tab :value="3">🔍探索巢穴</v-tab>
       <transition name="slide-fade">
         <div v-if="tab === 3" class="w-50">
           <v-row>
@@ -135,6 +135,9 @@ if (account.value !== undefined || boardId.value !== undefined) {
   isSearch.value = true;
   tab.value = 3;
 }
+if (account.value === undefined && boardId.value === undefined && isLogin) {
+  tab.value = 2;
+}
 if (account.value !== undefined) {
   isSearchAccount.value = true;
 }
@@ -170,6 +173,17 @@ if (boardId.value !== undefined) {
 }
 
 .h100vh {
-  min-height: calc(100vh - 64px - 48px);
+  min-height: calc(100dvh - 64px - 48px);
+  overflow: hidden;
+}
+.h100vh::-webkit-scrollbar {
+  display: none;
+}
+
+.non-scroll {
+  overflow: hidden;
+}
+.non-scroll::-webkit-scrollbar {
+  display: none;
 }
 </style>

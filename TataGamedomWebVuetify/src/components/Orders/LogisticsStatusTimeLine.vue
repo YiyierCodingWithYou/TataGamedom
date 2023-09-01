@@ -35,20 +35,28 @@
           </template>
           <div class="d-flex text-h6">
             <strong class="me-4">{{
-              relativeTime(logisticsTradeInfoData.tradeDate)
+              // relativeTime(logisticsTradeInfoData.tradeDate) 綠界測試環境只提供這個
+              relativeTime(order.createdAt)
             }}</strong>
             <div>
               <strong> 物流訂單成立</strong>
             </div>
           </div>
         </v-timeline-item>
+
+        <!-- 以下資料從Order Db拿出來Demo -->
         <v-timeline-item>
           <template v-slot:opposite>
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
           </template>
-          <div>
-            <div class="text-h6">出貨</div>
+          <div class="d-flex text-h6">
+            <strong class="me-4" v-if="order.sentAt">{{
+              relativeTime(order.sentAt)
+            }}</strong>
+            <div>
+              <strong> 出貨</strong>
+            </div>
           </div>
         </v-timeline-item>
 
@@ -58,8 +66,11 @@
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
           </template>
-          <div>
-            <div class="text-h6">送達超商門市</div>
+          <div class="d-flex text-h6" v-if="order.deliveredAt">
+            <strong class="me-4">{{ relativeTime(order.deliveredAt) }}</strong>
+            <div>
+              <strong> 送達超商門市</strong>
+            </div>
           </div>
         </v-timeline-item>
 
@@ -70,8 +81,13 @@
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
           </template>
-          <div>
-            <div class="text-h6">取貨</div>
+          <div class="d-flex text-h6">
+            <strong class="me-4" v-if="order.orderCompletedAt">{{
+              relativeTime(order.orderCompletedAt)
+            }}</strong>
+            <div>
+              <strong> 取貨</strong>
+            </div>
           </div>
         </v-timeline-item>
       </v-timeline>
@@ -107,8 +123,15 @@ export default {
           "getLogisticsTradeInfo",
           { MerchantTradeNo }
         );
+
+        console.log(order.value);
+
         logisticsTradeInfoData.value = logisticsTradeInfo.value.decodedData;
-        console.log("logisticsTradeInfo:", logisticsTradeInfo.value);
+        console.log(
+          "綠界物流查詢:",
+          "查詢用訂單編號: " + MerchantTradeNo,
+          "傳回結果:" + logisticsTradeInfoData.value.rtnMsg
+        );
       } catch (error) {
         console.error("Failed to fetch logistics trade info:", error);
       }
@@ -121,7 +144,6 @@ export default {
 
     onMounted(() => {
       fetchLogisticsTradeInfo();
-      console.log("物流查詢頁", order.value);
     });
 
     return {

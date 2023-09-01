@@ -1,7 +1,7 @@
 <template>
   <v-form v-model="valid">
     <v-container>
-      <v-row class="mt-10">
+      <v-row class="mt-3">
         <v-col cols="12" md="6">
           <v-text-field v-model="name" :rules="nameRules" label="姓名" required></v-text-field>
         </v-col>
@@ -19,20 +19,24 @@
           </v-text-field>
         </v-col>
 
-        <v-col cols="12" md="12">About Me
+        <v-col cols="12" md="10" style="position: relative;">
+          <v-file-input label="上傳頭像" variant="filled" prepend-icon="mdi-camera" style="font-size: 50px; height: 350px;"
+            @change="uploadImage"></v-file-input>
+          <!-- <img style="position: absolute; top:12px ; right:300px ; height: 200px; width: 200px; border-radius: 50%;"
+            :src="img + iconImg" /> -->
+        </v-col>
+        <img style="position: absolute; top:350px ; right:150px ; height: 200px; width: 200px; border-radius: 50%;"
+          :src="img + iconImg" />
+        <v-col cols="12" md="11" style="position: absolute; margin-top: 450px;">About Me
           <QuillEditor :modules="modules" :toolbar="toolbarOptions" class="quill-editor" contentType="html"
             v-model:content="editor" />
         </v-col>
-
-        <v-col cols="12" md="12" style="margin-top: 50px">
-          <v-file-input label="上傳頭像" variant="filled" prepend-icon="mdi-camera" @change="uploadImage"></v-file-input>
-        </v-col>
-        <img style="height: 300px; width: 300px" :src="img + iconImg" />
+        <v-btn color="yellow" @click="onClick" style="margin-left: 45%;top:110px;">
+          確認修改
+        </v-btn>
       </v-row>
     </v-container>
-    <v-btn color="yellow" @click="onClick" style="margin-left: 45%;margin-bottom: 10px;">
-      確認修改
-    </v-btn>
+
   </v-form>
 </template>
     
@@ -85,6 +89,8 @@ const loadMember = async () => {
   birthday.value = relativeTime(datas.birthday);
   phone.value = datas.phone;
   iconImg.value = datas.iconImg;
+  editor.value = datas.aboutMe;
+
   //iconImg.value = imageUrl;
   console.log("123132", datas);
 };
@@ -126,6 +132,9 @@ async function uploadImage(event) {
 
 //確認修改
 const onClick = async () => {
+  if (!validateForm()) {
+    return;
+  }
   axios
     .put(
       `https://localhost:7081/api/Members?iconImgFileName=${iconImg.value}`,
@@ -135,6 +144,7 @@ const onClick = async () => {
         iconImg: iconImg.value,
         account: account.value,
         email: email.value,
+        aboutMe: editor.value,
         //birthday: birthday.value,
       },
       {
@@ -258,6 +268,23 @@ const phoneRules = [
     return "手機為必填";
   },
 ];
+
+const validateForm = () => {
+  const nameValid = nameRules.every((rule) => rule(name.value) === true);
+  const phoneValid = phoneRules.every((rule) => rule(phone.value) === true);
+
+  if (!nameValid) {
+    alert("姓名必須符合驗證規則");
+    return false;
+  }
+
+  if (!phoneValid) {
+    alert("電話必須符合驗證規則");
+    return false;
+  }
+
+  return true;
+};
 </script>
     
 <style>
@@ -265,6 +292,6 @@ const phoneRules = [
   resize: vertical;
   overflow: auto;
   min-height: 200px;
-  max-height: 300px;
+  max-height: 200px;
 }
 </style>

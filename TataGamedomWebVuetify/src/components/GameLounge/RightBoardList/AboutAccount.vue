@@ -21,40 +21,95 @@
         class="d-flex justify-center align-items-center my-4"
         v-if="!memberData?.isSelf"
       >
-        <v-btn v-if="!memberData?.isFollowing" @click="followAction">
-          Follow
-        </v-btn>
-        <v-btn v-if="memberData?.isFollowing" @click="followAction">
-          UnFollow
+        <v-btn
+          rounded="lg"
+          size="large"
+          variant="outlined"
+          :class="!memberData?.isFollowing ? 'followBtn' : 'unFollowBtn'"
+          @click="followAction"
+        >
         </v-btn>
       </div>
       <div class="d-flex justify-center">
         <div class="mx-5 d-flex flex-column align-center justify-center">
-          <p>{{ memberData?.followerCounting }}</p>
+          <FollowList :data="followerList" :key="dataKey">
+            <template #title> 追隨者 </template>
+            <template #clickBtn>
+              <v-btn variant="text">
+                {{ memberData?.followerCounting }}
+              </v-btn>
+            </template>
+          </FollowList>
           <p>追隨者</p>
         </div>
         <div class="mx-5 d-flex flex-column align-center justify-center">
-          <p>{{ memberData?.followingCounting }}</p>
+          <FollowList :data="followingList" v-if="dataKey > 0">
+            <template #title> 追隨中 </template>
+            <template #clickBtn>
+              <v-btn variant="text">
+                {{ memberData?.followingCounting }}
+              </v-btn>
+            </template>
+          </FollowList>
           <p>追隨中</p>
         </div>
       </div>
       <v-divider class="mx-4 my-4"></v-divider>
       <v-card-title>About Me</v-card-title>
       <v-card-text v-html="memberData?.aboutMe"></v-card-text>
+      <v-btn
+        class="editMe"
+        v-if="memberData?.isSelf"
+        block
+        rounded="xl"
+        variant="outlined"
+        @click="() => $router.push('/Members')"
+        >修改</v-btn
+      >
     </v-card-text>
   </v-card>
 </template>
 
 <style scoped>
+.editMe {
+  color: #a1dfe9;
+  border-color: #a1dfe9;
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+.editMe:hover {
+  color: black;
+  border-color: #f9ee08;
+  background-color: #a1dfe9;
+}
 .v-card {
   background-color: transparent !important;
   box-shadow: 0px 0px 10px 2px #a1dfe9 !important;
 }
+.followBtn {
+  color: #f9ee08;
+}
+.followBtn::before {
+  content: "立即追蹤";
+  position: relative;
+}
+.unFollowBtn {
+  color: #a1dfe9;
+}
+.unFollowBtn:hover::before {
+  content: "取消追蹤";
+}
+.unFollowBtn::before {
+  content: "正在追蹤";
+  position: relative;
+}
 </style>
 <script setup lang="ts">
-import { ref, reactive, onMounted, defineProps } from "vue";
+import FollowList from "@/components/GameLounge/RightBoardList/FollowList.vue";
+import { ref, reactive, onMounted } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 interface MemberData {
   id: number;
@@ -68,6 +123,7 @@ interface MemberData {
   followingCounting: number;
 }
 
+const store = useStore();
 const memberData = ref<MemberData>();
 const iconUrl = ref("");
 const props = defineProps({
@@ -76,6 +132,9 @@ const props = defineProps({
     required: true,
   },
 });
+const followingList = ref([{}]);
+const followerList = ref([{}]);
+const dataKey = ref(0);
 
 const getMemberData = async () => {
   const res = await axios
@@ -85,11 +144,31 @@ const getMemberData = async () => {
     .then((res) => {
       memberData.value = res.data;
       iconUrl.value =
-        memberData.value?.iconUrl ??
-        "https://pbs.twimg.com/media/F32EcZxbYAI5Oml.jpg";
+        res.data.iconURL ?? "https://pbs.twimg.com/media/F32EcZxbYAI5Oml.jpg";
+      followingList.value = res.data.followings.map((m) => {
+        return {
+          title: m.name,
+          subtitle: m.account,
+          value: m.account,
+          prependAvatar: m.iconURL,
+        };
+      });
+      followerList.value = res.data.followers.map((m) => {
+        return {
+          title: m.name,
+          subtitle: m.account,
+          value: m.account,
+          prependAvatar: m.iconURL,
+        };
+      });
+      dataKey.value = dataKey.value + 1;
+      console.log(dataKey.value);
+
+      console.log(followerList.value);
+      console.log(followingList.value);
     })
     .catch((err) => {
-      console.log(err.data);
+      console.log(err);
     });
 };
 
@@ -102,7 +181,16 @@ const followAction = async () => {
         withCredentials: true,
       }
     )
-    .then((res) => {
+    .then(async (res) => {
+      if (!memberData.value.isFollowing) {
+        await store.dispatch("sendNotification", {
+          account: props.memberAccount,
+          loginMember: store.state.account,
+          message: "追蹤了你",
+          postId: 0,
+        });
+      }
+      dataKey.value = dataKey.value + 1;
       getMemberData();
     })
     .catch((err) => {

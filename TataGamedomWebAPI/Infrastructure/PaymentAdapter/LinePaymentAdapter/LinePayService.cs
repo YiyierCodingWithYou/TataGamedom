@@ -1,8 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
+using TataGamedomWebAPI.Application.Contracts.PaymentService;
+using TataGamedomWebAPI.Application.Features.Order.Commands.UpdateOrder.UpdateLinePayInfo;
 using TataGamedomWebAPI.Infrastructure.Data;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.Payment;
 using TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter.Dtos.Request.PaymentConfirm;
@@ -14,7 +17,7 @@ using TataGamedomWebAPI.Models.EFModels;
 
 namespace TataGamedomWebAPI.Infrastructure.PaymentAdapter.LinePaymentAdapter;
 
-public class LinePayService
+public class LinePayService : ILinePayService
 {
     private readonly string channelId = "2000361109";
     private readonly string channelSecretKey = "0e4e5eea8de9d55687434baf986c7d43";
@@ -23,22 +26,27 @@ public class LinePayService
     private readonly JsonProvider _jsonProvider;
     private readonly AppDbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMediator _mediator;
 
-    public LinePayService(AppDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+    public LinePayService(
+        AppDbContext dbContext, 
+        IHttpContextAccessor httpContextAccessor,
+        IMediator mediator)
     {
         client = new HttpClient();
         _jsonProvider = new JsonProvider();
         this._dbContext = dbContext;
         this._httpContextAccessor = httpContextAccessor;
+        this._mediator = mediator;
     }
 
-    public async Task<PaymentResponseDto> SendPaymentRequestWithCartInfo(ShipmentMethodDto shipment)
+    public async Task<PaymentResponseDto> SendPaymentRequestWithCartInfo(CreatePaymentRequestDto createPaymentRequestDto)
     {
-        List<LinePayProductDto> productDtos = await GetProductsInCartsInfo(shipment);
+        List<LinePayProductDto> productDtos = await GetProductsInCartsInfo(createPaymentRequestDto);
 
-        List<PackageDto> packageDtos = PutProductsIntoPackage(productDtos, shipment);
+        List<PackageDto> packageDtos = PutProductsIntoPackage(productDtos, createPaymentRequestDto);
 
-        PaymentRequestDto paymentRequestDto = CreatePaymentRequest(packageDtos, shipment);
+        PaymentRequestDto paymentRequestDto = CreatePaymentRequest(packageDtos, createPaymentRequestDto);
 
         var json = _jsonProvider.Serialize(paymentRequestDto);
         var nonce = Guid.NewGuid().ToString();
@@ -103,7 +111,24 @@ public class LinePayService
         var response = await client.SendAsync(request);
         PaymentConfirmResponseDto responseDto = _jsonProvider.Deserialize<PaymentConfirmResponseDto>(await response.Content.ReadAsStringAsync());
 
+        await UpdateLinePayResponseToDb(transactionId, responseDto);
+
         return responseDto;
+    }
+
+    private async Task UpdateLinePayResponseToDb(string transactionId, PaymentConfirmResponseDto responseDto)
+    {
+        if (responseDto.ReturnMessage == "Success.")
+        {
+            await _mediator.Send(new UpdateLinePayInfoCommand
+            {
+                Index = responseDto.Info.OrderId,
+                PaymentStatusId = (int)PaymentStatus.Paid,
+                LinePayTransactionId = transactionId,
+                PaidAt = DateTime.Now,
+                MaskedCreditCardNumber = responseDto.Info.PayInfo.Select(p => p.MaskedCreditCardNumber).FirstOrDefault()
+            });
+        }
     }
 
     public async Task<PaymentRefundResponseDto> RefundPayment(string transactionId, PaymentRefundRequestDto dto)
@@ -145,7 +170,7 @@ public class LinePayService
         Console.WriteLine($"訂單 {transactionId} 已取消");
     }
 
-    private async Task<List<LinePayProductDto>> GetProductsInCartsInfo(ShipmentMethodDto shipmentMethodDto)
+    private async Task<List<LinePayProductDto>> GetProductsInCartsInfo(CreatePaymentRequestDto shipmentMethodDto)
     {
         string? account = _httpContextAccessor.HttpContext?.User.Claims.Where(c => c.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
 
@@ -184,11 +209,11 @@ public class LinePayService
         return productDtos;
     }
 
-    private static List<PackageDto> PutProductsIntoPackage(List<LinePayProductDto> productDtos, ShipmentMethodDto shipment)
+    private static List<PackageDto> PutProductsIntoPackage(List<LinePayProductDto> productDtos, CreatePaymentRequestDto request)
     {
         int totalAmount = productDtos.Select(p => p.Price).Sum();
 
-        int finalTotalAmount = CalculateTotalAmount(totalAmount, shipment);
+        int finalTotalAmount = CalculateTotalAmount(totalAmount, request);
 
         List<PackageDto> packageDtos = new List<PackageDto>();
         packageDtos.Add(new PackageDto
@@ -200,17 +225,21 @@ public class LinePayService
         return packageDtos;
     }
 
-    private static int CalculateTotalAmount(int amount, ShipmentMethodDto shipment)
+    private static int CalculateTotalAmount(int amount, CreatePaymentRequestDto request)
     {
         int shippingCost = 0;
 
-        if (shipment.Method != "payFirstAtHome" && shipment.Method != "payAtHome")
+		if (request.ShipmentMethod == "oversea" || request.ShipmentMethod == "gameCode")
+		{
+			shippingCost = 0;
+		}
+		if (request.ShipmentMethod == "payFirstAtHome" || request.ShipmentMethod == "payAtHome")
         {
-            shippingCost = 60;
+            shippingCost = 80;
         }
         else
         {
-            shippingCost = 80;
+            shippingCost = 60;
         }
 
         int total = amount > 2000 ? amount : amount + shippingCost;
@@ -220,13 +249,13 @@ public class LinePayService
     }
 
 
-    private static PaymentRequestDto CreatePaymentRequest(List<PackageDto> packageDtos, ShipmentMethodDto shipment)
+    private static PaymentRequestDto CreatePaymentRequest(List<PackageDto> packageDtos, CreatePaymentRequestDto request)
     {
         //Mapping to paymentRequestDto
         PaymentRequestDto? paymentRequestDto = new PaymentRequestDto
         {
             Amount = packageDtos.Select(p => p.Amount).Sum(),
-            OrderId = Guid.NewGuid().ToString(),    //todo => 先建訂單，傳Index到OrderId
+            OrderId = request.OrderIndex,
             Packages = packageDtos,
             RedirectUrls = new RedirectUrlsDto()
         };
@@ -234,9 +263,10 @@ public class LinePayService
     }
 }
 
-public class ShipmentMethodDto 
+public class CreatePaymentRequestDto 
 {
-    public string Method { get; set; } = string.Empty;
+    public string OrderIndex { get; set; } = string.Empty;
+    public string ShipmentMethod { get; set; } = string.Empty;
 }
 
 
