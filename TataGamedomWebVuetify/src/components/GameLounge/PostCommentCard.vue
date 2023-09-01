@@ -126,11 +126,13 @@
 </style>
 
 <script setup lang="ts">
-import { reactive, ref, watch, defineEmits, defineProps } from "vue";
+import { reactive, ref, watch } from "vue";
 import { formatDistanceToNow } from "date-fns";
 import { zhTW } from "date-fns/locale";
 import { useRouter } from 'vue-router'
 const router = useRouter()
+import { useStore } from "vuex";
+const store = useStore();
 
 interface Comment {
   commentContent: string;
@@ -234,6 +236,12 @@ const newComment = async (commentId: number, postId: number) => {
           commentId: commentId,
           content: message.value,
         }),
+      });
+      await store.dispatch("sendNotification", {
+        account: props.comment?.memberAccount,
+        loginMember: store.state.account,
+        message: "回覆了您的留言",
+        postId: postId,
       });
       let result = await response.json();
       emits("reloadPost", postId);

@@ -92,7 +92,6 @@ import SideBar from "@/components/eCommerce/SideBar.vue";
 import { useRoute, useRouter } from "vue-router";
 import CartDrawer from "@/components/eCommerce/CartDrawer.vue";
 import store from "@/store";
-import Swal from 'sweetalert2';
 
 const router = useRouter();
 const route = useRoute();
@@ -155,7 +154,7 @@ const once = (func) => {
 //處理單筆商品頁傳來的參數
 const searchOnce = once(function () {
   if (typeof route.query.classificationChosen !== "undefined") {
-    if (route.query.classificationChosen === '所有遊戲') {     
+    if (route.query.classificationChosen === '所有遊戲') {
       classification.value = "";
     } else {
       classification.value = route.query.classificationChosen;
@@ -232,7 +231,6 @@ const Add2Cart = async (productId) => {
         name: "Login",
       });
     }
-    Swal.fire('成功！', result.message, 'success');
     autoToggleDrawer();
   } else {
     let localCart = localStorage.getItem("localCart");
@@ -250,10 +248,8 @@ const Add2Cart = async (productId) => {
       localCart.push({ productId, qty: 1 });
     }
     localStorage.setItem("localCart", JSON.stringify(localCart));
-    Swal.fire('成功！', '商品已加入購物車', 'success');
   }
   autoToggleDrawer();
-
 };
 
 const autoToggleDrawer = () => {
@@ -344,4 +340,5 @@ const GetSingleProduct = async (productId) => {
 
 .pointer {
   cursor: pointer;
-}</style>
+}
+</style>
