@@ -81,7 +81,7 @@
 </style>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import * as signalR from "@microsoft/signalr";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -124,24 +124,20 @@ const fetchNotificationData = async () => {
     items.value = datas;
     unreadNumber.value = datas.filter((n) => n.isReaded === false).length;
     notificationKey.value = notificationKey.value + 1;
-    console.log(items.value);
-    console.log(notificationKey.value);
-    console.log("unread=" + unreadNumber.value);
   } catch (err) {
     console.log(err);
   }
 };
 
 const linkTo = async (id, link) => {
-  console.log(id);
-  console.log(link);
   try {
     const response = await fetch(`${baseAddress}BoardNotifications/${id}`, {
       method: "put",
       credentials: "include",
     });
-    router.push(link);
+    store.commit("postReload");
     fetchNotificationData();
+    router.push(link);
   } catch (error) {
     console.error(error);
   }
@@ -172,6 +168,12 @@ const receiveNotificationHandler = (
     recipientMessage.value = `${relationMemberAccount} ${messageContent}`;
     showSnackbar.value = true;
     fetchNotificationData();
+    if (relationPostId !== 0) {
+      store.commit("setPostReloadId", relationPostId);
+      store.commit("postReload");
+    } else {
+      store.commit("reloadAccountAbout");
+    }
   }
 };
 
@@ -193,4 +195,14 @@ onUnmounted(() => {
   connectionToChatHub.off("ReceiveNotification", receiveNotificationHandler);
   connectionToChatHub.stop();
 });
+
+watch(
+  () => store.state.account,
+  (newValue, oldValue) => {
+    if (newValue !== oldValue) {
+      startTracking();
+      fetchNotificationData();
+    }
+  }
+);
 </script>

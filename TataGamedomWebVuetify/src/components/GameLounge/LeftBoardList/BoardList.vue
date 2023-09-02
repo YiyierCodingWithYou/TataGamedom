@@ -127,10 +127,7 @@ const router = useRouter();
 
 const openLink = (e) => {
   if (e.id !== undefined && e.id !== "search") {
-    router.push({
-      name: "GameLoungeBoard",
-      params: { boardId: e.id },
-    });
+    router.push(`/GameLounge/Board/${e.id}`);
   }
 };
 </script>

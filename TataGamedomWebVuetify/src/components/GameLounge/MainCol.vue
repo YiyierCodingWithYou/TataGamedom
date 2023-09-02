@@ -1,5 +1,5 @@
 <template>
-  <v-col cols="12" sm="7" class="scroll m-0 p-0">
+  <v-col cols="12" lg="7" order="3" order-lg="2" class="scroll m-0 p-0">
     <v-sheet min-height="70vh" rounded="lg">
       <v-container>
         <slot name="container"></slot>
