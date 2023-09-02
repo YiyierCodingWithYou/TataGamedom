@@ -5,7 +5,11 @@
       <v-card-title>{{ boardData?.name }}</v-card-title>
     </v-card-item>
     <v-card-subtitle>
-      <span class="me-1" v-if="boardData?.isMod">你是版主</span>
+      <span class="me-1" v-if="boardData?.isMod">你是版主獺獺</span>
+      <span class="me-1" v-if="boardData?.isBucket"
+        >正被水桶中，離解禁還有<br />
+        <span>{{ countDownTimeComputed }}</span>
+      </span>
     </v-card-subtitle>
     <v-card-text>
       <div class="d-flex justify-center align-items-center my-4">
@@ -72,6 +76,14 @@ import { ref, reactive, onMounted, watch, computed } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import {
+  formatDistanceToNow,
+  addDays,
+  addHours,
+  addSeconds,
+  formatDistanceStrict,
+} from "date-fns";
+import { zhTW } from "date-fns/locale";
 
 interface BoardData {
   id: number;
@@ -81,6 +93,8 @@ interface BoardData {
   isFollowed: boolean;
   isFavorite: boolean;
   isMod: boolean;
+  isBucket: boolean;
+  bucketEndTime: Date;
   memberFollowCount: number;
   postTotalCount: number;
   productLinks: object[];
@@ -90,19 +104,16 @@ const boardData = ref<BoardData>();
 const iconUrl = ref("");
 const productData = ref<any>([]);
 const modsList = ref<any>([]);
-
 const props = defineProps({
   boardId: {
     type: String,
     required: true,
   },
 });
-
 const store = useStore();
 const incrememtCount = () => {
   store.commit("boardListRefresh");
 };
-
 const getBoardData = async () => {
   const res = await axios
     .get(`https://localhost:7081/api/Boards/${props.boardId}`, {
@@ -132,7 +143,6 @@ const getBoardData = async () => {
       console.log(err.data);
     });
 };
-
 const followAction = async () => {
   const res = await axios
     .put(
@@ -150,6 +160,7 @@ const followAction = async () => {
       console.log(err);
     });
 };
+
 const favoriteAction = async () => {
   const res = await axios
     .put(
@@ -173,11 +184,6 @@ const openLink = (e) => {
     params: { account: e.id },
   });
 };
-
-onMounted(() => {
-  getBoardData();
-});
-
 //set refresh
 const count = computed(() => store.state.GameLoungeStore.aboutRefreshCount);
 
@@ -200,6 +206,38 @@ const openAccountLink = (account) => {
     params: { account: account },
   });
 };
+
+const countDownTime = (endTimeString) => {
+  const endTime = new Date(endTimeString);
+  const currentTime = new Date();
+
+  if (endTime > currentTime) {
+    const timeRemaining = endTime - currentTime;
+    const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor(
+      (timeRemaining % (1000 * 60 * 60)) / (1000 * 60)
+    );
+    const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+    return ` ${days} 天 ${hours} 小時 ${minutes} 分鐘 ${seconds} 秒`;
+  } else {
+    return "已過期";
+  }
+};
+
+const countDownTimeComputed = ref("");
+const updateCountDownTime = () => {
+  countDownTimeComputed.value = countDownTime(boardData.value.bucketEndTime);
+};
+
+onMounted(() => {
+  getBoardData();
+  const timer = setInterval(updateCountDownTime, 1000); // 啟動計時器，每秒更新倒數時間
+  return () => clearInterval(timer);
+});
 </script>
 <style scoped>
 .v-card {

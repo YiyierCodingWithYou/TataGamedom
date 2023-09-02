@@ -68,6 +68,8 @@ namespace TataGamedomWebAPI.Controllers
 				IsFollowed = b.MembersBoards.Any(m => m.MemberId == loggedInMemberId),
 				IsFavorite = b.MembersBoards.Any(m => m.MemberId == loggedInMemberId && m.IsFavorite == true),
 				IsMod = b.BoardsModerators.Any(m => m.ModeratorMember.Account == loggedInAccount),
+				IsBucket = b.BucketLogs.Any(m => m.BucketMemberId == loggedInMemberId && m.EndTime >= DateTime.Now),
+				BucketEndTime = b.BucketLogs.Where(m => m.BucketMemberId == loggedInMemberId && m.EndTime >= DateTime.Now).Select(m => m.EndTime).First(),
 				Mods = b.BoardsModerators.Select(m => new ModReadDto
 				{
 					Id = m.ModeratorMemberId,
@@ -120,6 +122,8 @@ namespace TataGamedomWebAPI.Controllers
 				IsFollowed = b.MembersBoards.Any(m => m.MemberId == loggedInMemberId),
 				IsFavorite = b.MembersBoards.Any(m => m.MemberId == loggedInMemberId && m.IsFavorite),
 				IsMod = b.BoardsModerators.Any(m => m.ModeratorMember.Account == loggedInAccount),
+				IsBucket = b.BucketLogs.Any(m => m.BucketMemberId == loggedInMemberId && m.EndTime >= DateTime.Now),
+				BucketEndTime = b.BucketLogs.Where(m => m.BucketMemberId == loggedInMemberId && m.EndTime >= DateTime.Now ).Select(m => m.EndTime).First(),
 				Mods = b.BoardsModerators.Select(m => new ModReadDto
 				{
 					Id = m.ModeratorMemberId,
