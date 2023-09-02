@@ -56,7 +56,6 @@ const loadData = async () => {
     totalPages.value = datas.totalPages;
     productId.value = parseInt(route.params.productId, 10);
 };
-loadData();
 
 const paginationHandler = (value) => {
     page.value = value;

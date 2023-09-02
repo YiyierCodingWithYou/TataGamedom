@@ -28,6 +28,8 @@ namespace TataGamedomWebAPI.Models.DTOs.Shop
 
         public int? BoardId { get; set; }
 
+		public int? StockQuantity { get; set; }
+
         public string GameCoverImg { get; set; } = null!;
         public IEnumerable<string>? Coupons { get; set; }
         public IEnumerable<string>? CouponDescription { get; set; }
