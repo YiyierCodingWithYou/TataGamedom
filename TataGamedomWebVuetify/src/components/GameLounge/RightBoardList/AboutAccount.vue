@@ -1,5 +1,5 @@
 <template>
-  <v-card class="w-100">
+  <v-card>
     <v-img cover max-height="250" :src="iconUrl"></v-img>
     <v-card-item>
       <v-card-title>{{ memberData?.name }}</v-card-title>
@@ -106,7 +106,7 @@
 </style>
 <script setup lang="ts">
 import FollowList from "@/components/GameLounge/RightBoardList/FollowList.vue";
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, computed, watch } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -135,6 +135,9 @@ const props = defineProps({
 const followingList = ref([{}]);
 const followerList = ref([{}]);
 const dataKey = ref(0);
+const StoreAcountAboutReloadKey = computed(
+  () => store.state.GameLoungeStore.accountAboutReloadKey
+);
 
 const getMemberData = async () => {
   const res = await axios
@@ -199,6 +202,10 @@ const followAction = async () => {
 };
 
 onMounted(() => {
+  getMemberData();
+});
+
+watch(StoreAcountAboutReloadKey, () => {
   getMemberData();
 });
 </script>

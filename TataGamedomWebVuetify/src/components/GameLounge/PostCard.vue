@@ -4,20 +4,32 @@
     class="post mb-3"
     :data-id="post.postId"
     v-if="post.activeFlag"
-    :class="post.isAuthor ? 'yellowOutline' : ''"
+    :class="[post.isAuthor ? 'blueOutline' : '', fullSize ? 'fullSize' : '']"
   >
     <v-card-item>
       <v-card-title>{{ post.title }}</v-card-title>
       <v-card-subtitle>
-        <span class="memberInfo" @click="linkTo('account', post.memberAccount)">
+        <span
+          class="memberInfo"
+          @click="linkTo('account', post.memberAccount, 0)"
+        >
           {{ post.memberName }} ( {{ post.memberAccount }} )
         </span>
-        <span class="boardInfo ms-auto" @click="linkTo('board', post.boardId)">
+        <span
+          class="boardInfo ms-auto"
+          @click="linkTo('board', post.boardId, 0)"
+        >
           @ {{ post.boardName }}</span
         >
       </v-card-subtitle>
     </v-card-item>
-    <v-card-text class="post-text" v-html="post.postContent"> </v-card-text>
+    <div class="gradient-overlay" v-if="!fullSize && !showCommentsBool"></div>
+    <v-card-text
+      class="post-text"
+      v-html="post.postContent"
+      @click="toggleFullSize()"
+    >
+    </v-card-text>
     <v-card-actions>
       <v-btn
         @click="vote('post', post.postId, 'Up', post.postId)"
@@ -37,7 +49,15 @@
         <span class="material-symbols-rounded size-20"> chat_bubble </span>
       </v-btn>
 
-      <v-btn @click="showComments" :disabled="post.commentCount === 0">
+      <v-btn
+        @click="
+          {
+            showComments();
+            showCommentsInput();
+          }
+        "
+        :disabled="post.commentCount === 0"
+      >
         <span class="material-symbols-rounded size-20"> more_horiz </span>
         ({{ post.commentCount }})
       </v-btn>
@@ -58,9 +78,11 @@
         <span class="material-symbols-rounded size-20"> delete </span>
       </v-btn>
 
-      <span class="ms-auto text-caption">{{
-        relativeTime(post.lastEditDatetime)
-      }}</span>
+      <span
+        class="ms-auto text-caption cursor-pointer"
+        @click="linkTo('post', post.boardId, post.postId)"
+        >{{ relativeTime(post.lastEditDatetime) }}</span
+      >
       <span class="text-caption" v-show="post.isEdited">修改</span>
     </v-card-actions>
     <v-text-field
@@ -82,19 +104,48 @@
     </div>
   </v-card>
 </template>
-<style>
+<style scoped>
 .material-symbols-rounded {
   font-variation-settings: "FILL" 1, "wght" 200, "GRAD" 0, "opsz" 24;
 }
 
 .post {
-  box-shadow: 0px 1px 10px 1px #a1dfe9;
   background-color: transparent;
-}
-.yellowOutline {
-  border: 1px solid #f9ee08;
+  border: rgba(255, 255, 255, 0.5) 2px solid;
+  border-right: none;
+  border-left: none;
+  position: relative;
+  overflow: hidden;
 }
 
+.post > .post-text {
+  overflow: hidden;
+  max-height: 40vh;
+  cursor: pointer;
+}
+
+.fullSize > .post-text {
+  max-height: 100%;
+}
+
+.post > .gradient-overlay {
+  content: "";
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 1)
+  );
+  position: absolute;
+  top: calc(40vh);
+  left: 0;
+  right: 0;
+  height: 90px;
+  z-index: 100;
+}
+.blueOutline {
+  border-color: #a1dfe9;
+}
 .voted {
   color: #f9ee08;
 }
@@ -102,13 +153,11 @@
   transform: scale(1.1);
   color: #a1dfe9;
 }
-
 .not-voted:hover {
   opacity: 1;
   transform: scale(1.1);
   color: #f9ee08;
 }
-
 .v-card-text {
   font-size: 1.1rem;
 }
@@ -119,7 +168,6 @@
 .v-card-subtitle {
   opacity: 1;
 }
-
 .memberInfo:hover {
   color: #f9ee08 !important;
   cursor: pointer;
@@ -127,6 +175,14 @@
 .boardInfo:hover {
   color: #a1dfe9 !important;
   cursor: pointer;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-pointer:hover {
+  color: #f9ee08 !important;
 }
 </style>
 
@@ -136,8 +192,10 @@ import { formatDistanceToNow } from "date-fns";
 import { zhTW } from "date-fns/locale";
 import editPostBtn from "./EditPostBtn.vue";
 import PostCommentCard from "./PostCommentCard.vue";
+import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import Swal from "sweetalert2";
 
 interface Comment {
   commentContent: string;
@@ -180,9 +238,16 @@ const post = ref<Post>(props.post);
 const comments = ref<Comment[]>([]);
 const hasComments = computed(() => comments.value.length > 0);
 const router = useRouter();
+const route = useRoute();
 const store = useStore();
 
-const linkTo = (boardOrAccount, value) => {
+const linkTo = (boardOrAccount, value, postId) => {
+  if (boardOrAccount === "post") {
+    router.push({
+      name: "GameLoungePOST",
+      params: { boardId: value, postId: postId },
+    });
+  }
   if (boardOrAccount === "board") {
     router.push({
       name: "GameLoungeBoard",
@@ -203,12 +268,21 @@ watchEffect(() => {
 
 let showCommentsBool = ref(false);
 let showCommentInputBool = ref(false);
+let fullSize = ref(false);
+const routePostId = computed(() => route.params.postId);
+
 const showComments = () => {
   showCommentsBool.value = !showCommentsBool.value;
+  fullSize.value = showCommentsBool.value;
 };
 const showCommentsInput = () => {
   showCommentInputBool.value = !showCommentInputBool.value;
 };
+const toggleFullSize = () => {
+  fullSize.value = !fullSize.value;
+  console.log(fullSize.value);
+};
+
 const relativeTime = (datetime: string) => {
   // 轉換字串為日期對象
   const date = new Date(datetime);
@@ -246,22 +320,37 @@ const deleteContent = async (
   deleteId: number,
   postId: number
 ) => {
-  try {
-    const response = await fetch(
-      `${baseAddress}${type === "post" ? "Posts" : "PostComments"}/${deleteId}`,
-      {
-        method: "DELETE",
-        credentials: "include",
+  Swal.fire({
+    title: "確認刪除此貼文？",
+    text: "刪除後無法復原",
+    icon: "warning",
+    showCancelButton: true,
+    color: "white",
+    confirmButtonColor: " red",
+    cancelButtonColor: "gray",
+    background: "#1e1e1e",
+    cancelButtonText: "取消",
+    confirmButtonText: "刪除",
+  }).then(async (result) => {
+    try {
+      const response = await fetch(
+        `${baseAddress}${
+          type === "post" ? "Posts" : "PostComments"
+        }/${deleteId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+      let result = await response.json();
+      await reloadPost(postId);
+      if (type === "post") {
+        emits("deletePost");
       }
-    );
-    let result = await response.json();
-    await reloadPost(postId);
-    if (type === "post") {
-      emits("deletePost");
+    } catch {
+      alert(":<");
     }
-  } catch {
-    alert(":<");
-  }
+  });
 };
 
 const reloadPost = async (id: number): Promise<void> => {
@@ -305,4 +394,10 @@ const newComment = async (postId: number) => {
     }
   }
 };
+
+onMounted(() => {
+  if (routePostId.value) {
+    showComments();
+  }
+});
 </script>

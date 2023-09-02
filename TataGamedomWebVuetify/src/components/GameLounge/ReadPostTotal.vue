@@ -1,5 +1,11 @@
 <template>
-  <NewPostBtn @postComplete="reload"></NewPostBtn>
+  <NewPostBtn v-if="!isBucket" @postComplete="reload"></NewPostBtn>
+  <v-btn
+    icon="mdi-arrow-up-bold"
+    size="large"
+    class="scrollToTop"
+    @click="scrollToTopSmooth"
+  ></v-btn>
   <PostCard
     v-for="post in posts"
     :key="post.postId"
@@ -31,6 +37,7 @@ import "v3-infinite-loading/lib/style.css"; //required if you're not going to ov
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { tr } from "date-fns/locale";
+import Swal from "sweetalert2";
 
 interface Comment {
   commentContent: string;
@@ -82,9 +89,17 @@ const route = useRoute();
 const store = useStore();
 const infiniteLoading = ref<any>(null);
 const keyword = computed(() => store.state.GameLoungeStore.keyword);
+const storeReloadKey = computed(
+  () => store.state.GameLoungeStore.postReloadKey
+);
 const reloadKey = ref(0);
 postId.value = +route.params.postId;
-
+const scrollToTopSmooth = () => {
+  reload();
+};
+const routePostId = computed(() => route.params.postId);
+const routeBoardId = computed(() => route.params.boardId);
+const isBucket = computed(() => store.state.GameLoungeStore.isBucket);
 const loadPosts = async ($state: any) => {
   if (route.params.postId) {
     const response = await fetch(`${baseaddress}Posts/${route.params.postId}`, {
@@ -131,5 +146,19 @@ watch(keyword, (newVal, oldVal) => {
     reload();
   }
 });
+
+watch(storeReloadKey, (newVal, oldVal) => {
+  if (routePostId.value) {
+    console.log("storeReloadKey changed 我要reload");
+    reload();
+  }
+});
 </script>
-<style lang=""></style>
+<style scoped>
+.scrollToTop {
+  position: fixed;
+  bottom: 20px;
+  right: 30vw;
+  z-index: 100;
+}
+</style>

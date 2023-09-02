@@ -1,12 +1,9 @@
 <template>
   <v-dialog v-model="dialog" v-if="IsLoggedIn" persistent width="auto">
     <template v-slot:activator="{ props }">
-      <v-btn
-        v-bind="props"
-        icon="mdi-plus"
-        size="x-large"
-        class="plusBtn"
-      ></v-btn>
+      <v-btn variant="outlined" class="w-100 my-5 newBtn" v-bind="props">
+        🖋️發表貼文
+      </v-btn>
     </template>
     <v-form @submit.prevent="postNewPost">
       <v-card>
@@ -152,18 +149,27 @@ if (route.params.boardId !== undefined) {
 </script>
 
 <style scoped>
-.plusBtn {
+/* .plusBtn {
   background-color: black;
   box-shadow: 0px 0px 10px 2px #a1dfe9 !important;
   position: fixed;
   bottom: 20px;
   right: 25%;
   z-index: 999;
+} */
+
+.newBtn {
+  border: #a1dfe9 1px solid;
+  position: relative;
+  letter-spacing: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
-.plusBtn:hover {
-  background-color: #f5f5f5;
-  color: black;
+.newBtn:hover {
+  background: #a1dfe9;
+  color: black !important;
+  box-shadow: 0px 0px 10px 2px #a1dfe9;
 }
 
 >>> .quill-editor {

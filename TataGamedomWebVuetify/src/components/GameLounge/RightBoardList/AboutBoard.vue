@@ -2,7 +2,9 @@
   <v-card class="w-100 my-5">
     <v-img cover max-height="250" :src="iconUrl"></v-img>
     <v-card-item>
-      <v-card-title>{{ boardData?.name }}</v-card-title>
+      <v-card-title @click="linkTo(boardData?.id)" class="cursor-pointer">{{
+        boardData?.name
+      }}</v-card-title>
     </v-card-item>
     <v-card-subtitle>
       <span class="me-1" v-if="boardData?.isMod">你是版主獺獺</span>
@@ -138,6 +140,7 @@ const getBoardData = async () => {
           prependAvatar: item.iconUrl,
         };
       });
+      store.commit("setIsBucket", boardData.value?.isBucket);
     })
     .catch((err) => {
       console.log(err.data);
@@ -182,6 +185,12 @@ const openLink = (e) => {
   router.push({
     name: "GameLoungeAccount",
     params: { account: e.id },
+  });
+};
+const linkTo = (id) => {
+  router.push({
+    name: "GameLoungeBoard",
+    params: { boardId: id },
   });
 };
 //set refresh
@@ -240,6 +249,9 @@ onMounted(() => {
 });
 </script>
 <style scoped>
+.cursor-pointer {
+  cursor: pointer;
+}
 .v-card {
   background-color: transparent !important;
   box-shadow: 0px 0px 10px 2px #a1dfe9 !important;

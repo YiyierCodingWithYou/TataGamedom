@@ -1,5 +1,5 @@
 <template>
-  <v-col cols="12" sm="2" class="scroll m-0 p-0">
+  <v-col cols="12" lg="2" order="2" order-lg="2" class="scroll m-0 p-0">
     <slot name="container"></slot>
   </v-col>
 </template>
@@ -16,5 +16,11 @@ import { ref } from "vue";
 }
 .scroll::-webkit-scrollbar {
   display: none;
+}
+
+@media (max-width: 1024px) {
+  .scroll {
+    display: none;
+  }
 }
 </style>
