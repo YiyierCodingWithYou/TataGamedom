@@ -23,12 +23,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import NewPostBtn from "./NewPostBtn.vue";
 import PostCard from "./PostCard.vue";
 import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css"; //required if you're not going to override default slots
-
+import { useStore } from "vuex";
 interface Comment {
   commentContent: string;
   dateTime: string;
@@ -55,7 +55,8 @@ interface Post {
   voted: string;
   comments: Comment[];
 }
-const reloadKey = ref<number>(0);
+const store = useStore();
+const reloadKey = ref(0);
 const page = ref<number>(1);
 const baseaddress = "https://localhost:7081/api/";
 const posts = ref<Post[]>([]);
@@ -82,7 +83,6 @@ const loadPosts = async ($state: any) => {
   }
 };
 const reloadPosts = () => {
-  console.log("reload起來");
   page.value = 1;
   posts.value = [];
   reloadKey.value++;

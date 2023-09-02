@@ -1,5 +1,5 @@
 <template lang="">
-  <div class="comment" :class="comment.isAuthor ? 'yellowOutline' : ''">
+  <div class="comment test" :class="comment.isAuthor ? 'blueOutline' : ''">
     <v-card
       v-if="comment"
       :key="comment.commentId"
@@ -9,7 +9,10 @@
     >
       <v-card-item v-if="comment.activeFlag">
         <v-card-subtitle>
-          <span class="memberInfo" @click="linkTo('account', comment.memberAccount)">
+          <span
+            class="memberInfo"
+            @click="linkTo('account', comment.memberAccount)"
+          >
             {{ comment.memberName }} ( {{ comment.memberAccount }} )
           </span>
         </v-card-subtitle>
@@ -55,7 +58,7 @@
       ></v-text-field>
     </v-card>
     <div>
-      <div class="ms-5">
+      <div class="ms-5 test">
         <PostCommentCard
           v-if="comment.comments"
           v-for="comment in comment.comments"
@@ -69,13 +72,14 @@
 </template>
 
 <style scoped>
+.test {
+  border-left: 1px solid rgba(249, 238, 8, 0.2);
+}
 .comment {
-  border: 1px solid #a1dfe9;
 }
 
-.yellowOutline {
-  border: 1px solid #f9ee08;
-  box-shadow: 1px 1px 5px 2px rgba(249, 238, 8, 0.5);
+.blueOutline {
+  border-color: #a1dfe9;
 }
 
 .material-symbols-rounded {
@@ -83,7 +87,13 @@
 }
 
 .commentCard {
-  border: none;
+  border-top: 1px none 1px none solid rgba(161, 223, 233);
+  border-left: 1px solid rgba(249, 238, 8, 0.2);
+  border-bottom: none;
+  border-right: none;
+  border-radius: 0%;
+  position: relative;
+  background-color: #01010f;
 }
 
 .voted {
@@ -129,10 +139,11 @@
 import { reactive, ref, watch } from "vue";
 import { formatDistanceToNow } from "date-fns";
 import { zhTW } from "date-fns/locale";
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import { useRouter } from "vue-router";
+const router = useRouter();
 import { useStore } from "vuex";
 const store = useStore();
+import Swal from "sweetalert2";
 
 interface Comment {
   commentContent: string;
@@ -189,7 +200,8 @@ const vote = async (
 ) => {
   try {
     const response = await fetch(
-      `${baseAddress}${type === "post" ? "Posts" : "PostComments"
+      `${baseAddress}${
+        type === "post" ? "Posts" : "PostComments"
       }/${voteCommentId}/Vote/${upOrDown}`,
       {
         method: "PUT",
@@ -208,19 +220,34 @@ const deleteContent = async (
   deleteId: number,
   postId: number
 ) => {
-  try {
-    const response = await fetch(
-      `${baseAddress}${type === "post" ? "Posts" : "PostComments"}/${deleteId}`,
-      {
-        method: "DELETE",
-        credentials: "include",
-      }
-    );
-    let result = await response.json();
-    emits("reloadPost", postId);
-  } catch {
-    alert(":<");
-  }
+  Swal.fire({
+    title: "確認刪除此貼文？",
+    text: "刪除後無法復原",
+    icon: "warning",
+    showCancelButton: true,
+    color: "white",
+    confirmButtonColor: " red",
+    cancelButtonColor: "gray",
+    background: "#1e1e1e",
+    cancelButtonText: "取消",
+    confirmButtonText: "刪除",
+  }).then(async (result) => {
+    try {
+      const response = await fetch(
+        `${baseAddress}${
+          type === "post" ? "Posts" : "PostComments"
+        }/${deleteId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+      let result = await response.json();
+      emits("reloadPost", postId);
+    } catch {
+      alert(":<");
+    }
+  });
 };
 
 const newComment = async (commentId: number, postId: number) => {
