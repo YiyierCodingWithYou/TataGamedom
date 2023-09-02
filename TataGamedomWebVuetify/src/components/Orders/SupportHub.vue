@@ -8,42 +8,20 @@
           <div class="container-sm mt-20">
             <v-virtual-scroll :items="messages">
               <template v-slot="{ item, index }">
-                <Message
-                  :key="index"
-                  :name="item.memberName"
-                  :senderPhotoUrl="memberAndChatInfo.memberIconImg"
-                  :recevierPhotoUrl="item.receiverIconImg"
-                  :sendAt="item.sendAt"
-                  :isSenderAccountMine="
-                    item.senderAccount === memberAndChatInfo.memberAccount
-                  "
-                >
+                <Message :key="index" :name="item.memberName" :senderPhotoUrl="memberAndChatInfo.memberIconImg"
+                  :recevierPhotoUrl="item.receiverIconImg" :sendAt="item.sendAt" :isSenderAccountMine="item.senderAccount === memberAndChatInfo.memberAccount
+                    ">
                   {{ item.content }}
                 </Message>
               </template>
             </v-virtual-scroll>
           </div>
           <div class="fixed-bottom-container align-center justify-between">
-            <v-text-field
-              label="傳給哪個帳號"
-              hide-details="auto"
-              variant="solo"
-              v-model="receiverAccount"
-              placeholder="傳給誰"
-              class="textField"
-            ></v-text-field>
-            <v-text-field
-              label="輸入訊息"
-              v-model="chatMessage"
-              placeholder="你的訊息"
-              type="text"
-              no-details
-              outlined
-              append-inner-icon="mdi-comment-multiple-outline"
-              @keyup.enter="sendPrivateMessage"
-              @click:append-inner="sendPrivateMessage"
-              class="textField"
-            ></v-text-field>
+            <v-text-field label="傳給哪個帳號" hide-details="auto" variant="solo" v-model="receiverAccount" placeholder="傳給誰"
+              class="textField"></v-text-field>
+            <v-text-field label="輸入訊息" hide-details="auto" variant="solo" v-model="chatMessage" placeholder="你的訊息"
+              type="text" no-details outlined append-inner-icon="mdi-comment-multiple-outline"
+              @keyup.enter="sendPrivateMessage" @click:append-inner="sendPrivateMessage" class="textField"></v-text-field>
           </div>
         </v-container>
       </div>
@@ -191,9 +169,10 @@ export default {
   position: relative;
   width: 100%;
 }
+
 .v-virtual-scroll {
   height: calc(100vh - 64px - 72px - 160px);
-  background-color: gray;
+  background-color: rgb(38, 38, 38);
 }
 </style>
   
