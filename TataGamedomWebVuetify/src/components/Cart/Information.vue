@@ -496,7 +496,8 @@ const handleSubmit = async () => {
       } else {
         router.push({ name: "Cart", query: { paymentSuccess: "true" } });
       }
-      //如果金流Response失敗不刪除
+
+      //如果Response失敗不刪除
       await store.dispatch('deleteCartsByMemberId', memberId.value);
 
       if (props.selectedData.shipMethod.method != ("gameCode" || "oversea")) {
