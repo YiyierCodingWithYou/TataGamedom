@@ -1,29 +1,82 @@
 <template>
   <v-form ref="myForm">
-    <v-card class="mx-auto mt-10" color="black" max-width="344" title="使用者註冊" style="border: 2px solid #a1dfe9">
+    <v-card
+      class="mx-auto mt-10"
+      color="black"
+      max-width="344"
+      title="使用者註冊"
+      style="border: 2px solid #a1dfe9"
+    >
       <v-container>
-        <v-text-field v-model="account" color="primary" label="帳號" :rules="rules.account"
-          variant="underlined"></v-text-field>
+        <v-text-field
+          v-model="account"
+          color="primary"
+          label="帳號"
+          :rules="rules.account"
+          variant="underlined"
+        ></v-text-field>
 
-        <v-text-field v-model="password" :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'" color="primary"
-          label="密碼" :type="passwordVisible ? 'text' : 'password'" :rules="passwordRules" variant="underlined"
-          @click:append-inner="passwordVisible = !passwordVisible"></v-text-field>
+        <v-text-field
+          v-model="password"
+          :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+          color="primary"
+          label="密碼"
+          :type="passwordVisible ? 'text' : 'password'"
+          :rules="passwordRules"
+          variant="underlined"
+          @click:append-inner="passwordVisible = !passwordVisible"
+        ></v-text-field>
 
-        <v-text-field v-model="checkPassword" :append-inner-icon="checkPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-          color="primary" label="確認密碼" :type="checkPasswordVisible ? 'text' : 'password'" :rules="checkPasswordRules"
-          variant="underlined" @click:append-inner="checkPasswordVisible = !checkPasswordVisible"></v-text-field>
+        <v-text-field
+          v-model="checkPassword"
+          :append-inner-icon="checkPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+          color="primary"
+          label="確認密碼"
+          :type="checkPasswordVisible ? 'text' : 'password'"
+          :rules="checkPasswordRules"
+          variant="underlined"
+          @click:append-inner="checkPasswordVisible = !checkPasswordVisible"
+        ></v-text-field>
 
-        <v-text-field v-model="name" :rules="rules.name" color="primary" label="姓名" variant="underlined"></v-text-field>
+        <v-text-field
+          v-model="name"
+          :rules="rules.name"
+          color="primary"
+          label="姓名"
+          variant="underlined"
+        ></v-text-field>
 
-        <v-text-field v-model="birthday" :rules="rules.birthday" color="primary" label="生日" type="date"
-          variant="underlined"></v-text-field>
+        <v-text-field
+          v-model="birthday"
+          :rules="rules.birthday"
+          color="primary"
+          label="生日"
+          type="date"
+          variant="underlined"
+        ></v-text-field>
 
-        <v-text-field v-model="email" :rules="emailRules" color="primary" label="Email"
-          variant="underlined"></v-text-field>
+        <v-text-field
+          v-model="email"
+          :rules="emailRules"
+          color="primary"
+          label="Email"
+          variant="underlined"
+        ></v-text-field>
 
-        <v-text-field v-model="phone" :rules="phoneRules" color="primary" label="手機" variant="underlined"></v-text-field>
+        <v-text-field
+          v-model="phone"
+          :rules="phoneRules"
+          color="primary"
+          label="手機"
+          variant="underlined"
+        ></v-text-field>
 
-        <v-checkbox v-model="terms" :rules="rules.terms" color="secondary" label="我同意網站條款和條件"></v-checkbox>
+        <v-checkbox
+          v-model="terms"
+          :rules="rules.terms"
+          color="secondary"
+          label="我同意網站條款和條件"
+        ></v-checkbox>
       </v-container>
 
       <v-divider></v-divider>
@@ -42,6 +95,7 @@
     
 <script>
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   data: () => ({
@@ -56,21 +110,26 @@ export default {
     terms: false,
     passwordVisible: false,
     checkPasswordVisible: false,
-    passwordRules: [(value) => {
-      if (!value) return "請輸入密碼";
-      if (value.length < 8) return "請輸入8個字以上的大小寫英文和數字";
-    },],
-    checkPasswordRules: [(value) => {
-      if (!value) return "請輸入確認密碼";
-      //if (value !== this.password) return "兩次密碼不相符";
-    }],
+    passwordRules: [
+      (value) => {
+        if (!value) return "請輸入密碼";
+        if (value.length < 8) return "請輸入8個字以上的大小寫英文和數字";
+      },
+    ],
+    checkPasswordRules: [
+      (value) => {
+        if (!value) return "請輸入確認密碼";
+        //if (value !== this.password) return "兩次密碼不相符";
+      },
+    ],
     emailRules: [
       (value) => {
         if (!value) return "請輸入信箱";
         if (/[\u4e00-\u9fa5]/.test(value)) return "信箱格式不正確";
         if (value.includes("@") && /.+@.+\..+/.test(value)) return true;
         return "信箱格式不正確";
-      }],
+      },
+    ],
     phoneRules: [
       (value) => {
         if (value && /^\d{10}$/.test(value)) {
@@ -81,14 +140,14 @@ export default {
       (value) => {
         if (value) return true;
         return "手機為必填";
-      }
+      },
     ],
     rules: {
       account: [(v) => !!v || "帳號不可空白"],
       name: [(v) => !!v || "姓名不可空白"],
       birthday: [(v) => !!v || "生日不可空白"],
       terms: [(v) => !!v || "請勾選同意"],
-    }
+    },
   }),
   methods: {
     validateAndSubmit() {
@@ -96,20 +155,28 @@ export default {
         if (valid) {
           this.onSubmit();
         } else {
-          alert("請正確填寫會員資料");
+          Swal.fire({
+            icon: "error",
+            title: "請正確填寫會員資料...",
+          });
         }
       });
     },
     onSubmit() {
-      if (!this.account ||
+      if (
+        !this.account ||
         !this.password ||
         !this.checkPassword ||
         !this.name ||
         !this.birthday ||
         !this.email ||
-        !this.phone) {
+        !this.phone
+      ) {
         console.log("asasd", this.password);
-        alert("請正確填寫會員資料")
+        Swal.fire({
+          icon: "error",
+          title: "請正確填寫會員資料...",
+        });
         return;
       }
       axios
@@ -134,12 +201,12 @@ export default {
             name: "Login",
           });
           console.log(res);
-          alert("註冊成功，請到信箱收取確認信!");
+          Swal.fire("註冊成功，請到信箱收取確認信!");
         })
         .catch((err) => {
           console.log(err);
           console.log("註冊失敗");
-          alert("註冊失敗");
+          Swal.fire("註冊失敗");
         });
     },
     callback(response) {
