@@ -98,6 +98,11 @@ namespace TataGamedomWebAPI.Controllers
 						? products.OrderByDescending(p => p.SaleDate)
 						: products.OrderBy(p => p.SaleDate);
 					break;
+				case "Score":
+					products = (isAscending ==false)
+						? products.OrderByDescending(p=>p.Score)
+						:products.OrderBy(p => p.Score);
+					break;
 				default:
 					products = products.OrderBy(p => p.Id);
 					break;
@@ -289,12 +294,37 @@ namespace TataGamedomWebAPI.Controllers
 				})
 				.ToListAsync();
 
+			foreach (var items in trackList)
+			{
+				foreach (var item in items.TrackItems)
+				{
+					item.StockQuantity = GetRemainingInventoryQuantityAsync(item.Id);
+				}
+			}
+
 			var trackProductDTO = new TrackProductDTO
 			{
 				TrackItems = trackList.SelectMany(dto => dto.TrackItems)
 			};
 
 			return trackProductDTO;
+		}
+
+		private int? GetRemainingInventoryQuantityAsync(int productId)
+		{
+			int inventoryItems = _context.InventoryItems
+		   .AsNoTracking()
+		   .Where(i => i.ProductId == productId)
+		   .Count();
+
+			int inventoryQuantitySoldOut = _context.OrderItems
+			.AsNoTracking()
+			.Where(o => o.ProductId == productId)
+			.Count();
+
+			int remainingInventoryQuantity = inventoryItems - inventoryQuantitySoldOut;
+
+			return remainingInventoryQuantity < 0 ? 0 : remainingInventoryQuantity;
 		}
 
 		[EnableCors("AllowCookie")]
@@ -325,6 +355,22 @@ namespace TataGamedomWebAPI.Controllers
 
 			return ApiResult.Success("商品已成功加入追蹤清單");
 		}
-
+		[EnableCors("AllowCookie")]
+		[HttpGet("TrackProductStatus")]
+		public async Task<ActionResult<bool>> GetTrackStatus(int productId)
+		{
+			var account = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
+			if (user == null)
+			{
+				return false;
+			}
+			var thisTrack = await _context.TrackProducts.FirstOrDefaultAsync(t => t.ProductId == productId && t.MemberId == user.Id);
+            if (thisTrack==null)
+            {
+				return false;
+            }
+            return true;
+		}
 	}
 }

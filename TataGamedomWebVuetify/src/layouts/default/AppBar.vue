@@ -47,6 +47,11 @@
     <Notification></Notification>
     <v-btn
       class="pageBtn"
+      icon="mdi-one-up"
+      @click="link('SupportHub')"
+    ></v-btn>
+    <v-btn
+      class="pageBtn"
       icon="mdi-cart-outline"
       @click="link('Cart')"
     ></v-btn>

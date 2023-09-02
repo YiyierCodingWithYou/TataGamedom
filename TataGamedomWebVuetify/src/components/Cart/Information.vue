@@ -89,7 +89,7 @@
         </v-expansion-panel>
       </v-expansion-panels>
     </div>
-    <v-form v-model="valid" v-if="cartData.allowCheckout">
+    <v-form ref="form" v-if="cartData.allowCheckout">
       <v-container>
         <v-row>
           <v-col cols="6">
@@ -230,8 +230,8 @@ import Swal from 'sweetalert2';
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
+const form = ref(null);
 const dialog = ref(false);
-const valid = ref(false);
 const cartData = ref({});
 const cartItems = ref([]);
 const imgLink = "https://localhost:7081/Files/Uploads/";
@@ -468,7 +468,8 @@ const handleSubmit = async () => {
   if (address.value) {
     createOrderCommand.value.toAddress = address;
   }
-  if (valid.value) {
+  const valid = await form.value.validate();
+  if (valid.valid) {
     createOrderCommand.value.ShipmentMethodId = props.selectedData.shipMethod.id;
     createOrderCommand.value.PaymentStatusId =
       props.selectedData.shipMethod.id == 2 || 4 || 6 ? 2 : null;  //純取貨 => 已付款
@@ -496,7 +497,7 @@ const handleSubmit = async () => {
         router.push({ name: "Cart", query: { paymentSuccess: "true" } });
       }
 
-      //如果金流Response失敗不刪除
+      //如果Response失敗不刪除
       await store.dispatch('deleteCartsByMemberId', memberId.value);
 
       if (props.selectedData.shipMethod.method != ("gameCode" || "oversea")) {
@@ -504,14 +505,12 @@ const handleSubmit = async () => {
         payload.value.OrderId = orderResult[0].orderId;
         await createLogisticsOrder(payload.value);
       }
-
     } catch (error) {
       console.error("Error:", error);
     }
   } else {
     Swal.fire('', '未完整填寫收件人資訊', 'warning');
   }
-
 };
 
 load();

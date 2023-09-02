@@ -58,6 +58,11 @@
                 現庫存剩餘{{ limit }}件
               </p>
               <p v-else-if="limit === 0" class="text-center">無庫存</p>
+              <div class="d-flex justify-center">
+                <v-btn class="trackBtn" @click="Add2Track(productData.id)"><v-icon :color="isTracked ? 'red' : 'grey'">mdi-heart</v-icon>加入追蹤
+              </v-btn>   
+              </div>
+                      
             </div>
           </v-col>
         </v-row>
@@ -138,7 +143,9 @@ import CartDrawer from "@/components/eCommerce/CartDrawer.vue";
 import Swal from 'sweetalert2';
 
 const router = useRouter();
-const props = defineProps({ productData: Object });
+const props = defineProps({
+  productData: Object,
+});
 const quantity = ref(1);
 const limit = ref(null);
 const imgLink = "https://localhost:7081/Files/Uploads/";
@@ -150,12 +157,28 @@ const comment = ref("");
 const API = "https://localhost:7081/api/";
 const quantityNum = ref(0)
 const emit = defineEmits(["paginationInput", "drawerInput"]);
+const isTracked = ref();
 
 watch(props, (newProps) => {
   if (newProps.productData.id) {
     fetchQuantityLimit();
+    loadTrackStatus();
   }
 });
+
+const loadTrackStatus = async () => {
+  console.log(props.productData.id);
+  const response = await fetch(`https://localhost:7081/api/Products/TrackProductStatus?productId=${props.productData.id}`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const datas = await response.json();
+  isTracked.value = datas;
+}
+
 const formattedPrice = computed(() => {
   if (props.productData.price !== undefined) {
     return unitExchange(props.productData.price);
@@ -278,6 +301,29 @@ const relativeTime = (datetime) => {
 };
 
 
+const Add2Track = async (productId) => {
+  const response = await fetch(`https://localhost:7081/api/Products/TrackProducts?productId=${productId}`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      productId: productId,
+    }),
+  });
+  let result = await response.json();
+  if (store.state.isLoggedIn) {
+    if (result.isSuccess) {
+      Swal.fire("",result.message, 'success');
+      loadTrackStatus();
+    }
+  } else {
+    Swal.fire('欲使用追蹤功能', result.message, 'warning');
+  }
+}
+
+
 const returnComments = () => {
   nextTick(() => {
     if (bookmark.value) {
@@ -344,7 +390,6 @@ const commentSubmit = async () => {
 };
 
 const toBoard = async () => {
-  //console.log(props.productData.boardId);
   router.push({
     name: "GameLoungeBoard",
     params: { boardId: props.productData.boardId },
@@ -404,5 +449,9 @@ const toBoard = async () => {
 .plusMinBtn {
   background-color: #01010f;
   color: #a1dfe9;
+}
+.trackBtn{
+  background-color: transparent;
+  width: 150px;
 }
 </style>

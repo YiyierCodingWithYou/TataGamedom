@@ -142,6 +142,7 @@ ORDER BY Time DESC";
 
               
 				news.NewsComments = comments;
+				news.FormatedScheduleDate = news.ScheduleDate.ToString("yyyy年MM月dd日 HH:mm");
 
 				var memberId = 1;
 				if(!string.IsNullOrEmpty(User.FindFirstValue("Membersid")))

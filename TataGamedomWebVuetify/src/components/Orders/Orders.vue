@@ -1,5 +1,6 @@
 <template>
   <v-container class="mt-7">
+    <v-breadcrumbs :items="['獺獺玩國', '會員中心', '我的訂單']"></v-breadcrumbs>
     <v-row no-gutters>
       <v-col cols="12">
         <p v-if="orders.length === 0">無訂單紀錄</p>
