@@ -16,6 +16,8 @@
               </template>
             </v-virtual-scroll>
           </div>
+
+          <!-- 給預設值 Demo比較快 -->
           <div class="fixed-bottom-container align-center justify-between">
             <v-text-field label="傳給哪個帳號" hide-details="auto" variant="solo" v-model="receiverAccount" placeholder="傳給誰"
               class="textField"></v-text-field>
