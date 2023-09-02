@@ -233,7 +233,7 @@ public class LinePayService : ILinePayService
 		{
 			shippingCost = 0;
 		}
-		if (request.ShipmentMethod == "payFirstAtHome" || request.ShipmentMethod == "payAtHome")
+		else if (request.ShipmentMethod == "payFirstAtHome" || request.ShipmentMethod == "payAtHome")
         {
             shippingCost = 80;
         }
