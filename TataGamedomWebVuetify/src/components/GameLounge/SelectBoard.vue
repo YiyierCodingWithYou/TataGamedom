@@ -29,6 +29,7 @@ const getBoardsList = async () => {
     withCredentials: true,
   });
   boardList.value = res.data;
+  boardList.value = boardList.value.filter((item) => item.isBucket === false);
   if (route.params.boardId !== undefined) {
     selectedBoard.value = +route.params.boardId;
   }
