@@ -81,7 +81,7 @@
                           <v-icon v-bind="props" size="x-large">
                             {{ "mdi-crosshairs-gps" }}
                           </v-icon>
-                          <LogisticsStatusTimeLine :orderId="shownOrder" activator="parent" width="auto" />
+                          <LogisticsStatusTimeLine :orderId="shownOrder" activator="parent" width="70%" />
                         </v-btn>
                       </template>
                     </v-tooltip>

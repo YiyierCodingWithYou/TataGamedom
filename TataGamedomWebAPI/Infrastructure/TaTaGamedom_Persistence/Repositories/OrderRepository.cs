@@ -66,15 +66,6 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task UpdateOrderStatusAfterReturn(int orderItemId)
-    {
-        var order = await _dbContext.OrderItems.Where(oi => oi.Id == orderItemId).Select(oi => oi.Order).FirstOrDefaultAsync();
-        order!.OrderStatusId = (int)OrderStatus.ReturnProcessing;
-
-        _dbContext.Entry(order).State = EntityState.Modified;
-        await _dbContext.SaveChangesAsync();
-    }
-
     public async Task<Order?> GetByIndex(string index)
     {
         var order = await _dbContext.Orders
@@ -94,6 +85,24 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
             .FirstOrDefaultAsync();
 
         return linePayTransitionId;
+    }
+    public async Task UpdateOrderStatusAfterReturn(int orderItemId)
+    {
+        var order = await _dbContext.OrderItems.Where(oi => oi.Id == orderItemId).Select(oi => oi.Order).FirstOrDefaultAsync();
+        order!.OrderStatusId = (int)OrderStatus.ReturnProcessing;
+
+        _dbContext.Entry(order).State = EntityState.Modified;
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task UpdateOrderStatusCompleted(int orderId)
+    {
+        var order = await _dbContext.Orders.Where(o => o.Id == orderId).FirstOrDefaultAsync();
+        order!.OrderStatusId = (int)OrderStatus.Completed;
+
+        _dbContext.Entry(order).State = EntityState.Modified;
+        await _dbContext.SaveChangesAsync();
+
     }
 }
 
