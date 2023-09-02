@@ -3,15 +3,31 @@
     <v-container>
       <v-row class="mt-3">
         <v-col cols="12" md="6">
-          <v-text-field v-model="name" :rules="nameRules" label="姓名" required></v-text-field>
+          <v-text-field
+            v-model="name"
+            :rules="nameRules"
+            label="姓名"
+            required
+          ></v-text-field>
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-text-field v-model="phone" :rules="phoneRules" :counter="10" label="手機" required></v-text-field>
+          <v-text-field
+            v-model="phone"
+            :rules="phoneRules"
+            :counter="10"
+            label="手機"
+            required
+          ></v-text-field>
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-text-field v-model="email" label="E-mail" required readonly></v-text-field>
+          <v-text-field
+            v-model="email"
+            label="E-mail"
+            required
+            readonly
+          ></v-text-field>
         </v-col>
 
         <v-col cols="12" md="6">
@@ -19,24 +35,47 @@
           </v-text-field>
         </v-col>
 
-        <v-col cols="12" md="10" style="position: relative;">
-          <v-file-input label="上傳頭像" variant="filled" prepend-icon="mdi-camera" style="font-size: 50px; height: 350px;"
-            @change="uploadImage"></v-file-input>
+        <v-col cols="12" md="10" style="position: relative">
+          <v-file-input
+            label="上傳頭像"
+            variant="filled"
+            prepend-icon="mdi-camera"
+            style="font-size: 50px; height: 350px"
+            @change="uploadImage"
+          ></v-file-input>
           <!-- <img style="position: absolute; top:12px ; right:300px ; height: 200px; width: 200px; border-radius: 50%;"
             :src="img + iconImg" /> -->
         </v-col>
-        <img style="position: absolute; top:350px ; right:150px ; height: 200px; width: 200px; border-radius: 50%;"
-          :src="img + iconImg" />
-        <v-col cols="12" md="11" style="position: absolute; margin-top: 450px;">About Me
-          <QuillEditor :modules="modules" :toolbar="toolbarOptions" class="quill-editor" contentType="html"
-            v-model:content="editor" />
+        <img
+          style="
+            position: absolute;
+            top: 350px;
+            right: 150px;
+            height: 200px;
+            width: 200px;
+            border-radius: 50%;
+          "
+          :src="img + iconImg"
+        />
+        <v-col cols="12" md="11" style="position: absolute; margin-top: 450px"
+          >About Me
+          <QuillEditor
+            :modules="modules"
+            :toolbar="toolbarOptions"
+            class="quill-editor"
+            contentType="html"
+            v-model:content="editor"
+          />
         </v-col>
-        <v-btn color="yellow" @click="onClick" style="margin-left: 45%;top:110px;">
+        <v-btn
+          color="yellow"
+          @click="onClick"
+          style="margin-left: 45%; top: 110px"
+        >
           確認修改
         </v-btn>
       </v-row>
     </v-container>
-
   </v-form>
 </template>
     
@@ -51,7 +90,7 @@ import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import ImageUploader from "quill-image-uploader";
 import ChangePwd from "./ChangePwd.vue";
-//import { VDatePicker } from "vuetify/labs/VDatePicker";
+import Swal from "sweetalert2";
 
 //const member = ref([]);
 const valid = ref(false);
@@ -153,12 +192,20 @@ const onClick = async () => {
     )
     .then((res) => {
       console.log(res);
-      alert("資料修改成功");
+      Swal.fire({
+        icon: "success",
+        title: "資料修改成功",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       store.commit("SET_UPDATEIMG", iconImg.value);
     })
     .catch((err) => {
       console.log(err);
-      alert("資料修改失敗");
+      Swal.fire({
+        icon: "error",
+        title: "資料修改失敗",
+      });
     });
 };
 
@@ -189,12 +236,20 @@ const onSubmit = async () => {
     )
     .then((res) => {
       console.log(res);
-      alert("密碼修改成功，請使用新密碼重新登入");
+      Swal.fire({
+        icon: "success",
+        title: "密碼修改成功，請使用新密碼重新登入",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       logout();
     })
     .catch((err) => {
       console.log(err);
-      alert("密碼修改失敗");
+      Swal.fire({
+        icon: "error",
+        title: "密碼修改失敗",
+      });
     });
 };
 
@@ -274,12 +329,19 @@ const validateForm = () => {
   const phoneValid = phoneRules.every((rule) => rule(phone.value) === true);
 
   if (!nameValid) {
-    alert("姓名必須符合驗證規則");
+    Swal.fire({
+      icon: "error",
+      title: "姓名必須符合驗證規則",
+    });
     return false;
   }
 
   if (!phoneValid) {
-    alert("電話必須符合驗證規則");
+    Swal.fire({
+      icon: "error",
+      title: "電話必須符合驗證規則",
+    });
+
     return false;
   }
 
