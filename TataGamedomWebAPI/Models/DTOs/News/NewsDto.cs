@@ -30,6 +30,8 @@ namespace TataGamedomWebAPI.Models.DTOs.News
 
 		public DateTime ScheduleDate { get; set; }
 
+		public string? FormatedScheduleDate { get; set; }
+
 		public bool ActiveFlag { get; set; }
 
 		public IEnumerable<NewsCommentsDTO> NewsComments { get; set; }
