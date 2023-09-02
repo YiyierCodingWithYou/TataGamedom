@@ -28,6 +28,9 @@
         <v-card-subtitle>
           類型: {{ orderItem.productIsVirtual === true ? "序號" : "遊戲片" }}
         </v-card-subtitle>
+
+        <!-- OrderItemIndex -->
+
       </v-card>
     </v-carousel-item>
   </v-carousel>
