@@ -251,79 +251,80 @@ namespace TataGamedomWebAPI.Controllers
 			return classification;
 		}
 
-		//[EnableCors("AllowCookie")]
-		//[HttpGet("TrackProducts")]
-		//public async Task<ActionResult<TrackProductDTO>> GetTrackProducts()
-		//{
-		//	var account = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-		//	var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
-		//	var currentTime = DateTime.Now;
+		[EnableCors("AllowCookie")]
+		[HttpGet("TrackProducts")]
+		public async Task<ActionResult<TrackProductDTO>> GetTrackProducts()
+		{
+			var account = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
+			var currentTime = DateTime.Now;
 
-		//	var trackList = await _context.TrackProducts
-		//		.Where(p => p.MemberId == user.Id)
-		//		.Select(p => new TrackProductDTO
-		//		{
-		//			TrackItems = new List<SingleProductDTO>
-		//			{
-		//		new SingleProductDTO
-		//		{
-		//			Id = p.ProductId,
-		//			ChiName = p.Product.Game.ChiName,
-		//			GameCoverImg = p.Product.Game.GameCoverImg,
-		//			GamePlatformName = p.Product.GamePlatform.Name,
-		//			Price = p.Product.Price,
-		//			SpecialPrice = p.Product.CouponsProducts
-		//				.Any(cp => currentTime >= cp.Coupon.StartTime && currentTime <= cp.Coupon.EndTime && cp.ProductId == p.ProductId)
-		//				? (int)Math.Round(p.Product.CouponsProducts
-		//					.Where(cp => currentTime >= cp.Coupon.StartTime && currentTime <= cp.Coupon.EndTime && cp.ProductId == p.ProductId)
-		//					.Select(cp => cp.Coupon.DiscountTypeId == 1
-		//						? p.Product.Price * (cp.Coupon.Discount / 100.0)
-		//						: (cp.Coupon.DiscountTypeId == 2
-		//							? p.Product.Price - cp.Coupon.Discount
-		//							: p.Product.Price))
-		//					.FirstOrDefault(), 1)
-		//				: p.Product.Price,
-		//		}
-		//			}
-		//		})
-		//		.ToListAsync();
+			var trackList = await _context.TrackProducts
+				.Where(p => p.MemberId == user.Id)
+				.Include(p => p.Product)
+				.Select(p => new TrackProductDTO
+				{
+					TrackItems = new List<SingleProductDTO>
+					{
+				new SingleProductDTO
+				{
+					Id = p.ProductId,
+					ChiName = p.Product.Game.ChiName,
+					GameCoverImg = p.Product.Game.GameCoverImg,
+					GamePlatformName = p.Product.GamePlatform.Name,
+					Price = p.Product.Price,
+					SpecialPrice = p.Product.CouponsProducts
+						.Any(cp => currentTime >= cp.Coupon.StartTime && currentTime <= cp.Coupon.EndTime && cp.ProductId == p.ProductId)
+						? (int)Math.Round(p.Product.CouponsProducts
+							.Where(cp => currentTime >= cp.Coupon.StartTime && currentTime <= cp.Coupon.EndTime && cp.ProductId == p.ProductId)
+							.Select(cp => cp.Coupon.DiscountTypeId == 1
+								? p.Product.Price * (cp.Coupon.Discount / 100.0)
+								: (cp.Coupon.DiscountTypeId == 2
+									? p.Product.Price - cp.Coupon.Discount
+									: p.Product.Price))
+							.FirstOrDefault(), 1)
+						: p.Product.Price,
+				}
+					}
+				})
+				.ToListAsync();
 
-		//	var trackProductDTO = new TrackProductDTO
-		//	{
-		//		TrackItems = trackList.SelectMany(dto => dto.TrackItems)
-		//	};
+			var trackProductDTO = new TrackProductDTO
+			{
+				TrackItems = trackList.SelectMany(dto => dto.TrackItems)
+			};
 
-		//	return trackProductDTO;
-		//}
+			return trackProductDTO;
+		}
 
-		//[EnableCors("AllowAny")]
-		//[HttpPost("TrackProducts")]
-		//public async Task<ApiResult> AddTrackProduct(int productId)
-		//{
-		//	var account = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-		//	var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
-		//	if (user == null)
-		//	{
-		//		return ApiResult.Fail("請先登入會員");
-		//	}
+		[EnableCors("AllowAny")]
+		[HttpPost("TrackProducts")]
+		public async Task<ApiResult> AddTrackProduct(int productId)
+		{
+			var account = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+			var user = await _context.Members.FirstOrDefaultAsync(m => m.Account == account);
+			if (user == null)
+			{
+				return ApiResult.Fail("請先登入會員");
+			}
 
-		//	var thisProduct = await _context.TrackProducts.FirstOrDefaultAsync(p => p.ProductId == productId && p.MemberId == user.Id);
-		//	if (product != null)
-		//	{
-		//		_context.TrackProducts.Remove(thisProduct);
-		//		await _context.SaveChangesAsync();
-		//		return ApiResult.Success("已取消追蹤該商品")
-		//	}
-		//	TrackProducts product = new TrackProducts
-		//	{
-		//		ProductId = productId,
-		//		MemberId = user.Id
-		//	};
-		//	_context.TrackProducts.Add(product);
-		//	await _context.SaveChangesAsync();
+			var thisProduct = await _context.TrackProducts.FirstOrDefaultAsync(p => p.ProductId == productId && p.MemberId == user.Id);
+			if (thisProduct != null)
+			{
+				_context.TrackProducts.Remove(thisProduct);
+				await _context.SaveChangesAsync();
+				return ApiResult.Success("已取消追蹤該商品");
+			}
+			TrackProduct product = new TrackProduct
+			{
+				ProductId = productId,
+				MemberId = user.Id
+			};
+			_context.TrackProducts.Add(product);
+			await _context.SaveChangesAsync();
 
-		//	return ApiResult.Success("商品已成功加入追蹤清單");
-		//}
+			return ApiResult.Success("商品已成功加入追蹤清單");
+		}
 
 	}
 }

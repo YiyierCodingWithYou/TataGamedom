@@ -4,28 +4,50 @@
     <v-container>
       <v-row>
         <v-col cols="8">
-          <v-sheet min-height="300vh" rounded="lg" style="background-color: #01010f; box-shadow: 2px 2px 10px #a1dfe9"
-            theme="dark">
+          <v-sheet
+            min-height="300vh"
+            rounded="lg"
+            style="background-color: #01010f; box-shadow: 2px 2px 10px #a1dfe9"
+            theme="dark"
+          >
             <div>
               <div class="size blue">{{ newsData.title }}</div>
-              <v-chip class="ma-2 f9ee08" @click="classificationHandler(newsData.name)">#{{ newsData.name }} </v-chip>
-              {{ (newsData.scheduleDate) }}
+              <v-chip
+                class="ma-2 f9ee08"
+                @click="classificationHandler(newsData.name)"
+                >#{{ newsData.name }}
+              </v-chip>
+              {{ newsData.scheduleDate }}
               <hr />
-              <img style="height: 550px; width: 100%" :src="img + newsData.coverImg" alt="" />
+              <img
+                style="height: 550px; width: 100%"
+                :src="img + newsData.coverImg"
+                alt=""
+              />
               <br />
               <div v-html="newsData.content"></div>
             </div>
             <br />
             <hr />
-            <h2 style="color: #a1dfe9; margin-bottom: 15px" id="comment">新聞評語</h2>
-            <div v-for="item in newsData.newsComments" :key="item" class="mb-5 comment-container">
+            <h2 style="color: #a1dfe9; margin-bottom: 15px" id="comment">
+              新聞評語
+            </h2>
+            <div
+              v-for="item in newsData.newsComments"
+              :key="item"
+              class="mb-5 comment-container"
+            >
               <div class="comment-info">
-                <img style="
+                <img
+                  style="
                     margin: 0 10px;
                     height: 60px;
                     width: 60px;
                     border-radius: 50%;
-                  " :src="icons + item.iconImg" alt="" />
+                  "
+                  :src="icons + item.iconImg"
+                  alt=""
+                />
                 <div class="comment-text">
                   <div style="color: #a1dfe9">{{ item.name }} :</div>
                   <div style="width: 800px">{{ item.content }}</div>
@@ -36,30 +58,56 @@
               </div>
             </div>
 
-            <div class="mt-5 me-5" style="
+            <div
+              class="mt-5 me-5"
+              style="
                 display: flex;
                 justify-content: flex-end;
                 align-items: center;
-              ">
-              <v-btn class="" variant="text" icon="mdi-thumb-up" color="blue-lighten-2" @click="likesCheck"></v-btn>
+              "
+            >
+              <v-btn
+                class=""
+                variant="text"
+                icon="mdi-thumb-up"
+                color="blue-lighten-2"
+                @click="likesCheck"
+              ></v-btn>
               {{ newsData.likeCount }}人說讚
             </div>
 
             <v-form style="padding: 5px 15px">
               <h2>發表新聞評語</h2>
               <div v-if="$store.state.isLoggedIn">
-                <v-textarea :rules="rules" clearable variant="solo" rows="4" v-model="comment"></v-textarea>
-                <v-btn @click="onSubmit" type="submit" :disabled="comment.length < 10 || comment.length > 100" style="
+                <v-textarea
+                  :rules="rules"
+                  clearable
+                  variant="solo"
+                  rows="4"
+                  v-model="comment"
+                ></v-textarea>
+                <v-btn
+                  @click="onSubmit"
+                  type="submit"
+                  :disabled="comment.length < 10 || comment.length > 100"
+                  style="
                     color: #01010f;
                     background-color: #fbf402;
                     margin-top: 10px;
-                  ">送出</v-btn>
+                  "
+                  >送出</v-btn
+                >
               </div>
               <div v-else>
-                <v-card height="100" class="d-flex align-center justify-center"
-                  style="border: 1px solid #fbf402; background-color: #01010f">
+                <v-card
+                  height="100"
+                  class="d-flex align-center justify-center"
+                  style="border: 1px solid #fbf402; background-color: #01010f"
+                >
                   <p>
-                    請先登入會員以啟用評論功能，<a href="/Members/Login">點此登入</a>
+                    請先登入會員以啟用評論功能，<a href="/Members/Login"
+                      >點此登入</a
+                    >
                   </p>
                 </v-card>
               </div>
@@ -68,21 +116,42 @@
         </v-col>
 
         <v-col cols="4" style="position: absolute; left: 71%; max-width: 550px">
-          <v-sheet rounded="lg" min-height="100" style="background-color: #01010f" theme="dark">
+          <v-sheet
+            rounded="lg"
+            min-height="100"
+            style="background-color: #01010f"
+            theme="dark"
+          >
             <h1 class="blue">關鍵字搜尋</h1>
-            <SearchTextBox class="mt-2" @searchInput="inputHandler"></SearchTextBox>
+            <SearchTextBox
+              class="mt-2"
+              @searchInput="inputHandler"
+            ></SearchTextBox>
           </v-sheet>
         </v-col>
 
         <v-col cols="4" class="gameclass">
-          <v-sheet rounded="lg" min-height="400" style="background-color: #01010f" theme="dark">
+          <v-sheet
+            rounded="lg"
+            min-height="400"
+            style="background-color: #01010f"
+            theme="dark"
+          >
             <h1 class="blue">遊戲類別</h1>
-            <NewsGameClass @classificationInput="classificationHandler" class="mt-10"></NewsGameClass>
+            <NewsGameClass
+              @classificationInput="classificationHandler"
+              class="mt-10"
+            ></NewsGameClass>
           </v-sheet>
         </v-col>
 
         <v-col cols="4" class="hotnews">
-          <v-sheet rounded="lg" min-height="500" style="background-color: #01010f" theme="dark">
+          <v-sheet
+            rounded="lg"
+            min-height="500"
+            style="background-color: #01010f"
+            theme="dark"
+          >
             <h1 class="blue">熱門新聞</h1>
             <HotNews></HotNews>
           </v-sheet>
@@ -103,6 +172,7 @@ import HotNews from "../News/HotNews.vue";
 import { format } from "date-fns";
 import { zhTW } from "date-fns/locale";
 import { useStore } from "vuex";
+import Swal from "sweetalert2";
 
 const router = useRouter();
 const route = useRoute();
@@ -126,7 +196,7 @@ const loadData = async () => {
     newsData.value = datas;
     console.log("我的TADAS", datas);
     scheduleDate.value = datas.scheduleDate;
-    console.log("DATEEEEEEE", newsData.value.scheduleDate)
+    console.log("DATEEEEEEE", newsData.value.scheduleDate);
     console.log("aaa", newsData.name);
   } catch (err) {
     console.log("錯誤訊息", err);
@@ -155,12 +225,12 @@ const onSubmit = async () => {
     )
     .then((res) => {
       console.log(res);
-      alert("發表留言成功");
+      Swal.fire("發表留言成功");
       //  window.scrollTo({ top: 600, behavior: 'smooth' });
     })
     .catch((error) => {
       console.log("ERRRRR", error.response.data);
-      alert("留言失敗");
+      Swal.fire("留言失敗");
     });
 };
 
@@ -205,15 +275,25 @@ const likes = async () => {
       console.log(res);
       if (res.data === "成功按讚") {
         loadData();
-        alert("已按讚");
+        Swal.fire({
+          icon: "success",
+          title: "已成功按讚",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       } else {
         loadData();
-        alert("已取消按讚");
+        Swal.fire({
+          icon: "error",
+          title: "已取消按讚",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     })
     .catch((err) => {
       console.log(err);
-      alert("按讚失敗");
+      Swal.fire("按讚失敗");
     });
 };
 
@@ -226,7 +306,7 @@ const likesCheck = () => {
 };
 
 const showLoginAlert = () => {
-  alert("請先登入會員以使用按讚功能");
+  Swal.fire("請先登入會員以使用按讚功能");
 };
 
 //時間轉換

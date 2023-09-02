@@ -1,43 +1,73 @@
 <template>
-  <!-- <div style="justify-content: center;align-items: center;display: flex;position: relative;">
-    <img src="https://localhost:7081/Files/Icons/bay.png" style="width: 800px;height: 800px;" alt="">
-  </div> -->
-  <!-- <div style="width: 2000px;">
-    <img src="https://localhost:7081/Files/Icons/black.jpg" style="height: 1000px;width: 2000px;" alt="">
-  </div> -->
-  <div style="position: absolute; top:130px;left: 35%;">
-    <v-card class="mx-auto pa-10 pb-5 mt" elevation="8" max-width="800" rounded="lg"
-      style="background-color: #01010f; color: white">
-      <div class="digi40px">ACCOUNT</div>
+  <div class="bg d-flex justify-center align-center">
+    <v-card
+      class="mx-auto pa-10 pb-5 mt"
+      elevation="8"
+      max-width="800"
+      rounded="lg"
+      style="background-color: #01010f; color: white"
+    >
+      <div class="digi25px">ACCOUNT</div>
       <!-- <div class="text-subtitle-1 text-medium-emphasis text-white">Account</div> -->
 
-      <v-text-field style="width: 500px;" v-model="account" density="compact" placeholder="Enter your account"
-        prepend-inner-icon="mdi-account-outline" variant="outlined"></v-text-field>
-      <div class="digi40px">PASSWORD
-      </div>
+      <v-text-field
+        style="width: 500px"
+        v-model="account"
+        density="compact"
+        placeholder="Enter your account"
+        prepend-inner-icon="mdi-account-outline"
+        variant="outlined"
+      ></v-text-field>
+      <div class="digi25px">PASSWORD</div>
       <!-- <div class="text-subtitle-1 mt-3 text-medium-emphasis d-flex align-center justify-space-between">
       </div> -->
 
-      <v-text-field v-model="password" :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-        :type="visible ? 'text' : 'password'" density="compact" placeholder="Enter your Password"
-        prepend-inner-icon="mdi-lock-outline" variant="outlined" @click:append-inner="visible = !visible"></v-text-field>
+      <v-text-field
+        v-model="password"
+        :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+        :type="visible ? 'text' : 'password'"
+        density="compact"
+        placeholder="Enter your Password"
+        prepend-inner-icon="mdi-lock-outline"
+        variant="outlined"
+        @click:append-inner="visible = !visible"
+      ></v-text-field>
 
       <div style="color: red">
         {{ errorMsg }}
       </div>
 
-      <v-btn block class="digi my-8" size="large" variant="tonal" @click="onSubmit">
+      <v-btn
+        block
+        class="digi my-5"
+        size="large"
+        variant="tonal"
+        @click="onSubmit"
+      >
         LOGIN
       </v-btn>
 
       <v-card-text class="text-center">
-        <a class="digi2 text-blue text-decoration-none cursor-pointer" @click="goToRegister">
+        <a
+          class="digi2 text-decoration-none cursor-pointer"
+          @click="goToRegister"
+        >
           Sign up<v-icon icon="mdi-chevron-right"></v-icon>
         </a>
-        <a class="digi2  text-decoration-none text-blue cursor-pointer" style="margin-left: 90px;" @click="ForgetPwd">
-          ForgetPassword?</a>
+        <a
+          class="digi2 text-decoration-none cursor-pointer"
+          style="margin-left: 90px"
+          @click="ForgetPwd"
+        >
+          ForgetPassword?</a
+        >
       </v-card-text>
-      <GoogleLogin :callback="callback" prompt style="margin-left: 30%;"></GoogleLogin>
+
+      <GoogleLogin
+        :callback="callback"
+        prompt
+        style="margin-left: 30%"
+      ></GoogleLogin>
     </v-card>
   </div>
 </template>
@@ -133,34 +163,40 @@ export default {
 </script>
 
 <style scoped>
+.bg {
+  background-image: url("https://www.nasa.gov/sites/default/files/styles/full_width_feature/public/thumbnails/image/pia21590_orig.jpg");
+  background-size: cover;
+  background-position: center;
+  height: calc(100vh - 63px);
+  width: 100vw;
+}
 .cursor-pointer {
   cursor: pointer;
 }
 
 .digi {
-  font-size: 50PX;
+  font-size: 50px;
   font-family: "Digi-font";
   color: #f9ee08;
   background-color: transparent;
-
 }
 
-.digi40px {
+.digi25px {
   display: inline-block;
-  font-size: 25PX;
+  font-size: 25px;
   font-weight: 50;
   font-family: "Digi-font";
   letter-spacing: 2px;
-  color: white
+  color: white;
 }
 
 .digi2 {
   display: inline-block;
-  font-size: 20PX;
+  font-size: 20px;
   font-weight: 50;
   font-family: "Digi-font";
   letter-spacing: 2px;
-  color: #f9ee08;
+  color: #a1dfe9;
   margin: 10px 0px;
 }
 </style> 

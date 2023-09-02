@@ -15,6 +15,8 @@
 		public bool? IsFollowed { get; set; }
 		public bool? IsFavorite { get; set; }
 		public bool? IsMod { get; set; }
+		public bool? IsBucket { get; set; }
+		public DateTime? BucketEndTime { get; set; }
 		public IEnumerable<ModReadDto> Mods { get; set; }
 		public IEnumerable<ProducLinkDto> ProductLinks { get; set; }
 	}
