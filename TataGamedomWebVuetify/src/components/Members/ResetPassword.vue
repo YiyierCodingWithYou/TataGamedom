@@ -26,6 +26,7 @@
     
 <script >
 import axios from "axios";
+import Swal from "sweetalert2";
 export default {
   data() {
     return {
@@ -60,14 +61,22 @@ export default {
         )
         .then(() => {
           // 顯示提醒訊息
-          alert("已將密碼重設，請重新登入");
+          Swal.fire({
+            icon: "success",
+            title: "已將密碼重設，請重新登入",
+            showConfirmButton: false,
+            timer: 1500,
+          });
           this.$router.push({
             name: "Login",
           });
         })
         .catch((err) => {
           console.error("重設密碼失敗", err);
-          alert("重設密碼失敗");
+          Swal.fire({
+            icon: "error",
+            title: "重設密碼失敗",
+          });
         });
     },
   },

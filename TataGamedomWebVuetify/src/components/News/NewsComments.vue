@@ -1,95 +1,80 @@
 <template>
-  <NewsCarousel />
-  <v-main style="background-color: #01010f">
-    <v-container>
-      <v-row>
-        <v-col cols="8">
-          <v-sheet
-            min-height="300vh"
-            rounded="lg"
-            style="background-color: #01010f; box-shadow: 2px 2px 10px #a1dfe9"
-            theme="dark"
-          >
-            <div>
-              <div class="size blue">{{ newsData.title }}</div>
-              <v-chip
-                class="ma-2 f9ee08"
-                @click="classificationHandler(newsData.name)"
-                >#{{ newsData.name }}
-              </v-chip>
-              {{ newsData.formatedScheduleDate }}
-              <hr />
-              <img
-                style="height: 550px; width: 100%"
-                :src="img + newsData.coverImg"
-                alt=""
-              />
-              <br />
-              <div v-html="newsData.content"></div>
-            </div>
-            <NewsComments></NewsComments>
-          </v-sheet>
-        </v-col>
+  <div style="height: 70px" ref="bookmark"></div>
+  <hr />
+  <h1 style="color: #a1dfe9; margin-bottom: 15px" id="comment">新聞評語</h1>
+  <div
+    v-for="item in newsData.newsComments"
+    :key="item"
+    class="mb-5 comment-container"
+  >
+    <div class="comment-info">
+      <img
+        style="margin: 0 10px; height: 60px; width: 60px; border-radius: 50%"
+        :src="icons + item.iconImg"
+        alt=""
+      />
+      <div class="comment-text">
+        <div style="color: #a1dfe9">{{ item.name }} :</div>
+        <div style="width: 800px">{{ item.content }}</div>
+        <div style="font-size: 8px; color: grey">
+          發表於:{{ relativeTime(item.time) }}
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <v-col cols="4" style="position: absolute; left: 71%; max-width: 550px">
-          <v-sheet
-            rounded="lg"
-            min-height="100"
-            style="background-color: #01010f"
-            theme="dark"
-          >
-            <h1 class="blue">關鍵字搜尋</h1>
-            <SearchTextBox
-              class="mt-2"
-              @searchInput="inputHandler"
-            ></SearchTextBox>
-          </v-sheet>
-        </v-col>
+  <div
+    class="mt-5 me-5"
+    style="display: flex; justify-content: flex-end; align-items: center"
+  >
+    <v-btn
+      class=""
+      variant="text"
+      icon="mdi-thumb-up"
+      color="blue-lighten-2"
+      @click="likesCheck"
+    ></v-btn>
+    {{ newsData.likeCount }}人說讚
+  </div>
 
-        <v-col cols="4" class="gameclass">
-          <v-sheet
-            rounded="lg"
-            min-height="400"
-            style="background-color: #01010f"
-            theme="dark"
-          >
-            <h1 class="blue">遊戲類別</h1>
-            <NewsGameClass
-              @classificationInput="classificationHandler"
-              class="mt-10"
-            ></NewsGameClass>
-          </v-sheet>
-        </v-col>
-
-        <v-col cols="4" class="hotnews">
-          <v-sheet
-            rounded="lg"
-            min-height="500"
-            style="background-color: #01010f"
-            theme="dark"
-          >
-            <h1 class="blue">熱門新聞</h1>
-            <HotNews></HotNews>
-          </v-sheet>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-main>
+  <v-form style="padding: 5px 15px">
+    <h2>發表新聞評語</h2>
+    <div v-if="$store.state.isLoggedIn">
+      <v-textarea
+        :rules="rules"
+        clearable
+        variant="solo"
+        rows="4"
+        v-model="comment"
+      ></v-textarea>
+      <v-btn
+        @click="onSubmit"
+        type="button"
+        :disabled="comment.length < 10 || comment.length > 100"
+        style="color: #01010f; background-color: #fbf402; margin-top: 10px"
+        >送出</v-btn
+      >
+    </div>
+    <div v-else>
+      <v-card
+        height="100"
+        class="d-flex align-center justify-center"
+        style="border: 1px solid #fbf402; background-color: #01010f"
+      >
+        <p>請先登入會員以啟用評論功能，<a href="/Members/Login">點此登入</a></p>
+      </v-card>
+    </div>
+  </v-form>
 </template>
     
-<script setup >
+<script setup>
 import axios from "axios";
 import { ref, onMounted, computed, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import NewsCarousel from "../News/NewsCarousel.vue";
-import SearchTextBox from "../News/SearchTextBox.vue";
-import NewsGameClass from "./NewsGameClass.vue";
-import HotNews from "../News/HotNews.vue";
 import { format } from "date-fns";
 import { zhTW } from "date-fns/locale";
 import { useStore } from "vuex";
 import Swal from "sweetalert2";
-import NewsComments from "../News/NewsComments.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -112,25 +97,17 @@ const loadData = async () => {
     );
     const datas = await response.json();
     newsData.value = datas;
-    console.log("我的TADAS", datas);
     scheduleDate.value = datas.scheduleDate;
-    console.log("DATEEEEEEE", newsData.value.scheduleDate);
-    console.log("aaa", newsData.name);
-  } catch (err) {
-    console.log("錯誤訊息", err);
-  }
+  } catch (err) {}
 };
 
 onMounted(() => {
   loadData();
-  window.scrollTo({
-    top: 550,
-  });
 });
 
 //偷你書籤
-const returnComments = () => {
-  nextTick(() => {
+const returnComments = async () => {
+  await nextTick(() => {
     if (bookmark.value) {
       const offset = bookmark.value.offsetTop;
       window.scrollTo({
@@ -155,35 +132,14 @@ const onSubmit = async () => {
       }
     )
     .then((res) => {
-      console.log(res);
-
       Swal.fire({ title: "發表留言成功", icon: "success" });
       comment.value = "";
+      loadData();
       returnComments();
     })
     .catch((error) => {
-      console.log("ERRRRR", error.response.data);
-      Swal.fire("留言失敗");
+      Swal.fire({ title: "留言失敗", icon: "error" });
     });
-};
-
-const inputHandler = (value) => {
-  router.push({
-    name: "News",
-    query: { keyword: value },
-  });
-};
-
-const classificationHandler = (value) => {
-  if (value === "所有遊戲") {
-    value = "";
-  }
-  router.push({
-    name: "News",
-    query: {
-      gamesCategory: value,
-    },
-  });
 };
 
 const rules = [
@@ -260,10 +216,6 @@ const relativeTime = (datetime) => {
   background-color: #f9ee08;
   color: black;
 }
-
-/* .v-main {
-  padding-top: 0;
-} */
 
 .comment-container {
   display: flex;
