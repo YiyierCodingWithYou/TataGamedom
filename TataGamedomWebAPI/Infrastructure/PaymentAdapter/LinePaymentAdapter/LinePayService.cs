@@ -183,18 +183,15 @@ public class LinePayService : ILinePayService
                 Quantity = 1,
                 OriginalPrice = c.Product.Price,
                 Price = c.Product.CouponsProducts
-                .Any(
-                    cp => DateTime.Now >= cp.Coupon.StartTime && DateTime.Now <= cp.Coupon.EndTime && cp.ProductId == c.ProductId) ?
+                    .Any(cp => DateTime.Now >= cp.Coupon.StartTime && DateTime.Now <= cp.Coupon.EndTime && cp.ProductId == c.ProductId) ?
                     (int)Math.Round(c.Product.CouponsProducts
-                    .Where(cp => DateTime.Now >= cp.Coupon.StartTime && DateTime.Now <= cp.Coupon.EndTime && cp.ProductId == c.ProductId)
+                            .Where(cp => DateTime.Now >= cp.Coupon.StartTime && DateTime.Now <= cp.Coupon.EndTime && cp.ProductId == c.ProductId)
                             .Select
-                            (
-                                cp => cp.Coupon.DiscountTypeId == (int)DiscountType.PercentDiscount ? c.Product.Price * (cp.Coupon.Discount / 100.0)
+                            (cp => cp.Coupon.DiscountTypeId == (int)DiscountType.PercentDiscount ? c.Product.Price * (cp.Coupon.Discount / 100.0)
                                 : cp.Coupon.DiscountTypeId == (int)DiscountType.DirectDiscount ? c.Product.Price - cp.Coupon.Discount
-                                : c.Product.Price
-                            )
-                        .FirstOrDefault(), 1)
-                        :c.Product.Price,
+                                : c.Product.Price)
+                        .FirstOrDefault(), 1) * c.Quantity
+                        :c.Product.Price * c.Quantity,
             }) 
             .ToListAsync();
 
@@ -233,7 +230,7 @@ public class LinePayService : ILinePayService
 		{
 			shippingCost = 0;
 		}
-		if (request.ShipmentMethod == "payFirstAtHome" || request.ShipmentMethod == "payAtHome")
+		else if (request.ShipmentMethod == "payFirstAtHome" || request.ShipmentMethod == "payAtHome")
         {
             shippingCost = 80;
         }

@@ -17,6 +17,7 @@ import Cart from "@/views/Cart.vue";
 import MemberDetial from "@/components/Members/MemberDetial.vue";
 import ResetPassword from "@/components/Members/ResetPassword.vue";
 import store from "@/store";
+import TrackProductIndex from "@/components/TrackProduct/TrackProductIndex.vue"
 import RedirectToLogisticsSelection_Test from "@/components/ECPay/RedirectToLogisticsSelection_Test";
 
 const routes = [
@@ -169,6 +170,17 @@ const routes = [
         props: (route) => ({
           paymentSuccess: route.query.paymentSuccess === "true",
         }),
+      },
+    ],
+  },
+  {
+    path: "/TrackProduct",
+    component: () => import("@/layouts/default/Default.vue"),
+    children: [
+      {
+        path: "",
+        name: "TrackProduct",
+        component: TrackProductIndex,
       },
     ],
   },

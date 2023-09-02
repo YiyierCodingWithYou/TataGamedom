@@ -11,6 +11,13 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
     }
 
+    public async Task<bool> AreAllOrderItemsVirtual(List<OrderItem> orderItemToBeCreatedList)
+    {
+        List<int> productIds = orderItemToBeCreatedList.Select(x => x.ProductId).ToList();
+
+        return await _dbContext.Products.AnyAsync(p => productIds.Contains(p.Id) && p.IsVirtual);
+    }
+
     public async Task<string> GetIndexById(int productId)
     {
         return await _dbContext.Products.Where(p => p.Id == productId).Select(p => p.Index).FirstAsync();

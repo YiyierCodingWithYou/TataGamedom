@@ -50,7 +50,13 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
 
     public async Task<List<OrderItemReturnDto>> Handle(CreateMultipleItemReturnsCommand request, CancellationToken cancellationToken)
     {
-        List<Models.EFModels.OrderItemReturn> orderItemReturnToBeCreatedList = await CreateMutipleOrderItemReturnToDb(request);
+        if (!request.CreateOrderItemReturnCommandList.Any())
+        {
+            _logger.LogInformation("沒有退貨單需要處理");
+            return new List<OrderItemReturnDto>();
+        }
+
+        List<Models.EFModels.OrderItemReturn>? orderItemReturnToBeCreatedList = await CreateMutipleOrderItemReturnToDb(request);
 
         List<OrderItemReturnDto> orderItemReturnList = _mapper.Map<List<OrderItemReturnDto>>(orderItemReturnToBeCreatedList);
         
@@ -60,7 +66,7 @@ public class CreateMultipleItemReturnsCommandHandler : IRequestHandler<CreateMul
     }
 
 
-    private async Task<List<Models.EFModels.OrderItemReturn>> CreateMutipleOrderItemReturnToDb(CreateMultipleItemReturnsCommand request)
+    private async Task<List<Models.EFModels.OrderItemReturn>?> CreateMutipleOrderItemReturnToDb(CreateMultipleItemReturnsCommand request)
     {
         var validator = new CreateOrderItemReturnCommandValidator(_orderItemRepository, _orderItemReturnRepository);
         var orderItemReturnToBeCreatedList = new List<Models.EFModels.OrderItemReturn>();

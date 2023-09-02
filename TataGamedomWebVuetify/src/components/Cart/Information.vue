@@ -466,13 +466,12 @@ const createLogisticsOrder = async (payload) => {
 
 const handleSubmit = async () => {
   if (address.value) {
-      createOrderCommand.value.toAddress = address;
-    }
+    createOrderCommand.value.toAddress = address;
+  }
   if (valid.value) {
     createOrderCommand.value.ShipmentMethodId = props.selectedData.shipMethod.id;
     createOrderCommand.value.PaymentStatusId =
       props.selectedData.shipMethod.id == 2 || 4 || 6 ? 2 : null;  //純取貨 => 已付款
-    // createOrderCommand.value.OrderStatusId = 4   => todo 皆為虛擬則為已完成
     createOrderCommand.value.RecipientName = buyerName;
     createOrderCommand.value.ReceiverEmail = buyerEmail;
     createOrderCommand.value.ReceiverCellPhone = buyerPhone;
@@ -497,16 +496,20 @@ const handleSubmit = async () => {
         router.push({ name: "Cart", query: { paymentSuccess: "true" } });
       }
 
+      //如果金流Response失敗不刪除
       await store.dispatch('deleteCartsByMemberId', memberId.value);
 
-      payload.value.MerchantTradeNo = orderResult[0].orderIndex;
-      payload.value.OrderId = orderResult[0].orderId;
-      await createLogisticsOrder(payload.value);
+      if (props.selectedData.shipMethod.method != ("gameCode" || "oversea")) {
+        payload.value.MerchantTradeNo = orderResult[0].orderIndex;
+        payload.value.OrderId = orderResult[0].orderId;
+        await createLogisticsOrder(payload.value);
+      }
+
     } catch (error) {
       console.error("Error:", error);
     }
   } else {
-    Swal.fire('', '未完整填寫收件人資訊' , 'warning');
+    Swal.fire('', '未完整填寫收件人資訊', 'warning');
   }
 
 };
@@ -585,4 +588,5 @@ load();
 
 .tdImg {
   width: 250px !important
-}</style>
+}
+</style>

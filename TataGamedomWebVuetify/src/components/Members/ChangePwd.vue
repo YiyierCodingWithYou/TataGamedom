@@ -1,18 +1,42 @@
 <template>
-  <v-card class="mx-auto mt-16" style=" box-shadow: 2px 2px 10px #a1dfe9;background-color: #01010f;" max-width="600"
-    title="更改密碼">
+  <v-card
+    class="mx-auto mt-16"
+    style="box-shadow: 2px 2px 10px #a1dfe9; background-color: #01010f"
+    max-width="600"
+    title="更改密碼"
+  >
     <v-container>
-      <v-text-field v-model="originalPassword" :append-inner-icon="originalPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary" label="舊密碼" :type="originalPasswordVisible ? 'text' : 'password'" variant="underlined"
-        @click:append-inner="originalPasswordVisible = !originalPasswordVisible"></v-text-field>
+      <v-text-field
+        v-model="originalPassword"
+        :append-inner-icon="originalPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary"
+        label="舊密碼"
+        :type="originalPasswordVisible ? 'text' : 'password'"
+        variant="underlined"
+        @click:append-inner="originalPasswordVisible = !originalPasswordVisible"
+      ></v-text-field>
 
-      <v-text-field v-model="createPassword" :append-inner-icon="createPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary" :rules="createPasswordRules" label="新密碼" :type="createPasswordVisible ? 'text' : 'password'"
-        variant="underlined" @click:append-inner="createPasswordVisible = !createPasswordVisible"></v-text-field>
+      <v-text-field
+        v-model="createPassword"
+        :append-inner-icon="createPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary"
+        :rules="createPasswordRules"
+        label="新密碼"
+        :type="createPasswordVisible ? 'text' : 'password'"
+        variant="underlined"
+        @click:append-inner="createPasswordVisible = !createPasswordVisible"
+      ></v-text-field>
 
-      <v-text-field v-model="confirmPassword" :append-inner-icon="confirmPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary" :rules="confirmPasswordRules" label="確認密碼" :type="confirmPasswordVisible ? 'text' : 'password'"
-        variant="underlined" @click:append-inner="confirmPasswordVisible = !confirmPasswordVisible"></v-text-field>
+      <v-text-field
+        v-model="confirmPassword"
+        :append-inner-icon="confirmPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary"
+        :rules="confirmPasswordRules"
+        label="確認密碼"
+        :type="confirmPasswordVisible ? 'text' : 'password'"
+        variant="underlined"
+        @click:append-inner="confirmPasswordVisible = !confirmPasswordVisible"
+      ></v-text-field>
 
       <v-btn color="yellow" @click="onSubmit" style="left: 200px">
         修改密碼
@@ -32,6 +56,7 @@ import { format } from "date-fns";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import ImageUploader from "quill-image-uploader";
+import Swal from "sweetalert2";
 
 //const member = ref([]);
 const valid = ref(false);
@@ -91,7 +116,6 @@ const confirmPasswordRules = ref([
   },
 ]);
 
-
 //登出
 const logout = async () => {
   axios.delete("https://localhost:7081/api/members/Logout", {
@@ -119,12 +143,22 @@ const onSubmit = async () => {
     )
     .then((res) => {
       console.log(res);
-      alert("密碼修改成功，請使用新密碼重新登入");
+      Swal.fire({
+        icon: "success",
+        title: `密碼修改成功
+      請使用新密碼重新登入`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
       logout();
     })
     .catch((err) => {
       console.log(err);
-      alert("密碼修改失敗");
+      Swal.fire("密碼修改失敗");
+      Swal.fire({
+        icon: "error",
+        title: "密碼修改失敗",
+      });
     });
 };
 
