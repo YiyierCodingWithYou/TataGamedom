@@ -11,12 +11,15 @@
     <div class="nya"></div>
     <div>
       <p class="inline-title font-size-4rem">獺獺</p>
-      <p class="inline-title  color-b font-size-4rem">玩國</p>
+      <p class="inline-title color-b font-size-4rem">玩國</p>
     </div>
     <div class="inline-title">
       <div class="inline-title-big color-y font-comfortaa">Tata</div>
       <div class="inline-title-big color-b font-comfortaa">Gamedom</div>
     </div>
+    <!-- <Typed :options="option2">
+      <p class="typing inline-title"></p>
+    </Typed> -->
   </div>
 </template>
 
@@ -30,6 +33,17 @@ const options: TypedOptions = {
   typeSpeed: 100,
   smartBackspace: false,
 };
+
+// const option2: TypedOptions = {
+//   strings: [
+//     "🎉暑期特賣指定活動商品95折",
+//     "🎉全館滿2000免運",
+//     "🎉全館滿3000折300",
+//   ],
+//   loop: true,
+//   typeSpeed: 100,
+//   smartBackspace: false,
+// };
 </script>
 
 <style scoped>
