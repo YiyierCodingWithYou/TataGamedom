@@ -88,4 +88,6 @@ public partial class Member
     public virtual ICollection<PostReport> PostReports { get; set; } = new List<PostReport>();
 
     public virtual ICollection<PostUpDownVote> PostUpDownVotes { get; set; } = new List<PostUpDownVote>();
+
+    public virtual ICollection<TrackProduct> TrackProducts { get; set; } = new List<TrackProduct>();
 }
