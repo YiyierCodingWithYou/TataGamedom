@@ -4,6 +4,7 @@ using TataGamedomWebAPI.Application.Contracts.Logging;
 using TataGamedomWebAPI.Application.Contracts.Persistence;
 using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleOrderItems;
 using TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateOrderItem;
+using TataGamedomWebAPI.Infrastructure.TaTaGamedom_Persistence.Repositories;
 using TataGamedomWebAPI.Models.Interfaces;
 
 namespace TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultipleItemsWithOrderId;
@@ -11,6 +12,7 @@ namespace TataGamedomWebAPI.Application.Features.OrderItem.Commands.CreateMultip
 public class CreateMultipleItemsWithOrderIdCommandHandler : IRequestHandler<CreateMultipleItemsWithOrderIdCommand, List<CreateOrderItemResponseDto>>
 {
     private readonly IMapper _mapper;
+    private readonly IOrderRepository _orderRepository;
     private readonly IOrderItemRepository _orderItemRepository;
     private readonly IProductRepository _productRepository;
     private readonly IInventoryItemRepository _inventoryItemRepository;
@@ -30,6 +32,7 @@ public class CreateMultipleItemsWithOrderIdCommandHandler : IRequestHandler<Crea
         IMediator mediator)
     {
         this._mapper = mapper;
+        this._orderRepository = orderRepository;
         this._orderItemRepository = orderItemRepository;
         this._productRepository = productRepository;
         this._inventoryItemRepository = inventoryItemRepository;
@@ -58,6 +61,12 @@ public class CreateMultipleItemsWithOrderIdCommandHandler : IRequestHandler<Crea
         }
 
         await _orderItemRepository.CreateAsync(orderItemToBeCreatedList);
+
+        //如果皆為虛擬，updateOrder為已完成
+        if (await _productRepository.AreAllOrderItemsVirtual(orderItemToBeCreatedList)) 
+        {
+            await _orderRepository.UpdateOrderStatusIfAllItemsVirtual();
+        }
 
         _logger.LogInformation("Created multiple order items successfully");
 
