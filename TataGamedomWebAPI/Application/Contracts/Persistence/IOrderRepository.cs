@@ -12,5 +12,6 @@ public interface IOrderRepository : IGenericRepository<Order>
     Task<List<OrderWithDeatilsDto>> GetOrderWithDetailsByAccount();
     Task<bool> IsOrderExist(int orderId);
     Task UpdateOrderStatusAfterReturn(int orderItemId);
+    Task UpdateOrderStatusCompleted(int responseOrderId);
 }
 

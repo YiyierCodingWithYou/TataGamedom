@@ -42,7 +42,7 @@
 
         <v-spacer></v-spacer>
         <v-btn block class="mt-2" text="取消" @click.stop="closeDialog"></v-btn>
-        <v-btn :loading="loading" block class="mt-2" text="送出" type="submit"></v-btn>
+        <v-btn :loading="loading" v-show="isOrderCompleted" block class="mt-2" text="送出" type="submit"></v-btn>
       </v-form>
     </v-sheet>
   </v-dialog>
