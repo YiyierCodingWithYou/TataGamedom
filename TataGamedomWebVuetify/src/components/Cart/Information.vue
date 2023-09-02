@@ -496,13 +496,15 @@ const handleSubmit = async () => {
         router.push({ name: "Cart", query: { paymentSuccess: "true" } });
       }
 
-      //如果LinePay Response失敗 不刪除
+      //如果金流Response失敗不刪除
       await store.dispatch('deleteCartsByMemberId', memberId.value);
 
-      //如果訂單因為皆為虛擬所以已完成，不執行建立物流
-      payload.value.MerchantTradeNo = orderResult[0].orderIndex;
-      payload.value.OrderId = orderResult[0].orderId;
-      await createLogisticsOrder(payload.value);
+      if (props.selectedData.shipMethod.method != ("gameCode" || "oversea")) {
+        payload.value.MerchantTradeNo = orderResult[0].orderIndex;
+        payload.value.OrderId = orderResult[0].orderId;
+        await createLogisticsOrder(payload.value);
+      }
+
     } catch (error) {
       console.error("Error:", error);
     }

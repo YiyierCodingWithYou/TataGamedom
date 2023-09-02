@@ -95,7 +95,7 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateOrderStatusIfAllItemsVirtual(int orderId)
+    public async Task UpdateOrderStatusCompleted(int orderId)
     {
         var order = await _dbContext.Orders.Where(o => o.Id == orderId).FirstOrDefaultAsync();
         order!.OrderStatusId = (int)OrderStatus.Completed;
