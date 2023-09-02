@@ -65,7 +65,7 @@ public class CreateMultipleItemsWithOrderIdCommandHandler : IRequestHandler<Crea
         //如果皆為虛擬，updateOrder為已完成
         if (await _productRepository.AreAllOrderItemsVirtual(orderItemToBeCreatedList)) 
         {
-            await _orderRepository.UpdateOrderStatusIfAllItemsVirtual();
+            await _orderRepository.UpdateOrderStatusIfAllItemsVirtual(responseOrderId);
         }
 
         _logger.LogInformation("Created multiple order items successfully");
