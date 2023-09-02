@@ -55,14 +55,7 @@ const loadData = async () => {
     product.value = datas;
     totalPages.value = datas.totalPages;
     productId.value = parseInt(route.params.productId, 10);
-
-    const result = await fetch(`https://localhost:7081/api/Products/TrackProductStatus?productId=${productId.value}`
-        //todo
-        //todo
-        //
-    )
 };
-loadData();
 
 const paginationHandler = (value) => {
     page.value = value;

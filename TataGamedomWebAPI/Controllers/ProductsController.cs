@@ -98,6 +98,11 @@ namespace TataGamedomWebAPI.Controllers
 						? products.OrderByDescending(p => p.SaleDate)
 						: products.OrderBy(p => p.SaleDate);
 					break;
+				case "Score":
+					products = (isAscending ==false)
+						? products.OrderByDescending(p=>p.Score)
+						:products.OrderBy(p => p.Score);
+					break;
 				default:
 					products = products.OrderBy(p => p.Id);
 					break;

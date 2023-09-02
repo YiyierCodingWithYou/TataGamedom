@@ -121,10 +121,12 @@ const select = ref({
 });
 const items = ref([
   { sort: "", ascending: "", label: "預設" },
-  { sort: "SaleDate", ascending: "true", label: "依日期排序：由舊到新" },
-  { sort: "SaleDate", ascending: "false", label: "依日期排序：由新到舊" },
   { sort: "Price", ascending: "true", label: "依售價排序：由低到高" },
   { sort: "Price", ascending: "false", label: "依售價排序：由高到低" },
+  { sort: "Score", ascending: "true", label: "依評分排序：由低到高" },
+  { sort: "Score", ascending: "false", label: "依評分排序：由高到低" },
+  { sort: "SaleDate", ascending: "true", label: "依日期排序：由舊到新" },
+  { sort: "SaleDate", ascending: "false", label: "依日期排序：由新到舊" },
 ]);
 
 const inputPlatform = ref("");
