@@ -58,6 +58,8 @@
                 現庫存剩餘{{ limit }}件
               </p>
               <p v-else-if="limit === 0" class="text-center">無庫存</p>
+              <v-btn @click="Add2Track(productData.id)"><v-icon>mdi-heart</v-icon>
+              </v-btn>
             </div>
           </v-col>
         </v-row>
@@ -276,6 +278,27 @@ const relativeTime = (datetime) => {
   );
   return formattedDate;
 };
+
+const Add2Track = async (productId) => {
+  const response = await fetch(`https://localhost:7081/api/Products/TrackProducts?productId=${productId}`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      productId: productId,
+    }),
+  });
+  let result = await response.json();
+  if (store.state.isLoggedIn) {
+    if (result.isSuccess) {
+      Swal.fire('成功', result.message, 'success');
+    }
+  } else {
+    Swal.fire('失敗', result.message, 'warning');
+  }
+}
 
 
 const returnComments = () => {

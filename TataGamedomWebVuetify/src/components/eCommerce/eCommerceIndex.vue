@@ -14,6 +14,9 @@
               @getProductInput="GetSingleProduct"></SideBar>
           </v-col>
           <v-col cols="9">
+            <Typed :options="option2">
+              <p class="typing ml-3" style="display:inline-block;"></p>
+            </Typed>
             <div class="d-flex">
               <v-col cols="6" class="me-auto">
                 <v-btn-toggle v-model="inputPlatform" rounded="0.5" group
@@ -85,13 +88,15 @@
   </div>
 </template>
   
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, onMounted, watchEffect } from "vue";
 import Carousel from "@/components/eCommerce/Carousel.vue";
 import SideBar from "@/components/eCommerce/SideBar.vue";
 import { useRoute, useRouter } from "vue-router";
 import CartDrawer from "@/components/eCommerce/CartDrawer.vue";
 import store from "@/store";
+import { Typed } from "@duskmoon/vue3-typed-js";
+import type { TypedOptions } from "@duskmoon/vue3-typed-js";
 
 const router = useRouter();
 const route = useRoute();
@@ -128,6 +133,17 @@ const API = "https://localhost:7081/api/";
 const unitExchange = (x) => {
   return 'NT$ ' + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+const option2: TypedOptions = {
+  strings: [
+    "🎉暑期特賣指定活動商品95折",
+    "🎉全館滿2000免運",
+    "🎉全館滿3000折300",
+  ],
+  loop: true,
+  typeSpeed: 100,
+  smartBackspace: false,
+};
 
 const loadProducts = async () => {
   const response = await fetch(

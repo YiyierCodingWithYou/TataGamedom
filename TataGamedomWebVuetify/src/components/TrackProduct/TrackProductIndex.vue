@@ -35,7 +35,8 @@
                             <div>{{ unitExchange(item.specialPrice) }}</div>
                         </td>
                         <td v-else class="myTd">{{ unitExchange(item.price) }}</td>
-                        <td class="myTd">加入購物車的BTN</td>
+                        <td class="myTd" v-if="item.stockQuantity > 0"><v-btn @click="Add2Cart(item.id)">加入購物車</v-btn></td>
+                        <td class="myTd" v-else>無法購買</td>
                         <td class="text-end">
                             <v-icon @click="removeItem(item.id)">mdi-cart-remove</v-icon>
                         </td>
@@ -103,6 +104,26 @@ const removeItem = async (productId) => {
         }
     })
 }
+
+const Add2Cart = async (productId) => {
+    const response = await fetch(`https://localhost:7081/api/Carts`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            productId: productId,
+            qty: 1,
+        }),
+    });
+    let result = await response.json();
+    if (result.isSuccess) {
+        Swal.fire('成功', '商品已加入購物車', 'success');
+    }
+};
+
+
 
 onMounted(() => {
     loadData();
