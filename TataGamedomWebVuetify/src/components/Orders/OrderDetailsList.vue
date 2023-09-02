@@ -3,7 +3,7 @@
     <v-card class="mx-auto" min-width="30vw" min-height="50vh">
       <v-card-item class="bg-tata-yellow">
         <v-card-title>
-          <p class="text-h4 bg-tata-yellow mb-2">訂單明細</p>
+          <p class="text-h5 bg-tata-yellow mb-2">訂單明細</p>
         </v-card-title>
       </v-card-item>
 
