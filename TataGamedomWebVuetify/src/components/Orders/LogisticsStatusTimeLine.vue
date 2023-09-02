@@ -11,8 +11,8 @@
           寄送方式:
           {{
             logisticsTradeInfoData.logisticsType == "CVS_UNIMART"
-              ? "7-11取貨"
-              : ""
+            ? "7-11取貨"
+            : ""
           }}
         </div>
         <div v-if="logisticsTradeInfoData.shipmentNo">
@@ -22,11 +22,7 @@
           託運單號(宅配): {{ logisticsTradeInfoData.bookingNote }}
         </div>
       </div>
-      <v-divider
-        :thickness="2"
-        class="border-opacity-25 mb-10"
-        color="success"
-      ></v-divider>
+      <v-divider :thickness="2" class="border-opacity-25 mb-10" color="success"></v-divider>
 
       <v-timeline direction="horizontal">
         <v-timeline-item>
@@ -34,7 +30,7 @@
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
           </template>
           <div class="d-flex text-h6">
-            <strong class="me-4">{{
+            <strong class="me-4" v-if="logisticsTradeInfoData.merchantTradeNo">{{
               // relativeTime(logisticsTradeInfoData.tradeDate) 綠界測試環境只提供這個
               relativeTime(order.createdAt)
             }}</strong>
@@ -66,8 +62,8 @@
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
             <v-icon icon="mdi-pac-man" size="median"></v-icon>
           </template>
-          <div class="d-flex text-h6" v-if="order.deliveredAt">
-            <strong class="me-4">{{ relativeTime(order.deliveredAt) }}</strong>
+          <div class="d-flex text-h6">
+            <strong class="me-4" v-if="order.deliveredAt">{{ relativeTime(order.deliveredAt) }}</strong>
             <div>
               <strong> 送達超商門市</strong>
             </div>
