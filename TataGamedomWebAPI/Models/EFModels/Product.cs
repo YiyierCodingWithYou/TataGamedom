@@ -54,4 +54,6 @@ public partial class Product
     public virtual ProductStatusCode ProductStatus { get; set; } = null!;
 
     public virtual ICollection<StandardProduct> StandardProducts { get; set; } = new List<StandardProduct>();
+
+    public virtual ICollection<TrackProduct> TrackProducts { get; set; } = new List<TrackProduct>();
 }

@@ -297,7 +297,7 @@ namespace TataGamedomWebAPI.Controllers
 			return trackProductDTO;
 		}
 
-		[EnableCors("AllowAny")]
+		[EnableCors("AllowCookie")]
 		[HttpPost("TrackProducts")]
 		public async Task<ApiResult> AddTrackProduct(int productId)
 		{
