@@ -2,9 +2,18 @@
   <v-card class="mx-auto mt-10 TATA" width="500">
     <v-sheet width="400" class="mx-auto my-5" theme="black">
       <v-form fast-fail @submit.prevent="submitForm">
-        <v-text-field v-model="account" label="帳號" :rules="accountRules"></v-text-field>
+        <v-text-field
+          v-model="account"
+          label="帳號"
+          :rules="accountRules"
+        ></v-text-field>
 
-        <v-text-field v-model="email" class="mt-5" label="email" :rules="emailRules"></v-text-field>
+        <v-text-field
+          v-model="email"
+          class="mt-5"
+          label="email"
+          :rules="emailRules"
+        ></v-text-field>
 
         <v-btn type="submit" block class="mt-2 bg-yellow">確認</v-btn>
       </v-form>
@@ -14,6 +23,7 @@
     
 <script >
 import axios from "axios";
+import Swal from "sweetalert2";
 export default {
   data: () => ({
     account: "",
@@ -50,11 +60,19 @@ export default {
         this.showAlert();
       } else {
         // 如果帳號或郵件地址為空，顯示錯誤訊息或執行其他適當的處理
-        alert("請正確填寫帳號和郵件地址");
+        Swal.fire({
+          icon: "error",
+          title: "請正確填寫帳號和郵件地址...",
+        });
       }
     },
     showAlert() {
-      alert("已將重設密碼信件寄出");
+      Swal.fire({
+        icon: "success",
+        title: "已將重設密碼信件寄出",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     },
   },
 };
