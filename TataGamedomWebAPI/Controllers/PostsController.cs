@@ -293,7 +293,7 @@ namespace TataGamedomWebAPI.Controllers
 				PostId = c.PostId,
 				ActiveFlag = c.ActiveFlag
 			})
-				.OrderByDescending(c => c.DateTime)
+				.OrderBy(c => c.DateTime)
 				.ToList();
 			foreach (var comment in comments)
 			{
