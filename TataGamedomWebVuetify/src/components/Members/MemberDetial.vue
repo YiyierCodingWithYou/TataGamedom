@@ -3,31 +3,15 @@
     <v-container>
       <v-row class="mt-3">
         <v-col cols="12" md="6">
-          <v-text-field
-            v-model="name"
-            :rules="nameRules"
-            label="姓名"
-            required
-          ></v-text-field>
+          <v-text-field v-model="name" :rules="nameRules" label="姓名" required></v-text-field>
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-text-field
-            v-model="phone"
-            :rules="phoneRules"
-            :counter="10"
-            label="手機"
-            required
-          ></v-text-field>
+          <v-text-field v-model="phone" :rules="phoneRules" :counter="10" label="手機" required></v-text-field>
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-text-field
-            v-model="email"
-            label="E-mail"
-            required
-            readonly
-          ></v-text-field>
+          <v-text-field v-model="email" label="E-mail" required readonly></v-text-field>
         </v-col>
 
         <v-col cols="12" md="6">
@@ -36,42 +20,24 @@
         </v-col>
 
         <v-col cols="12" md="10" style="position: relative">
-          <v-file-input
-            label="上傳頭像"
-            variant="filled"
-            prepend-icon="mdi-camera"
-            style="font-size: 50px; height: 350px"
-            @change="uploadImage"
-          ></v-file-input>
+          <v-file-input label="上傳頭像" variant="filled" prepend-icon="mdi-camera" style="font-size: 50px; height: 350px"
+            @change="uploadImage"></v-file-input>
           <!-- <img style="position: absolute; top:12px ; right:300px ; height: 200px; width: 200px; border-radius: 50%;"
             :src="img + iconImg" /> -->
         </v-col>
-        <img
-          style="
+        <img style="
             position: absolute;
             top: 350px;
             right: 150px;
             height: 200px;
             width: 200px;
             border-radius: 50%;
-          "
-          :src="img + iconImg"
-        />
-        <v-col cols="12" md="11" style="position: absolute; margin-top: 450px"
-          >About Me
-          <QuillEditor
-            :modules="modules"
-            :toolbar="toolbarOptions"
-            class="quill-editor"
-            contentType="html"
-            v-model:content="editor"
-          />
+          " :src="img + iconImg" />
+        <v-col cols="12" md="11" style="position: absolute; margin-top: 450px">About Me
+          <QuillEditor :modules="modules" :toolbar="toolbarOptions" class="quill-editor" contentType="html"
+            v-model:content="editor" />
         </v-col>
-        <v-btn
-          color="yellow"
-          @click="onClick"
-          style="margin-left: 45%; top: 110px"
-        >
+        <v-btn color="yellow" @click="onClick" style="margin-left: 45%; top: 110px">
           確認修改
         </v-btn>
       </v-row>
@@ -220,38 +186,6 @@ const logout = async () => {
   });
 };
 
-//改密碼
-const onSubmit = async () => {
-  await axios
-    .post(
-      "https://localhost:7081/api/Members/ChangePassword",
-      {
-        originalPassword: originalPassword.value,
-        createPassword: createPassword.value,
-        confirmPassword: confirmPassword.value,
-      },
-      {
-        withCredentials: true,
-      }
-    )
-    .then((res) => {
-      console.log(res);
-      Swal.fire({
-        icon: "success",
-        title: "密碼修改成功，請使用新密碼重新登入",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      logout();
-    })
-    .catch((err) => {
-      console.log(err);
-      Swal.fire({
-        icon: "error",
-        title: "密碼修改失敗",
-      });
-    });
-};
 
 const toolbarOptions = [
   [{ header: [1, 2, 3, 4, 5, false] }], // custom button values
@@ -339,7 +273,7 @@ const validateForm = () => {
   if (!phoneValid) {
     Swal.fire({
       icon: "error",
-      title: "電話必須符合驗證規則",
+      title: "手機必須符合驗證規則",
     });
 
     return false;
