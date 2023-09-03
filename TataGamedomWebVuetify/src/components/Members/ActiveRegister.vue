@@ -33,6 +33,9 @@ export default {
         this.sendVerify();
     },
     methods: {
+        isOktrue() {
+            this.isOk = true;
+        },
         sendVerify() {
             console.log(this.$route.query);
             axios
@@ -44,13 +47,14 @@ export default {
                     }
                 )
                 .then((res) => {
-                    console.log(res);
-                    console.log("驗證成功");
-                    setTimeout(() => {
-                        this.processing = false;
-                        this.isOk = true;
-                    }, 3000);
-                    this.$router.push("/Members/Login");
+                    this.isOktrue(),
+                        setTimeout(() => {
+                            this.processing = false;
+                            setTimeout(() => {
+                                console.log("aaaaa", this.isOk);
+                                this.$router.push("/Members/Login");
+                            }, 3000);
+                        }, 3000);
                 })
                 .catch((err) => {
                     console.log(err);
