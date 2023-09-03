@@ -1,25 +1,18 @@
 <template>
-  <v-sheet
-    width="300"
-    class="mx-auto"
-    style="margin-top: 30px; border: 1px solid blue"
-  >
+  <v-sheet width="600" class="mx-auto" style="margin-top: 30px;">
     <v-form fast-fail @submit.prevent="submitForm">
-      <v-text-field
-        v-model="createPassword"
-        label="重設密碼"
-        type="password"
-        :rules="createPasswordRules"
-      ></v-text-field>
+      <v-card class="mx-auto mt-16" style="box-shadow: 2px 2px 10px #a1dfe9; background-color: #01010f" max-width="600"
+        title="重設密碼">
+        <v-container>
+          <v-text-field style="" v-model="createPassword" label="重設密碼" type="password"
+            :rules="createPasswordRules"></v-text-field>
 
-      <v-text-field
-        v-model="confirmPassword"
-        label="確認密碼"
-        type="password"
-        :rules="confirmPasswordRules"
-      ></v-text-field>
+          <v-text-field v-model="confirmPassword" label="確認密碼" type="password"
+            :rules="confirmPasswordRules"></v-text-field>
 
-      <v-btn type="submit" block class="mt-2 bg-yellow">Submit</v-btn>
+          <v-btn type="submit" block class="mt-2 bg-yellow">重設密碼</v-btn>
+        </v-container>
+      </v-card>
     </v-form>
   </v-sheet>
 </template>

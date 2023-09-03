@@ -1,20 +1,28 @@
 <template>
     <div>
         <div v-if="processing" class="loading-container">
-            <div class="loading-spinner"></div>
-            <img src="https://localhost:7081/Files/Uploads/Icons/tataUserIcon.jpg"
-                style="margin-left: 30%;height: 700px;width: 700px;" alt="">
+
+            <img src="https://localhost:7081/Files/Icons/tataing.png"
+                style="position: relative;;margin-left: 30%;height: 700px;width: 700px;" alt="">
+            <div class="loading-spinner" style="position:absolute; top:61%; left: 46%;"></div>
         </div>
 
         <div v-else>
-            <h2 v-if="isOk === true">驗證成功</h2>
-            <h2 v-else>驗證失敗</h2>
+            <div v-if="isOk === true">
+                <img src="https://localhost:7081/Files/Icons/tataOK.png"
+                    style="margin-left: 30%;height: 700px;width: 700px;" alt="">
+            </div>
+            <div v-else>
+                <img src="https://localhost:7081/Files/Icons/tataerr.png"
+                    style="margin-left: 30%;height: 700px;width: 700px;" alt="">
+            </div>
         </div>
     </div>
 </template>
   
 <script>
 import axios from "axios";
+import { useRouter } from "vue-router";
 
 export default {
     data: () => ({
@@ -41,14 +49,15 @@ export default {
                     setTimeout(() => {
                         this.processing = false;
                         this.isOk = true;
-                    }, 10000);
+                    }, 3000);
+                    this.$router.push("/Members/Login");
                 })
                 .catch((err) => {
                     console.log(err);
                     console.log("驗證失敗");
                     setTimeout(() => {
                         this.processing = false;
-                    }, 10000);
+                    }, 3000);
                 });
         },
     },
@@ -57,10 +66,10 @@ export default {
   
 <style>
 .loading-spinner {
-    width: 50px;
-    height: 50px;
+    width: 70px;
+    height: 70px;
     border: 4px solid rgba(0, 0, 0, 0.2);
-    border-top: 4px solid #3498db;
+    border-top: 5px solid #3498db;
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-left: 10px;
