@@ -18,7 +18,9 @@
         修改密碼
         <v-icon icon="mdi-chevron-right" end></v-icon>
       </v-btn>
+      <v-btn color="black" style="left:350px" @click="fillFormData"></v-btn>
     </v-container>
+
   </v-card>
 </template>
     
@@ -77,6 +79,12 @@ const loadMember = async () => {
 onMounted(() => {
   loadMember();
 });
+
+const fillFormData = () => {
+  originalPassword.value = "w84w84j06eji6",
+    createPassword.value = "w84w84j06eji6",
+    confirmPassword.value = "w84w84j06eji6"
+}
 
 const originalPasswordRules = ref([
   (value) => {
