@@ -53,6 +53,7 @@
         label="回應"
         v-model="message"
         append-inner-icon="mdi-message-processing"
+        @click="showLoginAlert"
         @click:append-inner="newComment(comment.commentId, comment.postId)"
         @keyup.enter="newComment(comment.commentId, comment.postId)"
       ></v-text-field>
@@ -75,8 +76,8 @@
 .test {
   border-left: 1px solid rgba(249, 238, 8, 0.2);
 }
-.comment {
-}
+
+.comment {}
 
 .blueOutline {
   border-color: #a1dfe9;
@@ -136,7 +137,7 @@
 </style>
 
 <script setup lang="ts">
-import { reactive, ref, watch } from "vue";
+import { reactive, ref, watch, computed } from "vue";
 import { formatDistanceToNow } from "date-fns";
 import { zhTW } from "date-fns/locale";
 import { useRouter } from "vue-router";
@@ -192,16 +193,34 @@ const relativeTime = (datetime: string) => {
   return formatDistanceToNow(date, { addSuffix: true, locale: zhTW });
 };
 
+const isLoggedIn = computed(() => store.state.isLoggedIn);
+const showLoginAlert = () => {
+  if (!isLoggedIn.value) {
+    Swal.fire({
+      title: "請先登入會員以使用功能",
+      icon: "warning",
+      color: "white",
+      confirmButtonColor: "orange",
+      background: "#1e1e1e",
+      confirmButtonText: "🎮趕緊加入獺獺玩國🦦",
+    });
+  }
+};
+
+
 const vote = async (
   type: string,
   voteCommentId: number,
   upOrDown: string,
   postId: number
 ) => {
+  if (!isLoggedIn.value) {
+    showLoginAlert()
+    return
+  }
   try {
     const response = await fetch(
-      `${baseAddress}${
-        type === "post" ? "Posts" : "PostComments"
+      `${baseAddress}${type === "post" ? "Posts" : "PostComments"
       }/${voteCommentId}/Vote/${upOrDown}`,
       {
         method: "PUT",
@@ -232,25 +251,30 @@ const deleteContent = async (
     cancelButtonText: "取消",
     confirmButtonText: "刪除",
   }).then(async (result) => {
-    try {
-      const response = await fetch(
-        `${baseAddress}${
-          type === "post" ? "Posts" : "PostComments"
-        }/${deleteId}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        }
-      );
-      let result = await response.json();
-      emits("reloadPost", postId);
-    } catch {
-      alert(":<");
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(
+          `${baseAddress}${type === "post" ? "Posts" : "PostComments"
+          }/${deleteId}`,
+          {
+            method: "DELETE",
+            credentials: "include",
+          }
+        );
+        let result = await response.json();
+        emits("reloadPost", postId);
+      } catch {
+        alert(":<");
+      }
     }
   });
 };
 
 const newComment = async (commentId: number, postId: number) => {
+  if (!isLoggedIn.value) {
+    showLoginAlert()
+    return
+  }
   if (message.value.trim() != "") {
     try {
       const response = await fetch(`${baseAddress}PostComments/CommentReply`, {

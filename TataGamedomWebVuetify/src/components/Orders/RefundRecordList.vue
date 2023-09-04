@@ -7,8 +7,8 @@
         <div>退貨單編號: {{ item.index }}</div>
         <div>退款狀態: {{ item.isRefunded ? "已退款" : "未退款" }}</div>
         <div>退貨狀態: {{ item.isReturned ? "已退貨" : "未退貨" }}</div>
-        <div>申請退款時間: {{ item.issuedAt }}</div>
-        <div v-if="item.completedAt">完成退款時間: {{ item.completedAt }}</div>
+        <div>申請退款時間: {{ relativeTime(item.issuedAt) }}</div>
+        <div v-if="item.completedAt">完成退款時間: {{ relativeTime(item.completedAt) }}</div>
         <div>LinePay退款編號: {{ item.linePayRefundTransactionId }}</div>
         <div>原訂單品項編號: {{ item.orderItemId }}</div>
         <br />
@@ -19,6 +19,8 @@
 
 <script setup>
 import { ref, defineProps } from "vue";
+import { format } from "date-fns";
+import { zhTW } from "date-fns/locale";
 
 const props = defineProps({
   orderItemReturnList: {
@@ -26,7 +28,14 @@ const props = defineProps({
     required: true,
   },
 });
+
+const relativeTime = (datetime) => {
+  const date = new Date(datetime);
+  return format(date, "yyyy/MM/dd", { locale: zhTW });
+};
+
 const dialog = ref(false);
+
 </script>
 
 <style></style>
