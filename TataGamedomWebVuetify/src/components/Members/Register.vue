@@ -35,6 +35,7 @@
           完成註冊
           <v-icon icon="mdi-chevron-right" end></v-icon>
         </v-btn>
+        <v-btn color="black" @click="fillFormData">Demo</v-btn>
       </v-card-actions>
     </v-card>
   </v-form>
@@ -109,6 +110,17 @@ export default {
         }
       });
     },
+    fillFormData() {
+      // 自動輸入
+      this.account = "tata123456";
+      this.password = "w84w84j06eji6";
+      this.checkPassword = "w84w84j06eji6";
+      this.name = "又是我來電汪";
+      this.birthday = "1996-03-04";
+      this.email = "zzzz850304@gmail.com";
+      this.phone = "0987654321";
+      this.terms = true;
+    },
     onSubmit() {
       if (
         !this.account ||
@@ -140,8 +152,7 @@ export default {
           },
           {
             withCredentials: true,
-          }
-        )
+          })
         .then((res) => {
           this.$router.push({
             name: "Login",
