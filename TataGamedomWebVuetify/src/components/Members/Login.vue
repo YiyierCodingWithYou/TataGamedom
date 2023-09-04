@@ -121,11 +121,10 @@ export default {
           for (let item of localCart) {
             promises.push(
               axios.post(
-                "https://localhost:7081/api/Carts", // Assuming this is your API endpoint to add items to the cart
+                "https://localhost:7081/api/Carts", 
                 {
                   productId: item.productId,
                   qty: item.qty,
-                  // Add any other necessary properties
                 },
                 {
                   withCredentials: true,
@@ -136,7 +135,7 @@ export default {
           Promise.all(promises)
             .then(() => {
               console.log("All cart items successfully saved to the database");
-              localStorage.removeItem("localCart"); // Clear localCart after transferring to server
+              localStorage.removeItem("localCart"); 
             })
             .catch((error) => {
               console.error("Error saving cart items to the database:", error);
