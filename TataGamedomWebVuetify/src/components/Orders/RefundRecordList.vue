@@ -10,7 +10,7 @@
         <div>申請退款時間: {{ relativeTime(item.issuedAt) }}</div>
         <div v-if="item.completedAt">完成退款時間: {{ relativeTime(item.completedAt) }}</div>
         <div>LinePay退款編號: {{ item.linePayRefundTransactionId }}</div>
-        <div>原訂單品項編號: {{ item.orderItemId }}</div>
+        <div>原訂單品項編號: {{ item.index }}</div>
         <br />
       </v-expansion-panel>
     </v-expansion-panels>
