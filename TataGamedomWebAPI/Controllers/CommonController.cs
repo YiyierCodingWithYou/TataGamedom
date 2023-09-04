@@ -94,7 +94,7 @@ namespace TataGamedomWebAPI.Controllers
 			{
 				Name = b.Name,
 				Type = "Board",
-				IconUrl = GetFullUrl("Files/Icons/tataBoardIcon.jpg"),
+				IconUrl = $"https://localhost:7081/Files/Uploads/{b.BoardHeaderCoverImg}",
 				Param = b.Id.ToString()
 			}).ToListAsync();
 
@@ -110,7 +110,7 @@ namespace TataGamedomWebAPI.Controllers
 			{
 				Name = $"{m.Name} ( {m.Account} )",
 				Type = "Member",
-				IconUrl = GetFullUrl("Files/Icons/tataUserIcon.jpg"),
+				IconUrl = m.IconImg,
 				Param = m.Account
 			}).ToListAsync();
 
@@ -165,7 +165,7 @@ namespace TataGamedomWebAPI.Controllers
 			{
 				Name = b.Name,
 				Type = "Board",
-				IconUrl = GetFullUrl("Files/Icons/tataBoardIcon.jpg"),
+				IconUrl = $"https://localhost:7081/Files/Uploads/{b.BoardHeaderCoverImg}",
 				Param = b.Id.ToString()
 			}).ToListAsync();
 
@@ -181,7 +181,7 @@ namespace TataGamedomWebAPI.Controllers
 			{
 				Name = $"{m.Name} ( {m.Account} )",
 				Type = "Member",
-				IconUrl = GetFullUrl("Files/Icons/tataUserIcon.jpg"),
+				IconUrl = $"https://localhost:7081/Files/Uploads/Icons/{m.IconImg}",
 				Param = m.Account
 			}).ToListAsync();
 
