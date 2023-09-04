@@ -1,14 +1,14 @@
 <template>
-  <div>
+  <div class="container">
     <v-row>
       <v-container class="d-flex flex-no-wrap">
         <v-row>
-          <v-col cols="6">
+          <!-- <v-col cols="6">
+          </v-col> -->
+          <v-col cols="12">
             <div class="mt-3 d-flex justify-center align-center">
               <v-img :src="imgLink + productData.gameCoverImg" height="380" cover></v-img>
             </div>
-          </v-col>
-          <v-col cols="6">
             <div class="d-flex flex-column mt-3 whiteText">
               <div class="d-flex text-h5 mb-2 ml-3 justify-between" style="justify-content: space-between;color:#a1dfe9">
                 ✨{{ productData.chiName }} <div v-if="productData.isVirtual" style="font-size: 14px; color:#f9ee08">
@@ -59,10 +59,11 @@
               </p>
               <p v-else-if="limit === 0" class="text-center">無庫存</p>
               <div class="d-flex justify-center">
-                <v-btn class="trackBtn" @click="Add2Track(productData.id)"><v-icon :color="isTracked ? 'red' : 'grey'">mdi-heart</v-icon>加入追蹤
-              </v-btn>   
+                <v-btn class="trackBtn" @click="Add2Track(productData.id)"><v-icon
+                    :color="isTracked ? 'red' : 'grey'">mdi-heart</v-icon>加入追蹤
+                </v-btn>
               </div>
-                      
+
             </div>
           </v-col>
         </v-row>
@@ -177,6 +178,7 @@ const loadTrackStatus = async () => {
   });
   const datas = await response.json();
   isTracked.value = datas;
+  console.log("loadTrack");
 }
 
 const formattedPrice = computed(() => {
@@ -202,6 +204,7 @@ const fetchQuantityLimit = async () => {
   const datas = await response.json();
   limit.value = datas;
   totalPages.value = props.productData.totalPages;
+  console.log("fetch");
 };
 
 watch(quantity, () => {
@@ -315,7 +318,7 @@ const Add2Track = async (productId) => {
   let result = await response.json();
   if (store.state.isLoggedIn) {
     if (result.isSuccess) {
-      Swal.fire("",result.message, 'success');
+      Swal.fire("", result.message, 'success');
       loadTrackStatus();
     }
   } else {
@@ -398,6 +401,10 @@ const toBoard = async () => {
 </script>
     
 <style>
+.container {
+  width: 78% !important;
+}
+
 .myDraw {
   position: fixed;
   bottom: 20px;
@@ -450,7 +457,8 @@ const toBoard = async () => {
   background-color: #01010f;
   color: #a1dfe9;
 }
-.trackBtn{
+
+.trackBtn {
   background-color: transparent;
   width: 150px;
 }
