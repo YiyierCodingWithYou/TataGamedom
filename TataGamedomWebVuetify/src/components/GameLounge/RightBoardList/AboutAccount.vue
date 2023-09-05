@@ -4,30 +4,18 @@
     <v-card-item>
       <v-card-title>{{ memberData?.name }}</v-card-title>
       <v-card-subtitle>
-        <span
-          class="me-1"
-          v-if="memberData?.isFollowingYou && memberData?.isFollowing"
-          >互相追隨</span
-        >
-        <span
-          class="me-1"
-          v-if="memberData?.isFollowingYou && !memberData?.isFollowing"
-          >正在追隨你</span
-        >
+        <v-chip v-if="memberData?.isFollowingYou && memberData?.isFollowing" class="ma-2 me1" color="#f9ee08" label>
+          互相追隨
+        </v-chip>
+        <v-chip v-if="memberData?.isFollowingYou && !memberData?.isFollowing" class="ma-2 me1" color="#f9ee08" label>
+          正在追隨你
+        </v-chip>
       </v-card-subtitle>
     </v-card-item>
     <v-card-text>
-      <div
-        class="d-flex justify-center align-items-center my-4"
-        v-if="!memberData?.isSelf"
-      >
-        <v-btn
-          rounded="lg"
-          size="large"
-          variant="outlined"
-          :class="!memberData?.isFollowing ? 'followBtn' : 'unFollowBtn'"
-          @click="followAction"
-        >
+      <div class="d-flex justify-center align-items-center my-4" v-if="!memberData?.isSelf">
+        <v-btn rounded="lg" size="large" variant="outlined"
+          :class="!memberData?.isFollowing ? 'followBtn' : 'unFollowBtn'" @click="followAction">
         </v-btn>
       </div>
       <div class="d-flex justify-center">
@@ -57,15 +45,8 @@
       <v-divider class="mx-4 my-4"></v-divider>
       <v-card-title>About Me</v-card-title>
       <v-card-text v-html="memberData?.aboutMe"></v-card-text>
-      <v-btn
-        class="editMe"
-        v-if="memberData?.isSelf"
-        block
-        rounded="xl"
-        variant="outlined"
-        @click="() => $router.push('/Members')"
-        >修改</v-btn
-      >
+      <v-btn class="editMe" v-if="memberData?.isSelf" block rounded="xl" variant="outlined"
+        @click="() => $router.push('/Members')">修改</v-btn>
     </v-card-text>
   </v-card>
 </template>
@@ -77,28 +58,40 @@
   margin-bottom: 20px;
   font-size: 1rem;
 }
+
 .editMe:hover {
   color: black;
   border-color: #f9ee08;
   background-color: #a1dfe9;
 }
+
 .v-card {
   background-color: transparent !important;
   box-shadow: 0px 0px 10px 2px #a1dfe9 !important;
 }
+
 .followBtn {
   color: #f9ee08;
 }
+
 .followBtn::before {
   content: "立即追蹤";
   position: relative;
 }
+
 .unFollowBtn {
-  color: #a1dfe9;
+  color: black;
+  background-color: #a1dfe9;
 }
+
+.unFollowBtn:hover {
+  background-color: pink;
+}
+
 .unFollowBtn:hover::before {
   content: "取消追蹤";
 }
+
 .unFollowBtn::before {
   content: "正在追蹤";
   position: relative;
@@ -110,6 +103,7 @@ import { ref, reactive, onMounted, computed, watch } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import Swal from "sweetalert2";
 
 interface MemberData {
   id: number;
@@ -138,6 +132,20 @@ const dataKey = ref(0);
 const StoreAcountAboutReloadKey = computed(
   () => store.state.GameLoungeStore.accountAboutReloadKey
 );
+const isLoggedIn = computed(() => store.state.isLoggedIn);
+const showLoginAlert = () => {
+  if (!isLoggedIn.value) {
+
+    Swal.fire({
+      title: "請先登入會員以使用功能",
+      icon: "warning",
+      color: "white",
+      confirmButtonColor: "orange",
+      background: "#1e1e1e",
+      confirmButtonText: "🎮趕緊加入獺獺玩國🦦",
+    });
+  }
+};
 
 const getMemberData = async () => {
   const res = await axios
@@ -176,6 +184,10 @@ const getMemberData = async () => {
 };
 
 const followAction = async () => {
+  if (!isLoggedIn.value) {
+    showLoginAlert()
+    return
+  }
   const res = await axios
     .post(
       `https://localhost:7081/api/MembersAbout/Follow?memberAccount=${props.memberAccount}`,

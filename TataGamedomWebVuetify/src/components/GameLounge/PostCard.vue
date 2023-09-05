@@ -7,7 +7,7 @@
     :class="[post.isAuthor ? 'blueOutline' : '', fullSize ? 'fullSize' : '']"
   >
     <v-card-item>
-      <v-card-title>{{ post.title }}</v-card-title>
+      <v-card-title  @click="linkTo('post', post.boardId, post.postId)" class="titleText">{{ post.title }}</v-card-title>
       <v-card-subtitle>
         <span
           class="memberInfo"
@@ -92,6 +92,7 @@
       label="回應"
       v-model="message"
       append-inner-icon="mdi-message-processing"
+      @click="showLoginAlert"
       @click:append-inner="newComment(post.postId)"
       @keyup.enter="newComment(post.postId)"
     ></v-text-field>
@@ -122,24 +123,22 @@
   overflow: hidden;
 }
 
-.post > .post-text {
+.post>.post-text {
   overflow: hidden;
   max-height: 40vh;
   cursor: pointer;
 }
 
-.fullSize > .post-text {
+.fullSize>.post-text {
   max-height: 100%;
 }
 
-.post > .gradient-overlay {
+.post>.gradient-overlay {
   content: "";
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 0.7),
-    rgba(0, 0, 0, 1)
-  );
+  background: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.7),
+      rgba(0, 0, 0, 1));
   position: absolute;
   top: calc(40vh);
   left: 0;
@@ -147,21 +146,26 @@
   height: 90px;
   z-index: 100;
 }
+
 .blueOutline {
   border-color: #a1dfe9;
 }
+
 .voted {
   color: #f9ee08;
 }
+
 .voted:hover {
   transform: scale(1.1);
   color: #a1dfe9;
 }
+
 .not-voted:hover {
   opacity: 1;
   transform: scale(1.1);
   color: #f9ee08;
 }
+
 .v-card-text {
   font-size: 1.1rem;
 }
@@ -169,13 +173,16 @@
   max-width: 100% !important;
   height: auto;
 }
+
 .v-card-subtitle {
   opacity: 1;
 }
+
 .memberInfo:hover {
   color: #f9ee08 !important;
   cursor: pointer;
 }
+
 .boardInfo:hover {
   color: #a1dfe9 !important;
   cursor: pointer;
@@ -187,6 +194,12 @@
 
 .cursor-pointer:hover {
   color: #f9ee08 !important;
+}
+
+.titleText:hover {
+  color: #f9ee08 !important;
+  cursor: pointer;
+
 }
 </style>
 
@@ -244,6 +257,21 @@ const hasComments = computed(() => comments.value.length > 0);
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
+const isLoggedIn = computed(() => store.state.isLoggedIn);
+const showLoginAlert = () => {
+  if (!isLoggedIn.value) {
+
+    Swal.fire({
+      title: "請先登入會員以使用功能",
+      icon: "warning",
+      color: "white",
+      confirmButtonColor: "orange",
+      background: "#1e1e1e",
+      confirmButtonText: "🎮趕緊加入獺獺玩國🦦",
+    });
+  }
+};
+
 
 const linkTo = (boardOrAccount, value, postId) => {
   if (boardOrAccount === "post") {
@@ -300,10 +328,14 @@ const vote = async (
   upOrDown: string,
   postId: number
 ) => {
+  if (!isLoggedIn.value) {
+    showLoginAlert()
+    return
+  }
+
   try {
     const response = await fetch(
-      `${baseAddress}${
-        type === "post" ? "Posts" : "PostComments"
+      `${baseAddress}${type === "post" ? "Posts" : "PostComments"
       }/${voteCommentId}/Vote/${upOrDown}`,
       {
         method: "PUT",
@@ -336,23 +368,24 @@ const deleteContent = async (
     cancelButtonText: "取消",
     confirmButtonText: "刪除",
   }).then(async (result) => {
-    try {
-      const response = await fetch(
-        `${baseAddress}${
-          type === "post" ? "Posts" : "PostComments"
-        }/${deleteId}`,
-        {
-          method: "DELETE",
-          credentials: "include",
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(
+          `${baseAddress}${type === "post" ? "Posts" : "PostComments"
+          }/${deleteId}`,
+          {
+            method: "DELETE",
+            credentials: "include",
+          }
+        );
+        let result = await response.json();
+        await reloadPost(postId);
+        if (type === "post") {
+          emits("deletePost");
         }
-      );
-      let result = await response.json();
-      await reloadPost(postId);
-      if (type === "post") {
-        emits("deletePost");
+      } catch {
+        alert(":<");
       }
-    } catch {
-      alert(":<");
     }
   });
 };
@@ -371,6 +404,10 @@ const reloadPost = async (id: number): Promise<void> => {
 };
 
 const newComment = async (postId: number) => {
+  if (!isLoggedIn.value) {
+    showLoginAlert()
+    return
+  }
   if (message.value.trim() != "") {
     try {
       const response = await fetch(`${baseAddress}PostComments`, {

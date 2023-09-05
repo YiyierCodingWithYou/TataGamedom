@@ -2,17 +2,9 @@
   <div style="height: 70px" ref="bookmark"></div>
   <hr />
   <h1 style="color: #a1dfe9; margin-bottom: 15px" id="comment">新聞評語</h1>
-  <div
-    v-for="item in newsData.newsComments"
-    :key="item"
-    class="mb-5 comment-container"
-  >
+  <div v-for="item in newsData.newsComments" :key="item" class="mb-5 comment-container">
     <div class="comment-info">
-      <img
-        style="margin: 0 10px; height: 60px; width: 60px; border-radius: 50%"
-        :src="icons + item.iconImg"
-        alt=""
-      />
+      <img style="margin: 0 10px; height: 60px; width: 60px; border-radius: 50%" :src="icons + item.iconImg" alt="" />
       <div class="comment-text">
         <div style="color: #a1dfe9">{{ item.name }} :</div>
         <div style="width: 800px">{{ item.content }}</div>
@@ -23,44 +15,21 @@
     </div>
   </div>
 
-  <div
-    class="mt-5 me-5"
-    style="display: flex; justify-content: flex-end; align-items: center"
-  >
-    <v-btn
-      class=""
-      variant="text"
-      icon="mdi-thumb-up"
-      color="blue-lighten-2"
-      @click="likesCheck"
-    ></v-btn>
+  <div class="mt-5 me-5" style="display: flex; justify-content: flex-end; align-items: center">
+    <v-btn class="" variant="text" icon="mdi-thumb-up" :color="likeButtonColor" @click="likesCheck"></v-btn>
     {{ newsData.likeCount }}人說讚
   </div>
 
   <v-form style="padding: 5px 15px">
     <h2>發表新聞評語</h2>
     <div v-if="$store.state.isLoggedIn">
-      <v-textarea
-        :rules="rules"
-        clearable
-        variant="solo"
-        rows="4"
-        v-model="comment"
-      ></v-textarea>
-      <v-btn
-        @click="onSubmit"
-        type="button"
-        :disabled="comment.length < 10 || comment.length > 100"
-        style="color: #01010f; background-color: #fbf402; margin-top: 10px"
-        >送出</v-btn
-      >
+      <v-textarea :rules="rules" clearable variant="solo" rows="4" v-model="comment"></v-textarea>
+      <v-btn @click="onSubmit" type="button" :disabled="comment.length < 10 || comment.length > 100"
+        style="color: #01010f; background-color: #fbf402; margin-top: 10px">送出</v-btn>
     </div>
     <div v-else>
-      <v-card
-        height="100"
-        class="d-flex align-center justify-center"
-        style="border: 1px solid #fbf402; background-color: #01010f"
-      >
+      <v-card height="100" class="d-flex align-center justify-center"
+        style="border: 1px solid #fbf402; background-color: #01010f">
         <p>請先登入會員以啟用評論功能，<a href="/Members/Login">點此登入</a></p>
       </v-card>
     </div>
@@ -86,6 +55,7 @@ const comment = ref("");
 const bookmark = ref(null);
 const likeCount = ref("");
 const store = useStore();
+const likeButtonColor = ref('blue-lighten-2');
 const isLoggedIn = computed(() => store.state.isLoggedIn);
 let img = "https://localhost:7081/Files/NewsImages/";
 let icons = "https://localhost:7081/Files/Uploads/icons/";
@@ -98,14 +68,14 @@ const loadData = async () => {
     const datas = await response.json();
     newsData.value = datas;
     scheduleDate.value = datas.scheduleDate;
-  } catch (err) {}
+  } catch (err) { }
 };
 
 onMounted(() => {
   loadData();
 });
 
-//偷你書籤
+//書籤
 const returnComments = async () => {
   await nextTick(() => {
     if (bookmark.value) {
@@ -191,6 +161,7 @@ const likesCheck = () => {
     showLoginAlert();
     return;
   }
+  likeButtonColor.value = 'yellow';
   likes();
 };
 

@@ -42,7 +42,30 @@ const callback = async (response) => {
         age: apiResponse.data.age,
         iconImg: apiResponse.data.iconImg,
       });
-      // emit("loginOk");
+
+
+      // 我剛剛加的在這裡
+      const localCart = JSON.parse(localStorage.getItem("localCart") || "[]");
+      const promises = [];
+      for (let item of localCart) {
+        promises.push(
+          axios.post(
+            "https://localhost:7081/api/Carts",
+            {
+              productId: item.productId,
+              qty: item.qty,
+            },
+            {
+              withCredentials: true,
+            }
+          )
+        );
+      }
+
+      Promise.all(promises);
+      console.log("All cart items successfully saved to the database");
+      localStorage.removeItem("localCart");
+      //
       router.go(-1);
 
       localStorage.setItem("returnToRoute", route.fullPath);

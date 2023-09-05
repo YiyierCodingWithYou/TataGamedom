@@ -1,48 +1,26 @@
 <template>
-  <v-card
-    class="mx-auto mt-16"
-    style="box-shadow: 2px 2px 10px #a1dfe9; background-color: #01010f"
-    max-width="600"
-    title="更改密碼"
-  >
+  <v-card class="mx-auto mt-16" style="box-shadow: 2px 2px 10px #a1dfe9; background-color: #01010f" max-width="600"
+    title="更改密碼">
     <v-container>
-      <v-text-field
-        v-model="originalPassword"
-        :append-inner-icon="originalPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary"
-        label="舊密碼"
-        :type="originalPasswordVisible ? 'text' : 'password'"
-        variant="underlined"
-        @click:append-inner="originalPasswordVisible = !originalPasswordVisible"
-      ></v-text-field>
+      <v-text-field v-model="originalPassword" :append-inner-icon="originalPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary" :rules="originalPasswordRules" label="舊密碼" :type="originalPasswordVisible ? 'text' : 'password'"
+        variant="underlined" @click:append-inner="originalPasswordVisible = !originalPasswordVisible"></v-text-field>
 
-      <v-text-field
-        v-model="createPassword"
-        :append-inner-icon="createPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary"
-        :rules="createPasswordRules"
-        label="新密碼"
-        :type="createPasswordVisible ? 'text' : 'password'"
-        variant="underlined"
-        @click:append-inner="createPasswordVisible = !createPasswordVisible"
-      ></v-text-field>
+      <v-text-field v-model="createPassword" :append-inner-icon="createPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary" :rules="createPasswordRules" label="新密碼" :type="createPasswordVisible ? 'text' : 'password'"
+        variant="underlined" @click:append-inner="createPasswordVisible = !createPasswordVisible"></v-text-field>
 
-      <v-text-field
-        v-model="confirmPassword"
-        :append-inner-icon="confirmPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        color="primary"
-        :rules="confirmPasswordRules"
-        label="確認密碼"
-        :type="confirmPasswordVisible ? 'text' : 'password'"
-        variant="underlined"
-        @click:append-inner="confirmPasswordVisible = !confirmPasswordVisible"
-      ></v-text-field>
+      <v-text-field v-model="confirmPassword" :append-inner-icon="confirmPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        color="primary" :rules="confirmPasswordRules" label="確認密碼" :type="confirmPasswordVisible ? 'text' : 'password'"
+        variant="underlined" @click:append-inner="confirmPasswordVisible = !confirmPasswordVisible"></v-text-field>
 
       <v-btn color="yellow" @click="onSubmit" style="left: 200px">
         修改密碼
         <v-icon icon="mdi-chevron-right" end></v-icon>
       </v-btn>
+      <v-btn color="black" style="left:350px" @click="fillFormData"></v-btn>
     </v-container>
+
   </v-card>
 </template>
     
@@ -102,6 +80,18 @@ onMounted(() => {
   loadMember();
 });
 
+const fillFormData = () => {
+  originalPassword.value = "w84w84j06eji6",
+    createPassword.value = "w84w84j06eji6",
+    confirmPassword.value = "w84w84j06eji6"
+}
+
+const originalPasswordRules = ref([
+  (value) => {
+    if (!value) return "請輸入舊密碼";
+  },
+]);
+
 const createPasswordRules = ref([
   (value) => {
     if (!value) return "請輸入密碼";
@@ -129,37 +119,48 @@ const logout = async () => {
 
 //改密碼
 const onSubmit = async () => {
-  await axios
-    .post(
-      "https://localhost:7081/api/Members/ChangePassword",
-      {
-        originalPassword: originalPassword.value,
-        createPassword: createPassword.value,
-        confirmPassword: confirmPassword.value,
-      },
-      {
-        withCredentials: true,
-      }
-    )
-    .then((res) => {
-      console.log(res);
-      Swal.fire({
-        icon: "success",
-        title: `密碼修改成功
-      請使用新密碼重新登入`,
-        showConfirmButton: false,
-        timer: 1500,
+  if (
+    originalPassword.value &&
+    createPassword.value &&
+    confirmPassword.value
+  ) {
+    await axios
+      .post(
+        "https://localhost:7081/api/Members/ChangePassword",
+        {
+          originalPassword: originalPassword.value,
+          createPassword: createPassword.value,
+          confirmPassword: confirmPassword.value,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        Swal.fire({
+          icon: "success",
+          title: `密碼修改成功
+        請使用新密碼重新登入`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        logout();
+      })
+      .catch((err) => {
+        console.log(err);
+        Swal.fire("密碼修改失敗");
+        Swal.fire({
+          icon: "error",
+          title: "密碼修改失敗",
+        });
       });
-      logout();
-    })
-    .catch((err) => {
-      console.log(err);
-      Swal.fire("密碼修改失敗");
-      Swal.fire({
-        icon: "error",
-        title: "密碼修改失敗",
-      });
+  } else {
+    Swal.fire({
+      icon: "error",
+      title: "請填寫所有必填欄位",
     });
+  }
 };
 
 const toolbarOptions = [
