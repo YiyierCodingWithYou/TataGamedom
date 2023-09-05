@@ -44,8 +44,9 @@
     <v-spacer></v-spacer>
     <v-spacer></v-spacer>
     <v-spacer></v-spacer>
-    <Notification></Notification>
+    <Notification v-if="IsLogined"></Notification>
     <v-btn
+      v-if="IsLogined"
       class="pageBtn"
       icon="mdi-one-up"
       @click="link('SupportHub')"

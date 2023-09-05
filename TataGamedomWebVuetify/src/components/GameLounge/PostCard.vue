@@ -77,6 +77,7 @@
       >
         <span class="material-symbols-rounded size-20"> delete </span>
       </v-btn>
+      <v-btn class="w-5" @click="say('許願給新手的建議(●’◡’●)❤️')"></v-btn>
 
       <span
         class="ms-auto text-caption cursor-pointer"
@@ -104,7 +105,10 @@
     </div>
   </v-card>
 </template>
-<style scoped>
+<style>
+.w-5 {
+  width: 50px !important;
+}
 .material-symbols-rounded {
   font-variation-settings: "FILL" 1, "wght" 200, "GRAD" 0, "opsz" 24;
 }
@@ -161,8 +165,8 @@
 .v-card-text {
   font-size: 1.1rem;
 }
-.v-card-text img {
-  max-width: 100%;
+.post-text img {
+  max-width: 100% !important;
   height: auto;
 }
 .v-card-subtitle {
@@ -393,6 +397,10 @@ const newComment = async (postId: number) => {
       alert(":<");
     }
   }
+};
+
+const say = (text: string) => {
+  message.value = text;
 };
 
 onMounted(() => {
