@@ -138,9 +138,9 @@ const unitExchange = (x) => {
 
 const option2: TypedOptions = {
   strings: [
-    "🎉暑期特賣指定活動商品95折",
-    "🎉全館滿2000免運",
-    "🎉全館滿3000折300",
+    "🎉夏季特賣指定商品95折！",
+    "🎉全館滿2000免運！",
+    "🎉全館滿3000折300！",
   ],
   loop: true,
   typeSpeed: 100,
