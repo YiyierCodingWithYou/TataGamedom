@@ -10,7 +10,8 @@
           <v-text-field v-model="confirmPassword" label="確認密碼" type="password"
             :rules="confirmPasswordRules"></v-text-field>
 
-          <v-btn type="submit" block class="mt-2 bg-yellow">重設密碼</v-btn>
+          <v-btn type="submit" class="mt-2 bg-yellow" style="left:40%">重設密碼</v-btn>
+          <v-btn color="black" class="mt-2" @click="fillFormData" style="left:65%"></v-btn>
         </v-container>
       </v-card>
     </v-form>
@@ -40,6 +41,11 @@ export default {
     };
   },
   methods: {
+    fillFormData() {
+      this.createPassword = "w84w84j06eji6",
+        this.confirmPassword = "w84w84j06eji6"
+    }
+    ,
     submitForm() {
       axios
         .post(
