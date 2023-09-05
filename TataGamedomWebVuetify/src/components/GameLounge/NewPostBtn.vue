@@ -33,6 +33,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
+          <v-btn class="w-10" @click="demoAction"></v-btn>
           <v-btn color="orange-darken-1" @click="dialog = false"> 取消 </v-btn>
           <v-btn
             color="green-darken-1"
@@ -146,6 +147,12 @@ const postNewPost = () => {
 if (route.params.boardId !== undefined) {
   boardId.value = +route.params.boardId;
 }
+
+const demoAction = () => {
+  title.value = "【閒聊】我的王國之淚全破關100%了！";
+  editor.value =
+    "<p>大家好！我是你的版主李四。</p><p><br></p><p>我的王國之淚終於全破關100%了！</p><p><br></p><p>以下開放大家詢問任何薩爾達版的小問題，小彩蛋等。</p><p><br></p><p>以後如果有更多想看我發表的主題，也歡迎在下面許願唷！！！q(≧▽≦q)</p>";
+};
 </script>
 
 <style scoped>
